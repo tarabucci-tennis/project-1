@@ -12,7 +12,10 @@ class PagesController < ApplicationController
     "The crowd gives me energy. I feed off their passion."
   ].freeze
 
-  def hello
+  def home
+  end
+
+  def tennis
     @quote = SABALENKA_QUOTES.sample
   end
 end

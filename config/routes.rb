@@ -17,6 +17,8 @@ Rails.application.routes.draw do
   # Admin: user management
   resources :users, only: [ :index, :new, :create, :destroy ]
 
+  get "tennis", to: "pages#tennis", as: :tennis
+
   # Defines the root path route ("/")
-  root "pages#hello"
+  root "pages#home"
 end

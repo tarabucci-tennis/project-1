@@ -23,7 +23,10 @@
 
   <body>
     <nav class="navbar">
-      <a href="/" class="navbar-brand">🎾 Tara's Tennis Club</a>
+      <a href="/" class="navbar-brand">Tara's Sandbox</a>
+      <div class="navbar-center">
+        <%= link_to "Tennis", tennis_path, class: "nav-link" %>
+      </div>
       <div class="navbar-right">
         <% if current_user %>
           <% if current_user.admin? %>
