@@ -128,8 +128,13 @@ h1 {
 }
 
 .card-icon {
-  font-size: 2rem;
-  margin-bottom: 12px;
+  margin-bottom: 16px;
+}
+
+.card-icon svg {
+  width: 40px;
+  height: 40px;
+  color: #ccff00;
 }
 
 .card h3 {
