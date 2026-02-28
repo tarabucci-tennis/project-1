@@ -108,6 +108,9 @@ jobs:
         with:
           bundler-cache: true
 
+      - name: Install Chrome
+        uses: browser-actions/setup-chrome@v1
+
       - name: Run System Tests
         env:
           RAILS_ENV: test
