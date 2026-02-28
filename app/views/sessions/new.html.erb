@@ -1,0 +1,19 @@
+<div class="auth-page">
+  <div class="auth-card">
+    <div class="auth-logo">🎾</div>
+    <h1>Sign In</h1>
+    <p class="auth-sub">Enter your email to continue</p>
+
+    <% if alert %>
+      <div class="flash flash-alert"><%= alert %></div>
+    <% end %>
+
+    <%= form_with url: session_path, method: :post do |f| %>
+      <div class="field">
+        <%= f.label :email, "Email address" %>
+        <%= f.email_field :email, placeholder: "you@example.com", autofocus: true %>
+      </div>
+      <%= f.submit "Sign In →" %>
+    <% end %>
+  </div>
+</div>

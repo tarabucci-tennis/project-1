@@ -37,4 +37,6 @@ jobs:
               --name project-1 \
               --restart unless-stopped \
               project-1
+            sleep 5
+            docker exec project-1 bin/rails db:migrate db:seed
             echo "Deployed successfully"

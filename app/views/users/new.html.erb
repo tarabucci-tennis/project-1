@@ -1,0 +1,32 @@
+<div class="auth-page">
+  <div class="auth-card">
+    <h1>Add Player</h1>
+
+    <%= form_with model: @user do |f| %>
+      <% if @user.errors.any? %>
+        <div class="flash flash-alert">
+          <% @user.errors.full_messages.each do |msg| %>
+            <div><%= msg %></div>
+          <% end %>
+        </div>
+      <% end %>
+
+      <div class="field">
+        <%= f.label :name %>
+        <%= f.text_field :name, autofocus: true %>
+      </div>
+      <div class="field">
+        <%= f.label :email %>
+        <%= f.email_field :email %>
+      </div>
+      <div class="field field-check">
+        <%= f.check_box :admin %>
+        <%= f.label :admin, "Admin privileges" %>
+      </div>
+      <div class="form-actions">
+        <%= f.submit "Add Player" %>
+        <%= link_to "Cancel", users_path, class: "btn btn-secondary" %>
+      </div>
+    <% end %>
+  </div>
+</div>

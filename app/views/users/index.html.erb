@@ -1,0 +1,31 @@
+<div class="admin-page">
+  <div class="admin-header">
+    <h1>Players</h1>
+    <%= link_to "+ Add Player", new_user_path, class: "btn" %>
+  </div>
+
+  <table class="users-table">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Role</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @users.each do |user| %>
+        <tr>
+          <td><%= user.name %></td>
+          <td><%= user.email %></td>
+          <td><span class="badge <%= user.admin? ? 'badge-admin' : 'badge-player' %>"><%= user.admin? ? "Admin" : "Player" %></span></td>
+          <td>
+            <% unless user == current_user %>
+              <%= button_to "Remove", user_path(user), method: :delete, data: { turbo_confirm: "Remove #{user.name}?" }, class: "btn btn-danger" %>
+            <% end %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
