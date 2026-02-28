@@ -18,14 +18,20 @@ jobs:
           username: root
           key: ${{ secrets.DEPLOY_SSH_KEY }}
           script: |
+            set -e
+            if [ ! -d /root/app ]; then
+              git clone https://github.com/tarabucci-tennis/project-1 /root/app
+            fi
             cd /root/app
-            git pull origin main
+            git fetch origin
+            git checkout main
+            git reset --hard origin/main
             docker build -t project-1 .
             docker stop project-1 || true
             docker rm project-1 || true
             docker run -d \
               -p 80:80 \
-              -e RAILS_MASTER_KEY=${{ secrets.RAILS_MASTER_KEY }} \
+              -e "RAILS_MASTER_KEY=${{ secrets.RAILS_MASTER_KEY }}" \
               -v /root/storage:/rails/storage \
               --name project-1 \
               --restart unless-stopped \
