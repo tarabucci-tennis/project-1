@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - 'claude/**'
 
 jobs:
   deploy:
@@ -24,8 +25,8 @@ jobs:
             fi
             cd /root/app
             git fetch origin
-            git checkout main
-            git reset --hard origin/main
+            git checkout ${{ github.ref_name }}
+            git reset --hard origin/${{ github.ref_name }}
             docker build -t project-1 .
             docker stop project-1 || true
             docker rm project-1 || true
