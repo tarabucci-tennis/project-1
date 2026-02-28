@@ -8,3 +8,139 @@
  *
  * Consider organizing styles into separate files for maintainability.
  */
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background: #1a472a;
+  min-height: 100vh;
+  color: #fff;
+}
+
+.hero {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  background:
+    linear-gradient(rgba(26,71,42,0.85), rgba(26,71,42,0.85)),
+    repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 60px,
+      rgba(255,255,255,0.04) 60px,
+      rgba(255,255,255,0.04) 62px
+    );
+}
+
+.court-lines {
+  max-width: 800px;
+  width: 100%;
+  border: 2px solid rgba(255,255,255,0.25);
+  border-radius: 4px;
+  padding: 60px 40px;
+  text-align: center;
+  position: relative;
+}
+
+.court-lines::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 0; right: 0;
+  height: 1px;
+  background: rgba(255,255,255,0.15);
+}
+
+.ball {
+  font-size: 3rem;
+  margin-bottom: 16px;
+  animation: bounce 1.8s ease-in-out infinite;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-12px); }
+}
+
+h1 {
+  font-size: 3rem;
+  font-weight: 800;
+  letter-spacing: -1px;
+  color: #fff;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
+
+.tagline {
+  margin-top: 10px;
+  font-size: 1.1rem;
+  color: rgba(255,255,255,0.7);
+}
+
+.sabalenka-quote {
+  margin: 40px auto;
+  max-width: 500px;
+  padding: 20px 28px;
+  background: rgba(255,255,255,0.08);
+  border-left: 3px solid #ccff00;
+  border-radius: 0 8px 8px 0;
+  text-align: left;
+}
+
+.sabalenka-quote p {
+  font-size: 1.05rem;
+  font-style: italic;
+  color: rgba(255,255,255,0.9);
+}
+
+.sabalenka-quote span {
+  display: block;
+  margin-top: 8px;
+  font-size: 0.85rem;
+  color: #ccff00;
+  font-weight: 600;
+}
+
+.cards {
+  display: flex;
+  gap: 20px;
+  margin-top: 40px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.card {
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 12px;
+  padding: 28px 24px;
+  flex: 1;
+  min-width: 180px;
+  max-width: 220px;
+  transition: background 0.2s, transform 0.2s;
+}
+
+.card:hover {
+  background: rgba(255,255,255,0.14);
+  transform: translateY(-4px);
+}
+
+.card-icon {
+  font-size: 2rem;
+  margin-bottom: 12px;
+}
+
+.card h3 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: #ccff00;
+}
+
+.card p {
+  font-size: 0.88rem;
+  color: rgba(255,255,255,0.65);
+  line-height: 1.5;
+}
