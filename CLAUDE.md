@@ -21,9 +21,9 @@ Token: stored in `doctl` auth config (run `doctl auth list` to verify)
 
 | Resource | Details |
 |----------|---------|
-| Droplet ID | `555072020` |
+| Droplet ID | `555081556` |
 | Droplet Name | `project-1` |
-| Public IP | `64.23.147.194` |
+| Public IP | `146.190.112.29` |
 | Region | `sfo3` |
 | Size | `s-1vcpu-1gb` |
 | Image | `docker-20-04` (Ubuntu 22.04 + Docker pre-installed) |
@@ -32,7 +32,7 @@ Token: stored in `doctl` auth config (run `doctl auth list` to verify)
 | Container Registry | `registry.digitalocean.com/tarabucci-tennis` |
 | SSH Key ID | `54458995` (name: `do-deploy`) |
 
-**App URL:** http://64.23.147.194
+**App URL:** http://146.190.112.29
 
 ### Deployment Method
 
