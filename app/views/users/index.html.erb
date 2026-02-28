@@ -17,11 +17,12 @@
       <% @users.each do |user| %>
         <tr>
           <td><%= user.name %></td>
-          <td><%= user.email %></td>
+          <td><%= user.email.presence || %(<span class="no-email">no email yet</span>).html_safe %></td>
           <td><span class="badge <%= user.admin? ? 'badge-admin' : 'badge-player' %>"><%= user.admin? ? "Admin" : "Player" %></span></td>
-          <td>
+          <td class="row-actions">
+            <%= link_to "Edit", edit_user_path(user), class: "btn btn-secondary btn-sm" %>
             <% unless user == current_user %>
-              <%= button_to "Remove", user_path(user), method: :delete, data: { turbo_confirm: "Remove #{user.name}?" }, class: "btn btn-danger" %>
+              <%= button_to "Remove", user_path(user), method: :delete, data: { turbo_confirm: "Remove #{user.name}?" }, class: "btn btn-danger btn-sm" %>
             <% end %>
           </td>
         </tr>

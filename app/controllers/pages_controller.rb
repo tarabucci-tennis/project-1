@@ -13,9 +13,12 @@ class PagesController < ApplicationController
   ].freeze
 
   def home
+    return redirect_to login_path unless current_user
+    redirect_to tennis_path unless current_user.admin?
   end
 
   def tennis
+    return redirect_to login_path unless current_user
     @quote = SABALENKA_QUOTES.sample
   end
 end

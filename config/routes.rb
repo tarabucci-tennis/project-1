@@ -15,7 +15,7 @@ Rails.application.routes.draw do
   delete "session", to: "sessions#destroy"
 
   # Admin: user management
-  resources :users, only: [ :index, :new, :create, :destroy ]
+  resources :users, only: [ :index, :new, :create, :edit, :update, :destroy ]
 
   get "tennis", to: "pages#tennis", as: :tennis
 

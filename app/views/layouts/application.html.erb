@@ -23,9 +23,16 @@
 
   <body>
     <nav class="navbar">
-      <a href="/" class="navbar-brand">Tara's Sandbox</a>
+      <% if current_user&.admin? %>
+        <a href="/" class="navbar-brand">Tara's Sandbox</a>
+      <% else %>
+        <span class="navbar-brand navbar-brand-static">Tara's Sandbox</span>
+      <% end %>
       <div class="navbar-center">
         <%= link_to "Tennis", tennis_path, class: "nav-link" %>
+        <% if current_user&.admin? %>
+          <span class="nav-link nav-link-coming-soon">Project 2</span>
+        <% end %>
       </div>
       <div class="navbar-right">
         <% if current_user %>

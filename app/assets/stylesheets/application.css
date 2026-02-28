@@ -193,6 +193,23 @@ h1 {
 
 .nav-link:hover { color: #fff; }
 
+.navbar-brand-static { cursor: default; }
+
+.nav-link-coming-soon {
+  color: rgba(255,255,255,0.3);
+  font-size: 0.9rem;
+  cursor: default;
+  font-style: italic;
+}
+
+.no-email {
+  color: rgba(255,255,255,0.3);
+  font-style: italic;
+  font-size: 0.85rem;
+}
+
+.row-actions { display: flex; gap: 8px; align-items: center; }
+
 .nav-user {
   font-size: 0.9rem;
   color: #ccff00;
