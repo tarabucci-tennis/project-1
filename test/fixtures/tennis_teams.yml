@@ -1,0 +1,19 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  user: one
+  name: MyString
+  team_type: MyString
+  section: MyString
+  gender: MyString
+  rating: 9.99
+  start_date: 2026-02-28
+
+two:
+  user: two
+  name: MyString
+  team_type: MyString
+  section: MyString
+  gender: MyString
+  rating: 9.99
+  start_date: 2026-02-28

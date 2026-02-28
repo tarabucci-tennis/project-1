@@ -214,7 +214,9 @@ h1 {
   font-size: 0.9rem;
   color: #ccff00;
   font-weight: 600;
+  text-decoration: none;
 }
+.nav-user:hover { text-decoration: underline; }
 
 /* ---- Buttons ---- */
 .btn {
@@ -498,4 +500,230 @@ h1 {
   font-size: 0.85rem;
   color: rgba(255,255,255,0.55);
   line-height: 1.5;
+}
+
+/* ======================================================
+   Player Profile Page
+   ====================================================== */
+
+.profile-page {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 40px 24px 80px;
+}
+
+/* ── Header ── */
+.profile-header {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 32px;
+  align-items: flex-start;
+  margin-bottom: 48px;
+}
+
+.profile-identity { flex: 1; min-width: 240px; }
+
+.profile-identity h1 {
+  font-size: 2.4rem;
+  font-weight: 900;
+  letter-spacing: -1px;
+  color: #fff;
+  margin-bottom: 12px;
+}
+
+.profile-meta { display: flex; flex-wrap: wrap; gap: 8px; }
+
+.meta-chip {
+  display: inline-block;
+  padding: 4px 12px;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 20px;
+  font-size: 0.8rem;
+  color: rgba(255,255,255,0.65);
+}
+
+/* ── Rating cards ── */
+.rating-cards { display: flex; gap: 16px; flex-wrap: wrap; }
+
+.rating-card {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 14px;
+  padding: 20px 24px;
+  min-width: 200px;
+}
+
+.rating-card-ntrp {
+  border-color: rgba(204,255,0,0.3);
+  background: rgba(204,255,0,0.05);
+}
+
+.rating-card-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: rgba(255,255,255,0.45);
+  margin-bottom: 6px;
+}
+
+.rating-card-value {
+  font-size: 2.8rem;
+  font-weight: 900;
+  color: #ccff00;
+  letter-spacing: -1px;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+
+.rating-card-date {
+  font-size: 0.75rem;
+  color: rgba(255,255,255,0.4);
+  margin-bottom: 16px;
+}
+
+.rating-card-subrow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 12px;
+  border-top: 1px solid rgba(255,255,255,0.08);
+  margin-top: 8px;
+}
+
+.rating-card-sublabel { font-size: 0.75rem; color: rgba(255,255,255,0.45); }
+.rating-card-subdash  { font-size: 1rem; color: rgba(255,255,255,0.3); font-weight: 700; }
+
+/* ── Rating meter ── */
+.rating-meter { margin-top: 4px; }
+
+.rating-meter-track {
+  position: relative;
+  height: 6px;
+  background: rgba(255,255,255,0.12);
+  border-radius: 3px;
+  margin-bottom: 6px;
+}
+
+.rating-meter-fill {
+  position: absolute;
+  top: 0; left: 0; bottom: 0;
+  background: linear-gradient(90deg, rgba(204,255,0,0.4), #ccff00);
+  border-radius: 3px;
+}
+
+.rating-meter-thumb {
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 12px; height: 12px;
+  background: #ccff00;
+  border-radius: 50%;
+  border: 2px solid #1a472a;
+  box-shadow: 0 0 0 2px #ccff00;
+}
+
+.rating-meter-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.65rem;
+  color: rgba(255,255,255,0.35);
+}
+
+/* ── Sections ── */
+.profile-section { margin-bottom: 48px; }
+
+.section-title {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  color: rgba(255,255,255,0.4);
+  margin-bottom: 16px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+/* ── Profile tables ── */
+.profile-table-wrap {
+  overflow-x: auto;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.1);
+}
+
+.profile-table { width: 100%; border-collapse: collapse; }
+
+.profile-table th {
+  padding: 10px 14px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  color: rgba(255,255,255,0.4);
+  background: rgba(255,255,255,0.04);
+  text-align: left;
+  white-space: nowrap;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+.profile-table td {
+  padding: 12px 14px;
+  font-size: 0.88rem;
+  color: rgba(255,255,255,0.8);
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  white-space: nowrap;
+}
+
+.profile-table tbody tr:last-child td { border-bottom: none; }
+.profile-table tbody tr:hover td { background: rgba(255,255,255,0.03); }
+
+.td-primary { color: #fff; font-weight: 600; }
+.td-muted   { color: rgba(255,255,255,0.45); font-size: 0.82rem; }
+.td-year    { color: #ccff00; font-weight: 700; font-size: 0.95rem; }
+.td-win     { color: #86efac; }
+.td-loss    { color: #fca5a5; }
+.td-pct     { color: rgba(255,255,255,0.6); font-size: 0.82rem; }
+
+.rating-pill {
+  display: inline-block;
+  padding: 2px 10px;
+  background: rgba(204,255,0,0.12);
+  color: #ccff00;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.stats-table .group-header {
+  text-align: center;
+  border-left: 1px solid rgba(255,255,255,0.08);
+  border-right: 1px solid rgba(255,255,255,0.08);
+}
+
+.stats-table th, .stats-table td { text-align: right; }
+.stats-table th:first-child, .stats-table td:first-child { text-align: left; }
+
+.totals-row td {
+  font-weight: 700;
+  background: rgba(204,255,0,0.05) !important;
+  border-top: 2px solid rgba(204,255,0,0.2);
+  color: rgba(255,255,255,0.9);
+}
+
+.totals-row .td-year  { color: #ccff00; }
+.totals-row .td-win   { color: #86efac; }
+.totals-row .td-loss  { color: #fca5a5; }
+
+.stats-note {
+  margin-top: 10px;
+  font-size: 0.75rem;
+  color: rgba(255,255,255,0.25);
+  font-style: italic;
+}
+
+.profile-empty {
+  text-align: center;
+  padding: 60px 20px;
+  color: rgba(255,255,255,0.3);
 }
