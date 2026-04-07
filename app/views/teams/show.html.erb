@@ -1,0 +1,70 @@
+<div class="schedule-page">
+  <div class="schedule-header">
+    <div class="schedule-header-top">
+      <%= link_to "&larr; Teams".html_safe, teams_path, class: "back-link" %>
+    </div>
+    <div class="schedule-title-row">
+      <div>
+        <h1><%= @team.name %></h1>
+        <div class="schedule-meta">
+          <span class="meta-chip"><%= @team.team_type %></span>
+          <span class="meta-chip"><%= @team.rating %></span>
+          <span class="meta-chip"><%= @team.section %></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Roster summary -->
+  <div class="roster-strip">
+    <span class="roster-label">Roster (<%= @players.count %>)</span>
+    <div class="roster-names">
+      <% @players.each do |p| %>
+        <span class="roster-chip <%= 'roster-captain' if p.captain? %>">
+          <%= p.display_name %><% if p.captain? %> <small>(C)</small><% end %>
+        </span>
+      <% end %>
+    </div>
+  </div>
+
+  <!-- Schedule -->
+  <div class="profile-section">
+    <h2 class="section-title">Schedule</h2>
+
+    <% if @matches.any? %>
+      <div class="match-list">
+        <% @matches.each do |match| %>
+          <%= link_to team_scheduled_match_path(@team, match), class: "match-row #{'match-row-past' if match.match_date < Date.current}" do %>
+            <div class="match-date-block">
+              <span class="match-month"><%= match.match_date.strftime("%b").upcase %></span>
+              <span class="match-day"><%= match.match_date.strftime("%-d") %></span>
+              <span class="match-weekday"><%= match.match_date.strftime("%a").upcase %></span>
+            </div>
+            <div class="match-info">
+              <span class="match-opponent">
+                <% if match.home? %>
+                  <span class="match-ha home-badge">HOME</span>
+                <% else %>
+                  <span class="match-ha away-badge">AWAY</span>
+                <% end %>
+                vs. <%= match.opponent_team %>
+              </span>
+              <% if match.match_time.present? %>
+                <span class="match-time-label"><%= match.match_time %></span>
+              <% end %>
+              <% if match.location.present? %>
+                <span class="match-location"><%= match.location %></span>
+              <% end %>
+            </div>
+            <div class="match-avail-badge">
+              <span class="avail-count"><%= match.available_count %></span>
+              <span class="avail-label">available</span>
+            </div>
+          <% end %>
+        <% end %>
+      </div>
+    <% else %>
+      <div class="profile-empty">No matches scheduled yet.</div>
+    <% end %>
+  </div>
+</div>

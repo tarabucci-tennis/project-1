@@ -1,0 +1,22 @@
+<div class="schedule-page">
+  <div class="schedule-header">
+    <h1>My Teams</h1>
+    <p class="schedule-sub">Select a team to view schedule & availability</p>
+  </div>
+
+  <div class="team-grid">
+    <% @teams.each do |team| %>
+      <%= link_to team_path(team), class: "team-card" do %>
+        <div class="team-card-top">
+          <span class="team-card-rating"><%= team.rating %></span>
+          <span class="team-card-type"><%= team.team_type %></span>
+        </div>
+        <h2 class="team-card-name"><%= team.name %></h2>
+        <div class="team-card-meta">
+          <span><%= team.team_players.count %> players</span>
+          <span><%= team.scheduled_matches.upcoming.count %> upcoming</span>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
+</div>

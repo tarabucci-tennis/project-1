@@ -20,6 +20,16 @@ Rails.application.routes.draw do
   get "tennis",  to: "pages#tennis",    as: :tennis
   get "profile", to: "profiles#show",  as: :profile
 
+  # Lineup & Availability
+  resources :teams, only: [ :index, :show ] do
+    resources :scheduled_matches, only: [ :show ] do
+      member do
+        patch :update_lineup
+        patch :update_availability
+      end
+    end
+  end
+
   # Defines the root path route ("/")
   root "pages#home"
 end

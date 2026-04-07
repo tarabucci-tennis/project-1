@@ -1,0 +1,220 @@
+<% my_player = @players.find { |p| p.user_id == current_user&.id } %>
+<% my_avail = my_player ? @availabilities[my_player.id] : nil %>
+
+<div class="schedule-page">
+  <div class="schedule-header">
+    <div class="schedule-header-top">
+      <%= link_to "&larr; #{@team.name} Schedule".html_safe, team_path(@team), class: "back-link" %>
+    </div>
+    <div class="match-detail-header">
+      <div class="match-detail-date">
+        <span class="match-month"><%= @match.match_date.strftime("%b").upcase %></span>
+        <span class="match-day-lg"><%= @match.match_date.strftime("%-d") %></span>
+        <span class="match-weekday"><%= @match.match_date.strftime("%A") %></span>
+      </div>
+      <div class="match-detail-info">
+        <h1>
+          <% if @match.home? %>
+            <span class="match-ha home-badge">HOME</span>
+          <% else %>
+            <span class="match-ha away-badge">AWAY</span>
+          <% end %>
+          vs. <%= @match.opponent_team %>
+        </h1>
+        <% if @match.match_time.present? %>
+          <p class="match-time-label"><%= @match.match_time %></p>
+        <% end %>
+        <% if @match.location.present? %>
+          <p class="match-location"><%= @match.location %></p>
+        <% end %>
+      </div>
+      <div class="match-avail-badge large">
+        <span class="avail-count"><%= @match.available_count %></span>
+        <span class="avail-label">available</span>
+      </div>
+    </div>
+
+    <!-- Your Availability (for players on this team) -->
+    <% if my_player %>
+      <div class="my-avail-section">
+        <h3 class="my-avail-title">Your Availability</h3>
+        <div class="my-avail-buttons">
+          <%= button_to update_availability_team_scheduled_match_path(@team, @match),
+                method: :patch,
+                params: { team_player_id: my_player.id, status: "confirmed" },
+                class: "my-avail-btn #{'my-avail-active confirmed' if my_avail&.confirmed?}" do %>
+            <span>&#x2705;</span> Available
+          <% end %>
+          <%= button_to update_availability_team_scheduled_match_path(@team, @match),
+                method: :patch,
+                params: { team_player_id: my_player.id, status: "unavailable" },
+                class: "my-avail-btn #{'my-avail-active unavailable' if my_avail&.unavailable?}" do %>
+            <span>&#x274C;</span> Unavailable
+          <% end %>
+          <%= form_with url: update_availability_team_scheduled_match_path(@team, @match),
+                method: :patch,
+                class: "my-avail-custom" do |f| %>
+            <%= f.hidden_field :team_player_id, value: my_player.id %>
+            <%= f.hidden_field :status, value: "custom" %>
+            <%= f.text_field :message,
+                  value: my_avail&.custom? ? my_avail.message : "",
+                  placeholder: "Yaaass 😄 or custom note...",
+                  class: "my-avail-input" %>
+            <%= f.submit "Send", class: "btn btn-sm" %>
+          <% end %>
+        </div>
+        <% if my_avail && my_avail.status != "pending" %>
+          <p class="my-avail-current">
+            Current: <strong><%= my_avail.display_status %></strong>
+            <% if my_avail.custom? && my_avail.message.present? %>
+              &mdash; "<%= my_avail.message %>"
+            <% end %>
+          </p>
+        <% end %>
+      </div>
+    <% end %>
+
+    <!-- Action buttons -->
+    <div class="match-actions">
+      <button class="btn btn-secondary" onclick="window.print()">Print Scorecard</button>
+      <button class="btn btn-secondary" id="add-to-calendar-btn">Add to Calendar</button>
+    </div>
+  </div>
+
+  <!-- Lineup Card -->
+  <div class="profile-section">
+    <h2 class="section-title">Lineup</h2>
+
+    <% if current_user&.admin? %>
+      <%= form_with url: update_lineup_team_scheduled_match_path(@team, @match), method: :patch, class: "lineup-form" do |f| %>
+        <div class="lineup-card">
+          <% LineupSlot::POSITIONS.each do |pos| %>
+            <div class="lineup-line">
+              <div class="lineup-position">
+                <span class="pos-label"><%= pos %></span>
+                <span class="pos-type"><%= LineupSlot::POSITION_LABELS[pos] %></span>
+              </div>
+              <div class="lineup-players">
+                <% max = LineupSlot.max_players_for(pos) %>
+                <% max.times do |i| %>
+                  <% current_player = @lineup.dig(pos, i)&.team_player %>
+                  <select name="lineup[<%= pos %>][]" class="lineup-select">
+                    <option value="">-- Select Player --</option>
+                    <% @players.each do |p| %>
+                      <% avail = @availabilities[p.id] %>
+                      <option value="<%= p.id %>"
+                        <%= "selected" if current_player&.id == p.id %>
+                        data-status="<%= avail&.status || 'pending' %>">
+                        <%= p.display_name %><% if avail&.confirmed? %> &#x2705;<% elsif avail&.unavailable? %> &#x274C;<% end %>
+                      </option>
+                    <% end %>
+                  </select>
+                <% end %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+        <div class="lineup-submit">
+          <%= f.submit "Save Lineup", class: "btn" %>
+        </div>
+      <% end %>
+    <% else %>
+      <div class="lineup-card">
+        <% LineupSlot::POSITIONS.each do |pos| %>
+          <div class="lineup-line">
+            <div class="lineup-position">
+              <span class="pos-label"><%= pos %></span>
+              <span class="pos-type"><%= LineupSlot::POSITION_LABELS[pos] %></span>
+            </div>
+            <div class="lineup-players">
+              <% players_in_pos = @match.players_for_position(pos) %>
+              <% if players_in_pos.any? %>
+                <% players_in_pos.each do |p| %>
+                  <span class="lineup-player-name"><%= p.display_name %></span>
+                <% end %>
+              <% else %>
+                <span class="lineup-tbd">TBD</span>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+
+  <!-- Availability -->
+  <div class="profile-section">
+    <h2 class="section-title">Availability (<%= @match.response_count %>/<%= @players.count %> responded)</h2>
+
+    <div class="avail-grid">
+      <% @players.each do |player| %>
+        <% avail = @availabilities[player.id] %>
+        <div class="avail-row">
+          <div class="avail-player">
+            <span class="avail-name"><%= player.display_name %></span>
+            <% if player.captain? %>
+              <span class="avail-role">(C)</span>
+            <% end %>
+          </div>
+
+          <div class="avail-status status-<%= avail&.status || 'pending' %>">
+            <% case avail&.status %>
+            <% when "confirmed" %>
+              <span class="status-icon">&#x2705;</span>
+              <span>Available</span>
+            <% when "unavailable" %>
+              <span class="status-icon">&#x274C;</span>
+              <span>Unavailable</span>
+            <% when "custom" %>
+              <span class="status-icon">&#x1F4AC;</span>
+              <span><%= avail.message.presence || "Maybe" %></span>
+            <% else %>
+              <span class="status-icon">&#x2B55;</span>
+              <span>Pending</span>
+            <% end %>
+          </div>
+
+          <% if current_user&.admin? %>
+            <div class="avail-actions">
+              <%= button_to "&#x2705;".html_safe,
+                    update_availability_team_scheduled_match_path(@team, @match),
+                    method: :patch,
+                    params: { team_player_id: player.id, status: "confirmed" },
+                    class: "avail-btn #{'avail-btn-active' if avail&.confirmed?}" %>
+              <%= button_to "&#x274C;".html_safe,
+                    update_availability_team_scheduled_match_path(@team, @match),
+                    method: :patch,
+                    params: { team_player_id: player.id, status: "unavailable" },
+                    class: "avail-btn #{'avail-btn-active' if avail&.unavailable?}" %>
+              <%= form_with url: update_availability_team_scheduled_match_path(@team, @match),
+                    method: :patch,
+                    class: "avail-custom-form" do |f| %>
+                <%= f.hidden_field :team_player_id, value: player.id %>
+                <%= f.hidden_field :status, value: "custom" %>
+                <%= f.text_field :message,
+                      value: avail&.custom? ? avail.message : "",
+                      placeholder: "Yaaass 😄",
+                      class: "avail-custom-input" %>
+                <%= f.submit "&#x1F4AC;".html_safe, class: "avail-btn" %>
+              <% end %>
+            </div>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.getElementById("add-to-calendar-btn")?.addEventListener("click", function() {
+    var title = "<%= j "#{@team.name} vs. #{@match.opponent_team}" %>";
+    var date = "<%= @match.match_date.strftime('%Y%m%d') %>";
+    var location = "<%= j(@match.location || '') %>";
+    var url = "https://calendar.google.com/calendar/render?action=TEMPLATE" +
+      "&text=" + encodeURIComponent(title) +
+      "&dates=" + date + "/" + date +
+      "&location=" + encodeURIComponent(location) +
+      "&details=" + encodeURIComponent("<%= j "#{@match.home? ? 'Home' : 'Away'} match - #{@match.match_time}" %>");
+    window.open(url, "_blank");
+  });
+</script>
