@@ -28,6 +28,13 @@ tara.update!(
   end
 end
 
+# Create team memberships (Tara is captain of all her teams)
+tara.tennis_teams.each do |team|
+  TeamMembership.find_or_create_by!(user: tara, tennis_team: team) do |m|
+    m.role = "captain"
+  end
+end
+
 # Match stats
 # Note: sets/games for 2024–2025 were unclear in the source data;
 # fill them in from your USTA Connect page via the Players admin panel.

@@ -17,7 +17,13 @@ Rails.application.routes.draw do
   # Admin: user management
   resources :users, only: [ :index, :new, :create, :edit, :update, :destroy ]
 
-  resources :teams, only: [ :index, :show ]
+  resources :teams, only: [ :index, :show ] do
+    resources :matches, only: [ :index, :new, :create ]
+    get "captain", to: "matches#captain", as: :captain
+  end
+
+  # Availability AJAX endpoint
+  post "matches/:match_id/availability", to: "availabilities#update", as: :match_availability
 
   get "tennis",  to: "pages#tennis",    as: :tennis
   get "profile", to: "profiles#show",  as: :profile

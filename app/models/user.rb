@@ -1,6 +1,9 @@
 class User < ApplicationRecord
   has_many :tennis_teams, dependent: :destroy
   has_many :tennis_stats, dependent: :destroy
+  has_many :team_memberships, dependent: :destroy
+  has_many :member_teams, through: :team_memberships, source: :tennis_team
+  has_many :availabilities, dependent: :destroy
 
   validates :name, presence: true
   validates :email, uniqueness: { case_sensitive: false },

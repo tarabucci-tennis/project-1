@@ -10,7 +10,60 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_02_28_221018) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_08_200003) do
+  create_table "availabilities", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.integer "match_id", null: false
+    t.string "status", default: "no_response", null: false
+    t.string "message"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["match_id"], name: "index_availabilities_on_match_id"
+    t.index ["user_id", "match_id"], name: "index_availabilities_on_user_id_and_match_id", unique: true
+    t.index ["user_id"], name: "index_availabilities_on_user_id"
+  end
+
+  create_table "matches", force: :cascade do |t|
+    t.integer "tennis_team_id", null: false
+    t.datetime "match_date", null: false
+    t.string "location"
+    t.string "opponent"
+    t.text "notes"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["tennis_team_id", "match_date"], name: "index_matches_on_tennis_team_id_and_match_date"
+    t.index ["tennis_team_id"], name: "index_matches_on_tennis_team_id"
+  end
+
+  create_table "notifications", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.integer "tennis_team_id", null: false
+    t.integer "match_id", null: false
+    t.integer "actor_id", null: false
+    t.string "kind", null: false
+    t.string "body", null: false
+    t.boolean "read", default: false, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["match_id"], name: "index_notifications_on_match_id"
+    t.index ["tennis_team_id"], name: "index_notifications_on_tennis_team_id"
+    t.index ["user_id", "read"], name: "index_notifications_on_user_id_and_read"
+    t.index ["user_id"], name: "index_notifications_on_user_id"
+    t.index ["actor_id"], name: "index_notifications_on_actor_id"
+  end
+
+  create_table "team_memberships", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.integer "tennis_team_id", null: false
+    t.string "role", default: "player", null: false
+    t.string "notification_preference", default: "every_update", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["tennis_team_id"], name: "index_team_memberships_on_tennis_team_id"
+    t.index ["user_id", "tennis_team_id"], name: "index_team_memberships_on_user_id_and_tennis_team_id", unique: true
+    t.index ["user_id"], name: "index_team_memberships_on_user_id"
+  end
+
   create_table "tennis_stats", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.integer "defaults"
@@ -56,6 +109,15 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_28_221018) do
     t.index ["email"], name: "index_users_on_email", unique: true
   end
 
+  add_foreign_key "availabilities", "matches"
+  add_foreign_key "availabilities", "users"
+  add_foreign_key "matches", "tennis_teams"
+  add_foreign_key "notifications", "matches"
+  add_foreign_key "notifications", "tennis_teams"
+  add_foreign_key "notifications", "users"
+  add_foreign_key "notifications", "users", column: "actor_id"
+  add_foreign_key "team_memberships", "tennis_teams"
+  add_foreign_key "team_memberships", "users"
   add_foreign_key "tennis_stats", "users"
   add_foreign_key "tennis_teams", "users"
 end

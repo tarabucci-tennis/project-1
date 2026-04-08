@@ -10,6 +10,16 @@
     <h1><%= @team.name %></h1>
   </div>
 
+  <% membership = @team.team_memberships.find_by(user: current_user) %>
+  <% if membership %>
+    <div class="team-show-actions">
+      <%= link_to "View Schedule", team_matches_path(@team), class: "btn" %>
+      <% if @team.captain?(current_user) %>
+        <%= link_to "Captain View", team_captain_path(@team), class: "btn btn-secondary" %>
+      <% end %>
+    </div>
+  <% end %>
+
   <div class="team-show-details">
     <div class="team-detail-card">
       <div class="detail-label">Type</div>

@@ -1,0 +1,66 @@
+<% content_for :title, "#{@team.name} · Captain View" %>
+
+<div class="captain-page">
+  <div class="captain-header">
+    <div>
+      <%= link_to "&larr; Schedule".html_safe, team_matches_path(@team), class: "back-link" %>
+      <h1>Captain View</h1>
+      <p class="captain-sub"><%= @team.name %> — Availability Grid</p>
+    </div>
+  </div>
+
+  <% if @matches.any? && @members.any? %>
+    <div class="captain-grid-wrap">
+      <table class="captain-grid">
+        <thead>
+          <tr>
+            <th class="captain-grid-player">Player</th>
+            <% @matches.each do |match| %>
+              <th class="captain-grid-date">
+                <div><%= match.match_date.strftime("%a") %></div>
+                <div><%= match.match_date.strftime("%-m/%-d") %></div>
+                <% counts = match.availability_counts %>
+                <div class="captain-grid-counts">
+                  <span class="count-in"><%= counts[:in] %> ✅</span> ·
+                  <span class="count-out"><%= counts[:out] %> ❌</span> ·
+                  <span class="count-pending"><%= counts[:no_response] %> ?</span>
+                </div>
+              </th>
+            <% end %>
+          </tr>
+        </thead>
+        <tbody>
+          <% @members.each do |member| %>
+            <tr>
+              <td class="captain-grid-player-name"><%= member.name %></td>
+              <% @matches.each do |match| %>
+                <% avail = @availability_map.dig(member.id, match.id) %>
+                <% status = avail&.status || "no_response" %>
+                <td class="captain-grid-cell">
+                  <% if status == "in" %>
+                    <span class="dot dot-in" title="<%= avail&.message.presence || 'Available' %>">🟢</span>
+                  <% elsif status == "out" %>
+                    <span class="dot dot-out" title="<%= avail&.message.presence || 'Unavailable' %>">🔴</span>
+                  <% else %>
+                    <span class="dot dot-none" title="No response">⚪</span>
+                  <% end %>
+                  <% if avail&.message.present? %>
+                    <div class="dot-message"><%= avail.message %></div>
+                  <% end %>
+                </td>
+              <% end %>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  <% else %>
+    <div class="schedule-empty">
+      <% if @matches.empty? %>
+        <p>No matches scheduled yet. <%= link_to "Add a match", new_team_match_path(@team) %> to get started.</p>
+      <% else %>
+        <p>No team members yet.</p>
+      <% end %>
+    </div>
+  <% end %>
+</div>

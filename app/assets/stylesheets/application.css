@@ -890,3 +890,313 @@ h1 {
   font-weight: 600;
   color: #fff;
 }
+
+.team-show-actions {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 28px;
+}
+
+/* ======================================================
+   Schedule Page
+   ====================================================== */
+
+.schedule-page {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 40px 24px 80px;
+}
+
+.schedule-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: 32px;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.schedule-header h1 {
+  font-size: 2rem;
+  font-weight: 900;
+  letter-spacing: -1px;
+  margin-top: 8px;
+}
+
+.schedule-header-right {
+  display: flex;
+  gap: 10px;
+}
+
+.schedule-empty {
+  text-align: center;
+  padding: 80px 20px;
+  color: rgba(255,255,255,0.3);
+}
+
+.schedule-empty .btn { margin-top: 16px; }
+
+/* ── Match Cards ── */
+
+.match-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.match-card {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 14px;
+  padding: 0;
+  overflow: hidden;
+}
+
+.match-card-top {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 20px 24px;
+  flex-wrap: wrap;
+}
+
+.match-card-date {
+  text-align: center;
+  min-width: 70px;
+  flex-shrink: 0;
+}
+
+.match-date-day {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: rgba(255,255,255,0.45);
+}
+
+.match-date-num {
+  font-size: 1.5rem;
+  font-weight: 900;
+  color: #ccff00;
+  line-height: 1.2;
+}
+
+.match-date-time {
+  font-size: 0.75rem;
+  color: rgba(255,255,255,0.4);
+}
+
+.match-card-info {
+  flex: 1;
+  min-width: 150px;
+}
+
+.match-opponent {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 4px;
+}
+
+.match-location {
+  font-size: 0.85rem;
+  color: rgba(255,255,255,0.5);
+}
+
+.match-notes {
+  font-size: 0.8rem;
+  color: rgba(255,255,255,0.35);
+  font-style: italic;
+  margin-top: 4px;
+}
+
+.match-card-counts {
+  font-size: 0.82rem;
+  color: rgba(255,255,255,0.6);
+  white-space: nowrap;
+}
+
+.count-in { color: #86efac; }
+.count-out { color: #fca5a5; }
+.count-pending { color: rgba(255,255,255,0.35); }
+
+/* ── Availability Buttons ── */
+
+.match-card-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 24px;
+  background: rgba(0,0,0,0.15);
+  border-top: 1px solid rgba(255,255,255,0.06);
+  flex-wrap: wrap;
+}
+
+.avail-btn {
+  padding: 8px 16px;
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 8px;
+  background: rgba(255,255,255,0.06);
+  color: rgba(255,255,255,0.7);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+
+.avail-btn:hover {
+  background: rgba(255,255,255,0.12);
+  color: #fff;
+}
+
+.avail-btn-in.avail-btn-active {
+  background: rgba(34,197,94,0.2);
+  border-color: rgba(34,197,94,0.5);
+  color: #86efac;
+}
+
+.avail-btn-out.avail-btn-active {
+  background: rgba(239,68,68,0.2);
+  border-color: rgba(239,68,68,0.5);
+  color: #fca5a5;
+}
+
+.avail-message-wrap {
+  flex: 1;
+  min-width: 150px;
+}
+
+.avail-message-input {
+  width: 100%;
+  padding: 8px 12px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 8px;
+  color: #fff;
+  font-size: 0.85rem;
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.avail-message-input::placeholder {
+  color: rgba(255,255,255,0.25);
+}
+
+.avail-message-input:focus {
+  border-color: #ccff00;
+}
+
+/* ======================================================
+   Captain View / Availability Grid
+   ====================================================== */
+
+.captain-page {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 40px 24px 80px;
+}
+
+.captain-header h1 {
+  font-size: 2rem;
+  font-weight: 900;
+  letter-spacing: -1px;
+  margin-top: 8px;
+}
+
+.captain-sub {
+  font-size: 0.9rem;
+  color: rgba(255,255,255,0.45);
+  margin-top: 4px;
+}
+
+.captain-grid-wrap {
+  overflow-x: auto;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.1);
+  margin-top: 28px;
+}
+
+.captain-grid {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 500px;
+}
+
+.captain-grid th {
+  padding: 12px 14px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  color: rgba(255,255,255,0.45);
+  background: rgba(255,255,255,0.04);
+  text-align: center;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  white-space: nowrap;
+}
+
+.captain-grid-player {
+  text-align: left !important;
+  min-width: 140px;
+}
+
+.captain-grid-date {
+  min-width: 80px;
+}
+
+.captain-grid-counts {
+  font-size: 0.65rem;
+  margin-top: 4px;
+  font-weight: 400;
+}
+
+.captain-grid td {
+  padding: 10px 14px;
+  text-align: center;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  font-size: 1.1rem;
+}
+
+.captain-grid tbody tr:hover td {
+  background: rgba(255,255,255,0.03);
+}
+
+.captain-grid-player-name {
+  text-align: left !important;
+  font-weight: 600;
+  color: #fff;
+  font-size: 0.9rem !important;
+}
+
+.dot { cursor: default; }
+
+.dot-message {
+  font-size: 0.7rem;
+  color: rgba(255,255,255,0.4);
+  margin-top: 2px;
+  max-width: 100px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ── Form field input (for match form) ── */
+.field-input {
+  width: 100%;
+  padding: 10px 14px;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 8px;
+  color: #fff;
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.field-input:focus { border-color: #ccff00; }
+
+/* Color scheme fix for datetime-local input */
+input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+}
