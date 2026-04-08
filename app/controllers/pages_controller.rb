@@ -13,7 +13,7 @@ class PagesController < ApplicationController
   ].freeze
 
   def home
-    redirect_to "/courtreport.html", allow_other_host: true
+    render "courtreport", layout: false
   end
 
   def tennis
