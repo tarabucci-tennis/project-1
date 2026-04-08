@@ -19,6 +19,11 @@
       <% @user.errors.full_messages.each do |msg| %>
         <p><%= msg %></p>
       <% end %>
+      <% if @user.errors[:email]&.include?("has already been taken") %>
+        <p style="margin-top:8px;">
+          <a href="<%= login_path %>" style="color:var(--accent);font-weight:700;">Sign in to your existing account &rarr;</a>
+        </p>
+      <% end %>
     </div>
   <% end %>
 
@@ -42,13 +47,20 @@
     <div class="cr-field-row">
       <div class="cr-field">
         <%= f.label :password, "Password" %>
-        <%= f.password_field :password, placeholder: "6+ characters" %>
+        <div style="position:relative;">
+          <%= f.password_field :password, placeholder: "6+ characters", id: "password-field" %>
+          <button type="button" onclick="togglePassword('password-field', this)" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:1.1rem;color:var(--sub);" title="Show password">👁</button>
+        </div>
       </div>
       <div class="cr-field">
         <%= f.label :password_confirmation, "Confirm Password" %>
-        <%= f.password_field :password_confirmation %>
+        <div style="position:relative;">
+          <%= f.password_field :password_confirmation, id: "password-confirm-field" %>
+          <button type="button" onclick="togglePassword('password-confirm-field', this)" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:1.1rem;color:var(--sub);" title="Show password">👁</button>
+        </div>
       </div>
     </div>
+    <div id="password-match-msg" style="font-size:.78rem;margin-top:-8px;margin-bottom:12px;display:none;"></div>
     <div class="cr-field" style="margin-top:8px;">
       <%= f.submit "Create Account", class: "cr-btn", style: "width:100%;justify-content:center;" %>
     </div>
@@ -58,3 +70,40 @@
     Already have an account? <a href="<%= login_path %>" style="color:var(--accent);font-weight:600;">Sign In</a>
   </p>
 </div>
+
+<script>
+function togglePassword(fieldId, btn) {
+  var field = document.getElementById(fieldId);
+  if (field.type === "password") {
+    field.type = "text";
+    btn.textContent = "🙈";
+    btn.title = "Hide password";
+  } else {
+    field.type = "password";
+    btn.textContent = "👁";
+    btn.title = "Show password";
+  }
+}
+
+// Check passwords match
+var pw = document.getElementById("password-field");
+var pwc = document.getElementById("password-confirm-field");
+var msg = document.getElementById("password-match-msg");
+
+function checkMatch() {
+  if (pwc.value === "") { msg.style.display = "none"; return; }
+  msg.style.display = "block";
+  if (pw.value === pwc.value) {
+    msg.textContent = "Passwords match!";
+    msg.style.color = "var(--green)";
+  } else {
+    msg.textContent = "Passwords do not match";
+    msg.style.color = "var(--red)";
+  }
+}
+
+if (pw && pwc) {
+  pw.addEventListener("input", checkMatch);
+  pwc.addEventListener("input", checkMatch);
+}
+</script>

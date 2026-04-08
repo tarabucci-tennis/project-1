@@ -15,7 +15,10 @@
     </div>
     <div class="cr-field">
       <%= f.label :password, "Password" %>
-      <%= f.password_field :password, placeholder: "Your password" %>
+      <div style="position:relative;">
+        <%= f.password_field :password, placeholder: "Your password", id: "login-password" %>
+        <button type="button" onclick="togglePassword('login-password', this)" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:1.1rem;color:var(--sub);" title="Show password">👁</button>
+      </div>
     </div>
     <div class="cr-field" style="margin-top:8px;">
       <%= f.submit "Sign In", class: "cr-btn", style: "width:100%;justify-content:center;" %>
@@ -26,3 +29,18 @@
     Don't have an account? <a href="<%= signup_path %>" style="color:var(--accent);font-weight:600;">Sign Up</a>
   </p>
 </div>
+
+<script>
+function togglePassword(fieldId, btn) {
+  var field = document.getElementById(fieldId);
+  if (field.type === "password") {
+    field.type = "text";
+    btn.textContent = "🙈";
+    btn.title = "Hide password";
+  } else {
+    field.type = "password";
+    btn.textContent = "👁";
+    btn.title = "Show password";
+  }
+}
+</script>
