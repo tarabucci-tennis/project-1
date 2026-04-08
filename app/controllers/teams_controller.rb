@@ -1,7 +1,7 @@
 class TeamsController < ApplicationController
   before_action :require_login
-  before_action :set_team, only: [ :show, :edit, :update ]
-  before_action :require_captain, only: [ :edit, :update ]
+  before_action :set_team, only: [ :show, :edit, :update, :availability_grid ]
+  before_action :require_captain, only: [ :edit, :update, :availability_grid ]
 
   def index
     @my_teams = current_user.team_players.includes(team: :captain).map(&:team).uniq
@@ -36,6 +36,18 @@ class TeamsController < ApplicationController
       redirect_to team_path(@team), notice: "#{@team.name} created! Share your join link with your team."
     else
       render :new, status: :unprocessable_entity
+    end
+  end
+
+  def availability_grid
+    @matches = @team.scheduled_matches.upcoming.includes(:player_availabilities)
+    @players = @team.team_players.ordered.includes(:player_availabilities)
+    @avail_map = {}
+    @players.each do |player|
+      @avail_map[player.id] = {}
+      player.player_availabilities.each do |a|
+        @avail_map[player.id][a.scheduled_match_id] = a
+      end
     end
   end
 

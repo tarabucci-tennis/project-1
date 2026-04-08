@@ -1,0 +1,98 @@
+<% content_for(:title) { "Availability - #{@team.name}" } %>
+
+<p style="margin-bottom:16px;"><a href="<%= team_path(@team) %>" style="color:var(--accent);text-decoration:none;font-size:.85rem;">&larr; <%= @team.name %></a></p>
+
+<div class="cr-hero cr-hero-navy">
+  <div class="cr-hero-grid"></div><div class="cr-hero-glow"></div>
+  <div class="cr-hero-content">
+    <div class="cr-hero-tag"><%= @team.name %> · Captain View</div>
+    <div class="cr-hero-title">Availability</div>
+    <div class="cr-hero-sub"><%= @players.count %> players · <%= @matches.count %> upcoming matches</div>
+  </div>
+</div>
+
+<% if @matches.empty? %>
+  <div class="cr-card" style="text-align:center;padding:40px;">
+    <p>No upcoming matches.</p>
+  </div>
+<% else %>
+  <div style="overflow-x:auto;border:1px solid var(--border);border-radius:12px;background:var(--surface);">
+    <table style="width:100%;border-collapse:collapse;min-width:<%= 200 + @matches.count * 110 %>px;">
+      <thead>
+        <tr>
+          <th style="position:sticky;left:0;z-index:10;background:var(--off);padding:10px 14px;text-align:left;font-family:'JetBrains Mono',monospace;font-size:.58rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--sub);border-bottom:1px solid var(--border);min-width:180px;">Player</th>
+          <th style="background:var(--off);padding:10px 14px;text-align:left;font-family:'JetBrains Mono',monospace;font-size:.58rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--sub);border-bottom:1px solid var(--border);min-width:80px;">Stats</th>
+          <% @matches.each do |match| %>
+            <th style="background:var(--off);padding:10px 8px;text-align:center;border-bottom:1px solid var(--border);min-width:100px;">
+              <div style="font-family:'JetBrains Mono',monospace;font-size:.58rem;letter-spacing:1px;color:var(--sub);"><%= match.match_date.strftime("%-m/%-d") %></div>
+              <div style="font-size:.68rem;font-weight:700;color:var(--text);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100px;"><%= match.opponent_team.truncate(15) %></div>
+              <span style="font-size:.55rem;font-weight:700;padding:1px 6px;border-radius:3px;<%= match.home? ? 'background:#dbeafe;color:#1d4ed8;' : 'background:#fee2e2;color:#b91c1c;' %>"><%= match.home? ? 'H' : 'A' %></span>
+            </th>
+          <% end %>
+        </tr>
+        <!-- Available count row -->
+        <tr style="background:rgba(201,168,76,.04);">
+          <td style="position:sticky;left:0;z-index:10;background:rgba(201,168,76,.04);padding:8px 14px;font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:1px;color:var(--accent);font-weight:700;border-bottom:2px solid var(--accent);">AVAILABLE</td>
+          <td style="background:rgba(201,168,76,.04);border-bottom:2px solid var(--accent);"></td>
+          <% @matches.each do |match| %>
+            <% avail_count = match.player_availabilities.select { |a| a.status == "confirmed" }.count %>
+            <td style="background:rgba(201,168,76,.04);text-align:center;padding:8px;border-bottom:2px solid var(--accent);">
+              <span style="font-family:'Bebas Neue',sans-serif;font-size:1.1rem;color:<%= avail_count >= @team.spots_needed ? 'var(--green)' : (avail_count > 0 ? 'var(--accent)' : 'var(--red)') %>;"><%= avail_count %> of <%= @team.spots_needed %></span>
+            </td>
+          <% end %>
+        </tr>
+      </thead>
+      <tbody>
+        <% @players.each do |player| %>
+          <tr style="<%= player.captain? ? 'background:rgba(201,168,76,.03);' : '' %>">
+            <td style="position:sticky;left:0;z-index:10;background:var(--surface);padding:10px 14px;border-bottom:1px solid var(--border);">
+              <div style="display:flex;align-items:center;gap:10px;">
+                <div class="cr-avatar cr-avatar-blue" style="width:32px;height:32px;font-size:.7rem;flex-shrink:0;">
+                  <%= player.player_name.split.map(&:first).join.upcase[0..1] %>
+                </div>
+                <div>
+                  <a href="<%= team_player_stat_path(@team, player) %>" style="font-weight:700;font-size:.82rem;color:var(--text);text-decoration:none;">
+                    <%= player.player_name %>
+                  </a>
+                  <% if player.captain? %><span style="color:var(--accent);font-size:.65rem;font-weight:700;"> (C)</span><% end %>
+                  <% if player.user&.ntrp_rating %>
+                    <div style="font-family:'JetBrains Mono',monospace;font-size:.62rem;color:var(--sub);"><%= player.user.ntrp_rating %> NTRP</div>
+                  <% end %>
+                </div>
+              </div>
+            </td>
+            <td style="padding:8px 10px;border-bottom:1px solid var(--border);font-size:.68rem;color:var(--sub);white-space:nowrap;">
+              <div>Played 0 of 0</div>
+              <div>0 wins / 0 loss</div>
+              <% responded = @avail_map[player.id]&.values&.count { |a| a.status != "pending" } || 0 %>
+              <div>Avail <%= responded %> of <%= @matches.count %></div>
+            </td>
+            <% @matches.each do |match| %>
+              <% avail = @avail_map.dig(player.id, match.id) %>
+              <td style="text-align:center;padding:8px;border-bottom:1px solid var(--border);border-left:1px solid var(--border);">
+                <% case avail&.status %>
+                <% when "confirmed" %>
+                  <div style="padding:6px 8px;background:rgba(22,163,74,.1);border:1px solid rgba(22,163,74,.3);border-radius:6px;color:var(--green);font-size:.75rem;font-weight:700;">
+                    ✅ In
+                  </div>
+                <% when "unavailable" %>
+                  <div style="padding:6px 8px;background:rgba(220,38,38,.08);border:1px solid rgba(220,38,38,.25);border-radius:6px;color:var(--red);font-size:.75rem;font-weight:700;">
+                    ❌ Out
+                  </div>
+                <% when "custom" %>
+                  <div style="padding:6px 8px;background:rgba(217,119,6,.08);border:1px solid rgba(217,119,6,.25);border-radius:6px;color:#d97706;font-size:.72rem;font-weight:600;" title="<%= avail.message %>">
+                    💬 <%= avail.message.to_s.truncate(10) %>
+                  </div>
+                <% else %>
+                  <div style="padding:6px 8px;color:var(--sub);font-size:.75rem;">
+                    ?
+                  </div>
+                <% end %>
+              </td>
+            <% end %>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+<% end %>

@@ -19,6 +19,9 @@ Rails.application.routes.draw do
 
   # Teams with full CRUD
   resources :teams, only: [ :index, :show, :new, :create, :edit, :update ] do
+    member do
+      get :availability_grid
+    end
     # Player stats per team
     resources :player_stats, only: [ :show ]
 

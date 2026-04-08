@@ -20,6 +20,7 @@
 <!-- Captain Actions -->
 <% if @is_captain %>
   <div style="display:flex;gap:10px;margin-bottom:24px;flex-wrap:wrap;">
+    <a href="<%= availability_grid_team_path(@team) %>" class="cr-btn">📋 Availability Grid</a>
     <a href="<%= new_team_scheduled_match_path(@team) %>" class="cr-btn-outline">+ Add Match</a>
     <a href="<%= edit_team_path(@team) %>" class="cr-btn-outline">Edit Team</a>
     <% if current_user.super_admin? %>
