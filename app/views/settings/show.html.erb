@@ -1,0 +1,79 @@
+<div class="schedule-page">
+  <div class="schedule-header">
+    <h1>Settings</h1>
+  </div>
+
+  <!-- Notification Preferences -->
+  <div class="profile-section">
+    <h2 class="section-title">Notification Preferences</h2>
+
+    <div class="settings-card">
+      <p class="settings-desc">How would you like to be notified when players update their availability?</p>
+
+      <div class="notif-pref-options">
+        <%= button_to notification_preference_path, method: :patch,
+              params: { preference: "every_update" },
+              class: "notif-pref-btn #{'notif-pref-active' if @user.notify_every_update?}" do %>
+          <span class="notif-pref-icon">&#x1F514;</span>
+          <div>
+            <span class="notif-pref-label">Notify me for every update</span>
+            <span class="notif-pref-desc">Get an email each time a player responds</span>
+          </div>
+        <% end %>
+
+        <%= button_to notification_preference_path, method: :patch,
+              params: { preference: "count_only" },
+              class: "notif-pref-btn #{'notif-pref-active' if @user.notify_count_only?}" do %>
+          <span class="notif-pref-icon">&#x1F4CA;</span>
+          <div>
+            <span class="notif-pref-label">Just show me the count</span>
+            <span class="notif-pref-desc">I'll check when I'm ready</span>
+          </div>
+        <% end %>
+
+        <%= button_to notification_preference_path, method: :patch,
+              params: { preference: "none" },
+              class: "notif-pref-btn #{'notif-pref-active' if @user.notifications_off?}" do %>
+          <span class="notif-pref-icon">&#x1F515;</span>
+          <div>
+            <span class="notif-pref-label">No notifications</span>
+            <span class="notif-pref-desc">I'll manage it myself</span>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <!-- Recent Notifications -->
+  <% if @notifications.any? %>
+    <div class="profile-section">
+      <div class="settings-notif-header">
+        <h2 class="section-title">Recent Notifications</h2>
+        <% if @unread_count > 0 %>
+          <%= button_to "Mark all read", mark_notifications_read_path, method: :patch, class: "btn btn-sm btn-secondary" %>
+        <% end %>
+      </div>
+
+      <div class="notif-list">
+        <% @notifications.each do |notif| %>
+          <div class="notif-item <%= 'notif-unread' unless notif.read? %>">
+            <span class="notif-event-icon"><%= notif.event_icon %></span>
+            <div class="notif-content">
+              <span class="notif-text">
+                <strong><%= notif.team_player.display_name %></strong>
+                <%= notif.event_label %>
+                for <strong><%= notif.scheduled_match.team.name %></strong>
+                vs. <%= notif.scheduled_match.opponent_team %>
+                (<%= notif.scheduled_match.match_date.strftime("%b %-d") %>)
+              </span>
+              <% if notif.message.present? %>
+                <span class="notif-msg">"<%= notif.message %>"</span>
+              <% end %>
+              <span class="notif-time"><%= time_ago_in_words(notif.created_at) %> ago</span>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+</div>

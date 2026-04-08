@@ -1,0 +1,22 @@
+<h2>Availability Update</h2>
+
+<p>
+  <strong><%= @player.display_name %></strong>
+  <%= @notification.event_label %>
+  for <strong><%= @team.name %></strong> vs. <%= @match.opponent_team %>
+  on <%= @match.match_date.strftime("%A, %B %-d, %Y") %>.
+</p>
+
+<% if @notification.message.present? %>
+  <p>Message: "<%= @notification.message %>"</p>
+<% end %>
+
+<p>
+  Currently <strong><%= @match.available_count %></strong> players available
+  (<%= @match.response_count %> of <%= @team.roster_count %> responded).
+</p>
+
+<p style="margin-top: 20px; color: #666; font-size: 0.85em;">
+  You're receiving this because your notification preference is set to "Notify me for every update."
+  You can change this anytime in your Settings.
+</p>

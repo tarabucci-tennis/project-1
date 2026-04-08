@@ -40,6 +40,12 @@
           <% if current_user.admin? %>
             <%= link_to "Players", users_path, class: "nav-link" %>
           <% end %>
+          <%= link_to settings_path, class: "nav-notif-link" do %>
+            <span class="nav-notif-icon">&#x2699;&#xFE0F;</span>
+            <% if current_user.unread_notifications_count > 0 %>
+              <span class="nav-notif-badge"><%= current_user.unread_notifications_count %></span>
+            <% end %>
+          <% end %>
           <%= link_to current_user.name, profile_path, class: "nav-user" %>
           <%= button_to "Sign Out", session_path, method: :delete, class: "btn btn-sm" %>
         <% else %>

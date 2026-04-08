@@ -729,6 +729,219 @@ h1 {
 }
 
 /* ======================================================
+   Notification Preference Prompt
+   ====================================================== */
+
+.notif-prompt {
+  background: rgba(204,255,0,0.06);
+  border: 1px solid rgba(204,255,0,0.25);
+  border-radius: 16px;
+  padding: 28px;
+  margin-bottom: 28px;
+  animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.notif-prompt-header h3 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 16px;
+}
+
+.notif-prompt-options {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.notif-option {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  flex: 1;
+  min-width: 160px;
+  padding: 20px 16px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 12px;
+  color: #fff;
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.15s;
+}
+
+.notif-option:hover {
+  background: rgba(255,255,255,0.12);
+  border-color: rgba(204,255,0,0.3);
+  transform: translateY(-2px);
+}
+
+.notif-option-icon { font-size: 1.8rem; }
+
+.notif-option-label {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.notif-option-desc {
+  font-size: 0.75rem;
+  color: rgba(255,255,255,0.45);
+}
+
+/* ======================================================
+   Settings Page
+   ====================================================== */
+
+.settings-card {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 14px;
+  padding: 24px;
+}
+
+.settings-desc {
+  font-size: 0.9rem;
+  color: rgba(255,255,255,0.6);
+  margin-bottom: 16px;
+}
+
+.notif-pref-options {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.notif-pref-btn {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+  padding: 16px 20px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 12px;
+  color: #fff;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.15s;
+}
+
+.notif-pref-btn:hover {
+  background: rgba(255,255,255,0.1);
+}
+
+.notif-pref-active {
+  background: rgba(204,255,0,0.08);
+  border-color: rgba(204,255,0,0.35);
+}
+
+.notif-pref-icon { font-size: 1.5rem; flex-shrink: 0; }
+
+.notif-pref-label {
+  display: block;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.notif-pref-desc {
+  display: block;
+  font-size: 0.78rem;
+  color: rgba(255,255,255,0.4);
+  margin-top: 2px;
+}
+
+/* ── Notification List ── */
+.settings-notif-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.settings-notif-header .section-title { margin-bottom: 0; }
+
+.notif-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.notif-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 16px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 10px;
+}
+
+.notif-unread {
+  background: rgba(204,255,0,0.04);
+  border-color: rgba(204,255,0,0.15);
+}
+
+.notif-event-icon { font-size: 1.1rem; flex-shrink: 0; margin-top: 2px; }
+
+.notif-content { flex: 1; }
+
+.notif-text {
+  font-size: 0.88rem;
+  color: rgba(255,255,255,0.8);
+  line-height: 1.4;
+}
+
+.notif-msg {
+  display: block;
+  font-size: 0.82rem;
+  color: #fde68a;
+  font-style: italic;
+  margin-top: 4px;
+}
+
+.notif-time {
+  display: block;
+  font-size: 0.72rem;
+  color: rgba(255,255,255,0.3);
+  margin-top: 4px;
+}
+
+/* ── Navbar Notification Badge ── */
+.nav-notif-link {
+  position: relative;
+  text-decoration: none;
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.nav-notif-icon { font-size: 1rem; }
+
+.nav-notif-badge {
+  position: absolute;
+  top: -6px;
+  right: -8px;
+  background: #ff4444;
+  color: #fff;
+  font-size: 0.6rem;
+  font-weight: 800;
+  min-width: 16px;
+  height: 16px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 4px;
+}
+
+/* ======================================================
    Teams & Schedule Pages
    ====================================================== */
 

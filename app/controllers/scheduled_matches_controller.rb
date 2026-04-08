@@ -35,6 +35,8 @@ class ScheduledMatchesController < ApplicationController
     avail.message = params[:message] if params[:status] == "custom"
     avail.save!
 
+    notify_captain(player, avail)
+
     redirect_to team_scheduled_match_path(@team, @match), notice: "Availability updated!"
   end
 
@@ -50,5 +52,22 @@ class ScheduledMatchesController < ApplicationController
 
   def set_match
     @match = @team.scheduled_matches.find(params[:id])
+  end
+
+  def notify_captain(player, avail)
+    captain = @team.captain
+    return if captain.notifications_off?
+    return if captain.id == current_user&.id # don't notify yourself
+
+    notification = captain.captain_notifications.create!(
+      scheduled_match: @match,
+      team_player: player,
+      event_type: avail.status == "custom" ? "custom" : avail.status,
+      message: avail.message
+    )
+
+    if captain.notify_every_update? && captain.email.present?
+      CaptainMailer.availability_update(captain, notification).deliver_later
+    end
   end
 end

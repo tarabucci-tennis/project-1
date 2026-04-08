@@ -30,6 +30,11 @@ Rails.application.routes.draw do
     end
   end
 
+  # Settings & Notifications
+  get  "settings", to: "settings#show", as: :settings
+  patch "settings/notification_preference", to: "settings#update_notification_preference", as: :notification_preference
+  patch "settings/mark_notifications_read", to: "settings#mark_notifications_read", as: :mark_notifications_read
+
   # Defines the root path route ("/")
   root "pages#home"
 end

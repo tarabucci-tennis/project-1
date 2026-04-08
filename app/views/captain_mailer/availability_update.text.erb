@@ -1,0 +1,13 @@
+Availability Update
+===================
+
+<%= @player.display_name %> <%= @notification.event_label %> for <%= @team.name %> vs. <%= @match.opponent_team %> on <%= @match.match_date.strftime("%A, %B %-d, %Y") %>.
+<% if @notification.message.present? %>
+Message: "<%= @notification.message %>"
+<% end %>
+
+Currently <%= @match.available_count %> players available (<%= @match.response_count %> of <%= @team.roster_count %> responded).
+
+---
+You're receiving this because your notification preference is set to "Notify me for every update."
+You can change this anytime in your Settings.

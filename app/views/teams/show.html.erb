@@ -1,4 +1,36 @@
 <div class="schedule-page">
+  <!-- Notification preference prompt (shown once for captains) -->
+  <% if current_user&.admin? && !current_user.notification_preference_set? && @team.captain_id == current_user.id %>
+    <div class="notif-prompt" id="notif-prompt">
+      <div class="notif-prompt-header">
+        <h3>How would you like to be notified when players update their availability?</h3>
+      </div>
+      <div class="notif-prompt-options">
+        <%= button_to notification_preference_path, method: :patch,
+              params: { preference: "every_update" },
+              class: "notif-option" do %>
+          <span class="notif-option-icon">&#x1F514;</span>
+          <span class="notif-option-label">Notify me for every update</span>
+          <span class="notif-option-desc">Get an email each time a player responds</span>
+        <% end %>
+        <%= button_to notification_preference_path, method: :patch,
+              params: { preference: "count_only" },
+              class: "notif-option" do %>
+          <span class="notif-option-icon">&#x1F4CA;</span>
+          <span class="notif-option-label">Just show me the count</span>
+          <span class="notif-option-desc">I'll check when I'm ready</span>
+        <% end %>
+        <%= button_to notification_preference_path, method: :patch,
+              params: { preference: "none" },
+              class: "notif-option" do %>
+          <span class="notif-option-icon">&#x1F515;</span>
+          <span class="notif-option-label">No notifications</span>
+          <span class="notif-option-desc">I'll manage it myself</span>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+
   <div class="schedule-header">
     <div class="schedule-header-top">
       <%= link_to "&larr; Teams".html_safe, teams_path, class: "back-link" %>
