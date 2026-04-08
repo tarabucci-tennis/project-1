@@ -13,7 +13,7 @@ class PagesController < ApplicationController
   ].freeze
 
   def home
-    render file: Rails.root.join("public", "courtreport.html"), layout: false
+    redirect_to "/courtreport.html", allow_other_host: true
   end
 
   def tennis
