@@ -1,33 +1,31 @@
 <% content_for(:title) { "Sign In - Court Report" } %>
-<div class="cr-hero cr-hero-navy" style="margin-top:24px;">
-  <div class="cr-hero-grid"></div><div class="cr-hero-glow"></div>
-  <div class="cr-hero-content" style="text-align:center;">
-    <div class="cr-hero-title">Sign In</div>
-    <div class="cr-hero-sub">Welcome back to Court Report</div>
-  </div>
-</div>
 
-<div class="cr-form" style="margin:0 auto;">
+<div style="max-width:400px;margin:60px auto;padding:0 24px;">
+
+  <div style="text-align:center;margin-bottom:40px;">
+    <div style="font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:4px;color:var(--text);">Welcome Back</div>
+  </div>
+
   <%= form_with url: session_path, method: :post do |f| %>
-    <div class="cr-field">
-      <%= f.label :email, "Email" %>
-      <%= f.email_field :email, placeholder: "tara@example.com", autofocus: true %>
+    <div style="margin-bottom:20px;">
+      <label style="display:block;font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:2px;text-transform:uppercase;color:var(--sub);margin-bottom:6px;">Email Address</label>
+      <%= f.email_field :email, placeholder: "you@example.com", autofocus: true, style: "width:100%;padding:14px 16px;background:#fff;border:1px solid var(--border);border-radius:10px;font-family:'Inter',sans-serif;font-size:.92rem;color:var(--text);outline:none;" %>
     </div>
-    <div class="cr-field">
-      <%= f.label :password, "Password" %>
+    <div style="margin-bottom:24px;">
+      <label style="display:block;font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:2px;text-transform:uppercase;color:var(--sub);margin-bottom:6px;">Password</label>
       <div style="position:relative;">
-        <%= f.password_field :password, placeholder: "Your password", id: "login-password" %>
-        <button type="button" onclick="togglePassword('login-password', this)" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:1.1rem;color:var(--sub);" title="Show password">👁</button>
+        <%= f.password_field :password, placeholder: "Your password", id: "login-password", style: "width:100%;padding:14px 16px;padding-right:44px;background:#fff;border:1px solid var(--border);border-radius:10px;font-family:'Inter',sans-serif;font-size:.92rem;color:var(--text);outline:none;" %>
+        <button type="button" onclick="togglePassword('login-password', this)" style="position:absolute;right:14px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:1.1rem;color:var(--sub);padding:0;" title="Show password">👁</button>
       </div>
     </div>
-    <div class="cr-field" style="margin-top:8px;">
-      <%= f.submit "Sign In", class: "cr-btn", style: "width:100%;justify-content:center;" %>
-    </div>
+    <%= f.submit "Sign In", style: "width:100%;padding:14px;background:linear-gradient(135deg,var(--accent),var(--accent2));color:var(--navy);font-family:'Inter',sans-serif;font-size:.95rem;font-weight:700;border:none;border-radius:10px;cursor:pointer;letter-spacing:.3px;" %>
   <% end %>
 
-  <p style="text-align:center;margin-top:16px;font-size:.85rem;color:var(--sub);">
-    Don't have an account? <a href="<%= signup_path %>" style="color:var(--accent);font-weight:600;">Sign Up</a>
-  </p>
+  <div style="text-align:center;margin-top:28px;display:flex;flex-direction:column;gap:10px;">
+    <a href="<%= signup_path %>" style="font-size:.82rem;color:var(--sub);text-decoration:none;">First time? <span style="color:var(--accent);font-weight:600;">Request your password</span></a>
+    <a href="#" style="font-size:.82rem;color:var(--sub);text-decoration:none;">Forgot password? <span style="color:var(--accent);font-weight:600;">Retrieve it here</span></a>
+  </div>
+
 </div>
 
 <script>
