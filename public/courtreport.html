@@ -2,294 +2,308 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <meta name="apple-mobile-web-app-capable" content="yes"/>
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
 <meta name="theme-color" content="#060f1e"/>
 <title>Court Report</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
-:root{--navy:#060f1e;--blue:#0a2240;--cobalt:#0e3d6e;--accent:#c9a84c;--accent2:#f0cc6e;--white:#fff;--off:#f7f9fc;--surface:#fff;--green:#16a34a;--red:#dc2626;--wa:#25D366;--text:#0a0f1a;--sub:#64748b;--border:#e2e8f0;--pur:#3b0764;--pur2:#6d28d9;}
-html,body{height:100%;overflow:hidden;}
-body{font-family:'Inter',sans-serif;background:var(--off);color:var(--text);display:flex;flex-direction:column;-webkit-font-smoothing:antialiased;}
-@keyframes fu{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+:root{--navy:#060f1e;--blue:#0a2240;--cobalt:#0e3d6e;--accent:#c9a84c;--accent2:#f0cc6e;--white:#fff;--off:#f7f9fc;--surface:#fff;--green:#16a34a;--red:#dc2626;--text:#0a0f1a;--sub:#64748b;--border:#e2e8f0;--pur:#3b0764;--pur2:#6d28d9;}
+body{font-family:'Inter',sans-serif;background:var(--off);color:var(--text);-webkit-font-smoothing:antialiased;}
 @keyframes glow{0%,100%{box-shadow:0 0 0 0 rgba(201,168,76,.4)}50%{box-shadow:0 0 0 8px rgba(201,168,76,0)}}
+@keyframes fu{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 @keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
 .fu{animation:fu .35s cubic-bezier(.22,1,.36,1) both;}
-.app-header{background:var(--navy);padding:env(safe-area-inset-top) 0 0;flex-shrink:0;z-index:100;}
-.header-inner{display:flex;align-items:center;justify-content:space-between;padding:14px 18px 0;}
-.logo{display:flex;align-items:center;gap:10px;}
-.logo-mark{width:36px;height:36px;background:linear-gradient(135deg,var(--accent),var(--accent2));border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;animation:glow 3s ease infinite;flex-shrink:0;}
-.logo-name{font-family:'Bebas Neue',sans-serif;font-size:1.8rem;letter-spacing:4px;color:var(--white);}
+.app-header{background:var(--navy);position:sticky;top:0;z-index:200;box-shadow:0 2px 20px rgba(0,0,0,.3);}
+.header-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:16px 32px;}
+.logo{display:flex;align-items:center;gap:12px;}
+.logo-mark{width:42px;height:42px;background:linear-gradient(135deg,var(--accent),var(--accent2));border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;animation:glow 3s ease infinite;box-shadow:0 3px 14px rgba(201,168,76,.4);}
+.logo-name{font-family:'Bebas Neue',sans-serif;font-size:2.2rem;letter-spacing:5px;color:var(--white);}
 .logo-name span{color:var(--accent);}
-.header-search-btn{width:36px;height:36px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1rem;cursor:pointer;color:rgba(255,255,255,.6);}
-.team-tabs{display:flex;padding:12px 18px 0;gap:6px;}
-.team-tab{flex:1;padding:9px 0;border:none;background:rgba(255,255,255,.06);color:rgba(255,255,255,.4);font-family:'Inter',sans-serif;font-size:.78rem;font-weight:600;cursor:pointer;transition:all .2s;border-radius:8px 8px 0 0;letter-spacing:.5px;text-transform:uppercase;border-bottom:2px solid transparent;}
-.team-tab.active{background:rgba(255,255,255,.12);color:var(--accent);border-bottom-color:var(--accent);}
-.app-content{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:80px;}
-.team-hero{padding:22px 18px 18px;position:relative;overflow:hidden;color:var(--white);}
+.season-pill{font-family:'JetBrains Mono',monospace;font-size:.65rem;letter-spacing:2px;color:rgba(255,255,255,.35);border:1px solid rgba(255,255,255,.1);padding:5px 14px;border-radius:20px;}
+.search-btn{width:38px;height:38px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1rem;cursor:pointer;color:rgba(255,255,255,.6);}
+.team-tabs-wrap{background:var(--navy);border-bottom:1px solid rgba(255,255,255,.06);}
+.team-tabs{max-width:1200px;margin:0 auto;display:flex;padding:0 32px;}
+.team-tab{padding:12px 28px;border:none;background:none;color:rgba(255,255,255,.35);font-family:'Inter',sans-serif;font-size:.82rem;font-weight:600;cursor:pointer;transition:all .2s;border-bottom:2px solid transparent;letter-spacing:.8px;text-transform:uppercase;}
+.team-tab:hover{color:rgba(255,255,255,.7);}
+.team-tab.active{color:var(--accent);border-bottom-color:var(--accent);}
+.app-body{max-width:1200px;margin:0 auto;width:100%;padding:0 32px;}
+.desktop-nav{display:flex;background:var(--surface);border-bottom:2px solid var(--border);margin-bottom:24px;border-radius:12px 12px 0 0;overflow:hidden;}
+.dnav-btn{flex:1;padding:14px 10px;border:none;background:none;font-family:'Inter',sans-serif;font-size:.82rem;font-weight:600;color:var(--sub);cursor:pointer;transition:all .18s;border-bottom:3px solid transparent;display:flex;align-items:center;justify-content:center;gap:6px;}
+.dnav-btn:hover{color:var(--cobalt);background:var(--off);}
+.dnav-btn.active{color:var(--blue);border-bottom-color:var(--accent);}
+.team-hero{padding:40px 40px 36px;color:var(--white);position:relative;overflow:hidden;border-radius:16px;margin:24px 0 0;}
 .th-fri{background:linear-gradient(150deg,#060f1e,#0a2240 50%,#0e3d6e);}
 .th-tue{background:linear-gradient(150deg,#0f0620,#1e0840 50%,#3b0764);}
-.th-grid{position:absolute;inset:0;pointer-events:none;background-image:linear-gradient(rgba(255,255,255,.018) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.018) 1px,transparent 1px);background-size:32px 32px;}
+.th-grid{position:absolute;inset:0;pointer-events:none;background-image:linear-gradient(rgba(255,255,255,.018) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.018) 1px,transparent 1px);background-size:40px 40px;}
 .th-glow{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at 80% 40%,rgba(201,168,76,.08),transparent 65%);}
-.th-content{position:relative;}
-.th-tag{font-family:'JetBrains Mono',monospace;font-size:.58rem;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:8px;display:flex;align-items:center;gap:6px;}
-.th-tag::before{content:'';width:12px;height:1px;background:var(--accent);}
-.th-name{font-family:'Bebas Neue',sans-serif;font-size:2.2rem;letter-spacing:4px;line-height:1;color:var(--white);margin-bottom:4px;}
-.th-sub{font-size:.75rem;color:rgba(255,255,255,.4);margin-bottom:18px;}
+.th-content{position:relative;display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:24px;}
+.th-tag{font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:10px;display:flex;align-items:center;gap:8px;}
+.th-tag::before{content:'';width:16px;height:1px;background:var(--accent);}
+.th-name{font-family:'Bebas Neue',sans-serif;font-size:3rem;letter-spacing:5px;line-height:1;color:var(--white);margin-bottom:6px;}
+.th-sub{font-size:.84rem;color:rgba(255,255,255,.4);}
 .th-stats{display:flex;gap:0;}
-.th-stat{flex:1;padding-right:12px;margin-right:12px;border-right:1px solid rgba(255,255,255,.1);}
-.th-stat:last-child{border-right:none;}
-.th-sv{font-family:'Bebas Neue',sans-serif;font-size:1.8rem;letter-spacing:2px;line-height:1;}
-.th-sv.gold{color:var(--accent);}.th-sv.green{color:#4ade80;}.th-sv.soft-red{color:#f87171;}
-.th-sl{font-family:'JetBrains Mono',monospace;font-size:.52rem;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.35);margin-top:3px;}
-.quick-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;padding:14px 18px;}
-.qs{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 10px;text-align:center;position:relative;overflow:hidden;}
+.th-stat{padding:0 28px 0 0;margin-right:28px;border-right:1px solid rgba(255,255,255,.1);}
+.th-stat:last-child{border-right:none;margin-right:0;padding-right:0;}
+.th-sv{font-family:'Bebas Neue',sans-serif;font-size:2.2rem;letter-spacing:2px;line-height:1;}
+.th-sv.gold{color:var(--accent);}
+.th-sl{font-family:'JetBrains Mono',monospace;font-size:.58rem;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.35);margin-top:4px;}
+.quick-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin:20px 0;}
+.qs{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px;text-align:center;position:relative;overflow:hidden;}
 .qs::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--accent),var(--accent2));}
-.qs-val{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:1px;color:var(--text);line-height:1;}
-.qs-val.green{color:var(--green)}.qs-val.gold{color:var(--accent)}.qs-val.red{color:var(--red)}
-.qs-label{font-family:'JetBrains Mono',monospace;font-size:.52rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--sub);margin-top:3px;}
-.section{padding:6px 18px 16px;}
-.sec-head{display:flex;align-items:center;margin-bottom:12px;}
-.sec-title{font-family:'Bebas Neue',sans-serif;font-size:.92rem;letter-spacing:3px;color:var(--text);}
-.sec-line{flex:1;height:1px;background:var(--border);margin-left:12px;}
-.sched-list{display:flex;flex-direction:column;gap:9px;}
-.sched-card{background:var(--surface);border:1px solid var(--border);border-radius:11px;padding:13px 15px;display:flex;align-items:center;gap:13px;}
-.sdate{background:var(--navy);color:var(--white);border-radius:8px;padding:7px 9px;text-align:center;flex-shrink:0;min-width:44px;}
-.sd-mon{font-family:'JetBrains Mono',monospace;font-size:.5rem;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:1px;}
-.sd-day{font-family:'Bebas Neue',sans-serif;font-size:1.4rem;letter-spacing:1px;line-height:1;}
-.sinfo{flex:1;min-width:0;}
-.sopp{font-weight:700;font-size:.86rem;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.smeta{font-size:.7rem;color:var(--sub);}
-.stime{font-family:'JetBrains Mono',monospace;font-size:.72rem;font-weight:600;color:var(--cobalt);white-space:nowrap;}
-.loc-home{font-size:.6rem;font-weight:700;padding:2px 7px;border-radius:4px;background:#dbeafe;color:#1d4ed8;white-space:nowrap;}
-.loc-away{font-size:.6rem;font-weight:700;padding:2px 7px;border-radius:4px;background:#fee2e2;color:#b91c1c;white-space:nowrap;}
-.matches{display:flex;flex-direction:column;gap:8px;}
-.mc{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 14px;display:flex;align-items:center;gap:11px;border-left:3px solid var(--border);}
-.mc.win{border-left-color:var(--green)}.mc.loss{border-left-color:var(--red)}
-.mc-badge{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.7rem;flex-shrink:0;}
-.mc-badge.w{background:#dcfce7;color:#15803d}.mc-badge.l{background:#fee2e2;color:#b91c1c}
-.mc-info{flex:1;min-width:0;}
-.mc-opp{font-weight:600;font-size:.84rem;margin-bottom:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.mc-meta{font-size:.68rem;color:var(--sub);}
-.mc-score{font-family:'JetBrains Mono',monospace;font-size:.82rem;font-weight:600;text-align:right;flex-shrink:0;}
-.mc-date{font-family:'JetBrains Mono',monospace;font-size:.62rem;color:var(--sub);text-align:right;flex-shrink:0;margin-left:6px;}
+.qs-val{font-family:'Bebas Neue',sans-serif;font-size:2rem;letter-spacing:1px;color:var(--text);line-height:1;}
+.qs-val.gold{color:var(--accent)}
+.qs-label{font-family:'JetBrains Mono',monospace;font-size:.56rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--sub);margin-top:4px;}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:32px;}
+.one-col{margin-bottom:32px;}
+.sec-head{display:flex;align-items:center;margin-bottom:14px;}
+.sec-title{font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:3px;color:var(--text);}
+.sec-line{flex:1;height:1px;background:var(--border);margin-left:14px;}
+.sched-list{display:flex;flex-direction:column;gap:10px;}
+.sched-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px 18px;display:flex;align-items:center;gap:14px;transition:box-shadow .2s,transform .2s;}
+.sched-card:hover{box-shadow:0 4px 16px rgba(0,0,0,.07);transform:translateY(-1px);}
+.sdate{background:var(--navy);color:var(--white);border-radius:8px;padding:8px 10px;text-align:center;flex-shrink:0;min-width:48px;}
+.sd-mon{font-family:'JetBrains Mono',monospace;font-size:.52rem;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:1px;}
+.sd-day{font-family:'Bebas Neue',sans-serif;font-size:1.5rem;letter-spacing:1px;line-height:1;}
+.sinfo{flex:1;}
+.sopp{font-weight:700;font-size:.9rem;margin-bottom:2px;}
+.smeta{font-size:.72rem;color:var(--sub);}
+.loc-home{font-size:.62rem;font-weight:700;padding:2px 8px;border-radius:5px;background:#dbeafe;color:#1d4ed8;white-space:nowrap;flex-shrink:0;}
+.loc-away{font-size:.62rem;font-weight:700;padding:2px 8px;border-radius:5px;background:#fee2e2;color:#b91c1c;white-space:nowrap;flex-shrink:0;}
+.no-results{text-align:center;padding:40px 24px;color:var(--sub);font-size:.9rem;background:var(--surface);border:1px solid var(--border);border-radius:12px;line-height:1.8;}
 .stand-table{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;}
-.stand-head{padding:11px 14px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;background:var(--off);}
-.stand-title{font-family:'Bebas Neue',sans-serif;font-size:.85rem;letter-spacing:2px;color:var(--text);}
-.stand-sub{font-family:'JetBrains Mono',monospace;font-size:.62rem;color:var(--sub);}
+.stand-head{padding:12px 18px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;background:var(--off);}
+.stand-title{font-family:'Bebas Neue',sans-serif;font-size:.88rem;letter-spacing:2px;color:var(--text);}
+.stand-sub{font-family:'JetBrains Mono',monospace;font-size:.64rem;color:var(--sub);}
 table{width:100%;border-collapse:collapse;}
-th{font-family:'JetBrains Mono',monospace;font-size:.54rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--sub);padding:8px 12px;text-align:left;background:var(--off);border-bottom:1px solid var(--border);}
-td{padding:10px 12px;font-size:.82rem;border-bottom:1px solid var(--border);vertical-align:middle;}
+th{font-family:'JetBrains Mono',monospace;font-size:.58rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--sub);padding:9px 14px;text-align:left;background:var(--off);border-bottom:1px solid var(--border);}
+td{padding:11px 14px;font-size:.85rem;border-bottom:1px solid var(--border);vertical-align:middle;}
 tr:last-child td{border-bottom:none;}
+tr:hover td{background:rgba(201,168,76,.03);}
 .us-row td{background:rgba(201,168,76,.06);}
-.rank-c{font-family:'Bebas Neue',sans-serif;font-size:1rem;color:var(--sub);}
-.rank-c.r1{color:#c9a84c}.rank-c.r2{color:#94a3b8}.rank-c.r3{color:#a0673a}
-.bold-c{font-weight:700;}.mono-c{font-family:'JetBrains Mono',monospace;font-size:.75rem;}
-.cg{color:var(--green)}.ca{color:#d97706}.cr{color:var(--red)}
-.roster-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;}
-.rcard{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px 12px;text-align:center;cursor:pointer;transition:transform .15s,box-shadow .15s;position:relative;}
-.rcard:active{transform:scale(.97);}
-.rcard.captain::after{content:'C';position:absolute;top:8px;right:8px;width:18px;height:18px;background:var(--accent);color:var(--navy);border-radius:50%;font-size:.62rem;font-weight:700;display:flex;align-items:center;justify-content:center;}
-.rav{width:56px;height:56px;border-radius:50%;margin:0 auto 10px;display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:1px;color:#fff;overflow:hidden;flex-shrink:0;}
+.rank-c{font-family:'Bebas Neue',sans-serif;font-size:1.05rem;color:var(--sub);}
+.bold-c{font-weight:700;}.mono-c{font-family:'JetBrains Mono',monospace;font-size:.78rem;}
+.roster-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(175px,1fr));gap:14px;}
+.rcard{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:22px 16px;text-align:center;cursor:pointer;transition:transform .2s,box-shadow .2s;position:relative;}
+.rcard:hover{transform:translateY(-4px);box-shadow:0 12px 28px rgba(0,0,0,.1);}
+.rcard.cap::after{content:'C';position:absolute;top:10px;right:10px;width:20px;height:20px;background:var(--accent);color:var(--navy);border-radius:50%;font-size:.65rem;font-weight:700;display:flex;align-items:center;justify-content:center;}
+.rav{width:56px;height:56px;border-radius:50%;margin:0 auto 11px;display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:1.1rem;color:#fff;overflow:hidden;}
 .rav img{width:100%;height:100%;object-fit:cover;border-radius:50%;}
-.rav.blue{background:linear-gradient(135deg,var(--cobalt),var(--blue));}
-.rav.you{background:linear-gradient(135deg,#8b6914,var(--accent));color:var(--navy);}
-.rav.pur{background:linear-gradient(135deg,var(--pur),var(--pur2));}
-.rname{font-weight:700;font-size:.85rem;margin-bottom:2px;line-height:1.2;}
-.rntrp{font-family:'JetBrains Mono',monospace;font-size:.68rem;color:var(--sub);margin-bottom:6px;}
-.rbio{font-size:.72rem;color:var(--sub);line-height:1.5;margin-top:4px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
-.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:500;display:none;align-items:flex-end;animation:fadeIn .2s ease;}
-.modal-overlay.open{display:flex;}
-.modal{background:var(--surface);border-radius:20px 20px 0 0;width:100%;max-height:90vh;overflow-y:auto;padding-bottom:env(safe-area-inset-bottom);animation:slideUp .25s cubic-bezier(.22,1,.36,1);}
+.rav.blue{background:linear-gradient(135deg,var(--cobalt),var(--blue));box-shadow:0 4px 12px rgba(14,61,110,.28);}
+.rav.you{background:linear-gradient(135deg,#8b6914,var(--accent));color:var(--navy);box-shadow:0 4px 12px rgba(201,168,76,.38);}
+.rav.pur{background:linear-gradient(135deg,var(--pur),var(--pur2));box-shadow:0 4px 12px rgba(91,18,160,.28);}
+.rname{font-weight:700;font-size:.88rem;margin-bottom:2px;}
+.rntrp{font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--sub);}
+.wa-section{display:flex;flex-direction:column;align-items:center;text-align:center;padding:48px 20px;gap:16px;}
+.wa-icon{font-size:3.5rem;}
+.wa-title{font-family:'Bebas Neue',sans-serif;font-size:2.2rem;letter-spacing:4px;}
+.wa-sub{font-size:.9rem;color:var(--sub);max-width:380px;line-height:1.7;}
+.wa-btn{display:flex;align-items:center;gap:14px;padding:16px 24px;border-radius:12px;background:#f0fdf4;border:1px solid #86efac;text-decoration:none;color:#15803d;font-weight:700;font-size:.9rem;width:100%;max-width:360px;margin-top:8px;transition:all .2s;}
+.wa-btn:hover{background:#dcfce7;}
+.wa-btn-sub{font-size:.74rem;color:#4ade80;font-weight:400;margin-top:1px;}
+.mobile-nav{display:none;position:fixed;bottom:0;left:0;right:0;background:var(--navy);border-top:1px solid rgba(255,255,255,.08);padding:0 0 env(safe-area-inset-bottom);z-index:200;}
+.mobile-nav-inner{display:flex;}
+.bnav-btn{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:10px 0;border:none;background:none;cursor:pointer;color:rgba(255,255,255,.35);transition:color .15s;}
+.bnav-btn.active{color:var(--accent);}
+.bnav-icon{font-size:1.2rem;}
+.bnav-label{font-family:'JetBrains Mono',monospace;font-size:.5rem;letter-spacing:1.5px;text-transform:uppercase;}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:500;display:none;align-items:center;justify-content:center;}
+.modal-overlay.open{display:flex;animation:fadeIn .2s ease;}
+.modal{background:var(--surface);border-radius:20px;width:90%;max-width:480px;max-height:85vh;overflow-y:auto;animation:slideUp .25s cubic-bezier(.22,1,.36,1);}
 .modal-handle{width:36px;height:4px;background:var(--border);border-radius:2px;margin:12px auto 16px;}
-.modal-head{padding:0 20px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:14px;}
+.modal-head{padding:0 24px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:16px;}
 .modal-av{width:64px;height:64px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:1.3rem;color:#fff;flex-shrink:0;overflow:hidden;}
 .modal-av img{width:100%;height:100%;object-fit:cover;border-radius:50%;}
 .modal-av.blue{background:linear-gradient(135deg,var(--cobalt),var(--blue));}
 .modal-av.you{background:linear-gradient(135deg,#8b6914,var(--accent));color:var(--navy);}
 .modal-av.pur{background:linear-gradient(135deg,var(--pur),var(--pur2));}
-.modal-name{font-weight:700;font-size:1.1rem;margin-bottom:2px;}
-.modal-ntrp{font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--sub);}
-.modal-captain{display:inline-flex;align-items:center;gap:4px;font-size:.68rem;font-weight:700;padding:2px 8px;border-radius:10px;background:rgba(201,168,76,.15);color:var(--accent);margin-top:3px;}
-.modal-body{padding:18px 20px;}
-.modal-section{margin-bottom:18px;}
-.modal-label{font-family:'JetBrains Mono',monospace;font-size:.58rem;letter-spacing:2px;text-transform:uppercase;color:var(--sub);margin-bottom:8px;}
-.modal-bio{font-size:.88rem;line-height:1.65;color:var(--text);}
-.modal-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
-.mstat{background:var(--off);border-radius:10px;padding:12px 8px;text-align:center;}
-.mstat-val{font-family:'Bebas Neue',sans-serif;font-size:1.5rem;letter-spacing:1px;color:var(--text);}
-.mstat-val.green{color:var(--green)}.mstat-val.gold{color:var(--accent)}
-.mstat-label{font-family:'JetBrains Mono',monospace;font-size:.52rem;letter-spacing:1px;text-transform:uppercase;color:var(--sub);margin-top:2px;}
-.modal-close{display:block;width:calc(100% - 40px);margin:0 20px 20px;padding:14px;background:var(--navy);color:var(--white);border:none;border-radius:12px;font-family:'Inter',sans-serif;font-size:.9rem;font-weight:600;cursor:pointer;letter-spacing:.3px;}
-.search-overlay{position:fixed;inset:0;background:var(--navy);z-index:600;display:none;flex-direction:column;padding:env(safe-area-inset-top) 0 0;}
-.search-overlay.open{display:flex;}
-.search-header{display:flex;align-items:center;gap:12px;padding:16px 18px;}
-.search-field{flex:1;display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:10px 14px;}
-.search-field input{flex:1;background:none;border:none;outline:none;color:var(--white);font-family:'Inter',sans-serif;font-size:.9rem;}
+.modal-name{font-weight:700;font-size:1.15rem;margin-bottom:2px;}
+.modal-ntrp{font-family:'JetBrains Mono',monospace;font-size:.74rem;color:var(--sub);}
+.modal-cap{display:inline-flex;align-items:center;gap:4px;font-size:.7rem;font-weight:700;padding:2px 8px;border-radius:10px;background:rgba(201,168,76,.15);color:var(--accent);margin-top:4px;}
+.modal-body{padding:20px 24px;}
+.modal-sec{margin-bottom:18px;}
+.modal-label{font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:2px;text-transform:uppercase;color:var(--sub);margin-bottom:8px;}
+.modal-bio{font-size:.9rem;line-height:1.65;color:var(--text);}
+.mstat-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;}
+.mstat{background:var(--off);border-radius:10px;padding:14px 10px;text-align:center;}
+.mstat-val{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;color:var(--text);}
+.mstat-val.gold{color:var(--accent)}
+.mstat-label{font-family:'JetBrains Mono',monospace;font-size:.54rem;letter-spacing:1px;text-transform:uppercase;color:var(--sub);margin-top:2px;}
+.modal-close{display:block;width:calc(100% - 48px);margin:0 24px 24px;padding:14px;background:var(--navy);color:var(--white);border:none;border-radius:12px;font-family:'Inter',sans-serif;font-size:.92rem;font-weight:600;cursor:pointer;}
+.photo-upload{display:flex;align-items:center;gap:12px;padding:14px;background:var(--off);border:1px dashed var(--border);border-radius:10px;cursor:pointer;}
+.search-overlay{position:fixed;inset:0;background:rgba(6,15,30,.97);z-index:600;display:none;flex-direction:column;padding:20px;}
+.search-overlay.open{display:flex;animation:fadeIn .2s ease;}
+.search-header{display:flex;align-items:center;gap:12px;margin-bottom:20px;}
+.search-field{flex:1;display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:12px 16px;}
+.search-field input{flex:1;background:none;border:none;outline:none;color:var(--white);font-family:'Inter',sans-serif;font-size:.95rem;}
 .search-field input::placeholder{color:rgba(255,255,255,.3);}
-.search-cancel{color:var(--accent);font-weight:600;font-size:.88rem;white-space:nowrap;cursor:pointer;background:none;border:none;}
-.search-results-wrap{flex:1;overflow-y:auto;padding:8px 18px;}
-.search-sec-label{font-family:'JetBrains Mono',monospace;font-size:.56rem;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.28);padding:12px 0 6px;}
-.search-item{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid rgba(255,255,255,.06);cursor:pointer;}
-.search-item:active{opacity:.7;}
-.s-av{width:36px;height:36px;border-radius:9px;background:linear-gradient(135deg,var(--cobalt),var(--blue));display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:.88rem;color:#fff;flex-shrink:0;}
+.search-cancel{color:var(--accent);font-weight:600;cursor:pointer;background:none;border:none;font-size:.9rem;}
+.search-results{flex:1;overflow-y:auto;}
+.s-sec-label{font-family:'JetBrains Mono',monospace;font-size:.58rem;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.28);padding:12px 0 6px;}
+.s-item{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid rgba(255,255,255,.06);cursor:pointer;}
+.s-av{width:38px;height:38px;border-radius:9px;background:linear-gradient(135deg,var(--cobalt),var(--blue));display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:.9rem;color:#fff;flex-shrink:0;}
 .s-av.team{background:linear-gradient(135deg,#1a3a1a,#1e6b1e);}
 .s-info{flex:1;}
-.s-name{font-size:.88rem;font-weight:600;color:var(--white);}
-.s-sub{font-size:.72rem;color:rgba(255,255,255,.38);margin-top:1px;}
-.s-tag{font-size:.62rem;font-weight:700;padding:2px 8px;border-radius:4px;background:rgba(201,168,76,.15);color:var(--accent);}
-.search-empty{text-align:center;padding:40px 20px;color:rgba(255,255,255,.3);font-size:.88rem;}
-.bottom-nav{display:flex;background:var(--navy);border-top:1px solid rgba(255,255,255,.08);padding:0 0 env(safe-area-inset-bottom);flex-shrink:0;z-index:100;}
-.bnav-btn{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:10px 0;border:none;background:none;cursor:pointer;color:rgba(255,255,255,.35);transition:color .15s;}
-.bnav-btn.active{color:var(--accent);}
-.bnav-icon{font-size:1.2rem;}
-.bnav-label{font-family:'JetBrains Mono',monospace;font-size:.52rem;letter-spacing:1.5px;text-transform:uppercase;}
-.wa-page{padding:40px 20px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:14px;}
-.wa-big-icon{font-size:3.5rem;}
-.wa-page-title{font-family:'Bebas Neue',sans-serif;font-size:2rem;letter-spacing:4px;}
-.wa-page-sub{font-size:.88rem;color:var(--sub);line-height:1.65;max-width:280px;}
-.wa-btn{display:flex;align-items:center;gap:12px;padding:15px 20px;border-radius:12px;background:#f0fdf4;border:1px solid #86efac;text-decoration:none;color:#15803d;font-weight:700;font-size:.9rem;width:100%;max-width:300px;margin-top:8px;}
-.wa-btn-sub{font-size:.72rem;color:#4ade80;font-weight:400;margin-top:1px;}
+.s-name{font-size:.9rem;font-weight:600;color:var(--white);}
+.s-sub{font-size:.74rem;color:rgba(255,255,255,.38);margin-top:1px;}
+.s-tag{font-size:.64rem;font-weight:700;padding:2px 8px;border-radius:4px;background:rgba(201,168,76,.15);color:var(--accent);}
 .team-panel{display:none;}.team-panel.active{display:block;}
 .page-view{display:none;}.page-view.active{display:block;}
+.app-footer{background:var(--navy);color:rgba(255,255,255,.22);text-align:center;padding:20px;font-family:'JetBrains Mono',monospace;font-size:.65rem;letter-spacing:2px;border-top:1px solid rgba(255,255,255,.04);margin-top:40px;}
+.app-footer strong{color:rgba(255,255,255,.45);font-family:'Bebas Neue',sans-serif;font-size:.85rem;letter-spacing:3px;}
+@media(max-width:768px){
+  .header-inner{padding:12px 18px;}
+  .logo-name{font-size:1.7rem;}
+  .team-tabs{padding:0 18px;}
+  .app-body{padding:0 16px;padding-bottom:80px;}
+  .team-hero{margin:12px 0 0;padding:26px 22px 22px;border-radius:12px;}
+  .th-name{font-size:2.2rem;}
+  .th-content{flex-direction:column;gap:16px;}
+  .two-col{grid-template-columns:1fr;}
+  .quick-stats{grid-template-columns:repeat(2,1fr);gap:10px;}
+  .desktop-nav{display:none;}
+  .mobile-nav{display:block;}
+  .roster-grid{grid-template-columns:repeat(2,1fr);}
+  .season-pill{display:none;}
+  .app-footer{margin-bottom:70px;}
+}
 </style>
 </head>
 <body>
 <div class="app-header">
-  <div class="header-inner">
-    <div class="logo">
-      <div class="logo-mark">🎾</div>
-      <div class="logo-name">Court <span>Report</span></div>
-    </div>
-    <button class="header-search-btn" onclick="openSearch()">🔍</button>
-  </div>
-  <div class="team-tabs">
-    <button class="team-tab active" onclick="switchTeam('fri',this)">Kiss My Ace</button>
-    <button class="team-tab" onclick="switchTeam('tue',this)">Pour Decisions</button>
-  </div>
+<div class="header-inner"><div class="logo"><div class="logo-mark">🎾</div><div class="logo-name">Court <span>Report</span></div></div><div style="display:flex;align-items:center;gap:12px;"><div class="season-pill">Spring 2026</div><button class="search-btn" onclick="openSearch()">🔍</button></div></div>
+<div class="team-tabs-wrap"><div class="team-tabs"><button class="team-tab active" onclick="switchTeam('fri',this)">Kiss My Ace</button><button class="team-tab" onclick="switchTeam('tue',this)">Pour Decisions</button></div></div>
 </div>
-<div class="app-content" id="appContent">
+<div class="app-body">
+<div class="desktop-nav" id="desktopNav">
+<button class="dnav-btn active" onclick="switchPage('schedule',this)">📅 Schedule</button>
+<button class="dnav-btn" onclick="switchPage('docket',this)">📋 Docket</button>
+<button class="dnav-btn" onclick="switchPage('standings',this)">🏆 Standings</button>
+<button class="dnav-btn" onclick="switchPage('roster',this)">👥 Roster</button>
+<button class="dnav-btn" onclick="switchPage('whatsapp',this)">💬 WhatsApp</button>
+</div>
 <div id="panel-fri" class="team-panel active">
 <div id="fri-schedule" class="page-view active fu">
-<div class="team-hero th-fri"><div class="th-grid"></div><div class="th-glow"></div><div class="th-content"><div class="th-tag">Kiss My Ace · Friday · USTA 4.0</div><div class="th-name">Kiss My Ace</div><div class="th-sub">Middle States Philadelphia · 2026</div><div class="th-stats"><div class="th-stat"><div class="th-sv green">7–2</div><div class="th-sl">Record</div></div><div class="th-stat"><div class="th-sv gold">1st</div><div class="th-sl">Place</div></div><div class="th-stat"><div class="th-sv">3</div><div class="th-sl">Left</div></div></div></div></div>
-<div class="quick-stats"><div class="qs"><div class="qs-val green">7</div><div class="qs-label">Wins</div></div><div class="qs"><div class="qs-val red">2</div><div class="qs-label">Losses</div></div><div class="qs"><div class="qs-val gold">77%</div><div class="qs-label">Win%</div></div><div class="qs"><div class="qs-val">21</div><div class="qs-label">Points</div></div></div>
-<div class="section"><div class="sec-head"><div class="sec-title">Upcoming</div><div class="sec-line"></div></div><div class="sched-list">
-<div class="sched-card"><div class="sdate"><div class="sd-mon">APR</div><div class="sd-day">11</div></div><div class="sinfo"><div class="sopp">vs. Ardmore TC</div><div class="smeta">Round 10 · Villanova Swim &amp; Tennis</div></div><span class="loc-home">HOME</span><div class="stime">7 PM</div></div>
-<div class="sched-card"><div class="sdate"><div class="sd-mon">APR</div><div class="sd-day">18</div></div><div class="sinfo"><div class="sopp">vs. Radnor Hunt Club</div><div class="smeta">Round 11 · Radnor Hunt Club</div></div><span class="loc-away">AWAY</span><div class="stime">7 PM</div></div>
-<div class="sched-card"><div class="sdate"><div class="sd-mon">APR</div><div class="sd-day">25</div></div><div class="sinfo"><div class="sopp">vs. Penn Wynne TC</div><div class="smeta">Round 12 · Villanova Swim &amp; Tennis</div></div><span class="loc-home">HOME</span><div class="stime">7 PM</div></div>
-</div></div>
-<div class="section"><div class="sec-head"><div class="sec-title">Recent Results</div><div class="sec-line"></div></div><div class="matches">
-<div class="mc win"><div class="mc-badge w">W</div><div class="mc-info"><div class="mc-opp">vs. Ardmore TC</div><div class="mc-meta">Round 9 · Home</div></div><div class="mc-score">5–0</div><div class="mc-date">Mar 28</div></div>
-<div class="mc win"><div class="mc-badge w">W</div><div class="mc-info"><div class="mc-opp">vs. Wayne LTC</div><div class="mc-meta">Round 8 · Away</div></div><div class="mc-score">4–1</div><div class="mc-date">Mar 21</div></div>
-<div class="mc loss"><div class="mc-badge l">L</div><div class="mc-info"><div class="mc-opp">vs. Radnor Hunt</div><div class="mc-meta">Round 6 · Away</div></div><div class="mc-score">2–3</div><div class="mc-date">Mar 7</div></div>
-</div></div></div>
-<div id="fri-docket" class="page-view fu"><div class="team-hero th-fri" style="padding-bottom:14px;"><div class="th-grid"></div><div class="th-glow"></div><div class="th-content"><div class="th-tag">Kiss My Ace · Full Results</div><div class="th-name">The Docket</div></div></div><div class="section" style="padding-top:14px;"><div class="matches">
-<div class="mc win"><div class="mc-badge w">W</div><div class="mc-info"><div class="mc-opp">vs. Ardmore TC</div><div class="mc-meta">Round 9 · Home</div></div><div class="mc-score">5–0</div><div class="mc-date">Mar 28</div></div>
-<div class="mc win"><div class="mc-badge w">W</div><div class="mc-info"><div class="mc-opp">vs. Wayne LTC</div><div class="mc-meta">Round 8 · Away</div></div><div class="mc-score">4–1</div><div class="mc-date">Mar 21</div></div>
-<div class="mc win"><div class="mc-badge w">W</div><div class="mc-info"><div class="mc-opp">vs. Merion Cricket</div><div class="mc-meta">Round 7 · Home</div></div><div class="mc-score">3–2</div><div class="mc-date">Mar 14</div></div>
-<div class="mc loss"><div class="mc-badge l">L</div><div class="mc-info"><div class="mc-opp">vs. Radnor Hunt</div><div class="mc-meta">Round 6 · Away</div></div><div class="mc-score">2–3</div><div class="mc-date">Mar 7</div></div>
-<div class="mc win"><div class="mc-badge w">W</div><div class="mc-info"><div class="mc-opp">vs. Haverford TC</div><div class="mc-meta">Round 5 · Home</div></div><div class="mc-score">5–0</div><div class="mc-date">Feb 28</div></div>
-<div class="mc win"><div class="mc-badge w">W</div><div class="mc-info"><div class="mc-opp">vs. Gulph Mills GC</div><div class="mc-meta">Round 4 · Away</div></div><div class="mc-score">4–1</div><div class="mc-date">Feb 21</div></div>
-<div class="mc loss"><div class="mc-badge l">L</div><div class="mc-info"><div class="mc-opp">vs. Springfield CC</div><div class="mc-meta">Round 3 · Home</div></div><div class="mc-score">1–4</div><div class="mc-date">Feb 14</div></div>
-<div class="mc win"><div class="mc-badge w">W</div><div class="mc-info"><div class="mc-opp">vs. Bellevue TC</div><div class="mc-meta">Round 2 · Away</div></div><div class="mc-score">3–2</div><div class="mc-date">Feb 7</div></div>
-<div class="mc win"><div class="mc-badge w">W</div><div class="mc-info"><div class="mc-opp">vs. Penn Wynne</div><div class="mc-meta">Round 1 · Home</div></div><div class="mc-score">4–1</div><div class="mc-date">Jan 31</div></div>
-</div></div></div>
-<div id="fri-standings" class="page-view fu"><div class="team-hero th-fri" style="padding-bottom:14px;"><div class="th-grid"></div><div class="th-glow"></div><div class="th-content"><div class="th-tag">Kiss My Ace · League Table</div><div class="th-name">Standings</div></div></div><div class="section" style="padding-top:14px;"><div class="stand-table"><div class="stand-head"><div class="stand-title">League Table</div><div class="stand-sub">Thru Round 9</div></div><table><thead><tr><th>#</th><th>Team</th><th>W</th><th>L</th><th>%</th></tr></thead><tbody>
-<tr class="us-row"><td class="rank-c r1">1</td><td class="bold-c">🌟 Kiss My Ace</td><td>7</td><td>2</td><td class="mono-c cg">77%</td></tr>
-<tr><td class="rank-c r2">2</td><td class="bold-c">Ardmore TC</td><td>6</td><td>3</td><td class="mono-c cg">67%</td></tr>
-<tr><td class="rank-c r3">3</td><td class="bold-c">Wayne LTC</td><td>6</td><td>3</td><td class="mono-c cg">67%</td></tr>
-<tr><td class="rank-c">4</td><td class="bold-c">Merion Cricket</td><td>5</td><td>4</td><td class="mono-c ca">56%</td></tr>
-<tr><td class="rank-c">5</td><td class="bold-c">Radnor Hunt</td><td>4</td><td>5</td><td class="mono-c ca">44%</td></tr>
-<tr><td class="rank-c">6</td><td class="bold-c">Haverford TC</td><td>3</td><td>6</td><td class="mono-c cr">33%</td></tr>
-<tr><td class="rank-c">7</td><td class="bold-c">Gulph Mills</td><td>2</td><td>7</td><td class="mono-c cr">22%</td></tr>
-<tr><td class="rank-c">8</td><td class="bold-c">Springfield CC</td><td>1</td><td>8</td><td class="mono-c cr">11%</td></tr>
+<div class="team-hero th-fri"><div class="th-grid"></div><div class="th-glow"></div><div class="th-content"><div><div class="th-tag">Kiss My Ace · Captain: Jaclyn Groenen · Friday</div><div class="th-name">Kiss My Ace</div><div class="th-sub">Bryn Mawr Racquet Club · USTA 4.0 Women's · Spring 2026</div></div><div class="th-stats"><div class="th-stat"><div class="th-sv gold">0–0</div><div class="th-sl">Record</div></div><div class="th-stat"><div class="th-sv">8</div><div class="th-sl">Matches</div></div><div class="th-stat"><div class="th-sv">Apr 14</div><div class="th-sl">Starts</div></div></div></div></div>
+<div class="quick-stats"><div class="qs"><div class="qs-val">0</div><div class="qs-label">Wins</div></div><div class="qs"><div class="qs-val">0</div><div class="qs-label">Losses</div></div><div class="qs"><div class="qs-val gold">8</div><div class="qs-label">Scheduled</div></div><div class="qs"><div class="qs-val">22</div><div class="qs-label">Players</div></div></div>
+<div class="two-col"><div>
+<div class="sec-head"><div class="sec-title">Spring 2026 Schedule</div><div class="sec-line"></div></div>
+<div class="sched-list">
+<div class="sched-card"><div class="sdate"><div class="sd-mon">APR</div><div class="sd-day">14</div></div><div class="sinfo"><div class="sopp">vs. Kinetix Deuces Wild</div><div class="smeta">Bryn Mawr Racquet Club · 4 N Warner Ave, Bryn Mawr</div></div><span class="loc-home">HOME</span></div>
+<div class="sched-card"><div class="sdate"><div class="sd-mon">APR</div><div class="sd-day">21</div></div><div class="sinfo"><div class="sopp">vs. Unmatchables</div><div class="smeta">Conestoga Swim Club · 501 Sproul Rd, Villanova</div></div><span class="loc-away">AWAY</span></div>
+<div class="sched-card"><div class="sdate"><div class="sd-mon">MAY</div><div class="sd-day">5</div></div><div class="sinfo"><div class="sopp">vs. Tennis Addiction</div><div class="smeta">Tennis Addiction Sports Club · 202 Philips Rd, Exton</div></div><span class="loc-away">AWAY</span></div>
+<div class="sched-card"><div class="sdate"><div class="sd-mon">MAY</div><div class="sd-day">12</div></div><div class="sinfo"><div class="sopp">vs. Love Hurts</div><div class="smeta">Upper Main Line YMCA · 1416 Berwyn Paoli Rd, Berwyn</div></div><span class="loc-away">AWAY</span></div>
+<div class="sched-card"><div class="sdate"><div class="sd-mon">MAY</div><div class="sd-day">19</div></div><div class="sinfo"><div class="sopp">vs. Kinetix Deuces Wild</div><div class="smeta">Kinetix Tennis · 951 N Park Ave, Norristown</div></div><span class="loc-away">AWAY</span></div>
+<div class="sched-card"><div class="sdate"><div class="sd-mon">JUN</div><div class="sd-day">2</div></div><div class="sinfo"><div class="sopp">vs. Unmatchables</div><div class="smeta">Bryn Mawr Racquet Club · 4 N Warner Ave, Bryn Mawr</div></div><span class="loc-home">HOME</span></div>
+<div class="sched-card"><div class="sdate"><div class="sd-mon">JUN</div><div class="sd-day">16</div></div><div class="sinfo"><div class="sopp">vs. Tennis Addiction</div><div class="smeta">Bryn Mawr Racquet Club · 4 N Warner Ave, Bryn Mawr</div></div><span class="loc-home">HOME</span></div>
+<div class="sched-card"><div class="sdate"><div class="sd-mon">JUN</div><div class="sd-day">23</div></div><div class="sinfo"><div class="sopp">vs. Love Hurts</div><div class="smeta">Bryn Mawr Racquet Club · 4 N Warner Ave, Bryn Mawr</div></div><span class="loc-home">HOME</span></div>
+</div></div><div><div class="sec-head"><div class="sec-title">Results</div><div class="sec-line"></div></div><div class="no-results">🎾 Season starts April 14th!<br><br>Results will appear here after each match.</div></div></div></div>
+<div id="fri-docket" class="page-view fu"><div class="team-hero th-fri" style="margin-bottom:24px;"><div class="th-grid"></div><div class="th-glow"></div><div class="th-content"><div><div class="th-tag">Kiss My Ace · Match Results</div><div class="th-name">The Docket</div><div class="th-sub">Spring 2026 Season</div></div></div></div><div class="one-col"><div class="no-results">🎾 Season starts April 14th!<br><br>Match results will appear here after each game.</div></div></div>
+<div id="fri-standings" class="page-view fu"><div class="team-hero th-fri" style="margin-bottom:24px;"><div class="th-grid"></div><div class="th-glow"></div><div class="th-content"><div><div class="th-tag">Kiss My Ace · League Table</div><div class="th-name">Standings</div><div class="th-sub">USTA 4.0 Women's · Spring 2026</div></div></div></div><div class="one-col"><div class="stand-table"><div class="stand-head"><div class="stand-title">League Standings</div><div class="stand-sub">Season not yet started</div></div><table><thead><tr><th>#</th><th>Team</th><th>Played</th><th>W</th><th>L</th><th>Pts</th></tr></thead><tbody>
+<tr class="us-row"><td class="rank-c">—</td><td class="bold-c">🌟 Kiss My Ace</td><td class="mono-c">0</td><td class="mono-c">0</td><td class="mono-c">0</td><td class="bold-c mono-c">0</td></tr>
+<tr><td class="rank-c">—</td><td class="bold-c">Kinetix Deuces Wild</td><td class="mono-c">0</td><td class="mono-c">0</td><td class="mono-c">0</td><td class="mono-c">0</td></tr>
+<tr><td class="rank-c">—</td><td class="bold-c">Unmatchables</td><td class="mono-c">0</td><td class="mono-c">0</td><td class="mono-c">0</td><td class="mono-c">0</td></tr>
+<tr><td class="rank-c">—</td><td class="bold-c">Tennis Addiction</td><td class="mono-c">0</td><td class="mono-c">0</td><td class="mono-c">0</td><td class="mono-c">0</td></tr>
+<tr><td class="rank-c">—</td><td class="bold-c">Love Hurts</td><td class="mono-c">0</td><td class="mono-c">0</td><td class="mono-c">0</td><td class="mono-c">0</td></tr>
 </tbody></table></div></div></div>
-<div id="fri-roster" class="page-view fu"><div class="team-hero th-fri" style="padding-bottom:14px;"><div class="th-grid"></div><div class="th-glow"></div><div class="th-content"><div class="th-tag">Kiss My Ace · Players · Captain: Jaclyn Groenen</div><div class="th-name">The Roster</div><div class="th-sub">Tap a player to view their profile</div></div></div><div class="section" style="padding-top:14px;"><div class="roster-grid">
-<div class="rcard captain" onclick="openProfile('Jaclyn Groenen','JG','4.0','blue','Captain · #15','Jaclyn leads the team both on and off the court.','12','75%','4.0')"><div class="rav blue" id="av-JG">JG</div><div class="rname">Jaclyn Groenen</div><div class="rntrp">4.0 · Captain</div></div>
-<div class="rcard" onclick="openProfile('Tara Bucci','TB','4.0','you','#11 · 4.0 NTRP','Playing tennis since college. Love competing with this amazing group of women!','49','83%','3.9413')"><div class="rav you" id="av-TB">TB</div><div class="rname">Tara Bucci</div><div class="rntrp">4.0 NTRP</div></div>
-<div class="rcard" onclick="openProfile('Stephanie Giordano','SG','3.5','blue','3.5 NTRP','Doubles specialist with a killer serve.','18','62%','3.5')"><div class="rav blue" id="av-SG">SG</div><div class="rname">Stephanie Giordano</div><div class="rntrp">3.5 NTRP</div></div>
-<div class="rcard" onclick="openProfile('Amanda Neill','AN','4.0','blue','4.0 NTRP','Strong baseline player.','22','68%','4.0')"><div class="rav blue" id="av-AN">AN</div><div class="rname">Amanda Neill</div><div class="rntrp">4.0 NTRP</div></div>
-<div class="rcard" onclick="openProfile('Leslie Brinkley','LB','3.5','blue','3.5 NTRP','Consistent and reliable on the court.','16','58%','3.5')"><div class="rav blue" id="av-LB">LB</div><div class="rname">Leslie Brinkley</div><div class="rntrp">3.5 NTRP</div></div>
-<div class="rcard" onclick="openProfile('Rebecca Feinberg','RF','3.5','blue','3.5 NTRP','Loves the net game.','14','54%','3.5')"><div class="rav blue" id="av-RF">RF</div><div class="rname">Rebecca Feinberg</div><div class="rntrp">3.5 NTRP</div></div>
-<div class="rcard" onclick="openProfile('Lynn Sundblad','LS','4.0','blue','4.0 NTRP','Power hitter from the baseline.','20','65%','4.0')"><div class="rav blue" id="av-LS">LS</div><div class="rname">Lynn Sundblad</div><div class="rntrp">4.0 NTRP</div></div>
-<div class="rcard" onclick="openProfile('Rachel Chadwin','RC','4.0','blue','4.0 NTRP','Great court coverage and volleys.','19','63%','4.0')"><div class="rav blue" id="av-RC">RC</div><div class="rname">Rachel Chadwin</div><div class="rntrp">4.0 NTRP</div></div>
-<div class="rcard" onclick="openProfile('Amanda Neczypor','ANZ','3.5','blue','3.5 NTRP','Strong mental game.','15','56%','3.5')"><div class="rav blue" id="av-ANZ">ANZ</div><div class="rname">Amanda Neczypor</div><div class="rntrp">3.5 NTRP</div></div>
-<div class="rcard" onclick="openProfile('Jody Staples','JS','3.5','blue','3.5 NTRP','Reliable doubles partner.','13','52%','3.5')"><div class="rav blue" id="av-JS">JS</div><div class="rname">Jody Staples</div><div class="rntrp">3.5 NTRP</div></div>
-<div class="rcard" onclick="openProfile('Karli McGill','KM','4.0','blue','4.0 NTRP','Aggressive net player.','21','66%','4.0')"><div class="rav blue" id="av-KM">KM</div><div class="rname">Karli McGill</div><div class="rntrp">4.0 NTRP</div></div>
-<div class="rcard" onclick="openProfile('Kerry McDuffie','KMD','4.0','blue','4.0 NTRP','Versatile singles and doubles player.','18','61%','4.0')"><div class="rav blue" id="av-KMD">KMD</div><div class="rname">Kerry McDuffie</div><div class="rntrp">4.0 NTRP</div></div>
+<div id="fri-roster" class="page-view fu"><div class="team-hero th-fri" style="margin-bottom:24px;"><div class="th-grid"></div><div class="th-glow"></div><div class="th-content"><div><div class="th-tag">Kiss My Ace · Players · Captain: Jaclyn Groenen</div><div class="th-name">The Roster</div><div class="th-sub">Tap a player to view their profile</div></div></div></div><div class="one-col"><div class="roster-grid">
+<div class="rcard cap" onclick="openProfile('Jaclyn Groenen','JG','blue','4.0 NTRP · Captain','Team captain and fierce competitor.','4.0','Captain')"><div class="rav blue" id="av-JG">JG</div><div class="rname">Jaclyn Groenen</div><div class="rntrp">4.0 · Captain 👑</div></div>
+<div class="rcard" onclick="openProfile('Tara Bucci','TB','you','4.0 NTRP · 3.9413 Dynamic','Playing tennis since college. Love competing with this amazing group!','4.0','')"><div class="rav you" id="av-TB">TB</div><div class="rname">Tara Bucci</div><div class="rntrp">4.0 NTRP</div></div>
+<div class="rcard" onclick="openProfile('Stephanie Giordano','SG','blue','3.5 NTRP','','3.5','')"><div class="rav blue" id="av-SG">SG</div><div class="rname">Stephanie Giordano</div><div class="rntrp">3.5 NTRP</div></div>
+<div class="rcard" onclick="openProfile('Amanda Neill','AN','blue','4.0 NTRP','','4.0','')"><div class="rav blue" id="av-AN">AN</div><div class="rname">Amanda Neill</div><div class="rntrp">4.0 NTRP</div></div>
+<div class="rcard" onclick="openProfile('Leslie Brinkley','LB','blue','3.5 NTRP','','3.5','')"><div class="rav blue" id="av-LB">LB</div><div class="rname">Leslie Brinkley</div><div class="rntrp">3.5 NTRP</div></div>
+<div class="rcard" onclick="openProfile('Rebecca Feinberg','RF','blue','3.5 NTRP','','3.5','')"><div class="rav blue" id="av-RF">RF</div><div class="rname">Rebecca Feinberg</div><div class="rntrp">3.5 NTRP</div></div>
+<div class="rcard" onclick="openProfile('Lynn Sundblad','LS','blue','4.0 NTRP','','4.0','')"><div class="rav blue" id="av-LS">LS</div><div class="rname">Lynn Sundblad</div><div class="rntrp">4.0 NTRP</div></div>
+<div class="rcard" onclick="openProfile('Rachel Chadwin','RC','blue','4.0 NTRP','','4.0','')"><div class="rav blue" id="av-RC">RC</div><div class="rname">Rachel Chadwin</div><div class="rntrp">4.0 NTRP</div></div>
+<div class="rcard" onclick="openProfile('Amanda Neczypor','ANZ','blue','3.5 NTRP','','3.5','')"><div class="rav blue" id="av-ANZ">ANZ</div><div class="rname">Amanda Neczypor</div><div class="rntrp">3.5 NTRP</div></div>
+<div class="rcard" onclick="openProfile('Helen Lee','HL','blue','3.5 NTRP','','3.5','')"><div class="rav blue" id="av-HL">HL</div><div class="rname">Helen Lee</div><div class="rntrp">3.5 NTRP</div></div>
+<div class="rcard" onclick="openProfile('Helen He','HH','blue','4.0 NTRP','','4.0','')"><div class="rav blue" id="av-HH">HH</div><div class="rname">Helen He</div><div class="rntrp">4.0 NTRP</div></div>
+<div class="rcard" onclick="openProfile('Sarah Brautigan','SB','blue','4.0 NTRP','','4.0','')"><div class="rav blue" id="av-SB">SB</div><div class="rname">Sarah Brautigan</div><div class="rntrp">4.0 NTRP</div></div>
+<div class="rcard" onclick="openProfile('Mary Marshall','MM','blue','3.5 NTRP','','3.5','')"><div class="rav blue" id="av-MM">MM</div><div class="rname">Mary Marshall</div><div class="rntrp">3.5 NTRP</div></div>
+<div class="rcard" onclick="openProfile('Alison Vachris','AV','blue','4.0 NTRP','','4.0','')"><div class="rav blue" id="av-AV">AV</div><div class="rname">Alison Vachris</div><div class="rntrp">4.0 NTRP</div></div>
+<div class="rcard" onclick="openProfile('Doris Kerr','DK','blue','4.0 NTRP','','4.0','')"><div class="rav blue" id="av-DK">DK</div><div class="rname">Doris Kerr</div><div class="rntrp">4.0 NTRP</div></div>
+<div class="rcard" onclick="openProfile('Nicole Costelloe','NC','blue','4.0 NTRP','','4.0','')"><div class="rav blue" id="av-NC">NC</div><div class="rname">Nicole Costelloe</div><div class="rntrp">4.0 NTRP</div></div>
+<div class="rcard" onclick="openProfile('Christina Faidley','CF','blue','3.5 NTRP','','3.5','')"><div class="rav blue" id="av-CF">CF</div><div class="rname">Christina Faidley</div><div class="rntrp">3.5 NTRP</div></div>
+<div class="rcard" onclick="openProfile('Jody Staples','JS','blue','3.5 NTRP','','3.5','')"><div class="rav blue" id="av-JS">JS</div><div class="rname">Jody Staples</div><div class="rntrp">3.5 NTRP</div></div>
+<div class="rcard" onclick="openProfile('Karli McGill','KM','blue','4.0 NTRP','','4.0','')"><div class="rav blue" id="av-KM">KM</div><div class="rname">Karli McGill</div><div class="rntrp">4.0 NTRP</div></div>
+<div class="rcard" onclick="openProfile('Kerry McDuffie','KMD','blue','4.0 NTRP','','4.0','')"><div class="rav blue" id="av-KMD">KMD</div><div class="rname">Kerry McDuffie</div><div class="rntrp">4.0 NTRP</div></div>
+<div class="rcard" onclick="openProfile('Vanessa Halloran','VH','blue','4.0 NTRP','','4.0','')"><div class="rav blue" id="av-VH">VH</div><div class="rname">Vanessa Halloran</div><div class="rntrp">4.0 NTRP</div></div>
+<div class="rcard" onclick="openProfile('Bridget Hallman','BH','blue','4.0 NTRP','','4.0','')"><div class="rav blue" id="av-BH">BH</div><div class="rname">Bridget Hallman</div><div class="rntrp">4.0 NTRP</div></div>
 </div></div></div>
-<div id="fri-whatsapp" class="page-view fu"><div class="team-hero th-fri" style="padding-bottom:14px;"><div class="th-grid"></div><div class="th-glow"></div><div class="th-content"><div class="th-tag">Kiss My Ace · Chat</div><div class="th-name">WhatsApp</div></div></div><div class="wa-page"><div class="wa-big-icon">💬</div><div class="wa-page-title">Kiss My Ace Chat</div><div class="wa-page-sub">Tap below to open your team group chat on WhatsApp.</div><a href="https://chat.whatsapp.com/" class="wa-btn" target="_blank"><span style="font-size:1.3rem;">💬</span><div><div>Open Group Chat</div><div class="wa-btn-sub">Kiss My Ace · Friday</div></div></a></div></div>
+<div id="fri-whatsapp" class="page-view fu"><div class="team-hero th-fri" style="margin-bottom:24px;"><div class="th-grid"></div><div class="th-glow"></div><div class="th-content"><div><div class="th-tag">Kiss My Ace · Chat</div><div class="th-name">WhatsApp</div><div class="th-sub">Stay connected with your team</div></div></div></div><div class="wa-section"><div class="wa-icon">💬</div><div class="wa-title">Kiss My Ace Chat</div><div class="wa-sub">Tap below to open your team WhatsApp group.</div><a href="https://chat.whatsapp.com/" class="wa-btn" target="_blank"><span style="font-size:1.4rem;">💬</span><div><div>Open Group Chat</div><div class="wa-btn-sub">Kiss My Ace · Friday</div></div></a></div></div>
 </div>
 <div id="panel-tue" class="team-panel">
-<div id="tue-schedule" class="page-view active fu"><div class="team-hero th-tue"><div class="th-grid"></div><div class="th-glow"></div><div class="th-content"><div class="th-tag">Pour Decisions · Tuesday · USTA 4.0</div><div class="th-name">Pour Decisions</div><div class="th-sub">Middle States Philadelphia · 2026</div><div class="th-stats"><div class="th-stat"><div class="th-sv soft-red">5–4</div><div class="th-sl">Record</div></div><div class="th-stat"><div class="th-sv gold">5th</div><div class="th-sl">Place</div></div><div class="th-stat"><div class="th-sv">3</div><div class="th-sl">Left</div></div></div></div></div>
-<div class="quick-stats"><div class="qs"><div class="qs-val green">5</div><div class="qs-label">Wins</div></div><div class="qs"><div class="qs-val red">4</div><div class="qs-label">Losses</div></div><div class="qs"><div class="qs-val gold">55%</div><div class="qs-label">Win%</div></div><div class="qs"><div class="qs-val">15</div><div class="qs-label">Points</div></div></div>
-<div class="section"><div class="sec-head"><div class="sec-title">Upcoming</div><div class="sec-line"></div></div><div class="sched-list">
-<div class="sched-card"><div class="sdate"><div class="sd-mon">APR</div><div class="sd-day">15</div></div><div class="sinfo"><div class="sopp">vs. Wayne LTC</div><div class="smeta">Round 10 · Home Court</div></div><span class="loc-home">HOME</span><div class="stime">6:30 PM</div></div>
-<div class="sched-card"><div class="sdate"><div class="sd-mon">APR</div><div class="sd-day">22</div></div><div class="sinfo"><div class="sopp">vs. Merion Cricket</div><div class="smeta">Round 11 · Away</div></div><span class="loc-away">AWAY</span><div class="stime">6:30 PM</div></div>
-<div class="sched-card"><div class="sdate"><div class="sd-mon">APR</div><div class="sd-day">29</div></div><div class="sinfo"><div class="sopp">vs. Bryn Mawr TC</div><div class="smeta">Round 12 · Away</div></div><span class="loc-away">AWAY</span><div class="stime">6:30 PM</div></div>
-</div></div>
-<div class="section"><div class="sec-head"><div class="sec-title">Recent Results</div><div class="sec-line"></div></div><div class="matches">
-<div class="mc win"><div class="mc-badge w">W</div><div class="mc-info"><div class="mc-opp">vs. Bryn Mawr TC</div><div class="mc-meta">Round 9 · Home</div></div><div class="mc-score">4–1</div><div class="mc-date">Mar 25</div></div>
-<div class="mc loss"><div class="mc-badge l">L</div><div class="mc-info"><div class="mc-opp">vs. Narberth AC</div><div class="mc-meta">Round 8 · Away</div></div><div class="mc-score">2–3</div><div class="mc-date">Mar 18</div></div>
-<div class="mc win"><div class="mc-badge w">W</div><div class="mc-info"><div class="mc-opp">vs. Overbrook GC</div><div class="mc-meta">Round 7 · Home</div></div><div class="mc-score">3–2</div><div class="mc-date">Mar 11</div></div>
-</div></div></div>
-<div id="tue-docket" class="page-view fu"><div class="team-hero th-tue" style="padding-bottom:14px;"><div class="th-grid"></div><div class="th-glow"></div><div class="th-content"><div class="th-tag">Pour Decisions · Full Results</div><div class="th-name">The Docket</div></div></div><div class="section" style="padding-top:14px;"><div class="matches">
-<div class="mc win"><div class="mc-badge w">W</div><div class="mc-info"><div class="mc-opp">vs. Bryn Mawr TC</div><div class="mc-meta">Round 9 · Home</div></div><div class="mc-score">4–1</div><div class="mc-date">Mar 25</div></div>
-<div class="mc loss"><div class="mc-badge l">L</div><div class="mc-info"><div class="mc-opp">vs. Narberth AC</div><div class="mc-meta">Round 8 · Away</div></div><div class="mc-score">2–3</div><div class="mc-date">Mar 18</div></div>
-<div class="mc win"><div class="mc-badge w">W</div><div class="mc-info"><div class="mc-opp">vs. Overbrook GC</div><div class="mc-meta">Round 7 · Home</div></div><div class="mc-score">3–2</div><div class="mc-date">Mar 11</div></div>
-<div class="mc loss"><div class="mc-badge l">L</div><div class="mc-info"><div class="mc-opp">vs. Cynwyd Club</div><div class="mc-meta">Round 6 · Away</div></div><div class="mc-score">1–4</div><div class="mc-date">Mar 4</div></div>
-<div class="mc win"><div class="mc-badge w">W</div><div class="mc-info"><div class="mc-opp">vs. St. Davids GC</div><div class="mc-meta">Round 5 · Home</div></div><div class="mc-score">5–0</div><div class="mc-date">Feb 25</div></div>
-<div class="mc loss"><div class="mc-badge l">L</div><div class="mc-info"><div class="mc-opp">vs. Aronimink GC</div><div class="mc-meta">Round 4 · Away</div></div><div class="mc-score">2–3</div><div class="mc-date">Feb 18</div></div>
-<div class="mc win"><div class="mc-badge w">W</div><div class="mc-info"><div class="mc-opp">vs. Philadelphia CC</div><div class="mc-meta">Round 3 · Home</div></div><div class="mc-score">3–2</div><div class="mc-date">Feb 11</div></div>
-<div class="mc loss"><div class="mc-badge l">L</div><div class="mc-info"><div class="mc-opp">vs. Whitemarsh Valley</div><div class="mc-meta">Round 2 · Away</div></div><div class="mc-score">1–4</div><div class="mc-date">Feb 4</div></div>
-<div class="mc win"><div class="mc-badge w">W</div><div class="mc-info"><div class="mc-opp">vs. Germantown CC</div><div class="mc-meta">Round 1 · Home</div></div><div class="mc-score">3–2</div><div class="mc-date">Jan 28</div></div>
-</div></div></div>
-<div id="tue-standings" class="page-view fu"><div class="team-hero th-tue" style="padding-bottom:14px;"><div class="th-grid"></div><div class="th-glow"></div><div class="th-content"><div class="th-tag">Pour Decisions · League Table</div><div class="th-name">Standings</div></div></div><div class="section" style="padding-top:14px;"><div class="stand-table"><div class="stand-head"><div class="stand-title">League Table</div><div class="stand-sub">Thru Round 9</div></div><table><thead><tr><th>#</th><th>Team</th><th>W</th><th>L</th><th>%</th></tr></thead><tbody>
-<tr><td class="rank-c r1">1</td><td class="bold-c">Bryn Mawr TC</td><td>8</td><td>1</td><td class="mono-c cg">89%</td></tr>
-<tr><td class="rank-c r2">2</td><td class="bold-c">Narberth AC</td><td>7</td><td>2</td><td class="mono-c cg">78%</td></tr>
-<tr><td class="rank-c r3">3</td><td class="bold-c">St. Davids GC</td><td>6</td><td>3</td><td class="mono-c cg">67%</td></tr>
-<tr><td class="rank-c">4</td><td class="bold-c">Philadelphia CC</td><td>6</td><td>3</td><td class="mono-c cg">67%</td></tr>
-<tr class="us-row"><td class="rank-c">5</td><td class="bold-c">🍷 Pour Decisions</td><td>5</td><td>4</td><td class="mono-c ca">56%</td></tr>
-<tr><td class="rank-c">6</td><td class="bold-c">Cynwyd Club</td><td>4</td><td>5</td><td class="mono-c ca">44%</td></tr>
-<tr><td class="rank-c">7</td><td class="bold-c">Aronimink GC</td><td>3</td><td>6</td><td class="mono-c cr">33%</td></tr>
-<tr><td class="rank-c">8</td><td class="bold-c">Overbrook GC</td><td>2</td><td>7</td><td class="mono-c cr">22%</td></tr>
-<tr><td class="rank-c">9</td><td class="bold-c">Whitemarsh Valley</td><td>1</td><td>8</td><td class="mono-c cr">11%</td></tr>
+<div id="tue-schedule" class="page-view active fu">
+<div class="team-hero th-tue"><div class="th-grid"></div><div class="th-glow"></div><div class="th-content"><div><div class="th-tag">Pour Decisions · Captain: Lynn Sundblad · Friday</div><div class="th-name">Pour Decisions</div><div class="th-sub">Radnor Valley Country Club · USTA 4.0 Women's · Spring 2026</div></div><div class="th-stats"><div class="th-stat"><div class="th-sv gold">0–0</div><div class="th-sl">Record</div></div><div class="th-stat"><div class="th-sv">8</div><div class="th-sl">Matches</div></div><div class="th-stat"><div class="th-sv">Apr 13</div><div class="th-sl">Starts</div></div></div></div></div>
+<div class="quick-stats"><div class="qs"><div class="qs-val">0</div><div class="qs-label">Wins</div></div><div class="qs"><div class="qs-val">0</div><div class="qs-label">Losses</div></div><div class="qs"><div class="qs-val gold">8</div><div class="qs-label">Scheduled</div></div><div class="qs"><div class="qs-val">16</div><div class="qs-label">Players</div></div></div>
+<div class="two-col"><div><div class="sec-head"><div class="sec-title">Spring 2026 Schedule</div><div class="sec-line"></div></div><div class="sched-list">
+<div class="sched-card"><div class="sdate"><div class="sd-mon">APR</div><div class="sd-day">13</div></div><div class="sinfo"><div class="sopp">vs. IKST Gulph Mills</div><div class="smeta">Radnor Valley Country Club · 555 Sproul Rd, Villanova</div></div><span class="loc-home">HOME</span></div>
+<div class="sched-card"><div class="sdate"><div class="sd-mon">APR</div><div class="sd-day">27</div></div><div class="sinfo"><div class="sopp">vs. Saint Albans Swim &amp; Tennis</div><div class="smeta">Saint Albans Swim and Tennis Club</div></div><span class="loc-away">AWAY</span></div>
+<div class="sched-card"><div class="sdate"><div class="sd-mon">MAY</div><div class="sd-day">8</div></div><div class="sinfo"><div class="sopp">vs. UD Smash Squad</div><div class="smeta">Upper Dublin Sports Center</div></div><span class="loc-away">AWAY</span></div>
+<div class="sched-card"><div class="sdate"><div class="sd-mon">MAY</div><div class="sd-day">15</div></div><div class="sinfo"><div class="sopp">vs. Simply Smashing</div><div class="smeta">Radnor Valley Country Club · 555 Sproul Rd, Villanova</div></div><span class="loc-home">HOME</span></div>
+<div class="sched-card"><div class="sdate"><div class="sd-mon">MAY</div><div class="sd-day">29</div></div><div class="sinfo"><div class="sopp">vs. Merion Cricket 18+</div><div class="smeta">The Merion Cricket Club</div></div><span class="loc-away">AWAY</span></div>
+<div class="sched-card"><div class="sdate"><div class="sd-mon">JUN</div><div class="sd-day">5</div></div><div class="sinfo"><div class="sopp">vs. Philly Cricket</div><div class="smeta">Radnor Valley Country Club · 555 Sproul Rd, Villanova</div></div><span class="loc-home">HOME</span></div>
+<div class="sched-card"><div class="sdate"><div class="sd-mon">JUN</div><div class="sd-day">12</div></div><div class="sinfo"><div class="sopp">vs. Quad Squad</div><div class="smeta">Radnor Valley Country Club · 555 Sproul Rd, Villanova</div></div><span class="loc-home">HOME</span></div>
+<div class="sched-card"><div class="sdate"><div class="sd-mon">JUN</div><div class="sd-day">19</div></div><div class="sinfo"><div class="sopp">vs. Kicking Aces</div><div class="smeta">Radnor Valley Country Club · 555 Sproul Rd, Villanova</div></div><span class="loc-home">HOME</span></div>
+</div></div><div><div class="sec-head"><div class="sec-title">Results</div><div class="sec-line"></div></div><div class="no-results">🎾 Season starts April 13th!<br><br>Results will appear here after each match.</div></div></div></div>
+<div id="tue-docket" class="page-view fu"><div class="team-hero th-tue" style="margin-bottom:24px;"><div class="th-grid"></div><div class="th-glow"></div><div class="th-content"><div><div class="th-tag">Pour Decisions · Match Results</div><div class="th-name">The Docket</div><div class="th-sub">Spring 2026 Season</div></div></div></div><div class="one-col"><div class="no-results">🎾 Season starts April 13th!<br><br>Match results will appear here after each game.</div></div></div>
+<div id="tue-standings" class="page-view fu"><div class="team-hero th-tue" style="margin-bottom:24px;"><div class="th-grid"></div><div class="th-glow"></div><div class="th-content"><div><div class="th-tag">Pour Decisions · League Table</div><div class="th-name">Standings</div><div class="th-sub">USTA 4.0 Women's Del-Ches · Spring 2026</div></div></div></div><div class="one-col"><div class="stand-table"><div class="stand-head"><div class="stand-title">League Standings</div><div class="stand-sub">Season not yet started</div></div><table><thead><tr><th>#</th><th>Team</th><th>Played</th><th>W</th><th>L</th><th>Pts</th></tr></thead><tbody>
+<tr class="us-row"><td class="rank-c">—</td><td class="bold-c">🍷 Pour Decisions</td><td class="mono-c">0</td><td class="mono-c">0</td><td class="mono-c">0</td><td class="bold-c mono-c">0</td></tr>
+<tr><td class="rank-c">—</td><td class="bold-c">IKST Gulph Mills</td><td class="mono-c">0</td><td class="mono-c">0</td><td class="mono-c">0</td><td class="mono-c">0</td></tr>
+<tr><td class="rank-c">—</td><td class="bold-c">Saint Albans Swim &amp; Tennis</td><td class="mono-c">0</td><td class="mono-c">0</td><td class="mono-c">0</td><td class="mono-c">0</td></tr>
+<tr><td class="rank-c">—</td><td class="bold-c">UD Smash Squad</td><td class="mono-c">0</td><td class="mono-c">0</td><td class="mono-c">0</td><td class="mono-c">0</td></tr>
+<tr><td class="rank-c">—</td><td class="bold-c">Simply Smashing</td><td class="mono-c">0</td><td class="mono-c">0</td><td class="mono-c">0</td><td class="mono-c">0</td></tr>
+<tr><td class="rank-c">—</td><td class="bold-c">Merion Cricket 18+</td><td class="mono-c">0</td><td class="mono-c">0</td><td class="mono-c">0</td><td class="mono-c">0</td></tr>
+<tr><td class="rank-c">—</td><td class="bold-c">Philly Cricket</td><td class="mono-c">0</td><td class="mono-c">0</td><td class="mono-c">0</td><td class="mono-c">0</td></tr>
+<tr><td class="rank-c">—</td><td class="bold-c">Quad Squad</td><td class="mono-c">0</td><td class="mono-c">0</td><td class="mono-c">0</td><td class="mono-c">0</td></tr>
+<tr><td class="rank-c">—</td><td class="bold-c">Kicking Aces</td><td class="mono-c">0</td><td class="mono-c">0</td><td class="mono-c">0</td><td class="mono-c">0</td></tr>
 </tbody></table></div></div></div>
-<div id="tue-roster" class="page-view fu"><div class="team-hero th-tue" style="padding-bottom:14px;"><div class="th-grid"></div><div class="th-glow"></div><div class="th-content"><div class="th-tag">Pour Decisions · Players</div><div class="th-name">The Roster</div><div class="th-sub">Tap a player to view their profile</div></div></div><div class="section" style="padding-top:14px;"><div class="roster-grid">
-<div class="rcard captain" onclick="openProfile('Jaclyn Groenen','JG','4.0','pur','Captain · #15','Team captain for Pour Decisions too!','12','75%','4.0')"><div class="rav pur">JG</div><div class="rname">Jaclyn Groenen</div><div class="rntrp">4.0 · Captain</div></div>
-<div class="rcard" onclick="openProfile('Tara Bucci','TB','4.0','you','4.0 NTRP','Playing tennis since college.','49','83%','3.9413')"><div class="rav you">TB</div><div class="rname">Tara Bucci</div><div class="rntrp">4.0 NTRP</div></div>
-<div class="rcard" onclick="openProfile('Stephanie Giordano','SG','3.5','pur','3.5 NTRP','Doubles specialist.','18','62%','3.5')"><div class="rav pur">SG</div><div class="rname">Stephanie Giordano</div><div class="rntrp">3.5 NTRP</div></div>
-<div class="rcard" onclick="openProfile('Amanda Neill','AN','4.0','pur','4.0 NTRP','Strong baseline player.','22','68%','4.0')"><div class="rav pur">AN</div><div class="rname">Amanda Neill</div><div class="rntrp">4.0 NTRP</div></div>
-<div class="rcard" onclick="openProfile('Leslie Brinkley','LB','3.5','pur','3.5 NTRP','Consistent and reliable.','16','58%','3.5')"><div class="rav pur">LB</div><div class="rname">Leslie Brinkley</div><div class="rntrp">3.5 NTRP</div></div>
-<div class="rcard" onclick="openProfile('Rebecca Feinberg','RF','3.5','pur','3.5 NTRP','Loves the net game.','14','54%','3.5')"><div class="rav pur">RF</div><div class="rname">Rebecca Feinberg</div><div class="rntrp">3.5 NTRP</div></div>
+<div id="tue-roster" class="page-view fu"><div class="team-hero th-tue" style="margin-bottom:24px;"><div class="th-grid"></div><div class="th-glow"></div><div class="th-content"><div><div class="th-tag">Pour Decisions · Players · Captain: Lynn Sundblad</div><div class="th-name">The Roster</div><div class="th-sub">Tap a player to view their profile</div></div></div></div><div class="one-col"><div class="roster-grid">
+<div class="rcard cap" onclick="openProfile('Lynn Sundblad','LS2','pur','4.0 NTRP · Captain','Team captain for Pour Decisions.','4.0','Captain')"><div class="rav pur" id="av-LS2">LS</div><div class="rname">Lynn Sundblad</div><div class="rntrp">4.0 · Captain 👑</div></div>
+<div class="rcard" onclick="openProfile('Jaclyn Groenen','JG2','pur','4.0 NTRP','','4.0','')"><div class="rav pur" id="av-JG2">JG</div><div class="rname">Jaclyn Groenen</div><div class="rntrp">4.0 NTRP</div></div>
+<div class="rcard" onclick="openProfile('Tara Bucci','TB2','you','4.0 NTRP · 3.9413 Dynamic','','4.0','')"><div class="rav you" id="av-TB2">TB</div><div class="rname">Tara Bucci</div><div class="rntrp">4.0 NTRP</div></div>
+<div class="rcard" onclick="openProfile('Amanda Neill','AN2','pur','4.0 NTRP','','4.0','')"><div class="rav pur">AN</div><div class="rname">Amanda Neill</div><div class="rntrp">4.0 NTRP</div></div>
+<div class="rcard" onclick="openProfile('Rachel Chadwin','RC2','pur','4.0 NTRP','','4.0','')"><div class="rav pur">RC</div><div class="rname">Rachel Chadwin</div><div class="rntrp">4.0 NTRP</div></div>
+<div class="rcard" onclick="openProfile('Rebecca Feinberg','RF2','pur','3.5 NTRP','','3.5','')"><div class="rav pur">RF</div><div class="rname">Rebecca Feinberg</div><div class="rntrp">3.5 NTRP</div></div>
+<div class="rcard" onclick="openProfile('Helen Lee','HL2','pur','3.5 NTRP','','3.5','')"><div class="rav pur">HL</div><div class="rname">Helen Lee</div><div class="rntrp">3.5 NTRP</div></div>
+<div class="rcard" onclick="openProfile('Amanda Neczypor','ANZ2','pur','3.5 NTRP','','3.5','')"><div class="rav pur">ANZ</div><div class="rname">Amanda Neczypor</div><div class="rntrp">3.5 NTRP</div></div>
+<div class="rcard" onclick="openProfile('Kerry McDuffie','KMD2','pur','4.0 NTRP','','4.0','')"><div class="rav pur">KMD</div><div class="rname">Kerry McDuffie</div><div class="rntrp">4.0 NTRP</div></div>
+<div class="rcard" onclick="openProfile('Nicole Costelloe','NC2','pur','4.0 NTRP','','4.0','')"><div class="rav pur">NC</div><div class="rname">Nicole Costelloe</div><div class="rntrp">4.0 NTRP</div></div>
+<div class="rcard" onclick="openProfile('Olivia Andrews','OA','pur','4.0 NTRP','','4.0','')"><div class="rav pur" id="av-OA">OA</div><div class="rname">Olivia Andrews</div><div class="rntrp">4.0 NTRP</div></div>
+<div class="rcard" onclick="openProfile('Kristin Kobell','KK','pur','4.0 NTRP','','4.0','')"><div class="rav pur" id="av-KK">KK</div><div class="rname">Kristin Kobell</div><div class="rntrp">4.0 NTRP</div></div>
+<div class="rcard" onclick="openProfile('Christina Faidley','CF2','pur','3.5 NTRP','','3.5','')"><div class="rav pur">CF</div><div class="rname">Christina Faidley</div><div class="rntrp">3.5 NTRP</div></div>
+<div class="rcard" onclick="openProfile('Lisa Tan','LT','pur','3.5 NTRP','','3.5','')"><div class="rav pur" id="av-LT">LT</div><div class="rname">Lisa Tan</div><div class="rntrp">3.5 NTRP</div></div>
+<div class="rcard" onclick="openProfile('Jody Staples','JS2','pur','3.5 NTRP','','3.5','')"><div class="rav pur">JS</div><div class="rname">Jody Staples</div><div class="rntrp">3.5 NTRP</div></div>
+<div class="rcard" onclick="openProfile('Karli McGill','KM2','pur','4.0 NTRP','','4.0','')"><div class="rav pur">KM</div><div class="rname">Karli McGill</div><div class="rntrp">4.0 NTRP</div></div>
 </div></div></div>
-<div id="tue-whatsapp" class="page-view fu"><div class="team-hero th-tue" style="padding-bottom:14px;"><div class="th-grid"></div><div class="th-glow"></div><div class="th-content"><div class="th-tag">Pour Decisions · Chat</div><div class="th-name">WhatsApp</div></div></div><div class="wa-page"><div class="wa-big-icon">💬</div><div class="wa-page-title">Pour Decisions Chat</div><div class="wa-page-sub">Tap below to open your team group chat on WhatsApp.</div><a href="https://chat.whatsapp.com/" class="wa-btn" target="_blank"><span style="font-size:1.3rem;">💬</span><div><div>Open Group Chat</div><div class="wa-btn-sub">Pour Decisions · Tuesday</div></div></a></div></div>
+<div id="tue-whatsapp" class="page-view fu"><div class="team-hero th-tue" style="margin-bottom:24px;"><div class="th-grid"></div><div class="th-glow"></div><div class="th-content"><div><div class="th-tag">Pour Decisions · Chat</div><div class="th-name">WhatsApp</div><div class="th-sub">Stay connected with your team</div></div></div></div><div class="wa-section"><div class="wa-icon">💬</div><div class="wa-title">Pour Decisions Chat</div><div class="wa-sub">Tap below to open your team WhatsApp group.</div><a href="https://chat.whatsapp.com/" class="wa-btn" target="_blank"><span style="font-size:1.4rem;">💬</span><div><div>Open Group Chat</div><div class="wa-btn-sub">Pour Decisions · Friday Squad</div></div></a></div></div>
 </div>
 </div>
-<nav class="bottom-nav">
-<button class="bnav-btn active" id="bnav-schedule" onclick="switchPage('schedule',this)"><span class="bnav-icon">📅</span><span class="bnav-label">Schedule</span></button>
-<button class="bnav-btn" id="bnav-docket" onclick="switchPage('docket',this)"><span class="bnav-icon">📋</span><span class="bnav-label">Docket</span></button>
-<button class="bnav-btn" id="bnav-standings" onclick="switchPage('standings',this)"><span class="bnav-icon">🏆</span><span class="bnav-label">Standings</span></button>
-<button class="bnav-btn" id="bnav-roster" onclick="switchPage('roster',this)"><span class="bnav-icon">👥</span><span class="bnav-label">Roster</span></button>
-<button class="bnav-btn" id="bnav-whatsapp" onclick="switchPage('whatsapp',this)"><span class="bnav-icon">💬</span><span class="bnav-label">WhatsApp</span></button>
-</nav>
-<div class="modal-overlay" id="profileModal" onclick="closeProfile(event)"><div class="modal" id="modalContent"><div class="modal-handle"></div><div class="modal-head"><div class="modal-av blue" id="modal-av">TB</div><div><div class="modal-name" id="modal-name">Player</div><div class="modal-ntrp" id="modal-ntrp">4.0 NTRP</div><div id="modal-captain-badge"></div></div></div><div class="modal-body"><div class="modal-section"><div class="modal-label">About</div><div class="modal-bio" id="modal-bio">Player bio goes here.</div></div><div class="modal-section"><div class="modal-label">Stats</div><div class="modal-stats"><div class="mstat"><div class="mstat-val green" id="modal-wins">—</div><div class="mstat-label">Wins</div></div><div class="mstat"><div class="mstat-val gold" id="modal-pct">—</div><div class="mstat-label">Win %</div></div><div class="mstat"><div class="mstat-val" id="modal-rating">—</div><div class="mstat-label">Dynamic</div></div></div></div><div class="modal-section" id="photo-upload-section"><div class="modal-label">Profile Photo</div><label style="display:flex;align-items:center;gap:10px;padding:12px;background:var(--off);border:1px dashed var(--border);border-radius:10px;cursor:pointer;"><span style="font-size:1.2rem;">📷</span><div><div style="font-size:.84rem;font-weight:600;">Upload Photo</div><div style="font-size:.72rem;color:var(--sub);">Tap to choose from your camera roll</div></div><input type="file" accept="image/*" style="display:none;" onchange="handlePhotoUpload(event)"/></label></div></div><button class="modal-close" onclick="closeProfile()">Done</button></div></div>
-<div class="search-overlay" id="searchOverlay"><div class="search-header"><div class="search-field"><span>🔍</span><input type="text" placeholder="Search players or teams..." id="searchField" oninput="doSearch(this.value)" autocomplete="off"/></div><button class="search-cancel" onclick="closeSearch()">Cancel</button></div><div class="search-results-wrap" id="searchResultsWrap"><div class="search-sec-label">Players</div><div id="playerResults"></div><div class="search-sec-label">Teams</div><div id="teamResults"></div></div></div>
+<div class="app-footer"><strong>Court Report</strong> &nbsp;·&nbsp; Spring 2026 &nbsp;·&nbsp; Kiss My Ace &amp; Pour Decisions</div>
+<nav class="mobile-nav"><div class="mobile-nav-inner">
+<button class="bnav-btn active" id="mob-schedule" onclick="switchPage('schedule',this)"><span class="bnav-icon">📅</span><span class="bnav-label">Schedule</span></button>
+<button class="bnav-btn" id="mob-docket" onclick="switchPage('docket',this)"><span class="bnav-icon">📋</span><span class="bnav-label">Docket</span></button>
+<button class="bnav-btn" id="mob-standings" onclick="switchPage('standings',this)"><span class="bnav-icon">🏆</span><span class="bnav-label">Standings</span></button>
+<button class="bnav-btn" id="mob-roster" onclick="switchPage('roster',this)"><span class="bnav-icon">👥</span><span class="bnav-label">Roster</span></button>
+<button class="bnav-btn" id="mob-whatsapp" onclick="switchPage('whatsapp',this)"><span class="bnav-icon">💬</span><span class="bnav-label">WhatsApp</span></button>
+</div></nav>
+<div class="modal-overlay" id="profileModal" onclick="closeProfile(event)"><div class="modal"><div class="modal-handle"></div><div class="modal-head"><div class="modal-av blue" id="modal-av">TB</div><div><div class="modal-name" id="modal-name">Player</div><div class="modal-ntrp" id="modal-detail">4.0 NTRP</div><div id="modal-cap-badge"></div></div></div><div class="modal-body"><div class="modal-sec" id="bio-sec" style="display:none;"><div class="modal-label">About</div><div class="modal-bio" id="modal-bio"></div></div><div class="modal-sec"><div class="modal-label">Rating</div><div class="mstat-grid"><div class="mstat"><div class="mstat-val gold" id="modal-ntrp">4.0</div><div class="mstat-label">NTRP Rating</div></div><div class="mstat"><div class="mstat-val">Spring 2026</div><div class="mstat-label">Season</div></div></div></div><div class="modal-sec"><div class="modal-label">Profile Photo</div><label class="photo-upload"><span style="font-size:1.2rem;">📷</span><div><div style="font-size:.86rem;font-weight:600;">Upload Photo</div><div style="font-size:.73rem;color:var(--sub);">Choose from your camera roll</div></div><input type="file" accept="image/*" style="display:none;" onchange="handlePhoto(event)"/></label></div></div><button class="modal-close" onclick="closeProfile()">Close</button></div></div>
+<div class="search-overlay" id="searchOverlay"><div class="search-header"><div class="search-field"><span>🔍</span><input type="text" placeholder="Search players or teams..." id="searchField" oninput="doSearch(this.value)" autocomplete="off"/></div><button class="search-cancel" onclick="closeSearch()">Cancel</button></div><div class="search-results"><div class="s-sec-label">Players</div><div id="playerResults"></div><div class="s-sec-label">Teams</div><div id="teamResults"></div></div></div>
 <script>
 var currentTeam='fri',currentPage='schedule',currentProfile=null,photoData={};
-function switchTeam(team,btn){document.querySelectorAll('.team-tab').forEach(b=>b.classList.remove('active'));btn.classList.add('active');document.querySelectorAll('.team-panel').forEach(p=>p.classList.remove('active'));document.getElementById('panel-'+team).classList.add('active');currentTeam=team;document.getElementById('appContent').scrollTop=0;}
-function switchPage(page,btn){document.querySelectorAll('.bnav-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');var panel=document.getElementById('panel-'+currentTeam);panel.querySelectorAll('.page-view').forEach(v=>v.classList.remove('active'));var target=document.getElementById(currentTeam+'-'+page);if(target){target.classList.add('active');}currentPage=page;document.getElementById('appContent').scrollTop=0;}
-function openProfile(name,initials,ntrp,colorClass,detail,bio,wins,pct,rating){document.getElementById('modal-av').className='modal-av '+colorClass;document.getElementById('modal-av').textContent=initials;if(photoData[initials]){document.getElementById('modal-av').innerHTML='<img src="'+photoData[initials]+'"/>';}document.getElementById('modal-name').textContent=name;document.getElementById('modal-ntrp').textContent=detail;document.getElementById('modal-bio').textContent=bio;document.getElementById('modal-wins').textContent=wins;document.getElementById('modal-pct').textContent=pct;document.getElementById('modal-rating').textContent=rating;var capBadge=document.getElementById('modal-captain-badge');capBadge.innerHTML=detail.includes('Captain')?'<span class="modal-captain">👑 Captain</span>':'';currentProfile=initials;document.getElementById('profileModal').classList.add('open');document.body.style.overflow='hidden';}
+var PLAYERS=[{name:'Jaclyn Groenen',init:'JG',detail:'4.0 · Captain · Kiss My Ace'},{name:'Lynn Sundblad',init:'LS',detail:'4.0 · Captain · Pour Decisions'},{name:'Tara Bucci',init:'TB',detail:'4.0 · Both Teams'},{name:'Stephanie Giordano',init:'SG',detail:'3.5 · Kiss My Ace'},{name:'Amanda Neill',init:'AN',detail:'4.0 · Both Teams'},{name:'Leslie Brinkley',init:'LB',detail:'3.5 · Kiss My Ace'},{name:'Rebecca Feinberg',init:'RF',detail:'3.5 · Both Teams'},{name:'Rachel Chadwin',init:'RC',detail:'4.0 · Both Teams'},{name:'Amanda Neczypor',init:'ANZ',detail:'3.5 · Both Teams'},{name:'Helen Lee',init:'HL',detail:'3.5 · Both Teams'},{name:'Helen He',init:'HH',detail:'4.0 · Kiss My Ace'},{name:'Sarah Brautigan',init:'SB',detail:'4.0 · Kiss My Ace'},{name:'Mary Marshall',init:'MM',detail:'3.5 · Kiss My Ace'},{name:'Alison Vachris',init:'AV',detail:'4.0 · Kiss My Ace'},{name:'Doris Kerr',init:'DK',detail:'4.0 · Kiss My Ace'},{name:'Nicole Costelloe',init:'NC',detail:'4.0 · Both Teams'},{name:'Christina Faidley',init:'CF',detail:'3.5 · Both Teams'},{name:'Jody Staples',init:'JS',detail:'3.5 · Both Teams'},{name:'Karli McGill',init:'KM',detail:'4.0 · Both Teams'},{name:'Kerry McDuffie',init:'KMD',detail:'4.0 · Both Teams'},{name:'Vanessa Halloran',init:'VH',detail:'4.0 · Kiss My Ace'},{name:'Bridget Hallman',init:'BH',detail:'4.0 · Kiss My Ace'},{name:'Olivia Andrews',init:'OA',detail:'4.0 · Pour Decisions'},{name:'Kristin Kobell',init:'KK',detail:'4.0 · Pour Decisions'},{name:'Lisa Tan',init:'LT',detail:'3.5 · Pour Decisions'}];
+var TEAMS=[{name:'Kinetix Deuces Wild',detail:'Kiss My Ace opponent'},{name:'Unmatchables',detail:'Kiss My Ace opponent'},{name:'Tennis Addiction',detail:'Kiss My Ace opponent'},{name:'Love Hurts',detail:'Kiss My Ace opponent'},{name:'IKST Gulph Mills',detail:'Pour Decisions opponent'},{name:'Saint Albans Swim & Tennis',detail:'Pour Decisions opponent'},{name:'UD Smash Squad',detail:'Pour Decisions opponent'},{name:'Simply Smashing',detail:'Pour Decisions opponent'},{name:'Merion Cricket 18+',detail:'Pour Decisions opponent'},{name:'Philly Cricket',detail:'Pour Decisions opponent'},{name:'Quad Squad',detail:'Pour Decisions opponent'},{name:'Kicking Aces',detail:'Pour Decisions opponent'}];
+function switchTeam(team,btn){document.querySelectorAll('.team-tab').forEach(b=>b.classList.remove('active'));btn.classList.add('active');document.querySelectorAll('.team-panel').forEach(p=>p.classList.remove('active'));document.getElementById('panel-'+team).classList.add('active');currentTeam=team;document.querySelectorAll('.dnav-btn,.bnav-btn').forEach(b=>b.classList.remove('active'));document.querySelectorAll('.dnav-btn')[0].classList.add('active');document.getElementById('mob-schedule').classList.add('active');showPage(team,'schedule');currentPage='schedule';window.scrollTo(0,0);}
+function switchPage(page,btn){document.querySelectorAll('.dnav-btn').forEach(b=>b.classList.remove('active'));document.querySelectorAll('.bnav-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');var pages=['schedule','docket','standings','roster','whatsapp'];var idx=pages.indexOf(page);if(idx>=0){if(btn.classList.contains('dnav-btn'))document.getElementById('mob-'+page).classList.add('active');else document.querySelectorAll('.dnav-btn')[idx].classList.add('active');}showPage(currentTeam,page);currentPage=page;window.scrollTo(0,0);}
+function showPage(team,page){document.getElementById('panel-'+team).querySelectorAll('.page-view').forEach(v=>v.classList.remove('active'));var t=document.getElementById(team+'-'+page);if(t)t.classList.add('active');}
+function openProfile(name,initials,colorClass,detail,bio,ntrp,role){var av=document.getElementById('modal-av');av.className='modal-av '+colorClass;av.textContent=initials.replace(/[0-9]/g,'');if(photoData[initials])av.innerHTML='<img src="'+photoData[initials]+'">';document.getElementById('modal-name').textContent=name;document.getElementById('modal-detail').textContent=detail;document.getElementById('modal-ntrp').textContent=ntrp;var bioEl=document.getElementById('modal-bio');var bioSec=document.getElementById('bio-sec');if(bio){bioEl.textContent=bio;bioSec.style.display='block';}else bioSec.style.display='none';document.getElementById('modal-cap-badge').innerHTML=role==='Captain'?'<span class="modal-cap">👑 Captain</span>':'';currentProfile=initials;document.getElementById('profileModal').classList.add('open');document.body.style.overflow='hidden';}
 function closeProfile(e){if(e&&e.target!==document.getElementById('profileModal'))return;document.getElementById('profileModal').classList.remove('open');document.body.style.overflow='';currentProfile=null;}
-function handlePhotoUpload(event){var file=event.target.files[0];if(!file||!currentProfile)return;var reader=new FileReader();reader.onload=function(e){photoData[currentProfile]=e.target.result;document.getElementById('modal-av').className='modal-av';document.getElementById('modal-av').innerHTML='<img src="'+e.target.result+'" style="width:100%;height:100%;object-fit:cover;border-radius:50%;"/>';var cardAv=document.getElementById('av-'+currentProfile);if(cardAv){cardAv.innerHTML='<img src="'+e.target.result+'"/>';}};reader.readAsDataURL(file);}
-var PLAYERS=[{name:'Tara Bucci',init:'TB',detail:'4.0 · Kiss My Ace & Pour Decisions'},{name:'Jaclyn Groenen',init:'JG',detail:'4.0 · Captain'},{name:'Stephanie Giordano',init:'SG',detail:'3.5'},{name:'Amanda Neill',init:'AN',detail:'4.0'},{name:'Leslie Brinkley',init:'LB',detail:'3.5'},{name:'Rebecca Feinberg',init:'RF',detail:'3.5'},{name:'Lynn Sundblad',init:'LS',detail:'4.0'},{name:'Rachel Chadwin',init:'RC',detail:'4.0'},{name:'Amanda Neczypor',init:'ANZ',detail:'3.5'},{name:'Jody Staples',init:'JS',detail:'3.5'},{name:'Karli McGill',init:'KM',detail:'4.0'},{name:'Kerry McDuffie',init:'KMD',detail:'4.0'}];
-var TEAMS=[{name:'Ardmore TC',detail:'Friday League'},{name:'Wayne LTC',detail:'Friday League'},{name:'Merion Cricket',detail:'Friday League'},{name:'Radnor Hunt',detail:'Friday League'},{name:'Bryn Mawr TC',detail:'Tuesday League'},{name:'Narberth AC',detail:'Tuesday League'}];
+function handlePhoto(event){var file=event.target.files[0];if(!file||!currentProfile)return;var reader=new FileReader();reader.onload=function(e){photoData[currentProfile]=e.target.result;document.getElementById('modal-av').innerHTML='<img src="'+e.target.result+'">';var c=document.getElementById('av-'+currentProfile);if(c)c.innerHTML='<img src="'+e.target.result+'">';};reader.readAsDataURL(file);}
 function openSearch(){document.getElementById('searchOverlay').classList.add('open');setTimeout(()=>document.getElementById('searchField').focus(),100);doSearch('');}
 function closeSearch(){document.getElementById('searchOverlay').classList.remove('open');document.getElementById('searchField').value='';}
-function doSearch(q){var ql=q.toLowerCase();var players=q?PLAYERS.filter(p=>p.name.toLowerCase().includes(ql)):PLAYERS;var teams=q?TEAMS.filter(t=>t.name.toLowerCase().includes(ql)):TEAMS;document.getElementById('playerResults').innerHTML=players.map(p=>'<div class="search-item"><div class="s-av">'+p.init+'</div><div class="s-info"><div class="s-name">'+p.name+'</div><div class="s-sub">'+p.detail+'</div></div><span class="s-tag">Player</span></div>').join('')||'<div class="search-empty">No players found</div>';document.getElementById('teamResults').innerHTML=teams.map(t=>{var init=t.name.split(' ').map(w=>w[0]).join('').slice(0,2);return'<div class="search-item"><div class="s-av team">'+init+'</div><div class="s-info"><div class="s-name">'+t.name+'</div><div class="s-sub">'+t.detail+'</div></div><span class="s-tag">Team</span></div>';}).join('')||'<div class="search-empty">No teams found</div>';}
+function doSearch(q){var ql=q.toLowerCase();var pl=q?PLAYERS.filter(p=>p.name.toLowerCase().includes(ql)):PLAYERS;var tl=q?TEAMS.filter(t=>t.name.toLowerCase().includes(ql)):TEAMS;document.getElementById('playerResults').innerHTML=pl.map(p=>'<div class="s-item"><div class="s-av">'+p.init+'</div><div class="s-info"><div class="s-name">'+p.name+'</div><div class="s-sub">'+p.detail+'</div></div><span class="s-tag">Player</span></div>').join('')||'<div style="color:rgba(255,255,255,.3);padding:12px 0;">No players found</div>';document.getElementById('teamResults').innerHTML=tl.map(t=>{var i=t.name.split(' ').map(w=>w[0]).join('').slice(0,2);return'<div class="s-item"><div class="s-av team">'+i+'</div><div class="s-info"><div class="s-name">'+t.name+'</div><div class="s-sub">'+t.detail+'</div></div><span class="s-tag">Team</span></div>';}).join('')||'<div style="color:rgba(255,255,255,.3);padding:12px 0;">No teams found</div>';}
 </script>
 </body>
 </html>
