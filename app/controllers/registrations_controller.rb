@@ -17,6 +17,14 @@ class RegistrationsController < ApplicationController
 
     if @user.save
       session[:user_id] = @user.id
+      if session[:join_team_id]
+        team = Team.find_by(id: session.delete(:join_team_id))
+        if team && !team.team_players.exists?(user: @user)
+          team.team_players.create!(user: @user, player_name: @user.name, role: "player")
+        end
+        redirect_to team_path(team), notice: "Welcome to Court Report! You joined #{team.name}."
+        return
+      end
       redirect_to root_path, notice: "Welcome to Court Report, #{@user.name}!"
     else
       render :new, status: :unprocessable_entity
@@ -36,7 +44,7 @@ class RegistrationsController < ApplicationController
       redirect_to team_path(team), notice: "You joined #{team.name}!"
     else
       session[:join_team_id] = team.id
-      redirect_to signup_path, notice: "Sign up to join #{team.name}!"
+      redirect_to login_path, notice: "Sign in to join #{team.name}! New here? Sign up first."
     end
   rescue ActiveRecord::RecordNotFound
     redirect_to root_path, alert: "Invalid team link."

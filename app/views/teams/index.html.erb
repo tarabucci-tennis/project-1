@@ -9,9 +9,9 @@
 
 <% if @my_teams.empty? %>
   <div class="cr-card" style="text-align:center;padding:60px 24px;">
-    <p style="font-size:1.2rem;margin-bottom:12px;">No teams yet!</p>
-    <p style="color:var(--sub);margin-bottom:20px;">Create a team to get started, or ask your captain for a join link.</p>
-    <a href="<%= new_team_path %>" class="cr-btn">+ Create Your First Team</a>
+    <p style="font-size:1.2rem;margin-bottom:12px;">You haven't joined any teams yet</p>
+    <p style="color:var(--sub);margin-bottom:20px;">Ask your captain for a join link or create your own team to get started.</p>
+    <a href="<%= new_team_path %>" class="cr-btn">+ Create Team</a>
   </div>
 <% else %>
   <% @leagues.each do |league, teams| %>
