@@ -18,18 +18,31 @@ jobs:
           host: ${{ secrets.DEPLOY_HOST }}
           username: root
           key: ${{ secrets.DEPLOY_SSH_KEY }}
+          command_timeout: 15m
           script: |
             set -e
+            echo "=== Starting deployment ==="
+
+            # Clone repo if first deploy
             if [ ! -d /root/app ]; then
+              echo "First deploy — cloning repo..."
               git clone https://github.com/tarabucci-tennis/project-1 /root/app
             fi
+
             cd /root/app
+            echo "=== Pulling latest code ==="
             git fetch origin
             git checkout ${{ github.ref_name }}
             git reset --hard origin/${{ github.ref_name }}
+
+            echo "=== Building Docker image ==="
             docker build -t project-1 .
+
+            echo "=== Stopping old container ==="
             docker stop project-1 || true
             docker rm project-1 || true
+
+            echo "=== Starting new container ==="
             docker run -d \
               -p 80:80 \
               -e "RAILS_MASTER_KEY=${{ secrets.RAILS_MASTER_KEY }}" \
@@ -37,6 +50,27 @@ jobs:
               --name project-1 \
               --restart unless-stopped \
               project-1
+
+            echo "=== Running migrations and seeds ==="
             sleep 5
             docker exec project-1 bin/rails db:migrate db:seed
-            echo "Deployed successfully"
+
+            echo "=== Checking container health ==="
+            sleep 3
+            if docker ps | grep -q project-1; then
+              echo "Container is running!"
+              # Quick health check
+              HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" http://localhost/up || echo "000")
+              echo "Health check status: $HTTP_STATUS"
+              if [ "$HTTP_STATUS" = "200" ]; then
+                echo "=== Deploy successful! App is live ==="
+              else
+                echo "=== Warning: App started but health check returned $HTTP_STATUS ==="
+                echo "=== Container logs: ==="
+                docker logs project-1 --tail 30
+              fi
+            else
+              echo "=== ERROR: Container failed to start ==="
+              docker logs project-1 --tail 50
+              exit 1
+            fi
