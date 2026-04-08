@@ -1,7 +1,7 @@
 class ProfilesController < ApplicationController
-  def show
-    return redirect_to login_path unless current_user
+  before_action :require_login
 
+  def show
     @user  = current_user
     @teams = @user.tennis_teams.order(start_date: :desc)
     @stats = @user.tennis_stats.chronological

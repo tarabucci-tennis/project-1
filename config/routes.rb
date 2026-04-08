@@ -17,6 +17,8 @@ Rails.application.routes.draw do
   # Admin: user management
   resources :users, only: [ :index, :new, :create, :edit, :update, :destroy ]
 
+  resources :tennis_teams, path: "teams", only: [ :show ]
+
   get "tennis",  to: "pages#tennis",    as: :tennis
   get "profile", to: "profiles#show",  as: :profile
 

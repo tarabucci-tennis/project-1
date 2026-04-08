@@ -1,0 +1,74 @@
+<% content_for :title, "#{@team.name} · Team Details" %>
+
+<div class="profile-page">
+  <div style="margin-bottom: 24px;">
+    <%= link_to "← Back to Profile", profile_path, class: "btn btn-secondary btn-sm" %>
+  </div>
+
+  <div class="profile-header">
+    <div class="profile-identity">
+      <h1><%= @team.name %></h1>
+      <div class="profile-meta">
+        <% if @team.team_type.present? %>
+          <span class="meta-chip"><%= @team.team_type %></span>
+        <% end %>
+        <% if @team.section.present? %>
+          <span class="meta-chip"><%= @team.section %></span>
+        <% end %>
+        <% if @team.gender.present? %>
+          <span class="meta-chip"><%= @team.gender %></span>
+        <% end %>
+      </div>
+    </div>
+
+    <% if @team.rating.present? %>
+      <div class="rating-cards">
+        <div class="rating-card rating-card-ntrp">
+          <div class="rating-card-label">Team Rating</div>
+          <div class="rating-card-value"><%= @team.rating %></div>
+          <% if @team.start_date.present? %>
+            <div class="rating-card-date">started <%= @team.start_date.strftime("%-m/%-d/%Y") %></div>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
+  <section class="profile-section">
+    <h2 class="section-title">Team Details</h2>
+    <div class="profile-table-wrap">
+      <table class="profile-table">
+        <tbody>
+          <tr>
+            <td class="td-primary">Team Name</td>
+            <td><%= @team.name %></td>
+          </tr>
+          <tr>
+            <td class="td-primary">Type</td>
+            <td><%= @team.team_type || "—" %></td>
+          </tr>
+          <tr>
+            <td class="td-primary">Section</td>
+            <td><%= @team.section || "—" %></td>
+          </tr>
+          <tr>
+            <td class="td-primary">Gender</td>
+            <td><%= @team.gender || "—" %></td>
+          </tr>
+          <tr>
+            <td class="td-primary">Rating</td>
+            <td><% if @team.rating.present? %><span class="rating-pill"><%= @team.rating %></span><% else %>—<% end %></td>
+          </tr>
+          <tr>
+            <td class="td-primary">Match Start</td>
+            <td><%= @team.start_date&.strftime("%-m/%-d/%Y") || "—" %></td>
+          </tr>
+          <tr>
+            <td class="td-primary">Player</td>
+            <td><%= @user.name %></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+</div>
