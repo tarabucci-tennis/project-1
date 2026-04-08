@@ -727,3 +727,166 @@ h1 {
   padding: 60px 20px;
   color: rgba(255,255,255,0.3);
 }
+
+/* ======================================================
+   Teams Pages
+   ====================================================== */
+
+.teams-page {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 40px 24px 80px;
+}
+
+.teams-header {
+  margin-bottom: 32px;
+}
+
+.teams-header h1 {
+  font-size: 2rem;
+  font-weight: 900;
+  letter-spacing: -1px;
+}
+
+.team-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 20px;
+}
+
+.team-card {
+  display: block;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 14px;
+  padding: 28px 24px;
+  text-decoration: none;
+  color: #fff;
+  transition: background 0.2s, transform 0.2s, border-color 0.2s;
+  position: relative;
+}
+
+.team-card:hover {
+  background: rgba(255,255,255,0.12);
+  transform: translateY(-4px);
+  border-color: rgba(204,255,0,0.3);
+}
+
+.team-card-rating {
+  display: inline-block;
+  padding: 3px 12px;
+  background: rgba(204,255,0,0.12);
+  color: #ccff00;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.team-card-name {
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: #fff;
+  margin-bottom: 8px;
+  letter-spacing: -0.3px;
+}
+
+.team-card-details {
+  font-size: 0.85rem;
+  color: rgba(255,255,255,0.6);
+  margin-bottom: 6px;
+}
+
+.team-card-meta {
+  font-size: 0.78rem;
+  color: rgba(255,255,255,0.35);
+}
+
+.team-card-dot {
+  margin: 0 6px;
+}
+
+.teams-empty {
+  text-align: center;
+  padding: 80px 20px;
+  color: rgba(255,255,255,0.3);
+}
+
+/* ── Team Show Page ── */
+
+.team-show-page {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 40px 24px 80px;
+}
+
+.team-show-back {
+  margin-bottom: 24px;
+}
+
+.back-link {
+  color: rgba(255,255,255,0.5);
+  text-decoration: none;
+  font-size: 0.85rem;
+  transition: color 0.15s;
+}
+
+.back-link:hover {
+  color: #ccff00;
+}
+
+.team-show-header {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 36px;
+}
+
+.team-show-rating-badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  background: rgba(204,255,0,0.12);
+  border: 2px solid rgba(204,255,0,0.3);
+  border-radius: 14px;
+  color: #ccff00;
+  font-size: 1.3rem;
+  font-weight: 900;
+  flex-shrink: 0;
+}
+
+.team-show-header h1 {
+  font-size: 2.2rem;
+  font-weight: 900;
+  letter-spacing: -1px;
+}
+
+.team-show-details {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 16px;
+}
+
+.team-detail-card {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.detail-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: rgba(255,255,255,0.4);
+  margin-bottom: 8px;
+}
+
+.detail-value {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #fff;
+}

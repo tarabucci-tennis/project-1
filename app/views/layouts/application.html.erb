@@ -30,6 +30,9 @@
       <% end %>
       <div class="navbar-center">
         <%= link_to "Tennis", tennis_path, class: "nav-link" %>
+        <% if current_user %>
+          <%= link_to "My Teams", teams_path, class: "nav-link" %>
+        <% end %>
         <% if current_user&.admin? %>
           <span class="nav-link nav-link-coming-soon">Project 2</span>
         <% end %>

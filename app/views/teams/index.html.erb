@@ -1,0 +1,32 @@
+<% content_for :title, "My Teams" %>
+
+<div class="teams-page">
+  <div class="teams-header">
+    <h1>My Teams</h1>
+  </div>
+
+  <% if @teams.any? %>
+    <div class="team-cards">
+      <% @teams.each do |team| %>
+        <%= link_to team_path(team), class: "team-card" do %>
+          <div class="team-card-rating"><%= team.rating %></div>
+          <h2 class="team-card-name"><%= team.name %></h2>
+          <div class="team-card-details">
+            <span><%= team.team_type %></span>
+            <span class="team-card-dot">&middot;</span>
+            <span><%= team.gender == "F" ? "Women's" : "Men's" %></span>
+          </div>
+          <div class="team-card-meta">
+            <span><%= team.section %></span>
+            <span class="team-card-dot">&middot;</span>
+            <span>Started <%= team.start_date.strftime("%-m/%-d/%Y") %></span>
+          </div>
+        <% end %>
+      <% end %>
+    </div>
+  <% else %>
+    <div class="teams-empty">
+      <p>You haven't joined any teams yet.</p>
+    </div>
+  <% end %>
+</div>

@@ -1,0 +1,35 @@
+<% content_for :title, "#{@team.name} · Team" %>
+
+<div class="team-show-page">
+  <div class="team-show-back">
+    <%= link_to "&larr; My Teams".html_safe, teams_path, class: "back-link" %>
+  </div>
+
+  <div class="team-show-header">
+    <div class="team-show-rating-badge"><%= @team.rating %></div>
+    <h1><%= @team.name %></h1>
+  </div>
+
+  <div class="team-show-details">
+    <div class="team-detail-card">
+      <div class="detail-label">Type</div>
+      <div class="detail-value"><%= @team.team_type %></div>
+    </div>
+    <div class="team-detail-card">
+      <div class="detail-label">Section</div>
+      <div class="detail-value"><%= @team.section %></div>
+    </div>
+    <div class="team-detail-card">
+      <div class="detail-label">Gender</div>
+      <div class="detail-value"><%= @team.gender == "F" ? "Women's" : "Men's" %></div>
+    </div>
+    <div class="team-detail-card">
+      <div class="detail-label">Rating</div>
+      <div class="detail-value"><span class="rating-pill"><%= @team.rating %></span></div>
+    </div>
+    <div class="team-detail-card">
+      <div class="detail-label">Match Start</div>
+      <div class="detail-value"><%= @team.start_date.strftime("%-m/%-d/%Y") %></div>
+    </div>
+  </div>
+</div>
