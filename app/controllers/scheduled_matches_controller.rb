@@ -1,7 +1,7 @@
 class ScheduledMatchesController < ApplicationController
   before_action :require_login
   before_action :set_team
-  before_action :set_match, only: [ :show, :edit, :update, :update_lineup, :update_availability ]
+  before_action :set_match, only: [ :show, :edit, :update, :update_lineup, :update_availability, :confirm_lineup_spot ]
   before_action :require_captain, only: [ :new, :create, :edit, :update, :update_lineup ]
 
   def show
@@ -50,6 +50,18 @@ class ScheduledMatchesController < ApplicationController
       end
     end
     redirect_to team_scheduled_match_path(@team, @match), notice: "Lineup updated!"
+  end
+
+  def confirm_lineup_spot
+    my_player = @team.team_players.find_by(user: current_user)
+    slot = @match.lineup_slots.find_by(team_player: my_player)
+    if slot
+      message = params[:confirmation_message].presence
+      slot.confirm!(message)
+      redirect_back fallback_location: team_scheduled_match_path(@team, @match), notice: "Lineup confirmed! #{message || '✅'}"
+    else
+      redirect_back fallback_location: team_scheduled_match_path(@team, @match), alert: "You're not in the lineup for this match."
+    end
   end
 
   def update_availability

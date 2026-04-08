@@ -36,6 +36,7 @@ Rails.application.routes.draw do
       member do
         patch :update_lineup
         patch :update_availability
+        patch :confirm_lineup_spot
       end
       resources :match_scores, only: [ :new, :create, :edit, :update ]
     end

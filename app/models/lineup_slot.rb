@@ -19,4 +19,20 @@ class LineupSlot < ApplicationRecord
   def self.max_players_for(position)
     position == "1S" ? 1 : 2
   end
+
+  def confirmed?
+    confirmed
+  end
+
+  def confirm!(message = nil)
+    update!(confirmed: true, confirmation_message: message, confirmed_at: Time.current)
+  end
+
+  def confirmation_display
+    if confirmed?
+      confirmation_message.presence || "Confirmed"
+    else
+      "Pending"
+    end
+  end
 end
