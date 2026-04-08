@@ -9,14 +9,22 @@ class TeamsController < ApplicationController
   end
 
   def show
-    @matches = @team.scheduled_matches.chronological.includes(:player_availabilities, :lineup_slots, :match_scores)
-    @players = @team.team_players.ordered
+    @matches = begin
+      @team.scheduled_matches.chronological.includes(:player_availabilities, :lineup_slots, :match_scores).load
+    rescue ActiveRecord::StatementInvalid
+      @team.scheduled_matches.chronological.load rescue []
+    end
+    @players = @team.team_players.ordered.load rescue []
     @is_captain = current_user.captain_of?(@team) rescue false
-    @my_player = @team.team_players.find_by(user: current_user)
+    @my_player = @team.team_players.find_by(user: current_user) rescue nil
     @my_availabilities = {}
     if @my_player
-      @my_player.player_availabilities.where(scheduled_match: @matches).each do |a|
-        @my_availabilities[a.scheduled_match_id] = a
+      begin
+        @my_player.player_availabilities.where(scheduled_match: @matches).each do |a|
+          @my_availabilities[a.scheduled_match_id] = a
+        end
+      rescue ActiveRecord::StatementInvalid
+        # player_availabilities table may not exist
       end
     end
   end

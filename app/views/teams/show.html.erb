@@ -52,7 +52,7 @@
       <% avail_confirmed = all_avails.select { |a| a.status == "confirmed" } rescue [] %>
       <% avail_out = all_avails.select { |a| a.status == "unavailable" } rescue [] %>
       <% avail_pending = @players.count - avail_confirmed.count - avail_out.count rescue 0 %>
-      <% match_result = match.respond_to?(:team_result) ? match_result : nil rescue nil %>
+      <% match_result = match.respond_to?(:team_result) ? match.team_result : nil rescue nil %>
 
       <!-- Match Card (click to expand) -->
       <div style="border-radius:14px;margin-bottom:12px;overflow:hidden;">

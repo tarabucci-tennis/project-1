@@ -24,7 +24,9 @@ class User < ApplicationRecord
   end
 
   def super_admin?
-    super_admin
+    respond_to?(:super_admin) ? super_admin : false
+  rescue ActiveRecord::StatementInvalid
+    false
   end
 
   def generate_reset_token!
