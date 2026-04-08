@@ -12,7 +12,7 @@ class CaptainNotification < ApplicationRecord
     case event_type
     when "confirmed" then "\u2705"
     when "unavailable" then "\u274C"
-    when "custom" then "\uD83D\uDCAC"
+    when "custom" then "\u{1F4AC}"
     end
   end
 

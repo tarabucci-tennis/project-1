@@ -30,7 +30,7 @@ class PlayerAvailability < ApplicationRecord
     case status
     when "confirmed" then "\u2705"
     when "unavailable" then "\u274C"
-    when "custom" then "\uD83D\uDCAC"
+    when "custom" then "\u{1F4AC}"
     else "\u2B55"
     end
   end
