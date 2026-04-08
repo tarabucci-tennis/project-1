@@ -28,8 +28,8 @@ class Team < ApplicationRecord
   end
 
   def record
-    wins = scheduled_matches.where(team_result: "win").count
-    losses = scheduled_matches.where(team_result: "loss").count
+    wins = scheduled_matches.where(team_result: "win").count rescue 0
+    losses = scheduled_matches.where(team_result: "loss").count rescue 0
     { wins: wins, losses: losses }
   end
 

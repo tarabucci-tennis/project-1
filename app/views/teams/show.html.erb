@@ -45,8 +45,9 @@
   <% if @matches.any? %>
     <% @matches.each_with_index do |match, idx| %>
       <% my_avail = @my_availabilities[match.id] %>
-      <% avail_confirmed = match.player_availabilities.select { |a| a.status == "confirmed" } %>
-      <% avail_out = match.player_availabilities.select { |a| a.status == "unavailable" } %>
+      <% all_avails = match.player_availabilities.to_a rescue [] %>
+      <% avail_confirmed = all_avails.select { |a| a.status == "confirmed" } %>
+      <% avail_out = all_avails.select { |a| a.status == "unavailable" } %>
       <% avail_pending = @players.count - avail_confirmed.count - avail_out.count %>
 
       <div class="cr-match-expand" id="match-<%= match.id %>">

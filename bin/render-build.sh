@@ -2,9 +2,10 @@
 # Render build script — runs on every deploy
 set -o errexit
 
-# Allow lock file update for new gems (pg added for Render)
+# Allow lock file update for new gems (pg, bcrypt added for Render)
 export BUNDLE_FROZEN=false
 bundle config set --local without 'development test'
+bundle lock --add-platform x86_64-linux 2>/dev/null || true
 bundle install
 
 # Precompile assets
