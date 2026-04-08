@@ -51,6 +51,46 @@ class TeamsController < ApplicationController
     end
   end
 
+  def upload_schedule
+    @team = current_user.captained_teams.build(
+      name: params[:name],
+      league: params[:league],
+      rating: params[:rating],
+      home_court: params[:home_court],
+      gender: "F",
+      section: "Middle States"
+    )
+
+    if @team.save
+      @team.team_players.create!(user: current_user, player_name: current_user.name, role: "captain")
+
+      if params[:schedule_file].present?
+        parse_schedule_file(params[:schedule_file], @team)
+      end
+
+      redirect_to team_path(@team), notice: "#{@team.name} created with #{@team.scheduled_matches.count} matches imported!"
+    else
+      redirect_to new_team_path, alert: "Could not create team: #{@team.errors.full_messages.join(', ')}"
+    end
+  end
+
+  def invite_captain
+    # Send invite email to captain
+    if params[:captain_email].present?
+      CaptainMailer.captain_invite(
+        params[:captain_email],
+        params[:captain_name],
+        params[:team_name],
+        params[:message],
+        current_user
+      ).deliver_later rescue nil
+
+      redirect_to teams_path, notice: "Invitation sent to #{params[:captain_name]} at #{params[:captain_email]}!"
+    else
+      redirect_to new_team_path, alert: "Please enter your captain's email."
+    end
+  end
+
   def edit
   end
 
@@ -96,5 +136,46 @@ class TeamsController < ApplicationController
 
   def team_params
     params.require(:team).permit(:name, :league, :team_type, :section, :gender, :rating, :home_court, :usta_team_number)
+  end
+
+  def parse_schedule_file(file, team)
+    require "csv"
+    content = file.read
+
+    # Try to parse as CSV
+    rows = CSV.parse(content, headers: true, liberal_parsing: true) rescue nil
+    return unless rows
+
+    rows.each do |row|
+      # Try common column names from USTA TennisLink exports
+      date_val = row["Date"] || row["Match Date"] || row["date"] || row["Start Date"] || row.fields[0]
+      opp_val = row["Opponent"] || row["opponent"] || row["Opposing Team"] || row["Away Team"] || row.fields[1]
+      ha_val = row["Home/Away"] || row["H/A"] || row["Location Type"] || row.fields[2]
+      loc_val = row["Location"] || row["Venue"] || row["location"] || row["Facility"] || row.fields[3]
+
+      next unless date_val.present? && opp_val.present?
+
+      begin
+        match_date = Date.parse(date_val.to_s.strip)
+      rescue
+        next
+      end
+
+      home_away = if ha_val.to_s.strip.downcase.start_with?("h")
+        "home"
+      else
+        "away"
+      end
+
+      team.scheduled_matches.find_or_create_by!(
+        match_date: match_date,
+        opponent_team: opp_val.to_s.strip
+      ) do |m|
+        m.home_away = home_away
+        m.location = loc_val.to_s.strip
+      end
+    end
+  rescue => e
+    Rails.logger.error "Schedule import error: #{e.message}"
   end
 end

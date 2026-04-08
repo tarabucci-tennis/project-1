@@ -19,6 +19,10 @@ Rails.application.routes.draw do
 
   # Teams with full CRUD
   resources :teams, only: [ :index, :show, :new, :create, :edit, :update ] do
+    collection do
+      post :upload_schedule
+      post :invite_captain
+    end
     member do
       get :availability_grid
     end

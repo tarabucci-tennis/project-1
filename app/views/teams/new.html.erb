@@ -1,69 +1,233 @@
-<% content_for(:title) { "Create Team - Court Report" } %>
+<% content_for(:title) { "Add Team - Court Report" } %>
 
 <div class="cr-hero cr-hero-navy">
   <div class="cr-hero-grid"></div><div class="cr-hero-glow"></div>
-  <div class="cr-hero-content">
-    <div class="cr-hero-tag">New Team</div>
-    <div class="cr-hero-title">Create Your Team</div>
-    <div class="cr-hero-sub">Set up your team and share the join link with your players</div>
+  <div class="cr-hero-content" style="text-align:center;">
+    <div class="cr-hero-title">Add a Team</div>
+    <div class="cr-hero-sub">Choose how you'd like to get started</div>
   </div>
 </div>
 
-<div class="cr-form">
-  <% if @team.errors.any? %>
-    <div class="cr-errors">
-      <% @team.errors.full_messages.each do |msg| %>
-        <p><%= msg %></p>
-      <% end %>
-    </div>
-  <% end %>
+<!-- Three Options -->
+<div id="team-options" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px;margin-bottom:32px;">
+  <div onclick="showSetup('manual')" style="background:var(--surface);border:2px solid var(--border);border-radius:16px;padding:32px 24px;text-align:center;cursor:pointer;transition:all .2s;" onmouseover="this.style.borderColor='var(--accent)';this.style.transform='translateY(-4px)'" onmouseout="this.style.borderColor='var(--border)';this.style.transform='none'">
+    <div style="font-size:2rem;margin-bottom:12px;">✏️</div>
+    <div style="font-family:'Bebas Neue',sans-serif;font-size:1.3rem;letter-spacing:2px;color:var(--text);margin-bottom:6px;">Set Up Manually</div>
+    <div style="font-size:.82rem;color:var(--sub);line-height:1.5;">Enter your team info, schedule, and roster step by step</div>
+  </div>
+  <div onclick="showSetup('upload')" style="background:var(--surface);border:2px solid var(--border);border-radius:16px;padding:32px 24px;text-align:center;cursor:pointer;transition:all .2s;" onmouseover="this.style.borderColor='var(--accent)';this.style.transform='translateY(-4px)'" onmouseout="this.style.borderColor='var(--border)';this.style.transform='none'">
+    <div style="font-size:2rem;margin-bottom:12px;">📊</div>
+    <div style="font-family:'Bebas Neue',sans-serif;font-size:1.3rem;letter-spacing:2px;color:var(--text);margin-bottom:6px;">Upload a Spreadsheet</div>
+    <div style="font-size:.82rem;color:var(--sub);line-height:1.5;">Upload XLS, XLSX, or CSV — we'll read your schedule automatically</div>
+  </div>
+  <div onclick="showSetup('invite')" style="background:var(--surface);border:2px solid var(--border);border-radius:16px;padding:32px 24px;text-align:center;cursor:pointer;transition:all .2s;" onmouseover="this.style.borderColor='var(--accent)';this.style.transform='translateY(-4px)'" onmouseout="this.style.borderColor='var(--border)';this.style.transform='none'">
+    <div style="font-size:2rem;margin-bottom:12px;">📨</div>
+    <div style="font-family:'Bebas Neue',sans-serif;font-size:1.3rem;letter-spacing:2px;color:var(--text);margin-bottom:6px;">Invite Your Captain</div>
+    <div style="font-size:.82rem;color:var(--sub);line-height:1.5;">Send your captain an email to set up the team for you</div>
+  </div>
+</div>
 
-  <%= form_with model: @team, url: teams_path do |f| %>
-    <div class="cr-field">
-      <%= f.label :name, "Team Name" %>
-      <%= f.text_field :name, placeholder: "Kiss My Ace", autofocus: true %>
-    </div>
+<!-- MANUAL SETUP -->
+<div id="setup-manual" style="display:none;">
+  <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;">
+    <button onclick="showOptions()" style="background:none;border:none;color:var(--accent);cursor:pointer;font-size:.85rem;font-weight:600;">&larr; Back</button>
+    <div style="font-family:'Bebas Neue',sans-serif;font-size:1.2rem;letter-spacing:2px;">Set Up Manually</div>
+  </div>
 
-    <div class="cr-field-row">
+  <div class="cr-form">
+    <% if @team.errors.any? %>
+      <div class="cr-errors">
+        <% @team.errors.full_messages.each do |msg| %><p><%= msg %></p><% end %>
+      </div>
+    <% end %>
+
+    <%= form_with model: @team, url: teams_path do |f| %>
       <div class="cr-field">
-        <%= f.label :league, "League" %>
-        <%= f.select :league, Team::LEAGUES.map { |l| [l, l] }, { include_blank: "Select league..." } %>
+        <%= f.label :name, "Team Name" %>
+        <%= f.text_field :name, placeholder: "Kiss My Ace", autofocus: true %>
+      </div>
+      <div class="cr-field-row">
+        <div class="cr-field">
+          <%= f.label :league, "League" %>
+          <%= f.select :league, Team::LEAGUES.map { |l| [l, l] }, { include_blank: "Select league..." } %>
+        </div>
+        <div class="cr-field">
+          <%= f.label :team_type, "Division / Type" %>
+          <%= f.text_field :team_type, placeholder: "Adult 18+ 4.0" %>
+        </div>
+      </div>
+      <div class="cr-field-row">
+        <div class="cr-field">
+          <%= f.label :rating, "Rating" %>
+          <%= f.select :rating, [3.0, 3.5, 4.0, 4.5, 5.0].map { |r| [r.to_s, r] }, { include_blank: "Select..." } %>
+        </div>
+        <div class="cr-field">
+          <%= f.label :usta_team_number, "USTA Team Number (optional)" %>
+          <%= f.text_field :usta_team_number, placeholder: "e.g. 12345" %>
+        </div>
       </div>
       <div class="cr-field">
-        <%= f.label :team_type, "Division / Type" %>
-        <%= f.text_field :team_type, placeholder: "Adult 18+ 4.0" %>
+        <%= f.label :home_court, "Home Court" %>
+        <%= f.text_field :home_court, placeholder: "Bryn Mawr Racquet Club" %>
       </div>
-    </div>
+      <div class="cr-field-row">
+        <div class="cr-field">
+          <%= f.label :section, "Section" %>
+          <%= f.text_field :section, placeholder: "Middle States" %>
+        </div>
+        <div class="cr-field">
+          <%= f.label :gender, "Gender" %>
+          <%= f.select :gender, [["Women's", "F"], ["Men's", "M"], ["Mixed", "X"]], { include_blank: "Select..." } %>
+        </div>
+      </div>
+      <div class="cr-field" style="margin-top:12px;">
+        <%= f.submit "Create Team", class: "cr-btn", style: "width:100%;justify-content:center;" %>
+      </div>
+    <% end %>
+  </div>
+</div>
 
-    <div class="cr-field-row">
-      <div class="cr-field">
-        <%= f.label :rating, "Rating" %>
-        <%= f.select :rating, [3.0, 3.5, 4.0, 4.5, 5.0].map { |r| [r.to_s, r] }, { include_blank: "Select..." } %>
-      </div>
-      <div class="cr-field">
-        <%= f.label :usta_team_number, "USTA Team Number (optional)" %>
-        <%= f.text_field :usta_team_number, placeholder: "e.g. 12345" %>
-      </div>
-    </div>
+<!-- UPLOAD SPREADSHEET -->
+<div id="setup-upload" style="display:none;">
+  <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;">
+    <button onclick="showOptions()" style="background:none;border:none;color:var(--accent);cursor:pointer;font-size:.85rem;font-weight:600;">&larr; Back</button>
+    <div style="font-family:'Bebas Neue',sans-serif;font-size:1.2rem;letter-spacing:2px;">Upload Schedule</div>
+  </div>
 
-    <div class="cr-field">
-      <%= f.label :home_court, "Home Court" %>
-      <%= f.text_field :home_court, placeholder: "Bryn Mawr Racquet Club" %>
-    </div>
-
-    <div class="cr-field-row">
+  <%= form_with url: upload_schedule_teams_path, method: :post, multipart: true, id: "upload-form" do |f| %>
+    <div class="cr-form">
       <div class="cr-field">
-        <%= f.label :section, "Section" %>
-        <%= f.text_field :section, placeholder: "Middle States" %>
+        <%= f.label :name, "Team Name" %>
+        <%= f.text_field :name, placeholder: "Kiss My Ace" %>
+      </div>
+      <div class="cr-field-row">
+        <div class="cr-field">
+          <%= f.label :league, "League" %>
+          <%= f.select :league, Team::LEAGUES.map { |l| [l, l] }, { include_blank: "Select league..." } %>
+        </div>
+        <div class="cr-field">
+          <%= f.label :rating, "Rating" %>
+          <%= f.select :rating, [3.0, 3.5, 4.0, 4.5, 5.0].map { |r| [r.to_s, r] }, { include_blank: "Select..." } %>
+        </div>
       </div>
       <div class="cr-field">
-        <%= f.label :gender, "Gender" %>
-        <%= f.select :gender, [["Women's", "F"], ["Men's", "M"], ["Mixed", "X"]], { include_blank: "Select..." } %>
+        <%= f.label :home_court, "Home Court" %>
+        <%= f.text_field :home_court, placeholder: "Bryn Mawr Racquet Club" %>
       </div>
-    </div>
 
-    <div class="cr-field" style="margin-top:12px;">
-      <%= f.submit "Create Team", class: "cr-btn", style: "width:100%;justify-content:center;" %>
+      <div style="margin:24px 0;">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:2px;text-transform:uppercase;color:var(--sub);margin-bottom:10px;">Upload Schedule File</div>
+        <label style="display:flex;flex-direction:column;align-items:center;gap:12px;padding:32px;background:var(--off);border:2px dashed var(--border);border-radius:14px;cursor:pointer;transition:border-color .2s;" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='var(--border)'">
+          <div style="font-size:2.5rem;">📄</div>
+          <div style="font-weight:600;font-size:.9rem;color:var(--text);">Click to upload your schedule</div>
+          <div style="font-size:.78rem;color:var(--sub);">Supports XLS, XLSX, CSV · USTA TennisLink exports work great</div>
+          <input type="file" name="schedule_file" accept=".csv,.xls,.xlsx" style="display:none;" onchange="previewFile(this)"/>
+        </label>
+      </div>
+
+      <!-- File Preview -->
+      <div id="file-preview" style="display:none;margin-bottom:24px;">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:2px;text-transform:uppercase;color:var(--sub);margin-bottom:10px;">PREVIEW — CONFIRM YOUR SCHEDULE</div>
+        <div id="preview-table" style="background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;"></div>
+        <div style="margin-top:12px;font-size:.78rem;color:var(--sub);" id="preview-count"></div>
+      </div>
+
+      <div class="cr-field" style="margin-top:12px;">
+        <%= f.submit "Create Team & Import Schedule", class: "cr-btn", style: "width:100%;justify-content:center;" %>
+      </div>
     </div>
   <% end %>
 </div>
+
+<!-- INVITE CAPTAIN -->
+<div id="setup-invite" style="display:none;">
+  <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;">
+    <button onclick="showOptions()" style="background:none;border:none;color:var(--accent);cursor:pointer;font-size:.85rem;font-weight:600;">&larr; Back</button>
+    <div style="font-family:'Bebas Neue',sans-serif;font-size:1.2rem;letter-spacing:2px;">Invite Your Captain</div>
+  </div>
+
+  <div class="cr-card" style="max-width:500px;">
+    <div style="text-align:center;margin-bottom:20px;">
+      <div style="font-size:2.5rem;margin-bottom:12px;">📨</div>
+      <div style="font-size:.95rem;color:var(--text);line-height:1.6;">Enter your captain's email and we'll send them an invitation to set up the team on Court Report.</div>
+    </div>
+
+    <%= form_with url: invite_captain_teams_path, method: :post do |f| %>
+      <div class="cr-field">
+        <%= f.label :team_name, "Team Name" %>
+        <%= f.text_field :team_name, placeholder: "Kiss My Ace" %>
+      </div>
+      <div class="cr-field">
+        <%= f.label :captain_name, "Captain's Name" %>
+        <%= f.text_field :captain_name, placeholder: "Jaclyn Groenen" %>
+      </div>
+      <div class="cr-field">
+        <%= f.label :captain_email, "Captain's Email" %>
+        <%= f.email_field :captain_email, placeholder: "jaclyn@example.com" %>
+      </div>
+      <div class="cr-field">
+        <%= f.label :message, "Personal Message (optional)" %>
+        <%= f.text_area :message, placeholder: "Hey Jaclyn! Check out Court Report — it's perfect for managing our team schedule and lineups.", rows: 3, style: "width:100%;padding:12px 16px;background:var(--surface);border:1px solid var(--border);border-radius:10px;font-family:'Inter',sans-serif;font-size:.9rem;color:var(--text);outline:none;resize:vertical;" %>
+      </div>
+      <div class="cr-field">
+        <%= f.submit "Send Invitation", class: "cr-btn", style: "width:100%;justify-content:center;" %>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<script>
+function showOptions() {
+  document.getElementById('team-options').style.display = 'grid';
+  document.getElementById('setup-manual').style.display = 'none';
+  document.getElementById('setup-upload').style.display = 'none';
+  document.getElementById('setup-invite').style.display = 'none';
+}
+
+function showSetup(type) {
+  document.getElementById('team-options').style.display = 'none';
+  document.getElementById('setup-manual').style.display = type === 'manual' ? 'block' : 'none';
+  document.getElementById('setup-upload').style.display = type === 'upload' ? 'block' : 'none';
+  document.getElementById('setup-invite').style.display = type === 'invite' ? 'block' : 'none';
+}
+
+function previewFile(input) {
+  var file = input.files[0];
+  if (!file) return;
+
+  // Only handle CSV client-side (XLS/XLSX need server-side parsing)
+  if (file.name.endsWith('.csv')) {
+    var reader = new FileReader();
+    reader.onload = function(e) {
+      var lines = e.target.result.split('\n').filter(l => l.trim());
+      var html = '<table style="width:100%;border-collapse:collapse;">';
+      html += '<thead><tr>';
+      var headers = lines[0].split(',').map(h => h.replace(/"/g, '').trim());
+      headers.forEach(h => {
+        html += '<th style="font-family:\'JetBrains Mono\',monospace;font-size:.58rem;letter-spacing:1px;text-transform:uppercase;color:var(--sub);padding:9px 12px;text-align:left;background:var(--off);border-bottom:1px solid var(--border);">' + h + '</th>';
+      });
+      html += '</tr></thead><tbody>';
+
+      for (var i = 1; i < Math.min(lines.length, 20); i++) {
+        var cols = lines[i].split(',').map(c => c.replace(/"/g, '').trim());
+        html += '<tr>';
+        cols.forEach(c => {
+          html += '<td style="padding:8px 12px;font-size:.82rem;border-bottom:1px solid var(--border);">' + c + '</td>';
+        });
+        html += '</tr>';
+      }
+      html += '</tbody></table>';
+
+      document.getElementById('preview-table').innerHTML = html;
+      document.getElementById('preview-count').textContent = (lines.length - 1) + ' matches found in ' + file.name;
+      document.getElementById('file-preview').style.display = 'block';
+    };
+    reader.readAsText(file);
+  } else {
+    // For XLS/XLSX show file name, server will parse
+    document.getElementById('preview-table').innerHTML = '<div style="padding:20px;text-align:center;"><div style="font-size:1.5rem;margin-bottom:8px;">📊</div><div style="font-weight:600;">' + file.name + '</div><div style="font-size:.78rem;color:var(--sub);margin-top:4px;">File will be parsed after upload</div></div>';
+    document.getElementById('preview-count').textContent = 'Excel file selected — schedule will be imported after upload';
+    document.getElementById('file-preview').style.display = 'block';
+  }
+}
+</script>
