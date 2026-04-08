@@ -13,8 +13,7 @@ class PagesController < ApplicationController
   ].freeze
 
   def home
-    return redirect_to login_path unless current_user
-    redirect_to tennis_path unless current_user.admin?
+    render file: Rails.root.join("public", "courtreport.html"), layout: false
   end
 
   def tennis
