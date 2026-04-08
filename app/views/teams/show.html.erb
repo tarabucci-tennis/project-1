@@ -77,12 +77,14 @@
                   style: "padding:8px 14px;border-radius:8px;border:1px solid #{my_avail&.unavailable? ? '#dc2626' : 'var(--border)'};background:#{my_avail&.unavailable? ? 'rgba(220,38,38,.12)' : 'var(--surface)'};color:#{my_avail&.unavailable? ? '#dc2626' : 'var(--sub)'};font-size:.78rem;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;" do %>
               ❌ Out
             <% end %>
-            <div class="cr-avail-badge" style="margin-left:4px;">
-              <div class="cr-avail-count"><%= match.available_count %></div>
-              <div class="cr-avail-label">available</div>
-            </div>
+            <% if @is_captain %>
+              <div class="cr-avail-badge" style="margin-left:4px;">
+                <div class="cr-avail-count"><%= match.available_count %></div>
+                <div class="cr-avail-label">available</div>
+              </div>
+            <% end %>
           </div>
-        <% else %>
+        <% elsif @is_captain %>
           <div class="cr-avail-badge">
             <div class="cr-avail-count"><%= match.available_count %></div>
             <div class="cr-avail-label">available</div>
