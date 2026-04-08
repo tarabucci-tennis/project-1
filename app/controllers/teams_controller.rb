@@ -11,7 +11,7 @@ class TeamsController < ApplicationController
   def show
     @matches = @team.scheduled_matches.chronological.includes(:player_availabilities, :lineup_slots, :match_scores)
     @players = @team.team_players.ordered
-    @is_captain = current_user.captain_of?(@team)
+    @is_captain = current_user.captain_of?(@team) rescue false
     @my_player = @team.team_players.find_by(user: current_user)
     @my_availabilities = {}
     if @my_player

@@ -1,15 +1,18 @@
 <% content_for(:title) { "#{@team.name} - Court Report" } %>
+<% team_league = @team.respond_to?(:league) ? @team.league : nil %>
+<% team_home = @team.respond_to?(:home_court) ? @team.home_court : nil %>
+<% is_super = current_user.respond_to?(:super_admin?) && current_user.super_admin? rescue false %>
 
-<div class="cr-hero <%= @team.league == 'CUP' ? 'cr-hero-purple' : 'cr-hero-navy' %>">
+<div class="cr-hero <%= team_league == 'CUP' ? 'cr-hero-purple' : 'cr-hero-navy' %>">
   <div class="cr-hero-grid"></div><div class="cr-hero-glow"></div>
   <div class="cr-hero-content" style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:24px;">
     <div>
-      <div class="cr-hero-tag"><%= @team.name %> · <%= @team.league %> <%= @team.rating %> · Captain: <%= @team.captain.name %></div>
+      <div class="cr-hero-tag"><%= @team.name %><% if team_league %> · <%= team_league %><% end %> · Captain: <%= @team.captain&.name %></div>
       <div class="cr-hero-title"><%= @team.name %></div>
-      <div class="cr-hero-sub"><%= @team.home_court %> · <%= @team.team_type %> · Spring 2026</div>
+      <div class="cr-hero-sub"><%= team_home %> · <%= @team.team_type %> · Spring 2026</div>
     </div>
     <div style="display:flex;gap:20px;">
-      <% r = @team.record %>
+      <% r = @team.record rescue { wins: 0, losses: 0 } %>
       <div style="text-align:center;"><div style="font-family:'Bebas Neue',sans-serif;font-size:2rem;color:var(--accent);"><%= r[:wins] %>–<%= r[:losses] %></div><div style="font-family:'JetBrains Mono',monospace;font-size:.55rem;letter-spacing:1.5px;color:rgba(255,255,255,.35);margin-top:4px;">RECORD</div></div>
       <div style="text-align:center;"><div style="font-family:'Bebas Neue',sans-serif;font-size:2rem;color:var(--white);"><%= @matches.count %></div><div style="font-family:'JetBrains Mono',monospace;font-size:.55rem;letter-spacing:1.5px;color:rgba(255,255,255,.35);margin-top:4px;">MATCHES</div></div>
       <div style="text-align:center;"><div style="font-family:'Bebas Neue',sans-serif;font-size:2rem;color:var(--white);"><%= @players.count %></div><div style="font-family:'JetBrains Mono',monospace;font-size:.55rem;letter-spacing:1.5px;color:rgba(255,255,255,.35);margin-top:4px;">PLAYERS</div></div>
@@ -23,7 +26,7 @@
     <a href="<%= availability_grid_team_path(@team) %>" class="cr-btn">📋 Availability Grid</a>
     <a href="<%= new_team_scheduled_match_path(@team) %>" class="cr-btn-outline">+ Add Match</a>
     <a href="<%= edit_team_path(@team) %>" class="cr-btn-outline">Edit Team</a>
-    <% if current_user.super_admin? %>
+    <% if is_super %>
       <a href="<%= team_export_path(@team) %>" class="cr-btn-outline">Export CSV</a>
     <% end %>
   </div>
@@ -32,7 +35,7 @@
   <div class="cr-join-box">
     <div>
       <div style="font-size:.75rem;font-weight:700;color:var(--sub);margin-bottom:4px;">SHARE THIS LINK WITH YOUR TEAM</div>
-      <div class="cr-join-url" id="joinUrl"><%= request.base_url %>/join/<%= @team.join_code %></div>
+      <div class="cr-join-url" id="joinUrl"><%= request.base_url %>/join/<%= @team.respond_to?(:join_code) ? @team.join_code : @team.name.parameterize %></div>
     </div>
     <button class="cr-join-copy" onclick="navigator.clipboard.writeText(document.getElementById('joinUrl').textContent);this.textContent='Copied!';setTimeout(()=>this.textContent='Copy',2000)">Copy</button>
   </div>
@@ -46,9 +49,10 @@
     <% @matches.each_with_index do |match, idx| %>
       <% my_avail = @my_availabilities[match.id] %>
       <% all_avails = match.player_availabilities.to_a rescue [] %>
-      <% avail_confirmed = all_avails.select { |a| a.status == "confirmed" } %>
-      <% avail_out = all_avails.select { |a| a.status == "unavailable" } %>
-      <% avail_pending = @players.count - avail_confirmed.count - avail_out.count %>
+      <% avail_confirmed = all_avails.select { |a| a.status == "confirmed" } rescue [] %>
+      <% avail_out = all_avails.select { |a| a.status == "unavailable" } rescue [] %>
+      <% avail_pending = @players.count - avail_confirmed.count - avail_out.count rescue 0 %>
+      <% match_result = match.respond_to?(:team_result) ? match_result : nil rescue nil %>
 
       <div class="cr-match-expand" id="match-<%= match.id %>">
         <!-- Match Row (clickable to expand) -->
@@ -65,8 +69,8 @@
           </div>
           <span style="font-size:.6rem;font-weight:700;padding:3px 8px;border-radius:4px;<%= match.home? ? 'background:rgba(201,168,76,.15);color:var(--accent);' : 'background:rgba(255,255,255,.08);color:rgba(255,255,255,.5);' %>"><%= match.home? ? 'HOME' : 'AWAY' %></span>
 
-          <% if match.team_result %>
-            <div style="font-family:'Bebas Neue',sans-serif;font-size:1.2rem;color:<%= match.team_result == 'win' ? '#4ade80' : '#f87171' %>;"><%= match.team_result == 'win' ? 'W' : 'L' %> <%= match.courts_won %>–<%= match.courts_lost %></div>
+          <% if match_result %>
+            <div style="font-family:'Bebas Neue',sans-serif;font-size:1.2rem;color:<%= match_result == 'win' ? '#4ade80' : '#f87171' %>;"><%= match_result == 'win' ? 'W' : 'L' %> <%= (match.courts_won rescue 0) %>–<%= (match.courts_lost rescue 0) %></div>
           <% elsif my_avail&.confirmed? %>
             <div style="width:10px;height:10px;border-radius:50%;background:#4ade80;flex-shrink:0;" title="You're in"></div>
           <% elsif my_avail&.unavailable? %>
@@ -75,7 +79,7 @@
             <div style="width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,.2);flex-shrink:0;" title="No response"></div>
           <% end %>
 
-          <% if @is_captain && !match.team_result %>
+          <% if @is_captain && !match_result %>
             <div style="display:flex;align-items:center;gap:4px;flex-shrink:0;">
               <span style="font-family:'Bebas Neue',sans-serif;font-size:1rem;color:var(--accent);"><%= avail_confirmed.count %></span>
               <span style="font-size:.55rem;color:rgba(255,255,255,.3);">of <%= @team.spots_needed %></span>
@@ -88,7 +92,7 @@
         <!-- Expanded Panel -->
         <div class="cr-match-panel" id="panel-<%= match.id %>" style="display:none;background:var(--surface);border:1px solid var(--border);border-top:none;border-radius:0 0 12px 12px;padding:16px 20px;margin-top:-4px;margin-bottom:10px;">
 
-          <% if @my_player && !match.team_result %>
+          <% if @my_player && !match_result %>
             <!-- Player Availability Buttons -->
             <div style="margin-bottom:16px;">
               <div style="font-family:'JetBrains Mono',monospace;font-size:.58rem;letter-spacing:2px;color:var(--sub);margin-bottom:10px;">YOUR AVAILABILITY</div>
@@ -123,7 +127,7 @@
             </div>
           <% end %>
 
-          <% if @is_captain && !match.team_result %>
+          <% if @is_captain && !match_result %>
             <!-- Captain: Player Status Dots -->
             <div style="font-family:'JetBrains Mono',monospace;font-size:.58rem;letter-spacing:2px;color:var(--sub);margin-bottom:10px;">TEAM AVAILABILITY</div>
             <div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:10px;">
