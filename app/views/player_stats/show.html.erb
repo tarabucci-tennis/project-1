@@ -15,9 +15,19 @@
         <% if @player.user&.ntrp_rating %>
           · <%= @player.user.ntrp_rating %> NTRP
         <% end %>
+        <% if @player.user&.dynamic_rating %>
+          · <%= sprintf("%.4f", @player.user.dynamic_rating) %> Dynamic
+        <% end %>
       </div>
     </div>
   </div>
+</div>
+
+<!-- Ratings -->
+<div class="cr-stat-grid" style="grid-template-columns:repeat(3,1fr);">
+  <div class="cr-stat"><div class="cr-stat-val cr-stat-val-gold"><%= @player.user&.ntrp_rating || "—" %></div><div class="cr-stat-label">NTRP Rating</div></div>
+  <div class="cr-stat"><div class="cr-stat-val"><%= @player.user&.dynamic_rating ? sprintf("%.4f", @player.user.dynamic_rating) : "—" %></div><div class="cr-stat-label">Dynamic Rating</div></div>
+  <div class="cr-stat"><div class="cr-stat-val" style="font-size:1.4rem;">Spring 2026</div><div class="cr-stat-label">Season</div></div>
 </div>
 
 <!-- Quick Stats -->

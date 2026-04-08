@@ -87,8 +87,8 @@
         <% if player.captain? %><div class="cr-captain-badge">C</div><% end %>
         <div class="cr-avatar cr-avatar-blue"><%= player.player_name.split.map(&:first).join.upcase[0..1] %></div>
         <div class="cr-player-name"><%= player.player_name %></div>
-        <% if @team.league == "USTA" && player.user&.ntrp_rating %>
-          <div class="cr-player-rating"><%= player.user.ntrp_rating %> NTRP</div>
+        <% if player.user&.ntrp_rating %>
+          <div class="cr-player-rating"><%= player.user.ntrp_rating %> NTRP<% if player.user.dynamic_rating %> · <%= sprintf("%.2f", player.user.dynamic_rating) %> DR<% end %></div>
         <% end %>
         <div class="cr-player-rating"><%= player.role.capitalize %></div>
       </a>
