@@ -1,0 +1,77 @@
+<% content_for(:title) { "Enter Scores - #{@team.name}" } %>
+
+<p style="margin-bottom:16px;"><a href="<%= team_scheduled_match_path(@team, @match) %>" style="color:var(--accent);text-decoration:none;font-size:.85rem;">&larr; Back to match</a></p>
+
+<div class="cr-hero cr-hero-navy">
+  <div class="cr-hero-grid"></div><div class="cr-hero-glow"></div>
+  <div class="cr-hero-content">
+    <div class="cr-hero-tag"><%= @match.match_date.strftime("%B %-d, %Y") %></div>
+    <div class="cr-hero-title">Enter Scores</div>
+    <div class="cr-hero-sub"><%= @team.name %> vs. <%= @match.opponent_team %></div>
+  </div>
+</div>
+
+<%= form_with url: team_scheduled_match_match_scores_path(@team, @match), method: :post do |f| %>
+  <% LineupSlot::POSITIONS.each do |pos| %>
+    <% score = @scores[pos] %>
+    <div class="cr-score-row">
+      <div class="cr-score-position"><%= pos %> — <%= LineupSlot::POSITION_LABELS[pos] %></div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;">
+        <div class="cr-field" style="margin-bottom:0;">
+          <label>Player 1</label>
+          <select name="scores[<%= pos %>][player1_id]" style="width:100%;padding:10px;border:1px solid var(--border);border-radius:8px;">
+            <option value="">-- Select --</option>
+            <% @players.each do |p| %>
+              <option value="<%= p.id %>" <%= "selected" if score&.player1_id == p.id %>><%= p.player_name %></option>
+            <% end %>
+          </select>
+        </div>
+        <% if pos != "1S" %>
+          <div class="cr-field" style="margin-bottom:0;">
+            <label>Player 2</label>
+            <select name="scores[<%= pos %>][player2_id]" style="width:100%;padding:10px;border:1px solid var(--border);border-radius:8px;">
+              <option value="">-- Select --</option>
+              <% @players.each do |p| %>
+                <option value="<%= p.id %>" <%= "selected" if score&.player2_id == p.id %>><%= p.player_name %></option>
+              <% end %>
+            </select>
+          </div>
+        <% end %>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;">
+        <div class="cr-field" style="margin-bottom:0;">
+          <label>Opponent 1</label>
+          <input type="text" name="scores[<%= pos %>][opponent1_name]" value="<%= score&.opponent1_name %>" placeholder="Name" style="width:100%;padding:10px;border:1px solid var(--border);border-radius:8px;">
+        </div>
+        <% if pos != "1S" %>
+          <div class="cr-field" style="margin-bottom:0;">
+            <label>Opponent 2</label>
+            <input type="text" name="scores[<%= pos %>][opponent2_name]" value="<%= score&.opponent2_name %>" placeholder="Name" style="width:100%;padding:10px;border:1px solid var(--border);border-radius:8px;">
+          </div>
+        <% end %>
+      </div>
+
+      <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+        <label style="font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:1px;color:var(--sub);">SETS:</label>
+        <input type="text" name="scores[<%= pos %>][set1_score]" value="<%= score&.set1_score %>" placeholder="6-4" class="cr-score-set">
+        <input type="text" name="scores[<%= pos %>][set2_score]" value="<%= score&.set2_score %>" placeholder="6-3" class="cr-score-set">
+        <input type="text" name="scores[<%= pos %>][set3_score]" value="<%= score&.set3_score %>" placeholder="7-5" class="cr-score-set">
+
+        <div style="margin-left:auto;display:flex;gap:8px;">
+          <label class="cr-radio" style="color:var(--green);font-weight:700;">
+            <input type="radio" name="scores[<%= pos %>][result]" value="win" <%= "checked" if score&.win? %>> W
+          </label>
+          <label class="cr-radio" style="color:var(--red);font-weight:700;">
+            <input type="radio" name="scores[<%= pos %>][result]" value="loss" <%= "checked" if score&.loss? %>> L
+          </label>
+        </div>
+      </div>
+    </div>
+  <% end %>
+
+  <div style="text-align:right;margin-top:16px;">
+    <%= f.submit "Save All Scores", class: "cr-btn" %>
+  </div>
+<% end %>

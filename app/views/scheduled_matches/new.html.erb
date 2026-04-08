@@ -1,0 +1,48 @@
+<% content_for(:title) { "Add Match - #{@team.name}" } %>
+
+<p style="margin-bottom:16px;"><a href="<%= team_path(@team) %>" style="color:var(--accent);text-decoration:none;font-size:.85rem;">&larr; Back to <%= @team.name %></a></p>
+
+<div class="cr-hero cr-hero-navy">
+  <div class="cr-hero-grid"></div><div class="cr-hero-glow"></div>
+  <div class="cr-hero-content">
+    <div class="cr-hero-tag"><%= @team.name %> · Add Match</div>
+    <div class="cr-hero-title">Add Match</div>
+  </div>
+</div>
+
+<div class="cr-form">
+  <%= form_with model: [@team, @match], url: team_scheduled_matches_path(@team) do |f| %>
+    <div class="cr-field-row">
+      <div class="cr-field">
+        <%= f.label :match_date, "Date" %>
+        <%= f.date_field :match_date %>
+      </div>
+      <div class="cr-field">
+        <%= f.label :match_time, "Time" %>
+        <%= f.text_field :match_time, placeholder: "7:00 PM" %>
+      </div>
+    </div>
+
+    <div class="cr-field">
+      <%= f.label :opponent_team, "Opponent" %>
+      <%= f.text_field :opponent_team, placeholder: "Kinetix Deuces Wild" %>
+    </div>
+
+    <div class="cr-field">
+      <label>Home or Away</label>
+      <div class="cr-radio-group">
+        <label class="cr-radio"><%= f.radio_button :home_away, "home" %> Home</label>
+        <label class="cr-radio"><%= f.radio_button :home_away, "away" %> Away</label>
+      </div>
+    </div>
+
+    <div class="cr-field">
+      <%= f.label :location, "Location" %>
+      <%= f.text_field :location, placeholder: "Bryn Mawr Racquet Club · 4 N Warner Ave" %>
+    </div>
+
+    <div class="cr-field" style="margin-top:12px;">
+      <%= f.submit "Add Match", class: "cr-btn", style: "width:100%;justify-content:center;" %>
+    </div>
+  <% end %>
+</div>

@@ -1,19 +1,28 @@
-<div class="auth-page">
-  <div class="auth-card">
-    <div class="auth-logo">🎾</div>
-    <h1>Sign In</h1>
-    <p class="auth-sub">Enter your email to continue</p>
-
-    <% if alert %>
-      <div class="flash flash-alert"><%= alert %></div>
-    <% end %>
-
-    <%= form_with url: session_path, method: :post do |f| %>
-      <div class="field">
-        <%= f.label :email, "Email address" %>
-        <%= f.email_field :email, placeholder: "you@example.com", autofocus: true %>
-      </div>
-      <%= f.submit "Sign In →" %>
-    <% end %>
+<% content_for(:title) { "Sign In - Court Report" } %>
+<div class="cr-hero cr-hero-navy" style="margin-top:24px;">
+  <div class="cr-hero-grid"></div><div class="cr-hero-glow"></div>
+  <div class="cr-hero-content" style="text-align:center;">
+    <div class="cr-hero-title">Sign In</div>
+    <div class="cr-hero-sub">Welcome back to Court Report</div>
   </div>
+</div>
+
+<div class="cr-form" style="margin:0 auto;">
+  <%= form_with url: session_path, method: :post do |f| %>
+    <div class="cr-field">
+      <%= f.label :email, "Email" %>
+      <%= f.email_field :email, placeholder: "tara@example.com", autofocus: true %>
+    </div>
+    <div class="cr-field">
+      <%= f.label :password, "Password" %>
+      <%= f.password_field :password, placeholder: "Your password" %>
+    </div>
+    <div class="cr-field" style="margin-top:8px;">
+      <%= f.submit "Sign In", class: "cr-btn", style: "width:100%;justify-content:center;" %>
+    </div>
+  <% end %>
+
+  <p style="text-align:center;margin-top:16px;font-size:.85rem;color:var(--sub);">
+    Don't have an account? <a href="<%= signup_path %>" style="color:var(--accent);font-weight:600;">Sign Up</a>
+  </p>
 </div>

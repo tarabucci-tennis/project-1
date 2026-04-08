@@ -1,0 +1,80 @@
+<% content_for(:title) { "#{@player.player_name} Stats - #{@team.name}" } %>
+
+<p style="margin-bottom:16px;"><a href="<%= team_path(@team) %>" style="color:var(--accent);text-decoration:none;font-size:.85rem;">&larr; <%= @team.name %> Roster</a></p>
+
+<div class="cr-hero cr-hero-navy">
+  <div class="cr-hero-grid"></div><div class="cr-hero-glow"></div>
+  <div class="cr-hero-content" style="display:flex;align-items:center;gap:20px;">
+    <div class="cr-avatar cr-avatar-blue" style="width:72px;height:72px;font-size:1.4rem;">
+      <%= @player.player_name.split.map(&:first).join.upcase[0..1] %>
+    </div>
+    <div>
+      <div class="cr-hero-title"><%= @player.player_name %></div>
+      <div class="cr-hero-sub">
+        <%= @team.name %> · <%= @player.role.capitalize %>
+        <% if @player.user&.ntrp_rating %>
+          · <%= @player.user.ntrp_rating %> NTRP
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Quick Stats -->
+<div class="cr-stat-grid">
+  <div class="cr-stat"><div class="cr-stat-val"><%= @analytics.total_matches %></div><div class="cr-stat-label">Matches Played</div></div>
+  <div class="cr-stat"><div class="cr-stat-val cr-stat-val-green"><%= @analytics.wins %></div><div class="cr-stat-label">Wins</div></div>
+  <div class="cr-stat"><div class="cr-stat-val cr-stat-val-red"><%= @analytics.losses %></div><div class="cr-stat-label">Losses</div></div>
+  <div class="cr-stat"><div class="cr-stat-val cr-stat-val-gold"><%= @analytics.win_percentage %>%</div><div class="cr-stat-label">Win %</div></div>
+</div>
+
+<!-- Singles vs Doubles -->
+<div class="cr-section">
+  <div class="cr-section-head"><div class="cr-section-title">Singles vs Doubles</div><div class="cr-section-line"></div></div>
+  <div class="cr-stat-grid">
+    <div class="cr-stat"><div class="cr-stat-val"><%= @analytics.singles_percentage %>%</div><div class="cr-stat-label">Singles</div></div>
+    <div class="cr-stat"><div class="cr-stat-val"><%= @analytics.doubles_percentage %>%</div><div class="cr-stat-label">Doubles</div></div>
+  </div>
+</div>
+
+<!-- Position Breakdown -->
+<% breakdown = @analytics.position_breakdown %>
+<% if breakdown.any? %>
+  <div class="cr-section">
+    <div class="cr-section-head"><div class="cr-section-title">Position Breakdown</div><div class="cr-section-line"></div></div>
+    <div class="cr-stat-grid">
+      <% breakdown.each do |pos, pct| %>
+        <div class="cr-stat"><div class="cr-stat-val cr-stat-val-gold"><%= pct %>%</div><div class="cr-stat-label"><%= pos %></div></div>
+      <% end %>
+    </div>
+  </div>
+<% end %>
+
+<!-- Partner W/L -->
+<% partners = @analytics.partner_stats %>
+<% if partners.any? %>
+  <div class="cr-section">
+    <div class="cr-section-head"><div class="cr-section-title">Doubles Partner W/L</div><div class="cr-section-line"></div></div>
+    <table class="cr-table">
+      <thead><tr><th>Partner</th><th>W</th><th>L</th><th>Win %</th><th>Played</th></tr></thead>
+      <tbody>
+        <% partners.each do |p| %>
+          <tr>
+            <td style="font-weight:700;"><%= p[:partner]&.player_name || "Unknown" %></td>
+            <td style="color:var(--green);"><%= p[:wins] %></td>
+            <td style="color:var(--red);"><%= p[:losses] %></td>
+            <td style="font-family:'JetBrains Mono',monospace;font-weight:600;color:var(--accent);"><%= p[:win_pct] %>%</td>
+            <td><%= p[:total] %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+<% end %>
+
+<% if @analytics.total_matches == 0 %>
+  <div class="cr-card" style="text-align:center;padding:40px;">
+    <p style="font-size:1.1rem;">🎾 No match data yet</p>
+    <p style="color:var(--sub);margin-top:8px;">Stats will appear here once the captain enters scores.</p>
+  </div>
+<% end %>

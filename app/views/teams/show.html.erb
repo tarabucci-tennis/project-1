@@ -1,102 +1,97 @@
-<div class="schedule-page">
-  <!-- Notification preference prompt (shown once for captains) -->
-  <% if current_user&.admin? && !current_user.notification_preference_set? && @team.captain_id == current_user.id %>
-    <div class="notif-prompt" id="notif-prompt">
-      <div class="notif-prompt-header">
-        <h3>How would you like to be notified when players update their availability?</h3>
-      </div>
-      <div class="notif-prompt-options">
-        <%= button_to notification_preference_path, method: :patch,
-              params: { preference: "every_update" },
-              class: "notif-option" do %>
-          <span class="notif-option-icon">&#x1F514;</span>
-          <span class="notif-option-label">Notify me for every update</span>
-          <span class="notif-option-desc">Get an email each time a player responds</span>
-        <% end %>
-        <%= button_to notification_preference_path, method: :patch,
-              params: { preference: "count_only" },
-              class: "notif-option" do %>
-          <span class="notif-option-icon">&#x1F4CA;</span>
-          <span class="notif-option-label">Just show me the count</span>
-          <span class="notif-option-desc">I'll check when I'm ready</span>
-        <% end %>
-        <%= button_to notification_preference_path, method: :patch,
-              params: { preference: "none" },
-              class: "notif-option" do %>
-          <span class="notif-option-icon">&#x1F515;</span>
-          <span class="notif-option-label">No notifications</span>
-          <span class="notif-option-desc">I'll manage it myself</span>
-        <% end %>
-      </div>
-    </div>
-  <% end %>
+<% content_for(:title) { "#{@team.name} - Court Report" } %>
 
-  <div class="schedule-header">
-    <div class="schedule-header-top">
-      <%= link_to "&larr; Teams".html_safe, teams_path, class: "back-link" %>
+<div class="cr-hero <%= @team.league == 'CUP' ? 'cr-hero-purple' : 'cr-hero-navy' %>">
+  <div class="cr-hero-grid"></div><div class="cr-hero-glow"></div>
+  <div class="cr-hero-content" style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:24px;">
+    <div>
+      <div class="cr-hero-tag"><%= @team.name %> · <%= @team.league %> <%= @team.rating %> · Captain: <%= @team.captain.name %></div>
+      <div class="cr-hero-title"><%= @team.name %></div>
+      <div class="cr-hero-sub"><%= @team.home_court %> · <%= @team.team_type %> · Spring 2026</div>
     </div>
-    <div class="schedule-title-row">
-      <div>
-        <h1><%= @team.name %></h1>
-        <div class="schedule-meta">
-          <span class="meta-chip"><%= @team.team_type %></span>
-          <span class="meta-chip"><%= @team.rating %></span>
-          <span class="meta-chip"><%= @team.section %></span>
-        </div>
-      </div>
+    <div style="display:flex;gap:20px;">
+      <% r = @team.record %>
+      <div style="text-align:center;"><div style="font-family:'Bebas Neue',sans-serif;font-size:2rem;color:var(--accent);"><%= r[:wins] %>–<%= r[:losses] %></div><div style="font-family:'JetBrains Mono',monospace;font-size:.55rem;letter-spacing:1.5px;color:rgba(255,255,255,.35);margin-top:4px;">RECORD</div></div>
+      <div style="text-align:center;"><div style="font-family:'Bebas Neue',sans-serif;font-size:2rem;color:var(--white);"><%= @matches.count %></div><div style="font-family:'JetBrains Mono',monospace;font-size:.55rem;letter-spacing:1.5px;color:rgba(255,255,255,.35);margin-top:4px;">MATCHES</div></div>
+      <div style="text-align:center;"><div style="font-family:'Bebas Neue',sans-serif;font-size:2rem;color:var(--white);"><%= @players.count %></div><div style="font-family:'JetBrains Mono',monospace;font-size:.55rem;letter-spacing:1.5px;color:rgba(255,255,255,.35);margin-top:4px;">PLAYERS</div></div>
     </div>
   </div>
+</div>
 
-  <!-- Roster summary -->
-  <div class="roster-strip">
-    <span class="roster-label">Roster (<%= @players.count %>)</span>
-    <div class="roster-names">
-      <% @players.each do |p| %>
-        <span class="roster-chip <%= 'roster-captain' if p.captain? %>">
-          <%= p.display_name %><% if p.captain? %> <small>(C)</small><% end %>
-        </span>
+<!-- Captain Actions -->
+<% if @is_captain %>
+  <div style="display:flex;gap:10px;margin-bottom:24px;flex-wrap:wrap;">
+    <a href="<%= new_team_scheduled_match_path(@team) %>" class="cr-btn-outline">+ Add Match</a>
+    <a href="<%= edit_team_path(@team) %>" class="cr-btn-outline">Edit Team</a>
+    <% if current_user.super_admin? %>
+      <a href="<%= team_export_path(@team) %>" class="cr-btn-outline">Export CSV</a>
+    <% end %>
+  </div>
+
+  <!-- Join Link -->
+  <div class="cr-join-box">
+    <div>
+      <div style="font-size:.75rem;font-weight:700;color:var(--sub);margin-bottom:4px;">SHARE THIS LINK WITH YOUR TEAM</div>
+      <div class="cr-join-url" id="joinUrl"><%= request.base_url %>/join/<%= @team.join_code %></div>
+    </div>
+    <button class="cr-join-copy" onclick="navigator.clipboard.writeText(document.getElementById('joinUrl').textContent);this.textContent='Copied!';setTimeout(()=>this.textContent='Copy',2000)">Copy</button>
+  </div>
+<% end %>
+
+<!-- Schedule -->
+<div class="cr-section">
+  <div class="cr-section-head"><div class="cr-section-title">Schedule</div><div class="cr-section-line"></div></div>
+
+  <% if @matches.any? %>
+    <% @matches.each do |match| %>
+      <a href="<%= team_scheduled_match_path(@team, match) %>" class="cr-match-card">
+        <div class="cr-match-date">
+          <div class="cr-match-mon"><%= match.match_date.strftime("%b").upcase %></div>
+          <div class="cr-match-day"><%= match.match_date.strftime("%-d") %></div>
+        </div>
+        <div class="cr-match-info">
+          <div class="cr-match-opp">vs. <%= match.opponent_team %></div>
+          <div class="cr-match-meta">
+            <% if match.match_time.present? %><%= match.match_time %> · <% end %>
+            <%= match.location %>
+          </div>
+        </div>
+        <span class="cr-match-badge <%= match.home? ? 'cr-match-home' : 'cr-match-away' %>"><%= match.home? ? 'HOME' : 'AWAY' %></span>
+        <% if match.team_result %>
+          <div class="cr-match-result <%= match.team_result == 'win' ? 'cr-match-win' : 'cr-match-loss' %>">
+            <%= match.team_result == 'win' ? 'W' : 'L' %> <%= match.courts_won %>–<%= match.courts_lost %>
+          </div>
+        <% else %>
+          <div class="cr-avail-badge">
+            <div class="cr-avail-count"><%= match.available_count %></div>
+            <div class="cr-avail-label">available</div>
+          </div>
+        <% end %>
+      </a>
+    <% end %>
+  <% else %>
+    <div class="cr-card" style="text-align:center;padding:40px;">
+      <p>No matches scheduled yet.</p>
+      <% if @is_captain %>
+        <a href="<%= new_team_scheduled_match_path(@team) %>" class="cr-btn" style="margin-top:12px;">+ Add First Match</a>
       <% end %>
     </div>
-  </div>
+  <% end %>
+</div>
 
-  <!-- Schedule -->
-  <div class="profile-section">
-    <h2 class="section-title">Schedule</h2>
-
-    <% if @matches.any? %>
-      <div class="match-list">
-        <% @matches.each do |match| %>
-          <%= link_to team_scheduled_match_path(@team, match), class: "match-row #{'match-row-past' if match.match_date < Date.current}" do %>
-            <div class="match-date-block">
-              <span class="match-month"><%= match.match_date.strftime("%b").upcase %></span>
-              <span class="match-day"><%= match.match_date.strftime("%-d") %></span>
-              <span class="match-weekday"><%= match.match_date.strftime("%a").upcase %></span>
-            </div>
-            <div class="match-info">
-              <span class="match-opponent">
-                <% if match.home? %>
-                  <span class="match-ha home-badge">HOME</span>
-                <% else %>
-                  <span class="match-ha away-badge">AWAY</span>
-                <% end %>
-                vs. <%= match.opponent_team %>
-              </span>
-              <% if match.match_time.present? %>
-                <span class="match-time-label"><%= match.match_time %></span>
-              <% end %>
-              <% if match.location.present? %>
-                <span class="match-location"><%= match.location %></span>
-              <% end %>
-            </div>
-            <div class="match-avail-badge">
-              <span class="avail-count"><%= match.available_count %></span>
-              <span class="avail-label">available</span>
-            </div>
-          <% end %>
+<!-- Roster -->
+<div class="cr-section">
+  <div class="cr-section-head"><div class="cr-section-title">Roster (<%= @players.count %>)</div><div class="cr-section-line"></div></div>
+  <div class="cr-roster-grid">
+    <% @players.each do |player| %>
+      <a href="<%= team_player_stat_path(@team, player) %>" class="cr-player-card">
+        <% if player.captain? %><div class="cr-captain-badge">C</div><% end %>
+        <div class="cr-avatar cr-avatar-blue"><%= player.player_name.split.map(&:first).join.upcase[0..1] %></div>
+        <div class="cr-player-name"><%= player.player_name %></div>
+        <% if @team.league == "USTA" && player.user&.ntrp_rating %>
+          <div class="cr-player-rating"><%= player.user.ntrp_rating %> NTRP</div>
         <% end %>
-      </div>
-    <% else %>
-      <div class="profile-empty">No matches scheduled yet.</div>
+        <div class="cr-player-rating"><%= player.role.capitalize %></div>
+      </a>
     <% end %>
   </div>
 </div>

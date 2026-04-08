@@ -1,0 +1,69 @@
+<% content_for(:title) { "Create Team - Court Report" } %>
+
+<div class="cr-hero cr-hero-navy">
+  <div class="cr-hero-grid"></div><div class="cr-hero-glow"></div>
+  <div class="cr-hero-content">
+    <div class="cr-hero-tag">New Team</div>
+    <div class="cr-hero-title">Create Your Team</div>
+    <div class="cr-hero-sub">Set up your team and share the join link with your players</div>
+  </div>
+</div>
+
+<div class="cr-form">
+  <% if @team.errors.any? %>
+    <div class="cr-errors">
+      <% @team.errors.full_messages.each do |msg| %>
+        <p><%= msg %></p>
+      <% end %>
+    </div>
+  <% end %>
+
+  <%= form_with model: @team, url: teams_path do |f| %>
+    <div class="cr-field">
+      <%= f.label :name, "Team Name" %>
+      <%= f.text_field :name, placeholder: "Kiss My Ace", autofocus: true %>
+    </div>
+
+    <div class="cr-field-row">
+      <div class="cr-field">
+        <%= f.label :league, "League" %>
+        <%= f.select :league, Team::LEAGUES.map { |l| [l, l] }, { include_blank: "Select league..." } %>
+      </div>
+      <div class="cr-field">
+        <%= f.label :team_type, "Division / Type" %>
+        <%= f.text_field :team_type, placeholder: "Adult 18+ 4.0" %>
+      </div>
+    </div>
+
+    <div class="cr-field-row">
+      <div class="cr-field">
+        <%= f.label :rating, "Rating" %>
+        <%= f.select :rating, [3.0, 3.5, 4.0, 4.5, 5.0].map { |r| [r.to_s, r] }, { include_blank: "Select..." } %>
+      </div>
+      <div class="cr-field">
+        <%= f.label :usta_team_number, "USTA Team Number (optional)" %>
+        <%= f.text_field :usta_team_number, placeholder: "e.g. 12345" %>
+      </div>
+    </div>
+
+    <div class="cr-field">
+      <%= f.label :home_court, "Home Court" %>
+      <%= f.text_field :home_court, placeholder: "Bryn Mawr Racquet Club" %>
+    </div>
+
+    <div class="cr-field-row">
+      <div class="cr-field">
+        <%= f.label :section, "Section" %>
+        <%= f.text_field :section, placeholder: "Middle States" %>
+      </div>
+      <div class="cr-field">
+        <%= f.label :gender, "Gender" %>
+        <%= f.select :gender, [["Women's", "F"], ["Men's", "M"], ["Mixed", "X"]], { include_blank: "Select..." } %>
+      </div>
+    </div>
+
+    <div class="cr-field" style="margin-top:12px;">
+      <%= f.submit "Create Team", class: "cr-btn", style: "width:100%;justify-content:center;" %>
+    </div>
+  <% end %>
+</div>

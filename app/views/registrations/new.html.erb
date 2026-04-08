@@ -1,0 +1,60 @@
+<% content_for(:title) { "Sign Up - Court Report" } %>
+<div class="cr-hero cr-hero-navy" style="margin-top:24px;">
+  <div class="cr-hero-grid"></div><div class="cr-hero-glow"></div>
+  <div class="cr-hero-content" style="text-align:center;">
+    <div class="cr-hero-title">Join Court Report</div>
+    <div class="cr-hero-sub">
+      <% if @team %>
+        You've been invited to join <strong><%= @team.name %></strong>
+      <% else %>
+        Track your teams, lineups, and availability
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<div class="cr-form" style="margin:0 auto;">
+  <% if @user.errors.any? %>
+    <div class="cr-errors">
+      <% @user.errors.full_messages.each do |msg| %>
+        <p><%= msg %></p>
+      <% end %>
+    </div>
+  <% end %>
+
+  <%= form_with model: @user, url: signup_path, method: :post do |f| %>
+    <% if @user.invite_token.present? %>
+      <%= hidden_field_tag :invite_token, @user.invite_token %>
+    <% end %>
+
+    <div class="cr-field">
+      <%= f.label :name, "Full Name" %>
+      <%= f.text_field :name, placeholder: "Tara Bucci", autofocus: true %>
+    </div>
+    <div class="cr-field">
+      <%= f.label :email, "Email" %>
+      <%= f.email_field :email, placeholder: "tara@example.com" %>
+    </div>
+    <div class="cr-field">
+      <%= f.label :phone, "Phone Number" %>
+      <%= f.telephone_field :phone, placeholder: "(610) 555-1234" %>
+    </div>
+    <div class="cr-field-row">
+      <div class="cr-field">
+        <%= f.label :password, "Password" %>
+        <%= f.password_field :password, placeholder: "6+ characters" %>
+      </div>
+      <div class="cr-field">
+        <%= f.label :password_confirmation, "Confirm Password" %>
+        <%= f.password_field :password_confirmation %>
+      </div>
+    </div>
+    <div class="cr-field" style="margin-top:8px;">
+      <%= f.submit "Create Account", class: "cr-btn", style: "width:100%;justify-content:center;" %>
+    </div>
+  <% end %>
+
+  <p style="text-align:center;margin-top:16px;font-size:.85rem;color:var(--sub);">
+    Already have an account? <a href="<%= login_path %>" style="color:var(--accent);font-weight:600;">Sign In</a>
+  </p>
+</div>

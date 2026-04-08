@@ -2,6 +2,7 @@ class ScheduledMatch < ApplicationRecord
   belongs_to :team
   has_many :player_availabilities, dependent: :destroy
   has_many :lineup_slots, dependent: :destroy
+  has_many :match_scores, dependent: :destroy
 
   validates :match_date, presence: true
   validates :opponent_team, presence: true

@@ -1,22 +1,36 @@
-<div class="schedule-page">
-  <div class="schedule-header">
-    <h1>My Teams</h1>
-    <p class="schedule-sub">Select a team to view schedule & availability</p>
-  </div>
+<% content_for(:title) { "My Teams - Court Report" } %>
 
-  <div class="team-grid">
-    <% @teams.each do |team| %>
-      <%= link_to team_path(team), class: "team-card" do %>
-        <div class="team-card-top">
-          <span class="team-card-rating"><%= team.rating %></span>
-          <span class="team-card-type"><%= team.team_type %></span>
-        </div>
-        <h2 class="team-card-name"><%= team.name %></h2>
-        <div class="team-card-meta">
-          <span><%= team.team_players.count %> players</span>
-          <span><%= team.scheduled_matches.upcoming.count %> upcoming</span>
-        </div>
-      <% end %>
-    <% end %>
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;">
+  <div>
+    <h1 style="font-family:'Bebas Neue',sans-serif;font-size:2rem;letter-spacing:4px;">My Teams</h1>
   </div>
+  <a href="<%= new_team_path %>" class="cr-btn">+ Create Team</a>
 </div>
+
+<% if @my_teams.empty? %>
+  <div class="cr-card" style="text-align:center;padding:60px 24px;">
+    <p style="font-size:1.2rem;margin-bottom:12px;">No teams yet!</p>
+    <p style="color:var(--sub);margin-bottom:20px;">Create a team to get started, or ask your captain for a join link.</p>
+    <a href="<%= new_team_path %>" class="cr-btn">+ Create Your First Team</a>
+  </div>
+<% else %>
+  <% @leagues.each do |league, teams| %>
+    <div class="cr-league-label"><%= league || "Other" %></div>
+    <div class="cr-team-grid">
+      <% teams.each do |team| %>
+        <a href="<%= team_path(team) %>" class="cr-team-card">
+          <div class="cr-team-card-league"><%= team.league %> <% if team.usta_team_number.present? %>· #<%= team.usta_team_number %><% end %></div>
+          <div class="cr-team-card-name"><%= team.name %></div>
+          <div class="cr-team-card-meta">
+            <%= team.roster_count %> players · <%= team.scheduled_matches.upcoming.count %> upcoming
+            <% if current_user.captain_of?(team) %>
+              · <span style="color:var(--accent);">Captain</span>
+            <% end %>
+          </div>
+          <% r = team.record %>
+          <div class="cr-team-card-record"><%= r[:wins] %>–<%= r[:losses] %></div>
+        </a>
+      <% end %>
+    </div>
+  <% end %>
+<% end %>

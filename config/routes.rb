@@ -1,18 +1,15 @@
 Rails.application.routes.draw do
-  # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
-
-  # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
-  # Can be used by load balancers and uptime monitors to verify that the app is live.
   get "up" => "rails/health#show", as: :rails_health_check
-
-  # Render dynamic PWA files from app/views/pwa/* (remember to link manifest in application.html.erb)
-  # get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
-  # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
 
   # Auth
   get  "login",  to: "sessions#new",     as: :login
   post "session", to: "sessions#create",  as: :session
   delete "session", to: "sessions#destroy"
+
+  # Registration
+  get  "signup", to: "registrations#new", as: :signup
+  post "signup", to: "registrations#create"
+  get  "join/:code", to: "registrations#join", as: :join_team
 
   # Admin: user management
   resources :users, only: [ :index, :new, :create, :edit, :update, :destroy ]
@@ -20,13 +17,20 @@ Rails.application.routes.draw do
   get "tennis",  to: "pages#tennis",    as: :tennis
   get "profile", to: "profiles#show",  as: :profile
 
-  # Lineup & Availability
-  resources :teams, only: [ :index, :show ] do
-    resources :scheduled_matches, only: [ :show ] do
+  # Teams with full CRUD
+  resources :teams, only: [ :index, :show, :new, :create, :edit, :update ] do
+    # Player stats per team
+    resources :player_stats, only: [ :show ]
+
+    # Export
+    get "export", to: "exports#team_data", as: :export
+
+    resources :scheduled_matches, only: [ :show, :new, :create, :edit, :update ] do
       member do
         patch :update_lineup
         patch :update_availability
       end
+      resources :match_scores, only: [ :new, :create, :edit, :update ]
     end
   end
 
@@ -35,6 +39,5 @@ Rails.application.routes.draw do
   patch "settings/notification_preference", to: "settings#update_notification_preference", as: :notification_preference
   patch "settings/mark_notifications_read", to: "settings#mark_notifications_read", as: :mark_notifications_read
 
-  # Defines the root path route ("/")
   root "pages#home"
 end
