@@ -59,7 +59,7 @@ class ScheduledMatchesController < ApplicationController
     avail.message = params[:message] if params[:status] == "custom"
     avail.save!
     notify_captain(player, avail)
-    redirect_to team_scheduled_match_path(@team, @match), notice: "Availability updated!"
+    redirect_back fallback_location: team_scheduled_match_path(@team, @match), notice: "#{avail.confirmed? ? '✅ Available' : '❌ Unavailable'} for #{@match.opponent_team}"
   end
 
   private

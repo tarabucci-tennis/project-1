@@ -12,6 +12,13 @@ class TeamsController < ApplicationController
     @matches = @team.scheduled_matches.chronological.includes(:player_availabilities, :lineup_slots, :match_scores)
     @players = @team.team_players.ordered
     @is_captain = current_user.captain_of?(@team)
+    @my_player = @team.team_players.find_by(user: current_user)
+    @my_availabilities = {}
+    if @my_player
+      @my_player.player_availabilities.where(scheduled_match: @matches).each do |a|
+        @my_availabilities[a.scheduled_match_id] = a
+      end
+    end
   end
 
   def new

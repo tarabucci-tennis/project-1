@@ -43,22 +43,44 @@
 
   <% if @matches.any? %>
     <% @matches.each do |match| %>
-      <a href="<%= team_scheduled_match_path(@team, match) %>" class="cr-match-card">
-        <div class="cr-match-date">
-          <div class="cr-match-mon"><%= match.match_date.strftime("%b").upcase %></div>
-          <div class="cr-match-day"><%= match.match_date.strftime("%-d") %></div>
-        </div>
-        <div class="cr-match-info">
-          <div class="cr-match-opp">vs. <%= match.opponent_team %></div>
-          <div class="cr-match-meta">
-            <% if match.match_time.present? %><%= match.match_time %> · <% end %>
-            <%= match.location %>
+      <% my_avail = @my_availabilities[match.id] %>
+      <div class="cr-match-card" style="flex-wrap:wrap;">
+        <a href="<%= team_scheduled_match_path(@team, match) %>" style="display:flex;align-items:center;gap:14px;flex:1;text-decoration:none;color:var(--text);min-width:0;">
+          <div class="cr-match-date">
+            <div class="cr-match-mon"><%= match.match_date.strftime("%b").upcase %></div>
+            <div class="cr-match-day"><%= match.match_date.strftime("%-d") %></div>
           </div>
-        </div>
-        <span class="cr-match-badge <%= match.home? ? 'cr-match-home' : 'cr-match-away' %>"><%= match.home? ? 'HOME' : 'AWAY' %></span>
+          <div class="cr-match-info">
+            <div class="cr-match-opp">vs. <%= match.opponent_team %></div>
+            <div class="cr-match-meta">
+              <% if match.match_time.present? %><%= match.match_time %> · <% end %>
+              <%= match.location %>
+            </div>
+          </div>
+          <span class="cr-match-badge <%= match.home? ? 'cr-match-home' : 'cr-match-away' %>"><%= match.home? ? 'HOME' : 'AWAY' %></span>
+        </a>
         <% if match.team_result %>
           <div class="cr-match-result <%= match.team_result == 'win' ? 'cr-match-win' : 'cr-match-loss' %>">
             <%= match.team_result == 'win' ? 'W' : 'L' %> <%= match.courts_won %>–<%= match.courts_lost %>
+          </div>
+        <% elsif @my_player %>
+          <div style="display:flex;align-items:center;gap:6px;flex-shrink:0;">
+            <%= button_to update_availability_team_scheduled_match_path(@team, match),
+                  method: :patch,
+                  params: { team_player_id: @my_player.id, status: "confirmed" },
+                  style: "padding:8px 14px;border-radius:8px;border:1px solid #{my_avail&.confirmed? ? '#16a34a' : 'var(--border)'};background:#{my_avail&.confirmed? ? 'rgba(22,163,74,.12)' : 'var(--surface)'};color:#{my_avail&.confirmed? ? '#16a34a' : 'var(--sub)'};font-size:.78rem;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;" do %>
+              ✅ In
+            <% end %>
+            <%= button_to update_availability_team_scheduled_match_path(@team, match),
+                  method: :patch,
+                  params: { team_player_id: @my_player.id, status: "unavailable" },
+                  style: "padding:8px 14px;border-radius:8px;border:1px solid #{my_avail&.unavailable? ? '#dc2626' : 'var(--border)'};background:#{my_avail&.unavailable? ? 'rgba(220,38,38,.12)' : 'var(--surface)'};color:#{my_avail&.unavailable? ? '#dc2626' : 'var(--sub)'};font-size:.78rem;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;" do %>
+              ❌ Out
+            <% end %>
+            <div class="cr-avail-badge" style="margin-left:4px;">
+              <div class="cr-avail-count"><%= match.available_count %></div>
+              <div class="cr-avail-label">available</div>
+            </div>
           </div>
         <% else %>
           <div class="cr-avail-badge">
@@ -66,7 +88,7 @@
             <div class="cr-avail-label">available</div>
           </div>
         <% end %>
-      </a>
+      </div>
     <% end %>
   <% else %>
     <div class="cr-card" style="text-align:center;padding:40px;">
