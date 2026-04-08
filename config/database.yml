@@ -20,21 +20,29 @@ test:
   <<: *default
   database: storage/test.sqlite3
 
-# Store production database in the storage/ directory, which by default
-# is mounted as a persistent Docker volume in config/deploy.yml.
+# Production uses PostgreSQL on Render.com (via DATABASE_URL)
+# Falls back to SQLite if DATABASE_URL is not set (e.g. Docker/DigitalOcean)
 production:
   primary:
-    <<: *default
+    adapter: <%= ENV["DATABASE_URL"] ? "postgresql" : "sqlite3" %>
+    url: <%= ENV["DATABASE_URL"] %>
     database: storage/production.sqlite3
+    pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
   cache:
-    <<: *default
+    adapter: <%= ENV["DATABASE_URL"] ? "postgresql" : "sqlite3" %>
+    url: <%= ENV["CACHE_DATABASE_URL"] || ENV["DATABASE_URL"] %>
     database: storage/production_cache.sqlite3
     migrations_paths: db/cache_migrate
+    pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
   queue:
-    <<: *default
+    adapter: <%= ENV["DATABASE_URL"] ? "postgresql" : "sqlite3" %>
+    url: <%= ENV["QUEUE_DATABASE_URL"] || ENV["DATABASE_URL"] %>
     database: storage/production_queue.sqlite3
     migrations_paths: db/queue_migrate
+    pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
   cable:
-    <<: *default
+    adapter: <%= ENV["DATABASE_URL"] ? "postgresql" : "sqlite3" %>
+    url: <%= ENV["CABLE_DATABASE_URL"] || ENV["DATABASE_URL"] %>
     database: storage/production_cable.sqlite3
     migrations_paths: db/cable_migrate
+    pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
