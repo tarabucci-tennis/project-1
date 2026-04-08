@@ -1,6 +1,6 @@
 class SessionsController < ApplicationController
   def new
-    redirect_to teams_path if current_user
+    redirect_to root_path if current_user
   end
 
   def create
@@ -15,7 +15,7 @@ class SessionsController < ApplicationController
           end
           redirect_to team_path(team), notice: "Welcome back! You joined #{team.name}."
         else
-          redirect_to teams_path, notice: "Welcome back, #{user.name}!"
+          redirect_to root_path, notice: "Welcome back, #{user.name}!"
         end
       else
         flash.now[:alert] = "Incorrect password."
@@ -24,7 +24,7 @@ class SessionsController < ApplicationController
     elsif user
       # Legacy email-only login (no password set yet)
       session[:user_id] = user.id
-      redirect_to teams_path, notice: "Welcome back, #{user.name}!"
+      redirect_to root_path, notice: "Welcome back, #{user.name}!"
     else
       flash.now[:alert] = "No account found for that email."
       render :new, status: :unprocessable_entity

@@ -17,7 +17,7 @@ class RegistrationsController < ApplicationController
 
     if @user.save
       session[:user_id] = @user.id
-      redirect_to teams_path, notice: "Welcome to Court Report, #{@user.name}!"
+      redirect_to root_path, notice: "Welcome to Court Report, #{@user.name}!"
     else
       render :new, status: :unprocessable_entity
     end
