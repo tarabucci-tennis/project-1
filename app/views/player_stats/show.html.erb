@@ -1,90 +1,172 @@
-<% content_for(:title) { "#{@player.player_name} Stats - #{@team.name}" } %>
+<% content_for(:title) { "#{@player.player_name} - #{@team.name}" } %>
+<% initials = @player.player_name.split.map(&:first).join.upcase[0..1] %>
+<% is_you = @player.user_id == current_user&.id %>
+<% avatar_class = is_you ? "cr-avatar-gold" : (@team.league == "CUP" ? "cr-avatar-pur" : "cr-avatar-blue") %>
 
 <p style="margin-bottom:16px;"><a href="<%= team_path(@team) %>" style="color:var(--accent);text-decoration:none;font-size:.85rem;">&larr; <%= @team.name %> Roster</a></p>
 
-<div class="cr-hero cr-hero-navy">
-  <div class="cr-hero-grid"></div><div class="cr-hero-glow"></div>
-  <div class="cr-hero-content" style="display:flex;align-items:center;gap:20px;">
-    <div class="cr-avatar cr-avatar-blue" style="width:72px;height:72px;font-size:1.4rem;">
-      <%= @player.player_name.split.map(&:first).join.upcase[0..1] %>
+<!-- Profile Card (matching the popup design) -->
+<div class="cr-card" style="max-width:560px;margin:0 auto 24px;padding:0;overflow:hidden;border-radius:20px;">
+
+  <!-- Handle bar -->
+  <div style="width:36px;height:4px;background:var(--border);border-radius:2px;margin:12px auto 16px;"></div>
+
+  <!-- Header: Avatar + Name + Rating -->
+  <div style="display:flex;align-items:center;gap:16px;padding:0 24px 16px;border-bottom:1px solid var(--border);">
+    <div class="cr-avatar <%= avatar_class %>" style="width:72px;height:72px;font-size:1.4rem;flex-shrink:0;">
+      <%= initials %>
     </div>
     <div>
-      <div class="cr-hero-title"><%= @player.player_name %></div>
-      <div class="cr-hero-sub">
-        <%= @team.name %> · <%= @player.role.capitalize %>
+      <div style="font-weight:700;font-size:1.2rem;margin-bottom:2px;"><%= @player.player_name %></div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:.78rem;color:var(--sub);">
         <% if @player.user&.ntrp_rating %>
-          · <%= @player.user.ntrp_rating %> NTRP
+          <%= @player.user.ntrp_rating %> NTRP
         <% end %>
         <% if @player.user&.dynamic_rating %>
           · <%= sprintf("%.4f", @player.user.dynamic_rating) %> Dynamic
         <% end %>
       </div>
-    </div>
-  </div>
-</div>
-
-<!-- Ratings -->
-<div class="cr-stat-grid" style="grid-template-columns:repeat(3,1fr);">
-  <div class="cr-stat"><div class="cr-stat-val cr-stat-val-gold"><%= @player.user&.ntrp_rating || "—" %></div><div class="cr-stat-label">NTRP Rating</div></div>
-  <div class="cr-stat"><div class="cr-stat-val"><%= @player.user&.dynamic_rating ? sprintf("%.4f", @player.user.dynamic_rating) : "—" %></div><div class="cr-stat-label">Dynamic Rating</div></div>
-  <div class="cr-stat"><div class="cr-stat-val" style="font-size:1.4rem;">Spring 2026</div><div class="cr-stat-label">Season</div></div>
-</div>
-
-<!-- Quick Stats -->
-<div class="cr-stat-grid">
-  <div class="cr-stat"><div class="cr-stat-val"><%= @analytics.total_matches %></div><div class="cr-stat-label">Matches Played</div></div>
-  <div class="cr-stat"><div class="cr-stat-val cr-stat-val-green"><%= @analytics.wins %></div><div class="cr-stat-label">Wins</div></div>
-  <div class="cr-stat"><div class="cr-stat-val cr-stat-val-red"><%= @analytics.losses %></div><div class="cr-stat-label">Losses</div></div>
-  <div class="cr-stat"><div class="cr-stat-val cr-stat-val-gold"><%= @analytics.win_percentage %>%</div><div class="cr-stat-label">Win %</div></div>
-</div>
-
-<!-- Singles vs Doubles -->
-<div class="cr-section">
-  <div class="cr-section-head"><div class="cr-section-title">Singles vs Doubles</div><div class="cr-section-line"></div></div>
-  <div class="cr-stat-grid">
-    <div class="cr-stat"><div class="cr-stat-val"><%= @analytics.singles_percentage %>%</div><div class="cr-stat-label">Singles</div></div>
-    <div class="cr-stat"><div class="cr-stat-val"><%= @analytics.doubles_percentage %>%</div><div class="cr-stat-label">Doubles</div></div>
-  </div>
-</div>
-
-<!-- Position Breakdown -->
-<% breakdown = @analytics.position_breakdown %>
-<% if breakdown.any? %>
-  <div class="cr-section">
-    <div class="cr-section-head"><div class="cr-section-title">Position Breakdown</div><div class="cr-section-line"></div></div>
-    <div class="cr-stat-grid">
-      <% breakdown.each do |pos, pct| %>
-        <div class="cr-stat"><div class="cr-stat-val cr-stat-val-gold"><%= pct %>%</div><div class="cr-stat-label"><%= pos %></div></div>
+      <% if @player.captain? %>
+        <span style="display:inline-flex;align-items:center;gap:4px;font-size:.7rem;font-weight:700;padding:2px 8px;border-radius:10px;background:rgba(201,168,76,.15);color:var(--accent);margin-top:4px;">Captain</span>
       <% end %>
     </div>
   </div>
-<% end %>
 
-<!-- Partner W/L -->
-<% partners = @analytics.partner_stats %>
-<% if partners.any? %>
-  <div class="cr-section">
-    <div class="cr-section-head"><div class="cr-section-title">Doubles Partner W/L</div><div class="cr-section-line"></div></div>
-    <table class="cr-table">
-      <thead><tr><th>Partner</th><th>W</th><th>L</th><th>Win %</th><th>Played</th></tr></thead>
-      <tbody>
+  <div style="padding:20px 24px;">
+    <!-- About -->
+    <% if @player.user&.location.present? || is_you %>
+      <div style="margin-bottom:18px;">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:2px;text-transform:uppercase;color:var(--sub);margin-bottom:8px;">About</div>
+        <div style="font-size:.9rem;line-height:1.65;color:var(--text);">
+          <% if @player.user&.location.present? %>
+            <%= @player.user.location %>
+          <% end %>
+          · <%= @team.name %> · <%= @player.role.capitalize %>
+        </div>
+      </div>
+    <% end %>
+
+    <!-- Rating Cards -->
+    <div style="margin-bottom:18px;">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:2px;text-transform:uppercase;color:var(--sub);margin-bottom:8px;">Rating</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;">
+        <div style="background:var(--off);border-radius:12px;padding:16px 10px;text-align:center;">
+          <div style="font-family:'Bebas Neue',sans-serif;font-size:1.8rem;color:var(--accent);letter-spacing:1px;line-height:1;">
+            <%= @player.user&.ntrp_rating || "—" %>
+          </div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:.54rem;letter-spacing:1px;text-transform:uppercase;color:var(--sub);margin-top:4px;">NTRP Rating</div>
+        </div>
+        <div style="background:var(--off);border-radius:12px;padding:16px 10px;text-align:center;">
+          <div style="font-family:'Bebas Neue',sans-serif;font-size:1.8rem;color:var(--text);letter-spacing:1px;line-height:1;">
+            <%= @player.user&.dynamic_rating ? sprintf("%.4f", @player.user.dynamic_rating) : "—" %>
+          </div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:.54rem;letter-spacing:1px;text-transform:uppercase;color:var(--sub);margin-top:4px;">Dynamic</div>
+        </div>
+        <div style="background:var(--off);border-radius:12px;padding:16px 10px;text-align:center;">
+          <div style="font-family:'Bebas Neue',sans-serif;font-size:1.4rem;color:var(--text);letter-spacing:1px;line-height:1;">
+            Spring 2026
+          </div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:.54rem;letter-spacing:1px;text-transform:uppercase;color:var(--sub);margin-top:4px;">Season</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Match Stats -->
+    <div style="margin-bottom:18px;">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:2px;text-transform:uppercase;color:var(--sub);margin-bottom:8px;">Match Stats</div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;">
+        <div style="background:var(--off);border-radius:10px;padding:14px 8px;text-align:center;">
+          <div style="font-family:'Bebas Neue',sans-serif;font-size:1.6rem;color:var(--text);"><%= @analytics.total_matches %></div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:.5rem;letter-spacing:1px;text-transform:uppercase;color:var(--sub);margin-top:2px;">Played</div>
+        </div>
+        <div style="background:var(--off);border-radius:10px;padding:14px 8px;text-align:center;">
+          <div style="font-family:'Bebas Neue',sans-serif;font-size:1.6rem;color:var(--green);"><%= @analytics.wins %></div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:.5rem;letter-spacing:1px;text-transform:uppercase;color:var(--sub);margin-top:2px;">Wins</div>
+        </div>
+        <div style="background:var(--off);border-radius:10px;padding:14px 8px;text-align:center;">
+          <div style="font-family:'Bebas Neue',sans-serif;font-size:1.6rem;color:var(--red);"><%= @analytics.losses %></div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:.5rem;letter-spacing:1px;text-transform:uppercase;color:var(--sub);margin-top:2px;">Losses</div>
+        </div>
+        <div style="background:var(--off);border-radius:10px;padding:14px 8px;text-align:center;">
+          <div style="font-family:'Bebas Neue',sans-serif;font-size:1.6rem;color:var(--accent);"><%= @analytics.win_percentage %>%</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:.5rem;letter-spacing:1px;text-transform:uppercase;color:var(--sub);margin-top:2px;">Win %</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Singles vs Doubles -->
+    <div style="margin-bottom:18px;">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:2px;text-transform:uppercase;color:var(--sub);margin-bottom:8px;">Singles vs Doubles</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+        <div style="background:var(--off);border-radius:10px;padding:14px 8px;text-align:center;">
+          <div style="font-family:'Bebas Neue',sans-serif;font-size:1.6rem;color:var(--text);"><%= @analytics.singles_percentage %>%</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:.5rem;letter-spacing:1px;text-transform:uppercase;color:var(--sub);margin-top:2px;">Singles</div>
+        </div>
+        <div style="background:var(--off);border-radius:10px;padding:14px 8px;text-align:center;">
+          <div style="font-family:'Bebas Neue',sans-serif;font-size:1.6rem;color:var(--text);"><%= @analytics.doubles_percentage %>%</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:.5rem;letter-spacing:1px;text-transform:uppercase;color:var(--sub);margin-top:2px;">Doubles</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Position Breakdown -->
+    <% breakdown = @analytics.position_breakdown %>
+    <% if breakdown.any? %>
+      <div style="margin-bottom:18px;">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:2px;text-transform:uppercase;color:var(--sub);margin-bottom:8px;">Position Breakdown</div>
+        <div style="display:grid;grid-template-columns:repeat(<%= breakdown.size %>,1fr);gap:10px;">
+          <% breakdown.each do |pos, pct| %>
+            <div style="background:var(--off);border-radius:10px;padding:14px 8px;text-align:center;">
+              <div style="font-family:'Bebas Neue',sans-serif;font-size:1.6rem;color:var(--accent);"><%= pct %>%</div>
+              <div style="font-family:'JetBrains Mono',monospace;font-size:.5rem;letter-spacing:1px;text-transform:uppercase;color:var(--sub);margin-top:2px;"><%= pos %></div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+
+    <!-- Partner W/L -->
+    <% partners = @analytics.partner_stats %>
+    <% if partners.any? %>
+      <div style="margin-bottom:18px;">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:2px;text-transform:uppercase;color:var(--sub);margin-bottom:8px;">Doubles Partners</div>
         <% partners.each do |p| %>
-          <tr>
-            <td style="font-weight:700;"><%= p[:partner]&.player_name || "Unknown" %></td>
-            <td style="color:var(--green);"><%= p[:wins] %></td>
-            <td style="color:var(--red);"><%= p[:losses] %></td>
-            <td style="font-family:'JetBrains Mono',monospace;font-weight:600;color:var(--accent);"><%= p[:win_pct] %>%</td>
-            <td><%= p[:total] %></td>
-          </tr>
+          <div style="display:flex;align-items:center;gap:12px;padding:10px;background:var(--off);border-radius:10px;margin-bottom:6px;">
+            <div class="cr-avatar cr-avatar-blue" style="width:36px;height:36px;font-size:.8rem;">
+              <%= p[:partner]&.player_name&.split&.map(&:first)&.join&.upcase&.slice(0,2) || "?" %>
+            </div>
+            <div style="flex:1;">
+              <div style="font-weight:600;font-size:.88rem;"><%= p[:partner]&.player_name || "Unknown" %></div>
+              <div style="font-size:.72rem;color:var(--sub);"><%= p[:total] %> matches together</div>
+            </div>
+            <div style="text-align:right;">
+              <div style="font-family:'Bebas Neue',sans-serif;font-size:1.2rem;color:var(--accent);"><%= p[:win_pct] %>%</div>
+              <div style="font-size:.68rem;color:var(--sub);"><span style="color:var(--green);"><%= p[:wins] %>W</span> <span style="color:var(--red);"><%= p[:losses] %>L</span></div>
+            </div>
+          </div>
         <% end %>
-      </tbody>
-    </table>
-  </div>
-<% end %>
+      </div>
+    <% end %>
 
-<% if @analytics.total_matches == 0 %>
-  <div class="cr-card" style="text-align:center;padding:40px;">
-    <p style="font-size:1.1rem;">🎾 No match data yet</p>
-    <p style="color:var(--sub);margin-top:8px;">Stats will appear here once the captain enters scores.</p>
+    <!-- Profile Photo (only for yourself) -->
+    <% if is_you %>
+      <div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:2px;text-transform:uppercase;color:var(--sub);margin-bottom:8px;">Profile Photo</div>
+        <label style="display:flex;align-items:center;gap:12px;padding:14px;background:var(--off);border:1px dashed var(--border);border-radius:10px;cursor:pointer;">
+          <span style="font-size:1.2rem;">📷</span>
+          <div>
+            <div style="font-size:.86rem;font-weight:600;">Upload Photo</div>
+            <div style="font-size:.73rem;color:var(--sub);">Choose from your camera roll</div>
+          </div>
+          <input type="file" accept="image/*" style="display:none;"/>
+        </label>
+      </div>
+    <% end %>
+
+    <% if @analytics.total_matches == 0 %>
+      <div style="text-align:center;padding:24px 0;color:var(--sub);font-size:.9rem;">
+        🎾 No match data yet — stats will appear once the captain enters scores.
+      </div>
+    <% end %>
   </div>
-<% end %>
+</div>
