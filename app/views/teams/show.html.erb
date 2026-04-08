@@ -43,54 +43,113 @@
   <div class="cr-section-head"><div class="cr-section-title">Schedule</div><div class="cr-section-line"></div></div>
 
   <% if @matches.any? %>
-    <% @matches.each do |match| %>
+    <% @matches.each_with_index do |match, idx| %>
       <% my_avail = @my_availabilities[match.id] %>
-      <div class="cr-match-card" style="flex-wrap:wrap;">
-        <a href="<%= team_scheduled_match_path(@team, match) %>" style="display:flex;align-items:center;gap:14px;flex:1;text-decoration:none;color:var(--text);min-width:0;">
-          <div class="cr-match-date">
-            <div class="cr-match-mon"><%= match.match_date.strftime("%b").upcase %></div>
-            <div class="cr-match-day"><%= match.match_date.strftime("%-d") %></div>
+      <% avail_confirmed = match.player_availabilities.select { |a| a.status == "confirmed" } %>
+      <% avail_out = match.player_availabilities.select { |a| a.status == "unavailable" } %>
+      <% avail_pending = @players.count - avail_confirmed.count - avail_out.count %>
+
+      <div class="cr-match-expand" id="match-<%= match.id %>">
+        <!-- Match Row (clickable to expand) -->
+        <div class="cr-match-row" onclick="toggleMatch(<%= match.id %>)" style="display:flex;align-items:center;gap:14px;padding:16px 20px;background:var(--navy);border:1px solid rgba(255,255,255,.08);border-radius:12px;cursor:pointer;color:var(--white);transition:all .15s;margin-bottom:2px;">
+          <div style="text-align:center;min-width:44px;">
+            <div style="font-family:'JetBrains Mono',monospace;font-size:.5rem;letter-spacing:2px;color:var(--accent);"><%= match.match_date.strftime("%b").upcase %></div>
+            <div style="font-family:'Bebas Neue',sans-serif;font-size:1.5rem;line-height:1;"><%= match.match_date.strftime("%-d") %></div>
           </div>
-          <div class="cr-match-info">
-            <div class="cr-match-opp">vs. <%= match.opponent_team %></div>
-            <div class="cr-match-meta">
-              <% if match.match_time.present? %><%= match.match_time %> · <% end %>
-              <%= match.location %>
+          <div style="flex:1;min-width:0;">
+            <div style="font-weight:700;font-size:.9rem;">vs. <%= match.opponent_team %></div>
+            <div style="font-size:.72rem;color:rgba(255,255,255,.4);margin-top:2px;">
+              <% if match.match_time.present? %><%= match.match_time %> · <% end %><%= match.location.to_s.truncate(40) %>
             </div>
           </div>
-          <span class="cr-match-badge <%= match.home? ? 'cr-match-home' : 'cr-match-away' %>"><%= match.home? ? 'HOME' : 'AWAY' %></span>
-        </a>
-        <% if match.team_result %>
-          <div class="cr-match-result <%= match.team_result == 'win' ? 'cr-match-win' : 'cr-match-loss' %>">
-            <%= match.team_result == 'win' ? 'W' : 'L' %> <%= match.courts_won %>–<%= match.courts_lost %>
-          </div>
-        <% elsif @my_player %>
-          <div style="display:flex;align-items:center;gap:6px;flex-shrink:0;">
-            <%= button_to update_availability_team_scheduled_match_path(@team, match),
-                  method: :patch,
-                  params: { team_player_id: @my_player.id, status: "confirmed" },
-                  style: "padding:8px 14px;border-radius:8px;border:1px solid #{my_avail&.confirmed? ? '#16a34a' : 'var(--border)'};background:#{my_avail&.confirmed? ? 'rgba(22,163,74,.12)' : 'var(--surface)'};color:#{my_avail&.confirmed? ? '#16a34a' : 'var(--sub)'};font-size:.78rem;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;" do %>
-              ✅ In
-            <% end %>
-            <%= button_to update_availability_team_scheduled_match_path(@team, match),
-                  method: :patch,
-                  params: { team_player_id: @my_player.id, status: "unavailable" },
-                  style: "padding:8px 14px;border-radius:8px;border:1px solid #{my_avail&.unavailable? ? '#dc2626' : 'var(--border)'};background:#{my_avail&.unavailable? ? 'rgba(220,38,38,.12)' : 'var(--surface)'};color:#{my_avail&.unavailable? ? '#dc2626' : 'var(--sub)'};font-size:.78rem;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;" do %>
-              ❌ Out
-            <% end %>
-            <% if @is_captain %>
-              <div class="cr-avail-badge" style="margin-left:4px;">
-                <div class="cr-avail-count"><%= match.available_count %></div>
-                <div class="cr-avail-label">available</div>
+          <span style="font-size:.6rem;font-weight:700;padding:3px 8px;border-radius:4px;<%= match.home? ? 'background:rgba(201,168,76,.15);color:var(--accent);' : 'background:rgba(255,255,255,.08);color:rgba(255,255,255,.5);' %>"><%= match.home? ? 'HOME' : 'AWAY' %></span>
+
+          <% if match.team_result %>
+            <div style="font-family:'Bebas Neue',sans-serif;font-size:1.2rem;color:<%= match.team_result == 'win' ? '#4ade80' : '#f87171' %>;"><%= match.team_result == 'win' ? 'W' : 'L' %> <%= match.courts_won %>–<%= match.courts_lost %></div>
+          <% elsif my_avail&.confirmed? %>
+            <div style="width:10px;height:10px;border-radius:50%;background:#4ade80;flex-shrink:0;" title="You're in"></div>
+          <% elsif my_avail&.unavailable? %>
+            <div style="width:10px;height:10px;border-radius:50%;background:#f87171;flex-shrink:0;" title="You're out"></div>
+          <% else %>
+            <div style="width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,.2);flex-shrink:0;" title="No response"></div>
+          <% end %>
+
+          <% if @is_captain && !match.team_result %>
+            <div style="display:flex;align-items:center;gap:4px;flex-shrink:0;">
+              <span style="font-family:'Bebas Neue',sans-serif;font-size:1rem;color:var(--accent);"><%= avail_confirmed.count %></span>
+              <span style="font-size:.55rem;color:rgba(255,255,255,.3);">of <%= @team.spots_needed %></span>
+            </div>
+          <% end %>
+
+          <svg style="width:12px;height:12px;color:rgba(255,255,255,.3);flex-shrink:0;transition:transform .2s;" id="arrow-<%= match.id %>" viewBox="0 0 12 12"><path d="M3 4.5l3 3 3-3" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </div>
+
+        <!-- Expanded Panel -->
+        <div class="cr-match-panel" id="panel-<%= match.id %>" style="display:none;background:var(--surface);border:1px solid var(--border);border-top:none;border-radius:0 0 12px 12px;padding:16px 20px;margin-top:-4px;margin-bottom:10px;">
+
+          <% if @my_player && !match.team_result %>
+            <!-- Player Availability Buttons -->
+            <div style="margin-bottom:16px;">
+              <div style="font-family:'JetBrains Mono',monospace;font-size:.58rem;letter-spacing:2px;color:var(--sub);margin-bottom:10px;">YOUR AVAILABILITY</div>
+              <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+                <%= button_to update_availability_team_scheduled_match_path(@team, match),
+                      method: :patch,
+                      params: { team_player_id: @my_player.id, status: "confirmed" },
+                      style: "padding:10px 22px;border-radius:10px;font-family:'Inter',sans-serif;font-size:.85rem;font-weight:700;cursor:pointer;transition:all .15s;#{my_avail&.confirmed? ? 'background:linear-gradient(135deg,var(--accent),var(--accent2));color:var(--navy);border:2px solid var(--accent);' : 'background:transparent;color:var(--accent);border:2px solid rgba(201,168,76,.3);'}" do %>
+                  I'm In
+                <% end %>
+                <%= button_to update_availability_team_scheduled_match_path(@team, match),
+                      method: :patch,
+                      params: { team_player_id: @my_player.id, status: "unavailable" },
+                      style: "padding:10px 22px;border-radius:10px;font-family:'Inter',sans-serif;font-size:.85rem;font-weight:700;cursor:pointer;transition:all .15s;#{my_avail&.unavailable? ? 'background:rgba(220,38,38,.12);color:var(--red);border:2px solid var(--red);' : 'background:transparent;color:var(--sub);border:2px solid var(--border);'}" do %>
+                  I'm Out
+                <% end %>
+                <%= form_with url: update_availability_team_scheduled_match_path(@team, match),
+                      method: :patch, style: "display:flex;gap:6px;align-items:center;" do |f| %>
+                  <%= f.hidden_field :team_player_id, value: @my_player.id %>
+                  <%= f.hidden_field :status, value: "custom" %>
+                  <%= f.text_field :message, value: my_avail&.custom? ? my_avail.message : "",
+                        placeholder: "Custom message...",
+                        style: "padding:10px 14px;border:2px solid var(--border);border-radius:10px;font-size:.82rem;width:150px;font-family:'Inter',sans-serif;outline:none;" %>
+                  <%= f.submit "Send", style: "padding:10px 16px;border-radius:10px;background:var(--navy);color:var(--white);border:none;font-size:.8rem;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;" %>
+                <% end %>
               </div>
-            <% end %>
+              <% if my_avail && my_avail.status != "pending" %>
+                <div style="margin-top:8px;font-size:.78rem;color:var(--sub);">
+                  Status: <strong style="color:<%= my_avail.confirmed? ? 'var(--green)' : (my_avail.unavailable? ? 'var(--red)' : '#d97706') %>;"><%= my_avail.display_status %></strong>
+                </div>
+              <% end %>
+            </div>
+          <% end %>
+
+          <% if @is_captain && !match.team_result %>
+            <!-- Captain: Player Status Dots -->
+            <div style="font-family:'JetBrains Mono',monospace;font-size:.58rem;letter-spacing:2px;color:var(--sub);margin-bottom:10px;">TEAM AVAILABILITY</div>
+            <div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:10px;">
+              <% @players.each do |player| %>
+                <% pa = match.player_availabilities.find { |a| a.team_player_id == player.id } %>
+                <div title="<%= player.player_name %>: <%= pa&.display_status || 'Pending' %>" style="width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.55rem;font-weight:700;color:#fff;cursor:default;
+                  <% case pa&.status %>
+                  <% when 'confirmed' %>background:#16a34a;
+                  <% when 'unavailable' %>background:#dc2626;
+                  <% when 'custom' %>background:#d97706;
+                  <% else %>background:rgba(100,116,139,.25);color:rgba(100,116,139,.6);
+                  <% end %>
+                "><%= player.player_name.split.map(&:first).join.upcase[0..1] %></div>
+              <% end %>
+            </div>
+            <div style="display:flex;gap:16px;font-size:.72rem;color:var(--sub);">
+              <span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#16a34a;margin-right:4px;"></span><%= avail_confirmed.count %> In</span>
+              <span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#dc2626;margin-right:4px;"></span><%= avail_out.count %> Out</span>
+              <span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:rgba(100,116,139,.25);margin-right:4px;"></span><%= avail_pending %> Pending</span>
+            </div>
+          <% end %>
+
+          <!-- Quick Links -->
+          <div style="display:flex;gap:8px;margin-top:12px;">
+            <a href="<%= team_scheduled_match_path(@team, match) %>" style="font-size:.75rem;color:var(--accent);text-decoration:none;font-weight:600;">View Details &rarr;</a>
           </div>
-        <% elsif @is_captain %>
-          <div class="cr-avail-badge">
-            <div class="cr-avail-count"><%= match.available_count %></div>
-            <div class="cr-avail-label">available</div>
-          </div>
-        <% end %>
+        </div>
       </div>
     <% end %>
   <% else %>
@@ -120,3 +179,17 @@
     <% end %>
   </div>
 </div>
+
+<script>
+function toggleMatch(id) {
+  var panel = document.getElementById('panel-' + id);
+  var arrow = document.getElementById('arrow-' + id);
+  if (panel.style.display === 'none') {
+    panel.style.display = 'block';
+    arrow.style.transform = 'rotate(180deg)';
+  } else {
+    panel.style.display = 'none';
+    arrow.style.transform = 'rotate(0)';
+  }
+}
+</script>
