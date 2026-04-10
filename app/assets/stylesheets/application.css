@@ -724,6 +724,33 @@ button.cr-header-pill {
 .cr-avail-message::placeholder { color: var(--cr-text-light); }
 .cr-avail-message:focus { border-color: var(--cr-gold); }
 
+/* Locked state: selected button gets a bolder look */
+.cr-avail-in.avail-btn-locked {
+  border-width: 2px;
+  font-weight: 800;
+  cursor: default;
+}
+
+.cr-avail-out.avail-btn-locked {
+  border-width: 2px;
+  font-weight: 800;
+  cursor: default;
+}
+
+/* "Saved!" flash indicator */
+.cr-saved {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--cr-green);
+  opacity: 0;
+  transition: opacity 0.3s;
+  white-space: nowrap;
+}
+
+.cr-saved-visible {
+  opacity: 1;
+}
+
 /* ── Roster ── */
 
 .cr-roster {

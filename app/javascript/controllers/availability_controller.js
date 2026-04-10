@@ -1,7 +1,7 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["btnIn", "btnOut", "messageField", "messageDisplay", "counts"]
+  static targets = ["btnIn", "btnOut", "messageField", "counts", "savedIndicator"]
   static values = { matchId: Number, status: String, message: String }
 
   connect() {
@@ -9,17 +9,32 @@ export default class extends Controller {
   }
 
   markIn() {
+    // Already "in" — do nothing (prevents accidental unclick)
+    if (this.statusValue === "in") return
+
+    // Switching from "out" to "in" — confirm first
+    if (this.statusValue === "out") {
+      if (!confirm("Change your availability from Out to In?")) return
+    }
+
     this.statusValue = "in"
     this.save({ status: "in" })
   }
 
   markOut() {
+    // Already "out" — do nothing (prevents accidental unclick)
+    if (this.statusValue === "out") return
+
+    // Switching from "in" to "out" — confirm first
+    if (this.statusValue === "in") {
+      if (!confirm("Change your availability from In to Out?")) return
+    }
+
     this.statusValue = "out"
     this.save({ status: "out" })
   }
 
   saveMessage(event) {
-    // Save on Enter key or blur
     if (event.type === "keydown" && event.key !== "Enter") return
     if (event.type === "keydown") event.preventDefault()
 
@@ -49,6 +64,7 @@ export default class extends Controller {
         this.messageValue = result.message || ""
         this.updateButtonStates()
         this.updateCounts(result.counts)
+        this.showSaved()
       }
     } catch (error) {
       console.error("Failed to save availability:", error)
@@ -57,18 +73,33 @@ export default class extends Controller {
 
   updateButtonStates() {
     if (this.hasBtnInTarget) {
-      this.btnInTarget.classList.toggle("avail-btn-active", this.statusValue === "in")
+      const isIn = this.statusValue === "in"
+      this.btnInTarget.classList.toggle("avail-btn-active", isIn)
+      this.btnInTarget.classList.toggle("avail-btn-locked", isIn)
     }
     if (this.hasBtnOutTarget) {
-      this.btnOutTarget.classList.toggle("avail-btn-active", this.statusValue === "out")
+      const isOut = this.statusValue === "out"
+      this.btnOutTarget.classList.toggle("avail-btn-active", isOut)
+      this.btnOutTarget.classList.toggle("avail-btn-locked", isOut)
     }
   }
 
   updateCounts(counts) {
     if (!counts || !this.hasCountsTarget) return
     this.countsTarget.innerHTML =
-      `<span class="count-in">${counts.in} ✅</span> · ` +
-      `<span class="count-out">${counts.out} ❌</span> · ` +
-      `<span class="count-pending">${counts.no_response} ?</span>`
+      `<span class="cr-count-in">${counts.in} ✅</span>` +
+      `<span class="cr-count-out">${counts.out} ❌</span>` +
+      `<span class="cr-count-pending">${counts.no_response} ?</span>`
+  }
+
+  showSaved() {
+    if (!this.hasSavedIndicatorTarget) return
+    const el = this.savedIndicatorTarget
+    el.textContent = "Saved!"
+    el.classList.add("cr-saved-visible")
+    clearTimeout(this._savedTimer)
+    this._savedTimer = setTimeout(() => {
+      el.classList.remove("cr-saved-visible")
+    }, 1500)
   }
 }

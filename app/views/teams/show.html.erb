@@ -109,13 +109,13 @@
 
             <div class="cr-avail-row">
               <button type="button"
-                      class="cr-avail-btn cr-avail-in <%= 'avail-btn-active' if current_status == 'in' %>"
+                      class="cr-avail-btn cr-avail-in <%= 'avail-btn-active avail-btn-locked' if current_status == 'in' %>"
                       data-availability-target="btnIn"
                       data-action="click->availability#markIn">
                 ✅ I'm In
               </button>
               <button type="button"
-                      class="cr-avail-btn cr-avail-out <%= 'avail-btn-active' if current_status == 'out' %>"
+                      class="cr-avail-btn cr-avail-out <%= 'avail-btn-active avail-btn-locked' if current_status == 'out' %>"
                       data-availability-target="btnOut"
                       data-action="click->availability#markOut">
                 ❌ I'm Out
@@ -126,6 +126,7 @@
                      value="<%= current_message %>"
                      data-availability-target="messageField"
                      data-action="keydown->availability#saveMessage blur->availability#saveMessage">
+              <span class="cr-saved" data-availability-target="savedIndicator"></span>
             </div>
           </div>
         <% end %>
