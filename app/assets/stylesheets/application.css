@@ -347,13 +347,13 @@ button.cr-header-pill {
 }
 
 .cr-league-label {
-  font-size: 0.68rem;
-  font-weight: 700;
+  font-size: 0.95rem;
+  font-weight: 800;
   color: var(--cr-gold);
-  letter-spacing: 2px;
+  letter-spacing: 2.5px;
   text-transform: uppercase;
-  margin-bottom: 10px;
-  padding-bottom: 8px;
+  margin-bottom: 12px;
+  padding-bottom: 10px;
   border-bottom: 1px solid var(--cr-border);
 }
 
