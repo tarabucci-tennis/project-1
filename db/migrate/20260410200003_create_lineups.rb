@@ -21,7 +21,7 @@ class CreateLineups < ActiveRecord::Migration[8.1]
       t.timestamps
     end
 
-    add_index :lineups, [:match_id], unique: true
-    add_index :lineup_slots, [:lineup_id, :user_id], unique: true
+    add_index :lineups, [:match_id], unique: true unless index_exists?(:lineups, :match_id)
+    add_index :lineup_slots, [:lineup_id, :user_id], unique: true unless index_exists?(:lineup_slots, [:lineup_id, :user_id])
   end
 end
