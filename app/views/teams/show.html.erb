@@ -8,11 +8,11 @@
   <div class="cr-team-hero">
     <div class="cr-team-hero-content">
       <div class="cr-team-hero-label">
+        — <%= @team.name %>
         <% if @captain %>
-          <%= @team.league_category == "Local" ? "Del-Tri" : @team.league_category %>
           · Captain: <%= @captain.name %>
-        <% else %>
-          <%= @team.league_category == "Local" ? "Del-Tri" : @team.league_category %>
+        <% end %>
+        <% if @team.team_type.present? %>
           · <%= @team.team_type %>
         <% end %>
       </div>
@@ -72,106 +72,154 @@
     </div>
   </div>
 
-  <%# ── Schedule ────────────────────────────────────── %>
-  <% if @upcoming_matches.any? || @past_matches.any? %>
-    <section class="cr-section">
-      <h2 class="cr-section-title">
-        <%= @team.season_name.present? ? @team.season_name : "Schedule" %> Schedule
-      </h2>
-      <div class="cr-match-list">
-        <% @upcoming_matches.each do |match| %>
-          <% avail = @my_availabilities[match.id] %>
-          <% current_status = avail&.status || "no_response" %>
-          <% current_message = avail&.message || "" %>
-          <% counts = match.availability_counts %>
+  <%# ── Sub-tabs ─────────────────────────────────────── %>
+  <div data-controller="team-tabs">
+    <div class="cr-subtabs">
+      <button class="cr-subtab cr-subtab-active" data-team-tabs-target="tab" data-action="click->team-tabs#switch">📅 Schedule</button>
+      <button class="cr-subtab" data-team-tabs-target="tab" data-action="click->team-tabs#switch">👥 Roster</button>
+      <button class="cr-subtab" data-team-tabs-target="tab" data-action="click->team-tabs#switch">🏆 Standings</button>
+    </div>
 
-          <div class="cr-match-card"
-               data-controller="availability"
-               data-availability-match-id-value="<%= match.id %>"
-               data-availability-status-value="<%= current_status %>"
-               data-availability-message-value="<%= current_message %>">
+    <%# ── Tab 1: Schedule ────────────────────────────── %>
+    <div data-team-tabs-target="panel">
+      <div class="cr-schedule-layout">
+        <%# Left: upcoming matches %>
+        <div>
+          <h2 class="cr-section-title">
+            <%= @team.season_name.present? ? @team.season_name : "" %> Schedule
+          </h2>
+          <% if @upcoming_matches.any? %>
+            <div class="cr-match-list">
+              <% @upcoming_matches.each do |match| %>
+                <% avail = @my_availabilities[match.id] %>
+                <% current_status = avail&.status || "no_response" %>
+                <% current_message = avail&.message || "" %>
+                <% counts = match.availability_counts %>
 
-            <div class="cr-match-row">
-              <div class="cr-match-date">
-                <div class="cr-match-date-month"><%= match.match_date.strftime("%b").upcase %></div>
-                <div class="cr-match-date-day"><%= match.match_date.strftime("%-d") %></div>
-              </div>
-              <div class="cr-match-info">
-                <div class="cr-match-opponent">vs. <%= match.opponent %></div>
-                <div class="cr-match-location"><%= match.location %></div>
-              </div>
-              <% if @is_captain %>
-                <div class="cr-match-counts" data-availability-target="counts">
-                  <span class="cr-count-in"><%= counts[:in] %> ✅</span>
-                  <span class="cr-count-out"><%= counts[:out] %> ❌</span>
-                  <span class="cr-count-pending"><%= counts[:no_response] %> ?</span>
+                <div class="cr-match-card"
+                     data-controller="availability"
+                     data-availability-match-id-value="<%= match.id %>"
+                     data-availability-status-value="<%= current_status %>"
+                     data-availability-message-value="<%= current_message %>">
+
+                  <div class="cr-match-row">
+                    <div class="cr-match-date">
+                      <div class="cr-match-date-month"><%= match.match_date.strftime("%b").upcase %></div>
+                      <div class="cr-match-date-day"><%= match.match_date.strftime("%-d") %></div>
+                    </div>
+                    <div class="cr-match-info">
+                      <div class="cr-match-opponent">vs. <%= match.opponent %></div>
+                      <div class="cr-match-location"><%= match.location %></div>
+                    </div>
+                    <% if match.notes&.include?("Home") || match.location&.include?(@team.home_court.to_s.split(",").first.to_s) %>
+                      <div class="cr-match-badge cr-match-home">Home</div>
+                    <% elsif match.notes&.include?("Away") %>
+                      <div class="cr-match-badge cr-match-away">Away</div>
+                    <% end %>
+                    <% if @is_captain %>
+                      <div class="cr-match-counts" data-availability-target="counts">
+                        <span class="cr-count-in"><%= counts[:in] %> ✅</span>
+                        <span class="cr-count-out"><%= counts[:out] %> ❌</span>
+                        <span class="cr-count-pending"><%= counts[:no_response] %> ?</span>
+                      </div>
+                    <% end %>
+                  </div>
+
+                  <div class="cr-avail-row">
+                    <button type="button"
+                            class="cr-avail-btn cr-avail-in <%= 'avail-btn-active avail-btn-locked' if current_status == 'in' %>"
+                            data-availability-target="btnIn"
+                            data-action="click->availability#markIn">
+                      ✅ I'm In
+                    </button>
+                    <button type="button"
+                            class="cr-avail-btn cr-avail-out <%= 'avail-btn-active avail-btn-locked' if current_status == 'out' %>"
+                            data-availability-target="btnOut"
+                            data-action="click->availability#markOut">
+                      ❌ I'm Out
+                    </button>
+                    <input type="text"
+                           class="cr-avail-message"
+                           placeholder="Add a message..."
+                           value="<%= current_message %>"
+                           data-availability-target="messageField"
+                           data-action="keydown->availability#saveMessage blur->availability#saveMessage">
+                    <span class="cr-saved" data-availability-target="savedIndicator"></span>
+                    <% if @is_captain %>
+                      <%= link_to "View All", team_captain_path(@team), class: "cr-avail-captain-link" %>
+                    <% end %>
+                  </div>
                 </div>
               <% end %>
             </div>
+          <% else %>
+            <div class="cr-empty" style="padding: 40px 20px;">
+              <p>No upcoming matches.</p>
+            </div>
+          <% end %>
+        </div>
 
-            <div class="cr-avail-row">
-              <button type="button"
-                      class="cr-avail-btn cr-avail-in <%= 'avail-btn-active avail-btn-locked' if current_status == 'in' %>"
-                      data-availability-target="btnIn"
-                      data-action="click->availability#markIn">
-                ✅ I'm In
-              </button>
-              <button type="button"
-                      class="cr-avail-btn cr-avail-out <%= 'avail-btn-active avail-btn-locked' if current_status == 'out' %>"
-                      data-availability-target="btnOut"
-                      data-action="click->availability#markOut">
-                ❌ I'm Out
-              </button>
-              <input type="text"
-                     class="cr-avail-message"
-                     placeholder="Add a message..."
-                     value="<%= current_message %>"
-                     data-availability-target="messageField"
-                     data-action="keydown->availability#saveMessage blur->availability#saveMessage">
-              <span class="cr-saved" data-availability-target="savedIndicator"></span>
-              <% if @is_captain %>
-                <%= link_to "View All", team_captain_path(@team), class: "cr-avail-captain-link" %>
+        <%# Right: results %>
+        <div>
+          <h2 class="cr-section-title">Results</h2>
+          <div class="cr-results-placeholder">
+            <% if @past_matches.any? %>
+              <% @past_matches.first(10).each do |match| %>
+                <div class="cr-match-row cr-match-past">
+                  <div class="cr-match-date">
+                    <div class="cr-match-date-month"><%= match.match_date.strftime("%b").upcase %></div>
+                    <div class="cr-match-date-day"><%= match.match_date.strftime("%-d") %></div>
+                  </div>
+                  <div class="cr-match-info">
+                    <div class="cr-match-opponent">vs. <%= match.opponent %></div>
+                  </div>
+                </div>
               <% end %>
-            </div>
-          </div>
-        <% end %>
-        <% @past_matches.first(10).each do |match| %>
-          <div class="cr-match-row cr-match-past">
-            <div class="cr-match-date">
-              <div class="cr-match-date-month"><%= match.match_date.strftime("%b").upcase %></div>
-              <div class="cr-match-date-day"><%= match.match_date.strftime("%-d") %></div>
-            </div>
-            <div class="cr-match-info">
-              <div class="cr-match-opponent">vs. <%= match.opponent %></div>
-              <div class="cr-match-location"><%= match.location %></div>
-            </div>
-            <div class="cr-match-time"><%= match.match_date.strftime("%-I:%M %p") %></div>
-          </div>
-        <% end %>
-      </div>
-    </section>
-  <% end %>
-
-  <%# ── Roster ─────────────────────────────────────── %>
-  <section class="cr-section">
-    <h2 class="cr-section-title">Roster (<%= @player_count %> Players)</h2>
-    <div class="cr-roster">
-      <% @roster.each do |membership| %>
-        <%= link_to player_path(membership.user), class: "cr-roster-row", style: "text-decoration: none; color: inherit;" do %>
-          <div class="cr-roster-name <%= 'cr-roster-self' if membership.user_id == current_user.id %>">
-            <%= membership.user.name %>
-            <% if membership.user_id == current_user.id %>
-              (you)
+            <% else %>
+              <div style="text-align: center; padding: 40px 20px; color: var(--cr-text-light);">
+                🎾 Season starts <%= @team.next_match ? @team.next_match.match_date.strftime("%B %-d") : "soon" %>!
+                <div style="margin-top: 8px; font-size: 0.85rem;">Results will appear here after each match.</div>
+              </div>
             <% end %>
           </div>
-          <% if membership.user.ntrp_rating.present? %>
-            <div class="cr-roster-rating"><%= membership.user.ntrp_rating %></div>
-          <% end %>
-          <% if membership.captain? %>
-            <div class="cr-roster-role cr-roster-role-captain">Captain</div>
-          <% end %>
-        <% end %>
-      <% end %>
+        </div>
+      </div>
     </div>
-  </section>
+
+    <%# ── Tab 2: Roster ──────────────────────────────── %>
+    <div data-team-tabs-target="panel" style="display: none;">
+      <section class="cr-section">
+        <h2 class="cr-section-title">Roster (<%= @player_count %> Players)</h2>
+        <div class="cr-roster">
+          <% @roster.each do |membership| %>
+            <%= link_to player_path(membership.user), class: "cr-roster-row", style: "text-decoration: none; color: inherit;" do %>
+              <div class="cr-roster-name <%= 'cr-roster-self' if membership.user_id == current_user.id %>">
+                <%= membership.user.name %>
+                <% if membership.user_id == current_user.id %>
+                  (you)
+                <% end %>
+              </div>
+              <% if membership.user.ntrp_rating.present? %>
+                <div class="cr-roster-rating"><%= membership.user.ntrp_rating %></div>
+              <% end %>
+              <% if membership.captain? %>
+                <div class="cr-roster-role cr-roster-role-captain">Captain</div>
+              <% end %>
+            <% end %>
+          <% end %>
+        </div>
+      </section>
+    </div>
+
+    <%# ── Tab 3: Standings ───────────────────────────── %>
+    <div data-team-tabs-target="panel" style="display: none;">
+      <section class="cr-section">
+        <h2 class="cr-section-title">Standings</h2>
+        <div style="text-align: center; padding: 40px 20px; color: var(--cr-text-light);">
+          🏆 Standings will update as the season progresses.
+        </div>
+      </section>
+    </div>
+  </div>
+
 </div>
