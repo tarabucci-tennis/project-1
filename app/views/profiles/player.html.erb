@@ -106,10 +106,13 @@
               <div class="cr-year-caret">▾</div>
             </button>
             <div class="cr-year-detail" data-year-expand-target="detail">
+
+              <%# ── Matches ── %>
+              <div class="cr-year-section-label">Matches</div>
               <div class="cr-year-detail-grid">
                 <div class="cr-year-stat">
                   <div class="cr-year-stat-value"><%= s.matches_total || "—" %></div>
-                  <div class="cr-year-stat-label">Matches</div>
+                  <div class="cr-year-stat-label">Total</div>
                 </div>
                 <div class="cr-year-stat">
                   <div class="cr-year-stat-value cr-year-win"><%= s.matches_won || "—" %></div>
@@ -123,25 +126,60 @@
                   <div class="cr-year-stat-value"><%= s.match_wpct ? "#{s.match_wpct}%" : "—" %></div>
                   <div class="cr-year-stat-label">Win %</div>
                 </div>
-                <% if s.sets_total %>
-                  <div class="cr-year-stat">
-                    <div class="cr-year-stat-value"><%= s.sets_won || "—" %>-<%= s.sets_lost || "—" %></div>
-                    <div class="cr-year-stat-label">Sets (W-L)</div>
-                  </div>
-                <% end %>
-                <% if s.games_total %>
-                  <div class="cr-year-stat">
-                    <div class="cr-year-stat-value"><%= s.games_won || "—" %>-<%= s.games_lost || "—" %></div>
-                    <div class="cr-year-stat-label">Games (W-L)</div>
-                  </div>
-                <% end %>
-                <% if s.defaults && s.defaults > 0 %>
+              </div>
+
+              <%# ── Sets ── %>
+              <div class="cr-year-section-label">Sets</div>
+              <div class="cr-year-detail-grid">
+                <div class="cr-year-stat">
+                  <div class="cr-year-stat-value"><%= s.sets_total || "—" %></div>
+                  <div class="cr-year-stat-label">Total</div>
+                </div>
+                <div class="cr-year-stat">
+                  <div class="cr-year-stat-value cr-year-win"><%= s.sets_won || "—" %></div>
+                  <div class="cr-year-stat-label">Won</div>
+                </div>
+                <div class="cr-year-stat">
+                  <div class="cr-year-stat-value cr-year-loss"><%= s.sets_lost || "—" %></div>
+                  <div class="cr-year-stat-label">Lost</div>
+                </div>
+                <div class="cr-year-stat">
+                  <div class="cr-year-stat-value"><%= s.set_wpct ? "#{s.set_wpct}%" : "—" %></div>
+                  <div class="cr-year-stat-label">Win %</div>
+                </div>
+              </div>
+
+              <%# ── Games ── %>
+              <div class="cr-year-section-label">Games</div>
+              <div class="cr-year-detail-grid">
+                <div class="cr-year-stat">
+                  <div class="cr-year-stat-value"><%= s.games_total || "—" %></div>
+                  <div class="cr-year-stat-label">Total</div>
+                </div>
+                <div class="cr-year-stat">
+                  <div class="cr-year-stat-value cr-year-win"><%= s.games_won || "—" %></div>
+                  <div class="cr-year-stat-label">Won</div>
+                </div>
+                <div class="cr-year-stat">
+                  <div class="cr-year-stat-value cr-year-loss"><%= s.games_lost || "—" %></div>
+                  <div class="cr-year-stat-label">Lost</div>
+                </div>
+                <div class="cr-year-stat">
+                  <div class="cr-year-stat-value"><%= s.game_wpct ? "#{s.game_wpct}%" : "—" %></div>
+                  <div class="cr-year-stat-label">Win %</div>
+                </div>
+              </div>
+
+              <% if s.defaults && s.defaults > 0 %>
+                <div class="cr-year-section-label">Other</div>
+                <div class="cr-year-detail-grid">
                   <div class="cr-year-stat">
                     <div class="cr-year-stat-value"><%= s.defaults %></div>
                     <div class="cr-year-stat-label">Defaults</div>
                   </div>
-                <% end %>
-              </div>
+                </div>
+              <% end %>
+
             </div>
           </div>
         <% end %>

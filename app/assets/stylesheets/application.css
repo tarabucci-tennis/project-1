@@ -1234,6 +1234,18 @@ button.cr-header-pill {
 
 .cr-year-detail-open { display: block; }
 
+.cr-year-section-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--cr-gold);
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  margin-top: 14px;
+  margin-bottom: 8px;
+}
+
+.cr-year-section-label:first-child { margin-top: 0; }
+
 .cr-year-detail-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
