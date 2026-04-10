@@ -727,3 +727,101 @@ h1 {
   padding: 60px 20px;
   color: rgba(255,255,255,0.3);
 }
+
+/* ── League tabs (Recent Teams filter) ── */
+.league-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-bottom: 16px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+.league-tab-group { position: relative; }
+
+.league-tab {
+  background: transparent;
+  border: none;
+  color: rgba(255,255,255,0.55);
+  padding: 10px 16px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  transition: color 0.15s, border-color 0.15s;
+  font-family: inherit;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.league-tab:hover { color: #fff; }
+
+.league-tab.active {
+  color: #ccff00;
+  border-bottom-color: #ccff00;
+}
+
+.league-tab-count {
+  display: inline-block;
+  min-width: 20px;
+  padding: 1px 7px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 10px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: rgba(255,255,255,0.6);
+  text-align: center;
+}
+
+.league-tab.active .league-tab-count {
+  background: rgba(204,255,0,0.15);
+  color: #ccff00;
+}
+
+.league-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  min-width: 180px;
+  background: #0f3520;
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 8px;
+  padding: 6px;
+  margin-top: 4px;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-4px);
+  transition: opacity 0.15s, transform 0.15s;
+  z-index: 20;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+}
+
+.league-tab-group:hover .league-dropdown,
+.league-tab-group:focus-within .league-dropdown {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+.league-dropdown-item {
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: transparent;
+  border: none;
+  color: rgba(255,255,255,0.75);
+  padding: 8px 12px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  border-radius: 4px;
+  font-family: inherit;
+  white-space: nowrap;
+}
+
+.league-dropdown-item:hover {
+  background: rgba(204,255,0,0.1);
+  color: #ccff00;
+}

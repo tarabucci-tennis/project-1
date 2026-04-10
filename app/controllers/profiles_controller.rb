@@ -2,9 +2,10 @@ class ProfilesController < ApplicationController
   def show
     return redirect_to login_path unless current_user
 
-    @user  = current_user
-    @teams = @user.tennis_teams.order(start_date: :desc)
-    @stats = @user.tennis_stats.chronological
+    @user    = current_user
+    @teams   = @user.tennis_teams.order(start_date: :desc)
+    @leagues = @teams.group_by(&:team_type)
+    @stats   = @user.tennis_stats.chronological
 
     # Computed totals row across all years
     if @stats.any?

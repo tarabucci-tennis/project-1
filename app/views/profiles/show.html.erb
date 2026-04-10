@@ -61,8 +61,44 @@
 
   <%# ── Recent Teams ────────────────────────────────────────────────── %>
   <% if @teams.any? %>
-    <section class="profile-section">
+    <section class="profile-section" data-controller="league-tabs">
       <h2 class="section-title">Recent Teams</h2>
+
+      <nav class="league-nav" aria-label="Filter teams by league">
+        <button type="button"
+                class="league-tab active"
+                data-league-tabs-target="leagueTab"
+                data-league="all"
+                data-action="click->league-tabs#selectLeague">
+          All
+          <span class="league-tab-count"><%= @teams.size %></span>
+        </button>
+        <% @leagues.each do |league, teams_in_league| %>
+          <div class="league-tab-group">
+            <button type="button"
+                    class="league-tab"
+                    data-league-tabs-target="leagueTab"
+                    data-league="<%= league %>"
+                    data-action="click->league-tabs#selectLeague">
+              <%= league %>
+              <span class="league-tab-count"><%= teams_in_league.size %></span>
+            </button>
+            <div class="league-dropdown" role="menu">
+              <% teams_in_league.each do |t| %>
+                <button type="button"
+                        class="league-dropdown-item"
+                        role="menuitem"
+                        data-league="<%= league %>"
+                        data-team-id="<%= t.id %>"
+                        data-action="click->league-tabs#selectTeam">
+                  <%= t.name %>
+                </button>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+      </nav>
+
       <div class="profile-table-wrap">
         <table class="profile-table">
           <thead>
@@ -77,7 +113,9 @@
           </thead>
           <tbody>
             <% @teams.each do |team| %>
-              <tr>
+              <tr data-league-tabs-target="teamRow"
+                  data-league="<%= team.team_type %>"
+                  data-team-id="<%= team.id %>">
                 <td class="td-primary"><%= team.name %></td>
                 <td><%= team.team_type %></td>
                 <td><%= team.section %></td>
