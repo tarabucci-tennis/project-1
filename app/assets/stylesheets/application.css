@@ -1848,6 +1848,104 @@ button.cr-header-pill {
 }
 
 /* ========================================================
+   Landing Page
+   ======================================================== */
+
+.cr-landing {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.cr-landing-hero {
+  text-align: center;
+  padding: 60px 20px 40px;
+}
+
+.cr-landing-headline {
+  font-size: 2.8rem;
+  font-weight: 800;
+  line-height: 1.1;
+  color: var(--cr-text);
+  letter-spacing: -1px;
+}
+
+.cr-landing-headline-gold {
+  color: var(--cr-gold);
+}
+
+.cr-landing-tagline {
+  font-size: 1.05rem;
+  color: var(--cr-text-muted);
+  max-width: 480px;
+  margin: 16px auto 0;
+  line-height: 1.6;
+}
+
+.cr-landing-features {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 48px;
+}
+
+.cr-landing-feature {
+  text-align: center;
+  padding: 24px 16px;
+  background: var(--cr-white);
+  border: 1px solid var(--cr-border);
+  border-radius: 12px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.cr-landing-feature:hover {
+  border-color: var(--cr-gold);
+  box-shadow: 0 4px 12px rgba(201, 162, 74, 0.1);
+}
+
+.cr-landing-feature-icon {
+  font-size: 1.8rem;
+  margin-bottom: 10px;
+}
+
+.cr-landing-feature-title {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--cr-text);
+  margin-bottom: 6px;
+}
+
+.cr-landing-feature-text {
+  font-size: 0.8rem;
+  color: var(--cr-text-muted);
+  line-height: 1.4;
+}
+
+.cr-landing-signin {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 48px;
+}
+
+.cr-landing-signin .cr-login-card {
+  max-width: 420px;
+  width: 100%;
+}
+
+.cr-landing-footer {
+  text-align: center;
+  padding: 32px 20px;
+  border-top: 1px solid var(--cr-border);
+  color: var(--cr-text-muted);
+  font-size: 0.85rem;
+}
+
+@media (max-width: 720px) {
+  .cr-landing-headline { font-size: 2rem; }
+  .cr-landing-features { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* ========================================================
    Coming Soon Card
    ======================================================== */
 
