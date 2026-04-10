@@ -59,13 +59,28 @@ class TeamsController < ApplicationController
     @losses           = @team.matches.where(result: "loss").count
     @division_teams   = @team.division_teams.ranked
 
-    # Build combined standings: your team + division opponents, sorted by wins desc
+    # Build combined standings
+    @is_points_league = @team.league_category == "Local"
     @standings = []
-    @standings << { name: @team.name, wins: @wins, losses: @losses, is_self: true }
-    @division_teams.each do |dt|
-      @standings << { name: dt.name, wins: dt.wins, losses: dt.losses, is_self: false }
+
+    if @is_points_league
+      # Del-Tri uses points (total games won across the season)
+      # Calculate Legacy 2's points from match scores
+      my_points = @team.matches.where.not(score_summary: nil).sum { |m|
+        m.score_summary.to_s.split("-").first.to_i
+      }
+      @standings << { name: @team.name, points: my_points, is_self: true }
+      @division_teams.each do |dt|
+        @standings << { name: dt.name, points: dt.wins, is_self: false }
+      end
+      @standings.sort_by! { |s| [-s[:points], s[:name]] }
+    else
+      @standings << { name: @team.name, wins: @wins, losses: @losses, is_self: true }
+      @division_teams.each do |dt|
+        @standings << { name: dt.name, wins: dt.wins, losses: dt.losses, is_self: false }
+      end
+      @standings.sort_by! { |s| [-s[:wins], s[:losses], s[:name]] }
     end
-    @standings.sort_by! { |s| [-s[:wins], s[:losses], s[:name]] }
 
     # Player stats (visible to everyone on the Player Stats tab)
     @player_stats_data = build_player_analytics

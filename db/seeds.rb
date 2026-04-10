@@ -406,21 +406,22 @@ end
 ].each { |name| DivisionTeam.find_or_create_by!(tennis_team: pcc, name: name) }
 
 # Legacy 2 division (Del-Tri Division 4) — with final standings from completed season
-# Data from Del-Tri Statistics page: actual W-L records
+# Del-Tri uses POINTS (total games won), not W-L records
+# Points stored in wins column, W-L from statistics page in losses column for reference
 {
-  "DVTA 3"              => [16, 2],
-  "Brandywine 5"        => [11, 7],
-  "Springfield YMCA 3"  => [10, 8],
-  "Brandywine 4"        => [8, 10],
-  "Radnor Racquet 3"    => [8, 10],
-  "HPTA 6"              => [8, 10],
-  "Penn Oaks 5"         => [5, 13],
-  "Tennis Addiction 4"   => [5, 13],
-  "Upper Main Line Y 2" => [4, 14]
-}.each do |name, (w, l)|
+  "DVTA 3"              => 70,
+  "Brandywine 5"        => 58,
+  "Springfield YMCA 3"  => 56,
+  "Brandywine 4"        => 53,
+  "Radnor Racquet 3"    => 52,
+  "HPTA 6"              => 51,
+  "Penn Oaks 5"         => 48,
+  "Tennis Addiction 4"   => 45,
+  "Upper Main Line Y 2" => 39
+}.each do |name, pts|
   DivisionTeam.find_or_create_by!(tennis_team: legacy_2, name: name) do |dt|
-    dt.wins = w
-    dt.losses = l
+    dt.wins = pts
+    dt.losses = 0
   end
 end
 
