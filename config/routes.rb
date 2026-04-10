@@ -12,6 +12,14 @@ Rails.application.routes.draw do
   # Admin: user management
   resources :users, only: [ :index, :new, :create, :edit, :update, :destroy ]
 
+  # Join link
+  get "join/:code", to: "joins#show", as: :join_team
+
+  # Find / create teams
+  get  "find-team", to: "teams#search", as: :find_team
+  get  "create-team", to: "teams#new", as: :new_team
+  post "create-team", to: "teams#create", as: :create_team
+
   # Core app
   resources :teams, only: [ :index, :show ] do
     resources :matches, only: [ :index, :new, :create ] do
@@ -25,6 +33,7 @@ Rails.application.routes.draw do
       end
     end
     get "captain", to: "matches#captain", as: :captain
+    post "add_player", to: "teams#add_player", as: :add_player
   end
 
   # Availability AJAX endpoint (Phase 2 feature — routes preserved but unused on index page)

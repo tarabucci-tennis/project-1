@@ -7,6 +7,17 @@ class SessionsController < ApplicationController
     user = User.find_by(email: params[:email].to_s.downcase.strip)
     if user
       session[:user_id] = user.id
+
+      # Auto-join team if they came from a join link
+      if session[:pending_join_code].present?
+        team = TennisTeam.find_by(join_code: session.delete(:pending_join_code))
+        if team && !team.team_memberships.exists?(user: user)
+          TeamMembership.create!(user: user, tennis_team: team, role: "player")
+          redirect_to team_path(team), notice: "Welcome back! You've joined #{team.name}."
+          return
+        end
+      end
+
       redirect_to root_path, notice: "Welcome back, #{user.name}!"
     else
       flash.now[:alert] = "No account found for that email."

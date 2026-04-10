@@ -21,6 +21,17 @@ class RegistrationsController < ApplicationController
     user = User.new(name: name, email: email, admin: false)
     if user.save
       session[:user_id] = user.id
+
+      # Auto-join team if they came from a join link
+      if session[:pending_join_code].present?
+        team = TennisTeam.find_by(join_code: session.delete(:pending_join_code))
+        if team && !team.team_memberships.exists?(user: user)
+          TeamMembership.create!(user: user, tennis_team: team, role: "player")
+          redirect_to team_path(team), notice: "Welcome to Court Report! You've joined #{team.name}."
+          return
+        end
+      end
+
       redirect_to root_path, notice: "Welcome to Court Report, #{user.name.split.first}!"
     else
       flash.now[:alert] = user.errors.full_messages.join(", ")

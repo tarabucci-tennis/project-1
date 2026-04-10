@@ -435,6 +435,30 @@
             Only you can see this tab. Your team cannot.
           </p>
 
+          <%# ── Share Join Link + Add Player ── %>
+          <div style="display: flex; gap: 16px; margin-bottom: 28px; flex-wrap: wrap;">
+            <div style="flex: 1; min-width: 250px; background: var(--cr-white); border: 1px solid var(--cr-border); border-radius: 10px; padding: 16px;">
+              <div style="font-size: 0.75rem; font-weight: 700; color: var(--cr-text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">Share Join Link</div>
+              <p style="font-size: 0.8rem; color: var(--cr-text-light); margin-bottom: 8px;">Send this link to players so they can join your team:</p>
+              <div style="display: flex; gap: 6px;">
+                <input type="text" value="<%= join_team_url(@team.ensure_join_code!, host: request.host) %>" readonly
+                       style="flex: 1; padding: 8px 10px; font-size: 0.8rem; border: 1px solid var(--cr-border); border-radius: 6px; background: var(--cr-bg); color: var(--cr-text);"
+                       onclick="this.select(); document.execCommand('copy');">
+              </div>
+            </div>
+
+            <div style="flex: 1; min-width: 250px; background: var(--cr-white); border: 1px solid var(--cr-border); border-radius: 10px; padding: 16px;">
+              <div style="font-size: 0.75rem; font-weight: 700; color: var(--cr-text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">Add Player</div>
+              <%= form_with url: add_player_team_path(@team), method: :post, local: true do |f| %>
+                <div style="display: flex; flex-direction: column; gap: 6px;">
+                  <input type="text" name="player_name" placeholder="Name" style="padding: 8px 10px; font-size: 0.85rem; border: 1px solid var(--cr-border); border-radius: 6px;">
+                  <input type="email" name="email" placeholder="Email" required style="padding: 8px 10px; font-size: 0.85rem; border: 1px solid var(--cr-border); border-radius: 6px;">
+                  <%= f.submit "Add to Roster", class: "cr-btn cr-btn-gold", style: "padding: 8px 16px; font-size: 0.8rem;" %>
+                </div>
+              <% end %>
+            </div>
+          </div>
+
           <%# ── Availability overview for each upcoming match ── %>
           <% if @upcoming_matches.any? %>
             <h3 class="cr-captain-section-title">Upcoming — Who's Available</h3>

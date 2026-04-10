@@ -9,6 +9,8 @@ class TennisTeam < ApplicationRecord
 
   validates :league_category, inclusion: { in: LEAGUE_CATEGORIES }
 
+  before_create :generate_join_code
+
   scope :usta, -> { where(league_category: "USTA") }
   scope :inter_club, -> { where(league_category: "Inter-Club") }
   scope :local, -> { where(league_category: "Local") }
@@ -43,5 +45,17 @@ class TennisTeam < ApplicationRecord
     return "past" if matches.any? && upcoming_matches.none?
     return "upcoming" if upcoming_matches.any?
     "scheduled"
+  end
+
+  def ensure_join_code!
+    generate_join_code && save! if join_code.blank?
+    join_code
+  end
+
+  private
+
+  def generate_join_code
+    slug = name.to_s.parameterize
+    self.join_code = "#{slug}-#{SecureRandom.hex(4)}"
   end
 end

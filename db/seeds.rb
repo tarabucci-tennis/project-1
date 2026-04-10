@@ -390,4 +390,7 @@ end
   end
 end
 
+# Generate join codes for all teams
+TennisTeam.where(join_code: nil).find_each(&:ensure_join_code!)
+
 puts "✓ Seeded: #{TennisTeam.count} teams, #{User.count} users, #{Match.count} matches, #{DivisionTeam.count} division opponents"

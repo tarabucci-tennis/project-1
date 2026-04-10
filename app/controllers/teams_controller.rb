@@ -81,6 +81,73 @@ class TeamsController < ApplicationController
     @my_availabilities = Availability.where(user: current_user, match_id: match_ids).index_by(&:match_id)
   end
 
+  # GET /find-team — search for existing teams to join
+  def search
+    @query = params[:q].to_s.strip
+    if @query.present?
+      @results = TennisTeam.where("name LIKE ? OR section LIKE ?", "%#{@query}%", "%#{@query}%")
+                           .order(:name)
+                           .limit(20)
+    else
+      @results = []
+    end
+  end
+
+  # GET /create-team — form to create a new team
+  def new
+    # Any logged-in user can create a team
+  end
+
+  # POST /create-team — create a new team
+  def create
+    team = current_user.tennis_teams.new(
+      name: params[:name].to_s.strip,
+      league_category: params[:league_category].presence || "USTA",
+      team_type: params[:team_type].to_s.strip.presence,
+      section: params[:section].to_s.strip.presence || "Middle States",
+      gender: "F",
+      season_name: params[:season_name].to_s.strip.presence
+    )
+
+    if team.save
+      # Creator becomes captain
+      TeamMembership.create!(user: current_user, tennis_team: team, role: "captain")
+      redirect_to team_path(team), notice: "#{team.name} created! You're the captain."
+    else
+      flash.now[:alert] = team.errors.full_messages.join(", ")
+      render :new, status: :unprocessable_entity
+    end
+  end
+
+  # POST /teams/:team_id/add_player — captain adds a player by email
+  def add_player
+    @team = TennisTeam.find(params[:team_id])
+    unless @team.captain?(current_user) || current_user.admin?
+      return redirect_to team_path(@team), alert: "Only captains can add players."
+    end
+
+    email = params[:email].to_s.downcase.strip
+    name  = params[:player_name].to_s.strip
+
+    if email.blank?
+      return redirect_to team_path(@team), alert: "Please enter an email address."
+    end
+
+    player = User.find_by(email: email)
+    if player.nil? && name.present?
+      player = User.create!(name: name, email: email, admin: false)
+    elsif player.nil?
+      return redirect_to team_path(@team), alert: "No account found for #{email}. Enter their name too so we can create one."
+    end
+
+    if @team.team_memberships.exists?(user: player)
+      redirect_to team_path(@team), notice: "#{player.name} is already on the team."
+    else
+      TeamMembership.create!(user: player, tennis_team: @team, role: "player")
+      redirect_to team_path(@team), notice: "#{player.name} has been added to #{@team.name}!"
+    end
+  end
+
   private
 
   def require_login
