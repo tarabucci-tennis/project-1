@@ -619,4 +619,4 @@ Note: "Tara Buchakjian" in Del-Tri results = Tara Bucci (different last name spe
 - **Don't nest `<a>` tags inside `<a>` tags** — the calendar button inside a link_to caused the button to render outside the card. Use div with onclick instead.
 - **Route helper names matter** — `post "add_player"` inside a resources block generates a different helper name than expected. Use `member do` blocks for clarity.
 - **Del-Tri uses a points system, not W-L** — storing points as "wins" caused confusion. Need separate handling for points-based leagues.
-- **"Tara Buchakjian" = "Tara Bucci"** — Del-Tri uses a different last name for Tara in their system.
+- **"Tara Buchakjian" is NOT "Tara Bucci"** — they are two different people. Tara Buchakjian is a separate player on Legacy 2 who often plays Line 2 with Khue Feigenberg. Tara Bucci is the app builder.
