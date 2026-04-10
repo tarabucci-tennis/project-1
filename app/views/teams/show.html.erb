@@ -100,11 +100,13 @@
                 <div class="cr-match-opponent">vs. <%= match.opponent %></div>
                 <div class="cr-match-location"><%= match.location %></div>
               </div>
-              <div class="cr-match-counts" data-availability-target="counts">
-                <span class="cr-count-in"><%= counts[:in] %> ✅</span>
-                <span class="cr-count-out"><%= counts[:out] %> ❌</span>
-                <span class="cr-count-pending"><%= counts[:no_response] %> ?</span>
-              </div>
+              <% if @is_captain %>
+                <div class="cr-match-counts" data-availability-target="counts">
+                  <span class="cr-count-in"><%= counts[:in] %> ✅</span>
+                  <span class="cr-count-out"><%= counts[:out] %> ❌</span>
+                  <span class="cr-count-pending"><%= counts[:no_response] %> ?</span>
+                </div>
+              <% end %>
             </div>
 
             <div class="cr-avail-row">
@@ -127,6 +129,9 @@
                      data-availability-target="messageField"
                      data-action="keydown->availability#saveMessage blur->availability#saveMessage">
               <span class="cr-saved" data-availability-target="savedIndicator"></span>
+              <% if @is_captain %>
+                <%= link_to "View All", team_captain_path(@team), class: "cr-avail-captain-link" %>
+              <% end %>
             </div>
           </div>
         <% end %>

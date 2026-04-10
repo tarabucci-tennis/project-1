@@ -724,6 +724,16 @@ button.cr-header-pill {
 .cr-avail-message::placeholder { color: var(--cr-text-light); }
 .cr-avail-message:focus { border-color: var(--cr-gold); }
 
+.cr-avail-captain-link {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--cr-gold);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.cr-avail-captain-link:hover { text-decoration: underline; }
+
 /* Locked state: selected button gets a bolder look */
 .cr-avail-in.avail-btn-locked {
   border-width: 2px;
