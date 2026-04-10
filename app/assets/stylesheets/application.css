@@ -1047,6 +1047,7 @@ button.cr-header-pill {
 
 .cr-field input[type="text"],
 .cr-field input[type="email"],
+.cr-field input[type="password"],
 .cr-field select {
   width: 100%;
   padding: 11px 14px;

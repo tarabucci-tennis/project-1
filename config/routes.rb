@@ -8,6 +8,10 @@ Rails.application.routes.draw do
   delete "session", to: "sessions#destroy"
   get    "signup",  to: "registrations#new", as: :signup
   post   "signup",  to: "registrations#create"
+  get    "forgot-password", to: "password_resets#new", as: :forgot_password
+  post   "forgot-password", to: "password_resets#create"
+  get    "reset-password/:token", to: "password_resets#edit", as: :edit_password_reset
+  patch  "reset-password/:token", to: "password_resets#update", as: :reset_password
 
   # Admin: user management
   resources :users, only: [ :index, :new, :create, :edit, :update, :destroy ]

@@ -1,0 +1,22 @@
+<% content_for :title, "Reset Password — Court Report" %>
+
+<div class="cr-landing">
+  <div class="cr-landing-signin">
+    <div class="cr-login-card">
+      <h2 style="font-size: 1.3rem; margin-bottom: 4px;">Set a new password</h2>
+      <p class="cr-login-sub">Choose a password (at least 6 characters).</p>
+
+      <%= form_with url: reset_password_path(token: params[:token]), method: :patch do |f| %>
+        <div class="cr-field">
+          <%= f.label :password, "New password" %>
+          <%= f.password_field :password, placeholder: "At least 6 characters" %>
+        </div>
+        <div class="cr-field">
+          <%= f.label :password_confirmation, "Confirm password" %>
+          <%= f.password_field :password_confirmation, placeholder: "Type it again" %>
+        </div>
+        <%= f.submit "Reset Password →" %>
+      <% end %>
+    </div>
+  </div>
+</div>

@@ -7,8 +7,8 @@ class RegistrationsController < ApplicationController
     email = params[:email].to_s.downcase.strip
     name  = params[:name].to_s.strip
 
-    if email.blank? || name.blank?
-      flash.now[:alert] = "Please fill in both your name and email."
+    if email.blank? || name.blank? || params[:password].blank?
+      flash.now[:alert] = "Please fill in all fields."
       return render :new, status: :unprocessable_entity
     end
 
@@ -18,11 +18,10 @@ class RegistrationsController < ApplicationController
       return render :new, status: :unprocessable_entity
     end
 
-    user = User.new(name: name, email: email, admin: false)
+    user = User.new(name: name, email: email, admin: false, password: params[:password], password_confirmation: params[:password_confirmation])
     if user.save
       session[:user_id] = user.id
 
-      # Auto-join team if they came from a join link
       if session[:pending_join_code].present?
         team = TennisTeam.find_by(join_code: session.delete(:pending_join_code))
         if team && !team.team_memberships.exists?(user: user)

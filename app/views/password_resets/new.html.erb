@@ -1,0 +1,23 @@
+<% content_for :title, "Forgot Password — Court Report" %>
+
+<div class="cr-landing">
+  <div class="cr-landing-signin">
+    <div class="cr-login-card">
+      <h2 style="font-size: 1.3rem; margin-bottom: 4px;">Forgot your password?</h2>
+      <p class="cr-login-sub">Enter your email and we'll send you a reset link.</p>
+
+      <%= form_with url: forgot_password_path, method: :post do |f| %>
+        <div class="cr-field">
+          <%= f.label :email, "Email address" %>
+          <%= f.email_field :email, placeholder: "you@example.com", autofocus: true %>
+        </div>
+        <%= f.submit "Send Reset Link →" %>
+      <% end %>
+
+      <p style="text-align: center; margin-top: 16px; font-size: 0.85rem; color: var(--cr-text-muted);">
+        Remember your password?
+        <%= link_to "Sign in", login_path, style: "color: var(--cr-gold); font-weight: 600;" %>
+      </p>
+    </div>
+  </div>
+</div>

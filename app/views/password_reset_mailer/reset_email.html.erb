@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    body { margin: 0; padding: 0; background: #f4f4f4; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    .wrapper { max-width: 480px; margin: 0 auto; padding: 24px 16px; }
+    .card { background: #fff; border-radius: 16px; overflow: hidden; box-shadow: 0 2px 12px rgba(0,0,0,0.08); }
+    .header { background: #1a1a1a; padding: 24px 32px; text-align: center; }
+    .header-brand { font-size: 0.7rem; letter-spacing: 2px; color: rgba(255,255,255,0.5); text-transform: uppercase; }
+    .body { padding: 32px; }
+    .btn { display: inline-block; padding: 14px 36px; background: linear-gradient(135deg, #c8a415, #dab832); color: #1a1a1a; font-weight: 700; font-size: 0.95rem; border-radius: 10px; text-decoration: none; }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <div class="card">
+      <div class="header">
+        <div class="header-brand">🎾 Court Report</div>
+      </div>
+      <div class="body">
+        <h2 style="font-size: 1.2rem; margin-bottom: 16px;">Reset your password</h2>
+        <p style="font-size: 0.9rem; color: #555; line-height: 1.6; margin-bottom: 24px;">
+          Hi <%= @user.name.split.first %>, we received a request to reset your password. Click the button below to choose a new one:
+        </p>
+        <div style="text-align: center; margin: 28px 0;">
+          <a href="<%= @reset_url %>" class="btn">Reset Password</a>
+        </div>
+        <p style="font-size: 0.8rem; color: #999; line-height: 1.5;">
+          This link expires in 2 hours. If you didn't request this, you can ignore this email.
+        </p>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
