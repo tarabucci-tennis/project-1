@@ -91,11 +91,23 @@ TeamMembership.find_or_create_by!(user: tara, tennis_team: kiss_my_ace) do |m|
   m.role = "player"
 end
 
-# Kiss My Ace — known first match
-kiss_my_ace.matches.find_or_create_by!(match_date: Time.zone.local(2026, 4, 14, 19, 0)) do |m|
-  m.opponent = "Kinetix Deuces Wild"
-  m.location = "Bryn Mawr Racquet Club, 4 N Warner Ave, Bryn Mawr PA"
-  m.notes    = "Home match — season opener"
+# Kiss My Ace — full 8-match schedule from TennisLink
+kma_schedule = [
+  [ Date.new(2026, 4, 14), "Kinetix Deuces Wild" ],
+  [ Date.new(2026, 4, 21), "Unmatchables" ],
+  [ Date.new(2026, 5, 5),  "Tennis Addiction" ],
+  [ Date.new(2026, 5, 12), "Love Hurts" ],
+  [ Date.new(2026, 5, 19), "Kinetix Deuces Wild" ],
+  [ Date.new(2026, 6, 2),  "Unmatchables" ],
+  [ Date.new(2026, 6, 16), "Tennis Addiction" ],
+  [ Date.new(2026, 6, 23), "Love Hurts" ]
+]
+
+kma_schedule.each do |date, opp|
+  kiss_my_ace.matches.find_or_create_by!(match_date: Time.zone.local(date.year, date.month, date.day, 19, 0)) do |m|
+    m.opponent = opp
+    m.location = "Bryn Mawr Racquet Club"
+  end
 end
 
 # --------------------------------------------------------------
