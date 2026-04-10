@@ -20,12 +20,19 @@
 
 ## Critical Dates
 
-| Date | Event | Status |
-|------|-------|--------|
-| **April 14, 2026** | First match of the season for Tara's first team | Not ready — will use MatchTime |
-| **April 21, 2026** | First match of the season for Tara's "second team" — **NOT Legacy 2** (that season ended March 20). Best guess: **PCC (Inter-Club)** but still unconfirmed. Need info from Tara. | App needs to be working by then |
+**Known real first-match dates for each of Tara's four teams:**
 
-Both dates are real matches Tara needs to captain through. The app doesn't need to replace MatchTime by April 14 — Tara will still use MatchTime for that match. The harder target is April 21: by then, Court Report should be functional enough that Tara can actually use it for her second team's opening match.
+| Date | Day | Team | League | First Match |
+|------|-----|------|--------|-------------|
+| **April 14, 2026** | Tue | Kiss My Ace | USTA 40+ | vs. Kinetix Deuces Wild (HOME, Bryn Mawr Racquet Club) |
+| **April 17, 2026** | Fri | Pour Decisions | USTA 18+ | vs. No Drama Mamas |
+| **April 27, 2026** | Mon | Philadelphia Country #2 | Inter-Club | vs. Laurel Creek #1 (AWAY, 10:00 AM) |
+| (already over) | — | Legacy 2 | Del-Tri | Season ran Oct 3, 2025 – Mar 20, 2026 |
+
+**April 21 note:** When Tara first mentioned "April 21" as the deadline for her second team, she was approximating. **No team actually has an April 21 first match.** The real next-after-April-14 date is **April 17 (Pour Decisions)**. So the practical "by when must Court Report work?" target is:
+- **April 14:** Kiss My Ace opener. Tara will use MatchTime for this one.
+- **April 17:** Pour Decisions opener. First real opportunity to use Court Report.
+- **April 27:** PCC opener. Second real opportunity.
 
 ## How Tara Prefers to Work
 
@@ -213,9 +220,87 @@ These two teams are effectively **"sister teams"** with heavy roster overlap:
 
 **Design implication:** A player can be on many teams. The data model already supports this via `team_memberships`, but we need to make sure the UI treats "My Teams" as a list of all teams a user belongs to (not just teams they own or captain).
 
-### Philadelphia Country Club (PCC) — Inter-Club
+### Philadelphia Country Club #2 — Inter-Club (captured Session 7)
 
-_Details still needed. This is the first "real" team under the Inter-Club league category. Inter-Club is a country club league — may not use TennisLink, so data may have to come from Tara directly (email, team page, spreadsheet)._
+**League & format:**
+- League: **Philadelphia Inter-Club Tennis, Cup 6** (Monday league)
+- Division: **Cup 6**
+- Season: **April 27, 2026 – June 8, 2026** (7-match regular season, Mondays at 10:00 AM)
+- Home club: **Philadelphia Country Club**, 1601 Spring Mill Road, Gladwyne, PA 19035 (610-525-7788)
+- Club Representatives: **Deborah Dixon** and **Lindsey Schontz** (not captains — Inter-Club uses "club reps")
+
+**Captain:** No explicit "captain" shown on the Inter-Club website. Tara is listed as **position #1** in the roster, which suggests she may be a team leader even without the title.
+
+**Full schedule (7 matches, all 10:00 AM Mondays):**
+
+| Date | H/A | Opponent |
+|------|-----|----------|
+| 4/27/2026 | Away | Laurel Creek #1 |
+| 5/4/2026  | Home | Waynesborough #3 |
+| 5/11/2026 | Away | Philadelphia Cricket #3 |
+| 5/18/2026 | Home | Dupont CC #1 |
+| 5/26/2026 | Away | Delsea #2 (note: Tuesday, Memorial Day week) |
+| 6/1/2026  | Home | Overbrook #2 |
+| 6/8/2026  | Away | West Chester #2 |
+
+**First match: April 27, 2026 (Monday) vs. Laurel Creek #1 (AWAY).**
+
+**Division opponents (Cup 6):** Delsea #2, Dupont CC #1, Laurel Creek #1, Overbrook #2, Philadelphia Cricket #3, Waynesborough #3, West Chester #2
+
+**Primary roster (12 players, organized by position):**
+
+| Pos | Player |
+|-----|--------|
+| 1 | **Tara Bucci** |
+| 1 | Joanne Steinberg (also captain of Legacy 2!) |
+| 2 | Jaci Gronen |
+| 2 | Amanda Neczypor (also on Kiss My Ace + Pour Decisions) |
+| 3 | Jill Kirchner (also on Legacy 2) |
+| 3 | Laura Zalewski (also on Legacy 2) |
+| 4 | Lynda Donahue |
+| 4 | Anne Siembieda |
+| 5 | karen ernst |
+| 5 | Robyn Leto |
+| 6 | Ryan Longstreth |
+| 6 | Laurie Nowlan |
+
+**Subs:** Nancy Fox, Jen Gallagher, Rachel Miller (also on Legacy 2), Christi Neilly
+
+### The "Jaci" mystery — SOLVED (confirmed by Tara, Session 7)
+
+Looking across the rosters, the name "Jaci" / "Jaclyn" shows up three ways:
+
+1. **Jaclyn "Jaci" Groenen** — captain of Kiss My Ace, player on Pour Decisions, player on PCC, 4.0 USTA. The "Jaci" Tara first mentioned. **She is Tara's captain on Kiss My Ace.**
+2. **Jaci Gronen** (PCC roster) — same person as Jaclyn Groenen; the Inter-Club website has a typo in the last name.
+3. **Jody Staples** — a **different person**. Plays on Kiss My Ace and Pour Decisions with Tara. Often confused with Jaci because of similar-sounding names, but confirmed by Tara to be a separate teammate.
+
+**Confirmed by Tara (Session 7):** "Jody Staples and Jaci Groenen. Two different people. Both teammates. Jaci is our captain."
+
+### Correction: Tara is a PLAYER on all four teams, not a captain
+
+Earlier CLAUDE.md said "Tara is a captain of multiple USTA teams." The real TennisLink / Inter-Club / Del-Tri data shows that is **not correct**. Tara is:
+- **Kiss My Ace:** player (captain is Jaclyn Groenen)
+- **Pour Decisions:** player (captain is Lynn Sundblad)
+- **Legacy 2:** player (captain is JoAnne Steinberg)
+- **PCC:** position #1 player, no formal captain, two "club reps"
+
+**Tara is not the captain of any of her current teams.** She's building Court Report as a **player**, not a captain. This might actually matter for the app design — the primary use case is "player managing her own availability across four teams," not "captain managing a roster."
+
+### Cross-team players (the "real people" data model)
+
+Looking across all four rosters, many players appear on multiple teams:
+
+- **Tara Bucci** — plays on all 4
+- **JoAnne Steinberg** — Legacy 2 captain + PCC player
+- **Jaclyn ("Jaci") Groenen** — Kiss My Ace captain + Pour Decisions player + PCC player
+- **Lynn Sundblad** — Pour Decisions captain + Kiss My Ace player
+- **Amanda Neczypor** — Kiss My Ace + Pour Decisions + PCC
+- **Jill Kirchner** — Legacy 2 + PCC
+- **Laura Zalewski** — Legacy 2 + PCC
+- **Rachel Miller** — Legacy 2 + PCC (sub)
+- **Jody Staples** — Kiss My Ace + Pour Decisions
+
+**Implication:** The user model must support one human being on multiple teams across multiple leagues. The current `team_memberships` table already supports this correctly. The seed file needs to dedupe players (create one User record, then multiple TeamMemberships).
 
 ### Legacy 2 — Del-Tri Local League (captured Session 7)
 
