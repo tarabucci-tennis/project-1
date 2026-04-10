@@ -727,3 +727,182 @@ h1 {
   padding: 60px 20px;
   color: rgba(255,255,255,0.3);
 }
+
+/* ── Team filter tabs ── */
+.team-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-bottom: 16px;
+}
+
+.team-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  color: rgba(255,255,255,0.5);
+  font-size: 0.88rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s;
+  white-space: nowrap;
+}
+
+.team-tab:hover {
+  color: rgba(255,255,255,0.75);
+}
+
+.team-tab.tab-active {
+  color: #ccff00;
+  border-color: rgba(204,255,0,0.4);
+}
+
+.tab-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 10px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: rgba(255,255,255,0.45);
+}
+
+.tab-active .tab-count {
+  background: rgba(204,255,0,0.15);
+  color: #ccff00;
+}
+
+/* ── Team link in table ── */
+.team-link {
+  color: #fff;
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 0.15s;
+}
+
+.team-link:hover {
+  color: #ccff00;
+  text-decoration: underline;
+}
+
+/* ── Rating dash for nil ratings ── */
+.rating-dash {
+  color: rgba(255,255,255,0.3);
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+/* ======================================================
+   Team Detail Page
+   ====================================================== */
+
+.team-page {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 32px 24px 80px;
+}
+
+.team-back {
+  margin-bottom: 24px;
+}
+
+.back-link {
+  color: rgba(255,255,255,0.45);
+  text-decoration: none;
+  font-size: 0.85rem;
+  transition: color 0.15s;
+}
+
+.back-link:hover {
+  color: #ccff00;
+}
+
+/* ── Team header ── */
+.team-header {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 32px;
+  align-items: flex-start;
+  margin-bottom: 48px;
+}
+
+.team-identity { flex: 1; min-width: 240px; }
+
+.team-identity h1 {
+  font-size: 2.2rem;
+  font-weight: 900;
+  letter-spacing: -1px;
+  color: #fff;
+  margin-bottom: 12px;
+}
+
+/* ── Team stat cards ── */
+.team-stats-cards {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.team-stat-card {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 12px;
+  padding: 16px 20px;
+  min-width: 120px;
+  text-align: center;
+}
+
+.team-stat-label {
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: rgba(255,255,255,0.4);
+  margin-bottom: 6px;
+}
+
+.team-stat-value {
+  font-size: 1.6rem;
+  font-weight: 900;
+  color: #ccff00;
+  letter-spacing: -0.5px;
+}
+
+.record-dash {
+  color: rgba(255,255,255,0.3);
+  margin: 0 2px;
+}
+
+/* ── Result badges ── */
+.result-badge {
+  display: inline-block;
+  padding: 3px 12px;
+  border-radius: 12px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+}
+
+.result-w {
+  background: rgba(134,239,172,0.15);
+  color: #86efac;
+}
+
+.result-l {
+  background: rgba(252,165,165,0.15);
+  color: #fca5a5;
+}
+
+/* ── Matches table tweaks ── */
+.matches-table th,
+.matches-table td {
+  text-align: left;
+}

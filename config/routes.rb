@@ -19,6 +19,7 @@ Rails.application.routes.draw do
 
   get "tennis",  to: "pages#tennis",    as: :tennis
   get "profile", to: "profiles#show",  as: :profile
+  resources :tennis_teams, only: [ :show ], path: "teams"
 
   # Defines the root path route ("/")
   root "pages#home"

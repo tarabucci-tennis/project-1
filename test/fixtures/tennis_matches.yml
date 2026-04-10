@@ -1,0 +1,23 @@
+one:
+  tennis_team: one
+  match_date: 2026-04-17
+  match_type: Doubles
+  opponent_team: Aronimink TC
+  location: Home
+  result: W
+  score: 6-3, 6-2
+  partner: Jody Staples
+  opponent_players: K. Smith / L. Davis
+  court_number: 1
+
+two:
+  tennis_team: one
+  match_date: 2026-04-24
+  match_type: Doubles
+  opponent_team: Merion Cricket Club
+  location: Away
+  result: L
+  score: 4-6, 3-6
+  partner: Jody Staples
+  opponent_players: A. Park / M. Chen
+  court_number: 2

@@ -61,8 +61,22 @@
 
   <%# ── Recent Teams ────────────────────────────────────────────────── %>
   <% if @teams.any? %>
-    <section class="profile-section">
+    <section class="profile-section" data-controller="teams-filter">
       <h2 class="section-title">Recent Teams</h2>
+
+      <%# ── Filter tabs ── %>
+      <% type_counts = @teams.group_by(&:team_type).transform_values(&:count) %>
+      <div class="team-tabs">
+        <button class="team-tab tab-active" data-teams-filter-target="tab" data-type="All" data-action="click->teams-filter#select">
+          All <span class="tab-count"><%= @teams.size %></span>
+        </button>
+        <% type_counts.each do |type, count| %>
+          <button class="team-tab" data-teams-filter-target="tab" data-type="<%= type %>" data-action="click->teams-filter#select">
+            <%= type %> <span class="tab-count"><%= count %></span>
+          </button>
+        <% end %>
+      </div>
+
       <div class="profile-table-wrap">
         <table class="profile-table">
           <thead>
@@ -77,12 +91,20 @@
           </thead>
           <tbody>
             <% @teams.each do |team| %>
-              <tr>
-                <td class="td-primary"><%= team.name %></td>
+              <tr data-teams-filter-target="row" data-team-type="<%= team.team_type %>">
+                <td class="td-primary">
+                  <%= link_to team.name, tennis_team_path(team), class: "team-link" %>
+                </td>
                 <td><%= team.team_type %></td>
                 <td><%= team.section %></td>
                 <td><%= team.gender %></td>
-                <td><span class="rating-pill"><%= team.rating %></span></td>
+                <td>
+                  <% if team.rating.present? %>
+                    <span class="rating-pill"><%= team.rating %></span>
+                  <% else %>
+                    <span class="rating-dash">—</span>
+                  <% end %>
+                </td>
                 <td class="td-muted"><%= team.start_date.strftime("%-m/%-d/%Y") %></td>
               </tr>
             <% end %>
