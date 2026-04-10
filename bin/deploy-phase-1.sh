@@ -33,7 +33,7 @@ set -euo pipefail
 
 APP_NAME="project-1"
 APP_DIR="/root/app"
-BRANCH="claude/fix-teams-500-error-GPgeR"
+BRANCH="claude/clarify-team-members-1ycVZ"
 IMAGE="project-1"
 
 blue()  { printf "\033[34m%s\033[0m\n" "$*"; }
