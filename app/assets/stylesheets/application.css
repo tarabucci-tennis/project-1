@@ -2321,18 +2321,28 @@ button.cr-header-pill {
 }
 
 /* ── Match detail page ── */
-.cr-match-detail-header {
+.cr-lineup-match-header {
   display: flex;
-  gap: 16px;
-  align-items: flex-start;
-  padding: 20px 0;
-  margin-bottom: 8px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 18px;
+  background: var(--cr-bg);
+  border: 1px solid var(--cr-border);
+  border-radius: 10px 10px 0 0;
+  border-bottom: 3px solid var(--cr-gold);
 }
 
-.cr-match-detail-date {
-  text-align: center;
-  min-width: 56px;
-  flex-shrink: 0;
+.cr-lineup-confirm-prompt {
+  margin-top: 16px;
+  padding: 14px 18px;
+  background: #fef9ee;
+  border: 1px solid #f0dca0;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.9rem;
+  font-weight: 600;
 }
 
 .cr-lineup-table {
@@ -2358,11 +2368,16 @@ button.cr-header-pill {
 .cr-lineup-table-row {
   display: grid;
   grid-template-columns: 80px 50px 1fr 120px;
-  padding: 12px 18px;
-  border-bottom: 1px solid var(--cr-border);
+  padding: 10px 18px;
   font-size: 0.9rem;
   align-items: center;
 }
+
+.cr-lineup-line-group {
+  border-bottom: 1px solid var(--cr-border);
+}
+
+.cr-lineup-line-group:last-child { border-bottom: none; }
 
 .cr-lineup-table-row:last-child { border-bottom: none; }
 
