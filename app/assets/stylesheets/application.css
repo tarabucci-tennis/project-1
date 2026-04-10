@@ -751,6 +751,91 @@ button.cr-header-pill {
   opacity: 1;
 }
 
+/* ── Custom confirmation popup ── */
+
+.cr-popup-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(10, 22, 40, 0.5);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.cr-popup-overlay.cr-popup-visible { opacity: 1; }
+
+.cr-popup {
+  background: var(--cr-white);
+  border-radius: 16px;
+  padding: 32px 36px;
+  max-width: 320px;
+  width: 90%;
+  text-align: center;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+  transform: scale(0.95);
+  transition: transform 0.2s;
+}
+
+.cr-popup-visible .cr-popup { transform: scale(1); }
+
+.cr-popup-ball {
+  font-size: 2.2rem;
+  margin-bottom: 12px;
+}
+
+.cr-popup-title {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--cr-text);
+  margin-bottom: 6px;
+}
+
+.cr-popup-sub {
+  font-size: 0.85rem;
+  color: var(--cr-text-muted);
+  margin-bottom: 24px;
+}
+
+.cr-popup-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.cr-popup-btn {
+  flex: 1;
+  padding: 10px 16px;
+  border-radius: 10px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  border: none;
+  font-family: inherit;
+  transition: all 0.15s;
+}
+
+.cr-popup-cancel {
+  background: var(--cr-bg);
+  color: var(--cr-text-muted);
+}
+
+.cr-popup-cancel:hover {
+  background: var(--cr-border);
+  color: var(--cr-text);
+}
+
+.cr-popup-confirm {
+  background: var(--cr-gold);
+  color: var(--cr-black);
+}
+
+.cr-popup-confirm:hover {
+  background: var(--cr-gold-bright);
+}
+
 /* ── Roster ── */
 
 .cr-roster {

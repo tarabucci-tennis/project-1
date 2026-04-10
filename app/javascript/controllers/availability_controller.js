@@ -9,17 +9,20 @@ export default class extends Controller {
   }
 
   markIn() {
-    // Already "in" — unclick (clear response) with confirmation
     if (this.statusValue === "in") {
-      if (!confirm("Remove your In response?")) return
-      this.statusValue = "no_response"
-      this.save({ status: "no_response" })
+      this.showConfirm("Remove your response?", "You'll go back to undecided.", () => {
+        this.statusValue = "no_response"
+        this.save({ status: "no_response" })
+      })
       return
     }
 
-    // Switching from "out" to "in" — confirm first
     if (this.statusValue === "out") {
-      if (!confirm("Change your availability from Out to In?")) return
+      this.showConfirm("Switch to In?", "You're currently marked Out.", () => {
+        this.statusValue = "in"
+        this.save({ status: "in" })
+      })
+      return
     }
 
     this.statusValue = "in"
@@ -27,17 +30,20 @@ export default class extends Controller {
   }
 
   markOut() {
-    // Already "out" — unclick (clear response) with confirmation
     if (this.statusValue === "out") {
-      if (!confirm("Remove your Out response?")) return
-      this.statusValue = "no_response"
-      this.save({ status: "no_response" })
+      this.showConfirm("Remove your response?", "You'll go back to undecided.", () => {
+        this.statusValue = "no_response"
+        this.save({ status: "no_response" })
+      })
       return
     }
 
-    // Switching from "in" to "out" — confirm first
     if (this.statusValue === "in") {
-      if (!confirm("Change your availability from In to Out?")) return
+      this.showConfirm("Switch to Out?", "You're currently marked In.", () => {
+        this.statusValue = "out"
+        this.save({ status: "out" })
+      })
+      return
     }
 
     this.statusValue = "out"
@@ -105,11 +111,48 @@ export default class extends Controller {
   showSaved() {
     if (!this.hasSavedIndicatorTarget) return
     const el = this.savedIndicatorTarget
-    el.textContent = "Saved!"
+    el.textContent = "Saved! 🎾"
     el.classList.add("cr-saved-visible")
     clearTimeout(this._savedTimer)
     this._savedTimer = setTimeout(() => {
       el.classList.remove("cr-saved-visible")
     }, 1500)
+  }
+
+  // ── Custom popup ──────────────────────────────────
+
+  showConfirm(title, subtitle, onConfirm) {
+    // Remove any existing popup
+    document.querySelector(".cr-popup-overlay")?.remove()
+
+    const overlay = document.createElement("div")
+    overlay.className = "cr-popup-overlay"
+    overlay.innerHTML = `
+      <div class="cr-popup">
+        <div class="cr-popup-ball">🎾</div>
+        <div class="cr-popup-title">${title}</div>
+        <div class="cr-popup-sub">${subtitle}</div>
+        <div class="cr-popup-buttons">
+          <button class="cr-popup-btn cr-popup-cancel">Never mind</button>
+          <button class="cr-popup-btn cr-popup-confirm">Yes, change it</button>
+        </div>
+      </div>
+    `
+
+    document.body.appendChild(overlay)
+
+    // Animate in
+    requestAnimationFrame(() => overlay.classList.add("cr-popup-visible"))
+
+    const close = () => overlay.remove()
+
+    overlay.querySelector(".cr-popup-cancel").addEventListener("click", close)
+    overlay.querySelector(".cr-popup-confirm").addEventListener("click", () => {
+      close()
+      onConfirm()
+    })
+    overlay.addEventListener("click", (e) => {
+      if (e.target === overlay) close()
+    })
   }
 }
