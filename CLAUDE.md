@@ -23,7 +23,7 @@
 | Date | Event | Status |
 |------|-------|--------|
 | **April 14, 2026** | First match of the season for Tara's first team | Not ready — will use MatchTime |
-| **April 21, 2026** | First match of the season for Tara's second team | App needs to be working by then |
+| **April 21, 2026** | First match of the season for Tara's "second team" — **NOT Legacy 2** (that season ended March 20). Best guess: **PCC (Inter-Club)** but still unconfirmed. Need info from Tara. | App needs to be working by then |
 
 Both dates are real matches Tara needs to captain through. The app doesn't need to replace MatchTime by April 14 — Tara will still use MatchTime for that match. The harder target is April 21: by then, Court Report should be functional enough that Tara can actually use it for her second team's opening match.
 
@@ -217,9 +217,57 @@ These two teams are effectively **"sister teams"** with heavy roster overlap:
 
 _Details still needed. This is the first "real" team under the Inter-Club league category. Inter-Club is a country club league — may not use TennisLink, so data may have to come from Tara directly (email, team page, spreadsheet)._
 
-### Legacy 2 — Local League (Del-Tri)
+### Legacy 2 — Del-Tri Local League (captured Session 7)
 
-_Details still needed. This is the first "real" team under the Local Leagues category. Del-Tri = Delaware-Tri-State local league. **Likely the April 21 "second team first match" but unconfirmed.**_
+**Important: Legacy 2's season is FALL/WINTER (Oct 2025 – Mar 2026), already ended or ending.** This is NOT the April 21 team — its 2025-26 season just finished. April 21 must be PCC or another team.
+
+**League & format:**
+- League: **Del-Tri Tennis** (DELTRI TENNIS on the website)
+- Division: **Division 4**
+- Season: **October 3, 2025 – March 20, 2026** (fall/winter season, just ended)
+- Home club: **Legacy Tennis**, 4842 Ridge Ave, Philadelphia PA 19129 (215-487-9555)
+- Club rep: **JoAnne Steinberg**
+
+**Captain:**
+- **JoAnne Steinberg** (3.0 rating, 6W-6L record)
+- **Tara is a player** (listed under "Players Also Subbing for Other Teams" — she's a regular but also subs elsewhere)
+- Tara's Del-Tri rating: **3.5** (note: different from her USTA 4.0 rating — Del-Tri uses a separate rating system)
+
+**Final 2025-26 standings (Division 4):**
+| Rank | Team | Pts |
+|------|------|-----|
+| 1 | DVTA 3 | 70 |
+| **2** | **Legacy 2** | **68** |
+| 3 | Brandywine 5 | 58 |
+| 4 | Springfield YMCA 3 | 56 |
+| 5 | Brandywine 4 | 53 |
+| 6 | Radnor Racquet 3 | 52 |
+| 7 | HPTA 6 | 51 |
+| 8 | Penn Oaks 5 | 48 |
+| 9 | Tennis Addiction 4 | 45 |
+| 10 | Upper Main Line Y 2 | 39 |
+
+**Primary roster (9 players):** Anh Bixby (4.0), Rachel Miller (3.5), Tara Buchakjian (3.0), Khue Feigenberg (3.5), Rebecca Bramen (3.0), Sarah Dougherty (3.0), Leilani Schlottfeldt (3.0), Lindsey Schontz (3.0), Jill Kirchner (3.0), Laura Zalewski (3.5).
+
+**Regular players who also sub elsewhere:** Tara Bucci (3.5)
+
+**Subs from other teams who played for Legacy 2:** Jackie Wilson, Lorise Chow, Marla Cohen, Audra DelConte, Jennifer Enslin, Ronni Giannascoli, Denise Gozdan, Noelle Heckscher, Ina Nechita, Leslie Reber, Joye Shrager, Jamie Straszewski.
+
+**Frozen players:** Ginger McGeer (3.5)
+
+**Full schedule (18 matches, all played):** see TennisLink screenshots — team went approximately 12-6 over the season.
+
+### Data model implications from Legacy 2
+
+Legacy 2's structure is more complex than Kiss My Ace / Pour Decisions and forces us to think about:
+
+1. **Roles beyond captain/player:** Del-Tri rosters have "captain," "player," "sub from other team" (S), "frozen player" (Frz). The current `team_memberships.role` field only knows "captain" and "player." Probably fine for MVP — we can collapse subs/frozen into "player" for now.
+
+2. **League-specific ratings:** Tara is 4.0 in USTA but 3.5 in Del-Tri. Rating belongs on the **team membership**, not the **user**. Current model has `ntrp_rating` on `users` — will need to move or duplicate it per team.
+
+3. **Season scope:** Legacy 2's season is already over. The app needs to handle "my current teams" vs "all my teams across all seasons." MVP decision: show all of Tara's teams, but mark Legacy 2 as "past season" so it's not in the active rotation.
+
+4. **League categories have different seasons:** Del-Tri = fall/winter. USTA = spring/summer. Inter-Club = probably also spring. A team's season dates matter — there isn't just one "current season."
 
 ### Important notes
 
