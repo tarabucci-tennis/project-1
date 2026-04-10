@@ -70,6 +70,75 @@ There are currently **two different things** both being called "Court Report":
 
 **The plan:** make #1 look like #2, then point the domain at #1.
 
+## Real Team Data
+
+### Kiss My Ace (captured from TennisLink, Session 7)
+
+**League & Format:**
+- League: **USTA Adult 40 & Over**
+- Flight: **4.0 Women Delches** (Tuesdays, Sub-Flight 2)
+- Rating: **4.0**
+- Gender: **Women's**
+- Section: **Middle States** (District: Philadelphia)
+- Match format: 1S, 4D (1 singles + 4 doubles lines)
+- Season: **April 13, 2026 — June 30, 2026**
+
+**First match (the April 14 deadline):**
+- Date: Tuesday, April 14, 2026
+- Opponent: Kinetix Deuces Wild (HOME)
+- Location: Bryn Mawr Racquet Club, 4 N Warner Ave, Bryn Mawr, PA 19010
+
+**Captain:**
+- **Jaclyn Groenen** — `jaclyn.groenen@gmail.com`, 610-329-8911
+- **IMPORTANT: Tara is a player on Kiss My Ace, NOT the captain.** Earlier assumption was wrong.
+
+**Division opponents:**
+- Kinetix Deuces Wild
+- Love Hurts
+- Unmatchables (note: was in old seed data — probably Tara's previous team)
+- Tennis Addiction
+
+**Full roster (22 players):**
+
+| Name | NTRP |
+|------|------|
+| Stephanie Giordano | 3.5 |
+| Amanda Neill | 4.0 |
+| Leslie Brinkley | 3.5 |
+| Rebecca Feinberg | 3.5 |
+| **Jaclyn Groenen (captain)** | 4.0 |
+| Lynn Sundblad | 4.0 |
+| Rachel Chadwin | 4.0 |
+| Amanda Neczypor | 3.5 |
+| Helen Lee | 3.5 |
+| Helen He | 4.0 |
+| Sarah Brautigan | 4.0 |
+| Mary Marshall | 4.0 |
+| Alison Vachris | 4.0 |
+| Doris Kerr | 4.0 |
+| **Tara Bucci** | 4.0 |
+| Nicole Costelloe | 4.0 |
+| Christina Faidley | 4.0 |
+| Jody Staples | 3.5 |
+| Karli McGill | 4.0 |
+| Kerry McDuffle | 4.0 |
+| Vanessa Halloran | 4.0 |
+| Bridget Hallman | 4.0 |
+
+### Pour Decisions
+
+_Details still needed. From tiiny.host mockup: USTA, 16 players, 8 upcoming, 0-0._
+
+### Legacy 2
+
+_Details still needed._
+
+### Important notes
+
+- **Jaci vs. Jody name question:** Earlier Tara referenced "Jaclyn ('Jaci') Staples" as her teammate. The Kiss My Ace roster shows "Jody Staples" (3.5) but no "Jaclyn Staples." These may be the same person (nickname) or Tara may have mis-remembered. The captain is a different person entirely: **Jaclyn Groenen**. Ask Tara to clarify.
+- **"Unmatchables" in old seeds:** The old Rails seed file had "Unmatchables" as one of Tara's teams. The TennisLink data shows Unmatchables is now an opponent in Kiss My Ace's division — so this was likely Tara's team in a previous year (possibly a lower rating level).
+- **The tiiny.host mockup said "Friday"** for Kiss My Ace but TennisLink confirms **Tuesday**. April 14, 2026 is a Tuesday. The mockup text was wrong.
+
 ## Session History
 
 Reconstructed from git log. Tara has built this app over ~6 sessions.
