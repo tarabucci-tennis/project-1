@@ -2,27 +2,30 @@
 
 ## What This Is
 
-**Court Report** is a tennis team management app being built by Tara Bucci to replace MatchTime (the commercial tool her team currently uses). The goal is to give USTA tennis captains a way to manage match schedules, player availability, and team rosters — starting with Tara's own teams.
+**Court Report** is an app that puts all of a racket sport player's tennis (and eventually other racket sport) life in one place — schedules, teams, leagues, availability, rosters. Today, players and captains jump between different apps and sites for different teams and leagues. Court Report is the "one app" that replaces that mess.
+
+**In Tara's words:**
+> "It's an app for players and captains to have all tennis platforms in one app. We jump from schedule to schedule for different teams and leagues. It would be extremely beneficial for all players, coaches and teams to have it all in one place."
 
 - **Product name:** Court Report
 - **Domain (goal):** yourcourtreport.com
 - **Current production URL:** http://146.190.112.29 (DigitalOcean droplet)
+- **Who it's for:** All racket sport players, captains, and coaches. Not just tennis — also pickleball, squash, padel, etc. (future). Not just USTA — any league.
+- **End goal:** Tara is building this for herself first, but wants to turn it into a real product that other people pay for.
 
 **Key people:**
-- **Tara Bucci** — primary user, admin, captain of multiple USTA teams. Builder of this app.
+- **Tara Bucci** — primary user, admin, captain of multiple USTA teams. **Building this app alone.**
 - **Jaclyn ("Jaci") Staples** — Tara's teammate, first "real" user beyond Tara.
-- **Tara's husband** — built the tiiny.host mockup as a design example to show Tara what Claude could do. Not actively building the app.
-
-### Product Vision (Tara's words — TBD)
-
-> [TBD — ask Tara to describe Court Report in her own words. What problem does it solve? Who is it for? Is it a personal tool, or does she want it to become a product other captains pay for?]
+- **Tara's husband** — built the tiiny.host mockup as a design example to show Tara what Claude could do. **Not involved in building the Rails app.**
 
 ## Critical Dates
 
 | Date | Event | Status |
 |------|-------|--------|
-| **April 14, 2026** | First USTA match of the season | Not ready — Jaci will keep using MatchTime |
-| **April 21, 2026** | Target date to switch Jaci from MatchTime to Court Report | App must actually work by then |
+| **April 14, 2026** | First match of the season for Tara's first team | Not ready — will use MatchTime |
+| **April 21, 2026** | First match of the season for Tara's second team | App needs to be working by then |
+
+Both dates are real matches Tara needs to captain through. The app doesn't need to replace MatchTime by April 14 — Tara will still use MatchTime for that match. The harder target is April 21: by then, Court Report should be functional enough that Tara can actually use it for her second team's opening match.
 
 ## How Tara Prefers to Work
 
@@ -153,18 +156,25 @@ SQLite databases are persisted via a Docker volume mounted at `/root/storage` on
 
 **Note:** After merging the Session 6 branch, you will also need to run database updates on the server: `docker exec project-1 bin/rails db:migrate db:seed`
 
-## Open Questions (things Claude needs from Tara)
+## Open Questions (things Claude still needs from Tara)
 
-- [ ] **Product vision in Tara's words** — one or two sentences describing what Court Report is for.
-- [ ] **End goal** — is this just for Tara's personal use? For her teams? Or a future product for other captains to pay for?
+**Answered in Session 7 (April 10, 2026):**
+- ✅ Product vision — Tara's own words captured above.
+- ✅ End goal — personal use first, then a real product for anyone who plays a racket sport.
+- ✅ Who it's for — players, captains, coaches across any racket sport.
+- ✅ Husband's involvement — none beyond the tiiny.host mockup.
+
+**Still open:**
 - [ ] **Real team data** — for each of Tara's current teams (Kiss My Ace, Pour Decisions, Legacy 2):
-  - League, rating (e.g. 4.0), gender, section
+  - League (USTA?), rating (e.g. 4.0), gender, section
   - Number of players and their names/emails
-  - Is Tara the captain?
+  - Which team has the April 14 match and which has the April 21 match
+  - Is Tara the captain of each?
   - Start date of the season
 - [ ] **Domain registrar** — where was `yourcourtreport.com` purchased? (GoDaddy, Namecheap, Google Domains, etc.) Needed to move DNS to DigitalOcean.
 - [ ] **tiiny.host source files** — does Tara have access to the HTML/CSS files used for the mockup? Would help match the Court Report visual design exactly.
 - [ ] **Has Session 6's code been tested?** Before merging `claude/fix-teams-500-error-GPgeR`, verify the teams page and availability feature actually work.
+- [ ] **Future racket sports** — how soon does Tara want pickleball/squash/padel support? MVP = tennis only, but we should avoid baking "tennis" into the data model in ways that'll hurt later.
 
 ## Working Norms Going Forward
 
