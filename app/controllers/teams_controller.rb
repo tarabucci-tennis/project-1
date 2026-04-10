@@ -39,6 +39,10 @@ class TeamsController < ApplicationController
     @upcoming_matches = @team.matches.where("match_date >= ?", Time.current).order(match_date: :asc)
     @past_matches     = @team.matches.where("match_date < ?", Time.current).order(match_date: :desc)
     @player_count     = @team.team_memberships.count
+
+    # Phase 2: load current user's availability for each match
+    match_ids = (@upcoming_matches + @past_matches).map(&:id)
+    @my_availabilities = Availability.where(user: current_user, match_id: match_ids).index_by(&:match_id)
   end
 
   private

@@ -80,16 +80,53 @@
       </h2>
       <div class="cr-match-list">
         <% @upcoming_matches.each do |match| %>
-          <div class="cr-match-row">
-            <div class="cr-match-date">
-              <div class="cr-match-date-month"><%= match.match_date.strftime("%b").upcase %></div>
-              <div class="cr-match-date-day"><%= match.match_date.strftime("%-d") %></div>
+          <% avail = @my_availabilities[match.id] %>
+          <% current_status = avail&.status || "no_response" %>
+          <% current_message = avail&.message || "" %>
+          <% counts = match.availability_counts %>
+
+          <div class="cr-match-card"
+               data-controller="availability"
+               data-availability-match-id-value="<%= match.id %>"
+               data-availability-status-value="<%= current_status %>"
+               data-availability-message-value="<%= current_message %>">
+
+            <div class="cr-match-row">
+              <div class="cr-match-date">
+                <div class="cr-match-date-month"><%= match.match_date.strftime("%b").upcase %></div>
+                <div class="cr-match-date-day"><%= match.match_date.strftime("%-d") %></div>
+              </div>
+              <div class="cr-match-info">
+                <div class="cr-match-opponent">vs. <%= match.opponent %></div>
+                <div class="cr-match-location"><%= match.location %></div>
+              </div>
+              <div class="cr-match-counts" data-availability-target="counts">
+                <span class="cr-count-in"><%= counts[:in] %> ✅</span>
+                <span class="cr-count-out"><%= counts[:out] %> ❌</span>
+                <span class="cr-count-pending"><%= counts[:no_response] %> ?</span>
+              </div>
             </div>
-            <div class="cr-match-info">
-              <div class="cr-match-opponent">vs. <%= match.opponent %></div>
-              <div class="cr-match-location"><%= match.location %></div>
+
+            <div class="cr-avail-row">
+              <button type="button"
+                      class="cr-avail-btn cr-avail-in <%= 'avail-btn-active' if current_status == 'in' %>"
+                      data-availability-target="btnIn"
+                      data-action="click->availability#markIn">
+                ✅ I'm In
+              </button>
+              <button type="button"
+                      class="cr-avail-btn cr-avail-out <%= 'avail-btn-active' if current_status == 'out' %>"
+                      data-availability-target="btnOut"
+                      data-action="click->availability#markOut">
+                ❌ I'm Out
+              </button>
+              <input type="text"
+                     class="cr-avail-message"
+                     placeholder="Add a message..."
+                     value="<%= current_message %>"
+                     data-availability-target="messageField"
+                     data-action="keydown->availability#saveMessage blur->availability#saveMessage">
             </div>
-            <div class="cr-match-time"><%= match.match_date.strftime("%-I:%M %p") %></div>
           </div>
         <% end %>
         <% @past_matches.first(10).each do |match| %>

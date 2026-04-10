@@ -642,6 +642,88 @@ button.cr-header-pill {
   color: var(--cr-text-muted);
 }
 
+/* ── Match card (with availability) ── */
+
+.cr-match-card {
+  border-bottom: 1px solid var(--cr-border);
+}
+
+.cr-match-card:last-child { border-bottom: none; }
+
+.cr-match-card .cr-match-row {
+  border-bottom: none;
+}
+
+.cr-match-counts {
+  font-size: 0.78rem;
+  color: var(--cr-text-muted);
+  white-space: nowrap;
+  display: flex;
+  gap: 8px;
+}
+
+.cr-count-in { color: var(--cr-green); }
+.cr-count-out { color: var(--cr-red); }
+.cr-count-pending { color: var(--cr-text-light); }
+
+/* ── Availability buttons row ── */
+
+.cr-avail-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 20px 16px;
+  flex-wrap: wrap;
+}
+
+.cr-avail-btn {
+  padding: 8px 16px;
+  border: 1px solid var(--cr-border);
+  border-radius: 8px;
+  background: var(--cr-white);
+  color: var(--cr-text-muted);
+  font-size: 0.84rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: inherit;
+  white-space: nowrap;
+}
+
+.cr-avail-btn:hover {
+  background: var(--cr-bg);
+  color: var(--cr-text);
+}
+
+.cr-avail-in.avail-btn-active {
+  background: #dcfce7;
+  border-color: #86efac;
+  color: #166534;
+}
+
+.cr-avail-out.avail-btn-active {
+  background: #fef2f2;
+  border-color: #fca5a5;
+  color: #991b1b;
+}
+
+.cr-avail-message {
+  flex: 1;
+  min-width: 140px;
+  padding: 8px 14px;
+  border: 1px solid var(--cr-border);
+  border-radius: 8px;
+  font-size: 0.84rem;
+  color: var(--cr-text);
+  background: var(--cr-white);
+  outline: none;
+  font-family: inherit;
+  transition: border-color 0.15s;
+}
+
+.cr-avail-message::placeholder { color: var(--cr-text-light); }
+.cr-avail-message:focus { border-color: var(--cr-gold); }
+
 /* ── Roster ── */
 
 .cr-roster {
