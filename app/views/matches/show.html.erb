@@ -91,11 +91,6 @@
   <% else %>
     <div style="text-align: center; padding: 48px 20px; background: var(--cr-white); border: 1px solid var(--cr-border); border-radius: 10px; color: var(--cr-text-light); margin-top: 4px;">
       <span style="font-size: 0.85rem; padding: 6px 14px; border: 1px solid var(--cr-border); border-radius: 6px; display: inline-block; color: var(--cr-text-muted);">No lineup posted</span>
-      <% if @is_captain %>
-        <div style="margin-top: 14px;">
-          <%= link_to "Set Lineup", edit_team_match_lineup_path(@team, @match), class: "cr-btn cr-btn-gold", style: "padding: 8px 20px; font-size: 0.85rem;" %>
-        </div>
-      <% end %>
     </div>
   <% end %>
 
