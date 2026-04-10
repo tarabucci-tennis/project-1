@@ -239,6 +239,16 @@ button.cr-header-pill {
   font-family: inherit;
 }
 
+.cr-header-signup {
+  background: var(--cr-gold) !important;
+  color: var(--cr-black) !important;
+  border-color: var(--cr-gold) !important;
+  font-weight: 700;
+}
+.cr-header-signup:hover {
+  opacity: 0.9;
+}
+
 /* ========================================================
    Main wrapper
    ======================================================== */

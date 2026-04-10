@@ -33,6 +33,7 @@
             <%= button_to "Sign Out", session_path, method: :delete, class: "cr-header-pill cr-header-signout", form: { style: "display:inline" } %>
           <% else %>
             <%= link_to "Sign In", login_path, class: "cr-header-pill" %>
+            <%= link_to "Sign Up", signup_path, class: "cr-header-pill cr-header-signup" %>
           <% end %>
         </div>
       </div>

@@ -6,6 +6,8 @@ Rails.application.routes.draw do
   get    "login",   to: "sessions#new",     as: :login
   post   "session", to: "sessions#create",  as: :session
   delete "session", to: "sessions#destroy"
+  get    "signup",  to: "registrations#new", as: :signup
+  post   "signup",  to: "registrations#create"
 
   # Admin: user management
   resources :users, only: [ :index, :new, :create, :edit, :update, :destroy ]
