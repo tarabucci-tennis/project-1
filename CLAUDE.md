@@ -171,7 +171,7 @@ SQLite databases are persisted via a Docker volume mounted at `/root/storage` on
   - Which team has the April 14 match and which has the April 21 match
   - Is Tara the captain of each?
   - Start date of the season
-- [ ] **Domain registrar** — where was `yourcourtreport.com` purchased? (GoDaddy, Namecheap, Google Domains, etc.) Needed to move DNS to DigitalOcean.
+- [x] **Domain registrar** — `yourcourtreport.com` was purchased from **GoDaddy**. Tara will need to log in to GoDaddy and change the DNS A record to point to `146.190.112.29` (the DigitalOcean droplet) when we're ready to switch.
 - [ ] **tiiny.host source files** — does Tara have access to the HTML/CSS files used for the mockup? Would help match the Court Report visual design exactly.
 - [ ] **Has Session 6's code been tested?** Before merging `claude/fix-teams-500-error-GPgeR`, verify the teams page and availability feature actually work.
 - [ ] **Future racket sports** — how soon does Tara want pickleball/squash/padel support? MVP = tennis only, but we should avoid baking "tennis" into the data model in ways that'll hurt later.
