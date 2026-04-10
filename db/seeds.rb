@@ -32,29 +32,42 @@ tara.update!(
 # --------------------------------------------------------------
 # Clean out any old team data from previous seeds
 # --------------------------------------------------------------
-# Disable foreign key checks during cleanup so destroy_all works
-ActiveRecord::Base.connection.execute("PRAGMA foreign_keys = OFF")
+# Use raw SQL to delete in correct order (child tables first) to avoid
+# foreign key constraint errors. This is safer than PRAGMA foreign_keys = OFF.
+conn = ActiveRecord::Base.connection
 
-# Remove old team names that were placeholders before we had real data.
+# Get IDs of all teams owned by Tara (plus any old placeholder names)
 old_team_names = [ "Quad Squad", "Over Served", "Tri Me", "AGC ACES", "Unmatchables" ]
-TennisTeam.where(name: old_team_names).each do |team|
-  team.division_teams.delete_all if team.respond_to?(:division_teams)
-  team.matches.each { |m| m.match_lines.each { |l| l.match_line_players.delete_all }; m.match_lines.delete_all; m.availabilities.delete_all }
-  team.matches.delete_all
-  team.team_memberships.delete_all
-  team.destroy
-end
+tara_team_ids = tara.tennis_teams.pluck(:id)
+old_team_ids  = TennisTeam.where(name: old_team_names).pluck(:id)
+all_cleanup_ids = (tara_team_ids + old_team_ids).uniq
 
-# Remove any old teams owned by Tara so seeds is idempotent
-tara.tennis_teams.each do |team|
-  team.division_teams.delete_all if team.respond_to?(:division_teams)
-  team.matches.each { |m| m.match_lines.each { |l| l.match_line_players.delete_all }; m.match_lines.delete_all; m.availabilities.delete_all }
-  team.matches.delete_all
-  team.team_memberships.delete_all
-  team.destroy
-end
+if all_cleanup_ids.any?
+  ids = all_cleanup_ids.join(",")
+  # Get match IDs for these teams
+  match_ids = conn.select_values("SELECT id FROM matches WHERE tennis_team_id IN (#{ids})")
 
-ActiveRecord::Base.connection.execute("PRAGMA foreign_keys = ON")
+  if match_ids.any?
+    mids = match_ids.join(",")
+    # Get match_line IDs
+    line_ids = conn.select_values("SELECT id FROM match_lines WHERE match_id IN (#{mids})")
+
+    if line_ids.any?
+      lids = line_ids.join(",")
+      conn.execute("DELETE FROM match_line_players WHERE match_line_id IN (#{lids})")
+    end
+
+    conn.execute("DELETE FROM match_lines WHERE match_id IN (#{mids})")
+    conn.execute("DELETE FROM availabilities WHERE match_id IN (#{mids})")
+    conn.execute("DELETE FROM notifications WHERE match_id IN (#{mids})")
+  end
+
+  conn.execute("DELETE FROM matches WHERE tennis_team_id IN (#{ids})")
+  conn.execute("DELETE FROM division_teams WHERE tennis_team_id IN (#{ids})")
+  conn.execute("DELETE FROM team_memberships WHERE tennis_team_id IN (#{ids})")
+  conn.execute("DELETE FROM notifications WHERE tennis_team_id IN (#{ids})")
+  conn.execute("DELETE FROM tennis_teams WHERE id IN (#{ids})")
+end
 
 # --------------------------------------------------------------
 # Team 1: Kiss My Ace (USTA Adult 40+)
