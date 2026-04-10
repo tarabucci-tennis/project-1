@@ -3,6 +3,7 @@ class TennisTeam < ApplicationRecord
   has_many :team_memberships, dependent: :destroy
   has_many :members, through: :team_memberships, source: :user
   has_many :matches, dependent: :destroy
+  has_many :division_teams, dependent: :destroy
 
   LEAGUE_CATEGORIES = %w[USTA Inter-Club Local].freeze
 

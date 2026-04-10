@@ -38,6 +38,7 @@ ActiveRecord::Base.connection.execute("PRAGMA foreign_keys = OFF")
 # Remove old team names that were placeholders before we had real data.
 old_team_names = [ "Quad Squad", "Over Served", "Tri Me", "AGC ACES", "Unmatchables" ]
 TennisTeam.where(name: old_team_names).each do |team|
+  team.division_teams.delete_all if team.respond_to?(:division_teams)
   team.matches.each { |m| m.match_lines.each { |l| l.match_line_players.delete_all }; m.match_lines.delete_all; m.availabilities.delete_all }
   team.matches.delete_all
   team.team_memberships.delete_all
@@ -46,6 +47,7 @@ end
 
 # Remove any old teams owned by Tara so seeds is idempotent
 tara.tennis_teams.each do |team|
+  team.division_teams.delete_all if team.respond_to?(:division_teams)
   team.matches.each { |m| m.match_lines.each { |l| l.match_line_players.delete_all }; m.match_lines.delete_all; m.availabilities.delete_all }
   team.matches.delete_all
   team.team_memberships.delete_all
@@ -308,4 +310,58 @@ end
   end
 end
 
-puts "✓ Seeded: #{TennisTeam.count} teams, #{User.count} users, #{Match.count} matches"
+# --------------------------------------------------------------
+# Division standings for each team
+# --------------------------------------------------------------
+
+# Kiss My Ace division (USTA 40+ · 4.0 Women Delches · Sub-Flight 2)
+[
+  "Kinetix Deuces Wild",
+  "Love Hurts",
+  "Unmatchables",
+  "Tennis Addiction"
+].each { |name| DivisionTeam.find_or_create_by!(tennis_team: kiss_my_ace, name: name) }
+
+# Pour Decisions division (USTA 18+ · 4.0 Women Del-Ches · Sub-Flight 1)
+[
+  "Quad Squad",
+  "UD Smash Squad",
+  "Kicking Aces",
+  "St. Albans",
+  "No Drama Mamas",
+  "Simply Smashing",
+  "Merion Cricket 18+",
+  "Philly Cricket"
+].each { |name| DivisionTeam.find_or_create_by!(tennis_team: pour_decisions, name: name) }
+
+# PCC division (Inter-Club Cup 6)
+[
+  "Delsea #2",
+  "Dupont CC #1",
+  "Laurel Creek #1",
+  "Overbrook #2",
+  "Philadelphia Cricket #3",
+  "Waynesborough #3",
+  "West Chester #2"
+].each { |name| DivisionTeam.find_or_create_by!(tennis_team: pcc, name: name) }
+
+# Legacy 2 division (Del-Tri Division 4) — with final standings from completed season
+{
+  "DVTA 3"              => [70, nil],
+  "Brandywine 5"        => [58, nil],
+  "Springfield YMCA 3"  => [56, nil],
+  "Brandywine 4"        => [53, nil],
+  "Radnor Racquet 3"    => [52, nil],
+  "HPTA 6"              => [51, nil],
+  "Penn Oaks 5"         => [48, nil],
+  "Tennis Addiction 4"   => [45, nil],
+  "Upper Main Line Y 2" => [39, nil]
+}.each do |name, (pts, _)|
+  DivisionTeam.find_or_create_by!(tennis_team: legacy_2, name: name) do |dt|
+    # Del-Tri uses points not W-L, store points in wins for sorting
+    dt.wins = pts
+    dt.losses = 0
+  end
+end
+
+puts "✓ Seeded: #{TennisTeam.count} teams, #{User.count} users, #{Match.count} matches, #{DivisionTeam.count} division opponents"

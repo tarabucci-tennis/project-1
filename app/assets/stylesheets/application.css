@@ -1645,7 +1645,9 @@ button.cr-header-pill {
   overflow: hidden;
 }
 
-.cr-standings-header {
+.cr-standings-header-row {
+  display: flex;
+  align-items: center;
   padding: 10px 20px;
   background: var(--cr-bg);
   font-size: 0.75rem;
@@ -1657,12 +1659,58 @@ button.cr-header-pill {
 }
 
 .cr-standings-row {
+  display: flex;
+  align-items: center;
   padding: 12px 20px;
   border-bottom: 1px solid var(--cr-border);
   font-size: 0.9rem;
 }
 
 .cr-standings-row:last-child { border-bottom: none; }
+
+.cr-standings-row-self {
+  background: var(--cr-black);
+  color: var(--cr-white);
+  font-weight: 700;
+}
+
+.cr-standings-row-self .cr-standings-wins { color: #4ade80; }
+.cr-standings-row-self .cr-standings-losses { color: #f87171; }
+
+.cr-standings-rank-col {
+  width: 32px;
+  flex-shrink: 0;
+  font-weight: 700;
+  color: var(--cr-text-muted);
+}
+
+.cr-standings-row-self .cr-standings-rank-col { color: var(--cr-gold); }
+
+.cr-standings-team-col {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.cr-standings-stat-col {
+  width: 48px;
+  text-align: center;
+  flex-shrink: 0;
+  font-weight: 600;
+}
+
+.cr-standings-you-badge {
+  display: inline-block;
+  padding: 1px 8px;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  background: var(--cr-gold);
+  color: var(--cr-white);
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
 
 .cr-section-subtitle {
   font-size: 0.8rem;

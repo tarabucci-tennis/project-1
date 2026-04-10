@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_10_200001) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_10_200002) do
   create_table "availabilities", force: :cascade do |t|
     t.integer "user_id", null: false
     t.integer "match_id", null: false
@@ -21,6 +21,18 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_10_200001) do
     t.index ["match_id"], name: "index_availabilities_on_match_id"
     t.index ["user_id", "match_id"], name: "index_availabilities_on_user_id_and_match_id", unique: true
     t.index ["user_id"], name: "index_availabilities_on_user_id"
+  end
+
+  create_table "division_teams", force: :cascade do |t|
+    t.integer "tennis_team_id", null: false
+    t.string "name", null: false
+    t.integer "wins", default: 0, null: false
+    t.integer "losses", default: 0, null: false
+    t.integer "position"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["tennis_team_id", "name"], name: "index_division_teams_on_tennis_team_id_and_name", unique: true
+    t.index ["tennis_team_id"], name: "index_division_teams_on_tennis_team_id"
   end
 
   create_table "match_line_players", force: :cascade do |t|
@@ -140,6 +152,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_10_200001) do
     t.index ["email"], name: "index_users_on_email", unique: true
   end
 
+  add_foreign_key "division_teams", "tennis_teams"
   add_foreign_key "availabilities", "matches"
   add_foreign_key "availabilities", "users"
   add_foreign_key "match_line_players", "match_lines"

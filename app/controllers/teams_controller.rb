@@ -42,7 +42,15 @@ class TeamsController < ApplicationController
     @is_captain       = @team.captain?(current_user)
     @wins             = @team.matches.where(result: "win").count
     @losses           = @team.matches.where(result: "loss").count
-    @division_opponents = @team.matches.pluck(:opponent).compact.uniq.sort
+    @division_teams   = @team.division_teams.ranked
+
+    # Build combined standings: your team + division opponents, sorted by wins desc
+    @standings = []
+    @standings << { name: @team.name, wins: @wins, losses: @losses, is_self: true }
+    @division_teams.each do |dt|
+      @standings << { name: dt.name, wins: dt.wins, losses: dt.losses, is_self: false }
+    end
+    @standings.sort_by! { |s| [-s[:wins], s[:losses], s[:name]] }
 
     # Load current user's availability for each match
     match_ids = (@upcoming_matches + @past_matches).map(&:id)
