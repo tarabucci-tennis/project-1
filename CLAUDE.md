@@ -482,3 +482,141 @@ SQLite databases are persisted via a Docker volume mounted at `/root/storage` on
 - New Open Questions that came up
 
 **Think of this file as the project diary.** It's the first thing any future Claude session should read before writing any code.
+
+## Session 8 (April 10, 2026 — evening)
+
+### What was built, tested, and deployed
+
+**All features are LIVE at http://146.190.112.29 on branch `claude/clarify-team-members-1ycVZ`.**
+
+1. **Google Calendar button** — Calendar icon on Coming Up cards and Schedule tab. Opens Google Calendar with match title, date/time, location pre-filled. Tara uses this so her husband and family know where she is.
+
+2. **Compact Coming Up cards** — Smaller cards with league label (USTA/DEL-TRI) above team name in gold, not clickable as links anymore but clickable to navigate to match detail page. Calendar icon inline inside card.
+
+3. **Match detail page** (`/teams/:id/matches/:id`) — MatchTime-style layout with:
+   - Header bar: date, time, HOME/AWAY badge, opponent, gold underline
+   - Lineup table: Time | Line | Player | Confirmed/Pending/Declined
+   - Lines grouped by position (1S, 1D-4D or Lines 1-6)
+   - Confirm/Can't Play prompt for players in pending lineup
+   - "No lineup posted" clean state
+   - Set Lineup button only visible to captain/team creator (NOT admin)
+
+4. **Lineup email notifications** — LineupMailer sends creative HTML email when captain publishes lineup. Black/gold branded email with tennis ball, match details, player's assigned position, and Confirm/Can't Play buttons. Requires Gmail SMTP setup (see below).
+
+5. **Lineup confirm route fix** — Confirm now accepts GET requests so email links work (was PATCH-only, causing 404).
+
+6. **Sign Up page** — New users can create an account with name + email at `/signup`. Gold "Sign Up" button in header for logged-out users. Auto-signs in after creation.
+
+7. **Three ways to join a team:**
+   - **Captain adds player** — Name + email form on Captain tab. Creates account if needed.
+   - **Join link** — Each team gets a unique `/join/:code` URL. Captain shares via text. Players auto-join after signing up/in.
+   - **Player self-service** — "Find a Team" search page and "Create a Team" form. Players can search by team name and join, or create their own team (becomes captain).
+
+8. **Empty My Teams page** — Shows bouncing tennis ball + "Find a Team" and "Create a Team" buttons instead of blank message.
+
+9. **Lineup position on Coming Up cards** — Shows black/gold badge (e.g., "1S", "2D") when you're in a published lineup.
+
+10. **Legacy 2 full season results** — All 18 matches seeded with scores (2-4, 4-2, 6-0, etc.). Season completed Fall/Winter 2025-26.
+
+11. **Del-Tri points-based standings** — Legacy 2 standings show Points (68 pts, 2nd place) instead of W-L since Del-Tri uses total games won as points.
+
+12. **Deploy workflow fix** — Removed `claude/**` from the auto-deploy GitHub Action trigger. Only `main` branch pushes deploy now. This prevents new Claude sessions from accidentally overwriting the deployed site.
+
+13. **Bouncing tennis ball animation** — Bounces on empty My Teams, Find a Team, and Create a Team pages.
+
+### What was NOT deployed / NOT tested
+- Email notifications require Gmail SMTP setup (see below)
+- Line-by-line match data for Legacy 2 (Tara shared all 18 matches worth of screenshots but data entry page not built yet)
+
+### Deploy commands
+
+```bash
+# Standard redeploy (keeps existing data)
+cd /root/app && bash bin/deploy-phase-1.sh
+
+# Fresh deploy (resets database, re-seeds everything)
+cd /root/app && rm -rf /root/storage/* && bash bin/deploy-phase-1.sh
+```
+
+### Gmail SMTP setup (for lineup email notifications)
+
+On the Droplet, create `/root/.smtp_credentials`:
+```bash
+cat > /root/.smtp_credentials << 'EOF'
+SMTP_USERNAME="tarabucci@gmail.com"
+SMTP_PASSWORD="your-16-char-gmail-app-password"
+EOF
+chmod 600 /root/.smtp_credentials
+```
+
+To get a Gmail App Password: myaccount.google.com > Security > 2-Step Verification > App Passwords > create one for "Court Report".
+
+Then redeploy: `bash bin/deploy-phase-1.sh`
+
+### Key branches
+
+- **`claude/clarify-team-members-1ycVZ`** — the deploy branch. Deploy script pulls from here.
+- **`claude/clarify-team-members-1ycVZ-aTu9y`** — this session's working branch (same code, kept in sync).
+- Deploy workflow only triggers on `main` pushes now (safe).
+
+### New decisions made
+
+1. **Set Lineup visible only to captain/team creator** — not to admin users. If Tara is a player (not captain) on a team, she shouldn't see Set Lineup.
+2. **Del-Tri and Inter-Club use 6 doubles lines** (no singles). USTA uses 1S + 4D. Need league format config.
+3. **Subs are a roster role** — captains need to add substitute players. Team memberships need "sub" role in addition to "captain" and "player".
+4. **Del-Tri scoring = points** (total games/lines won), not W-L records.
+5. **Players can create their own teams** and become captain — the app works even if only one player on a team uses it.
+
+### League format differences (important for lineup/results)
+
+| League | Format | Lines |
+|--------|--------|-------|
+| **USTA** | 1 Singles + 4 Doubles | 1S, 1D, 2D, 3D, 4D |
+| **Del-Tri** | 6 Doubles only | Line 1-6 |
+| **Inter-Club** | 6 Doubles only | Line 1-6 |
+
+### PCC subs (from Inter-Club website)
+
+Nancy Fox (S), Jen Gallagher (S), Rachel Miller (S), Christi Neilly (S)
+
+### Legacy 2 line-by-line data
+
+Tara shared all 18 match screenshots from the Del-Tri website with full line-by-line results (who played which line, set scores, wins/losses). This data is preserved in Session 8's conversation. Key matches with Tara playing:
+
+- Oct 3 vs Brandywine 5: Tara on Line 2 (with Ginger McGeer), Line 3 (with JoAnne Steinberg)
+- Oct 10 vs DVTA 3: Tara on Line 2 (Buchakjian/Khue), Line 3 (JoAnne/Tara Bucci)
+- Oct 17 vs Brandywine 4: Tara on Line 3 (Tara Bucci/JoAnne Steinberg)
+- Oct 24 vs Tennis Addiction 4: Tara on Line 3 (Buchakjian/Khue Feigenberg)
+- Oct 31 vs Upper Main Line Y 2: Tara on Line 3 (Tara Bucci/JoAnne Steinberg)
+- Nov 7 vs Springfield YMCA 3: Tara on Line 1 (Tara Bucci/Anh Bixby)
+- Nov 14 vs HPTA 6: Tara on Line 2 (Buchakjian/Khue Feigenberg)
+- Nov 21 vs Radnor Racquet 3: (line data captured)
+- Dec 5 vs Penn Oaks 5: Tara on Line 3 (Tara Bucci/JoAnne Steinberg)
+- Jan 9 vs Brandywine 5: Tara on Line 3 (Tara Bucci/JoAnne Steinberg)
+- Jan 16 vs DVTA 3: Tara on Line 2 (Buchakjian/Khue), Line 3 (Tara Bucci/JoAnne)
+- Jan 23 vs Brandywine 4: Tara on Line 3 (Tara Bucci/Jackie Wilson)
+- Jan 30 vs Tennis Addiction 4: (Tara not in lineup this week)
+- Feb 6 vs Upper Main Line Y 2: Tara on Line 2 (Buchakjian/Khue)
+- Feb 20 vs Springfield YMCA 3: (data captured)
+- Feb 27 vs HPTA 6: (data captured)
+- Mar 6 vs Radnor Racquet 3: Tara on Line 2 (Buchakjian/Lorise Chow)
+- Mar 13 vs Penn Oaks 5: Tara on Line 3 (Buchakjian/Khue), Line 4 (JoAnne/Tara Bucci)
+
+Note: "Tara Buchakjian" in Del-Tri results = Tara Bucci (different last name spelling in Del-Tri system).
+
+### Next session priorities
+
+1. **Build Enter Results page** — for Legacy 2's line-by-line data. Must support Del-Tri format (6 doubles lines). Use the screenshots from this conversation as reference.
+2. **Add "sub" role to team memberships** — captains can add subs with name, ranking (optional), email (optional)
+3. **League format configuration** — add field to TennisTeam for format ("usta_standard" = 1S+4D, "doubles_6" = 6 doubles lines). Lineup builder and Enter Results pages use this.
+4. **Set up yourcourtreport.com domain** — Tara owns it on GoDaddy. Need to point DNS A record to 146.190.112.29 and set up HTTPS.
+5. **Gmail app password** — Tara needs to create one for lineup email notifications.
+6. **Co-captain role** — allow captain to promote a player to co-captain who can also set lineups.
+
+### Lessons learned (Session 8)
+
+- **The deploy workflow was overwriting the site** every time a new Claude session pushed to a `claude/*` branch. Fixed by removing `claude/**` from the trigger. Only `main` deploys now.
+- **Don't nest `<a>` tags inside `<a>` tags** — the calendar button inside a link_to caused the button to render outside the card. Use div with onclick instead.
+- **Route helper names matter** — `post "add_player"` inside a resources block generates a different helper name than expected. Use `member do` blocks for clarity.
+- **Del-Tri uses a points system, not W-L** — storing points as "wins" caused confusion. Need separate handling for points-based leagues.
+- **"Tara Buchakjian" = "Tara Bucci"** — Del-Tri uses a different last name for Tara in their system.
