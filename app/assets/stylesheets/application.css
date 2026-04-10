@@ -1105,6 +1105,67 @@ button.cr-header-pill {
 }
 
 /* ========================================================
+   Player profile
+   ======================================================== */
+
+.cr-player-header {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 32px;
+  padding-bottom: 28px;
+  border-bottom: 1px solid var(--cr-border);
+}
+
+.cr-player-avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: var(--cr-gold);
+  color: var(--cr-black);
+  font-weight: 900;
+  font-size: 1.3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  letter-spacing: 1px;
+}
+
+.cr-player-name {
+  font-size: 1.8rem;
+  font-weight: 900;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.cr-player-you {
+  font-size: 0.85rem;
+  color: var(--cr-gold);
+  font-weight: 600;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.cr-player-meta {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 6px;
+  font-size: 0.85rem;
+  color: var(--cr-text-muted);
+}
+
+.cr-player-rating-chip {
+  background: rgba(201, 162, 74, 0.12);
+  color: var(--cr-gold);
+  font-weight: 700;
+  padding: 2px 10px;
+  border-radius: 10px;
+  font-size: 0.8rem;
+}
+
+/* ========================================================
    Responsive
    ======================================================== */
 

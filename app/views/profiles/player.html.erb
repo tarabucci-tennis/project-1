@@ -1,0 +1,131 @@
+<% content_for :title, "#{@user.name} · Court Report" %>
+
+<div class="cr-team-page">
+
+  <%= link_to "← Back", :back, class: "cr-back-link" %>
+
+  <%# ── Player header ── %>
+  <div class="cr-player-header">
+    <div class="cr-player-avatar">
+      <%= @user.name.split.map { |n| n[0] }.join.upcase[0..1] %>
+    </div>
+    <div class="cr-player-info">
+      <h1 class="cr-player-name">
+        <%= @user.name %>
+        <% if @is_self %>
+          <span class="cr-player-you">(you)</span>
+        <% end %>
+      </h1>
+      <div class="cr-player-meta">
+        <% if @user.location.present? %>
+          <span>📍 <%= @user.location %></span>
+        <% end %>
+        <% if @user.ntrp_rating.present? %>
+          <span class="cr-player-rating-chip"><%= @user.ntrp_rating %> NTRP</span>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <%# ── Rating cards (only if they have ratings) ── %>
+  <% if @user.ntrp_rating.present? || @user.dynamic_rating.present? %>
+    <div class="cr-stat-cards" style="margin-bottom: 32px;">
+      <% if @user.ntrp_rating.present? %>
+        <div class="cr-stat-card">
+          <div class="cr-stat-card-value" style="color: var(--cr-gold);"><%= @user.ntrp_rating %></div>
+          <div class="cr-stat-card-label">NTRP Rating</div>
+          <% if @user.ntrp_rating_date.present? %>
+            <div style="font-size: 0.7rem; color: var(--cr-text-light); margin-top: 4px;">
+              as of <%= @user.ntrp_rating_date.strftime("%-m/%-d/%Y") %>
+            </div>
+          <% end %>
+        </div>
+      <% end %>
+      <% if @user.dynamic_rating.present? %>
+        <div class="cr-stat-card">
+          <div class="cr-stat-card-value" style="color: var(--cr-gold);"><%= sprintf("%.2f", @user.dynamic_rating) %></div>
+          <div class="cr-stat-card-label">Dynamic Rating</div>
+          <% if @user.dynamic_rating_date.present? %>
+            <div style="font-size: 0.7rem; color: var(--cr-text-light); margin-top: 4px;">
+              as of <%= @user.dynamic_rating_date.strftime("%-m/%-d/%Y") %>
+            </div>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+
+  <%# ── Shared teams (only shown when viewing a teammate) ── %>
+  <% if !@is_self && @shared_teams.any? %>
+    <section class="cr-section">
+      <h2 class="cr-section-title">Teams You Share</h2>
+      <div class="cr-match-list">
+        <% @shared_teams.each do |team| %>
+          <%= link_to team_path(team), class: "cr-match-row", style: "text-decoration: none; color: inherit;" do %>
+            <div class="cr-match-date" style="min-width: auto; padding: 8px 14px;">
+              <div class="cr-match-date-month" style="font-size: 0.6rem;"><%= team.league_category == "Local" ? "DEL-TRI" : team.league_category.upcase %></div>
+            </div>
+            <div class="cr-match-info">
+              <div class="cr-match-opponent" style="font-size: 0.95rem;"><%= team.name %></div>
+              <div class="cr-match-location"><%= team.team_type %> · <%= team.season_name %></div>
+            </div>
+          <% end %>
+        <% end %>
+      </div>
+    </section>
+  <% end %>
+
+  <%# ── All teams ── %>
+  <% if @teams.any? %>
+    <section class="cr-section">
+      <h2 class="cr-section-title"><%= @is_self ? "My Teams" : "#{@user.name.split.first}'s Teams" %></h2>
+      <div class="cr-match-list">
+        <% @teams.each do |team| %>
+          <%= link_to team_path(team), class: "cr-match-row", style: "text-decoration: none; color: inherit;" do %>
+            <div class="cr-match-date" style="min-width: auto; padding: 8px 14px;">
+              <div class="cr-match-date-month" style="font-size: 0.6rem;"><%= team.league_category == "Local" ? "DEL-TRI" : team.league_category.upcase %></div>
+            </div>
+            <div class="cr-match-info">
+              <div class="cr-match-opponent" style="font-size: 0.95rem;"><%= team.name %></div>
+              <div class="cr-match-location"><%= team.team_type %> · <%= team.season_name %></div>
+            </div>
+            <% membership = team.team_memberships.find { |m| m.user_id == @user.id } %>
+            <% if membership&.captain? %>
+              <div class="cr-roster-role cr-roster-role-captain">Captain</div>
+            <% end %>
+          <% end %>
+        <% end %>
+      </div>
+    </section>
+  <% end %>
+
+  <%# ── Match history (only for users who have stats) ── %>
+  <% if @stats.any? %>
+    <section class="cr-section">
+      <h2 class="cr-section-title">Match History</h2>
+      <table class="cr-table">
+        <thead>
+          <tr>
+            <th>Year</th>
+            <th>Matches</th>
+            <th>Won</th>
+            <th>Lost</th>
+            <th>Win %</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @stats.each do |s| %>
+            <tr>
+              <td style="font-weight: 700; color: var(--cr-gold);"><%= s.year %></td>
+              <td><%= s.matches_total || "—" %></td>
+              <td style="color: var(--cr-green);"><%= s.matches_won || "—" %></td>
+              <td style="color: var(--cr-red);"><%= s.matches_lost || "—" %></td>
+              <td><%= s.match_wpct ? "#{s.match_wpct}%" : "—" %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </section>
+  <% end %>
+
+</div>

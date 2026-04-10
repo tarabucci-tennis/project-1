@@ -19,7 +19,8 @@ Rails.application.routes.draw do
   # Availability AJAX endpoint (Phase 2 feature — routes preserved but unused on index page)
   post "matches/:match_id/availability", to: "availabilities#update", as: :match_availability
 
-  get "profile", to: "profiles#show", as: :profile
+  get "profile",      to: "profiles#show", as: :profile
+  get "players/:id",  to: "profiles#player", as: :player
 
   # Root: sends logged-in users to My Teams; logged-out users to login
   root "pages#home"

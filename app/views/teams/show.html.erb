@@ -152,7 +152,7 @@
     <h2 class="cr-section-title">Roster (<%= @player_count %> Players)</h2>
     <div class="cr-roster">
       <% @roster.each do |membership| %>
-        <div class="cr-roster-row">
+        <%= link_to player_path(membership.user), class: "cr-roster-row", style: "text-decoration: none; color: inherit;" do %>
           <div class="cr-roster-name <%= 'cr-roster-self' if membership.user_id == current_user.id %>">
             <%= membership.user.name %>
             <% if membership.user_id == current_user.id %>
@@ -165,7 +165,7 @@
           <% if membership.captain? %>
             <div class="cr-roster-role cr-roster-role-captain">Captain</div>
           <% end %>
-        </div>
+        <% end %>
       <% end %>
     </div>
   </section>
