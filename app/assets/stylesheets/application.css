@@ -336,8 +336,14 @@ button.cr-header-pill {
    My Teams page
    ======================================================== */
 
+.cr-leagues-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+}
+
 .cr-league-section {
-  margin-bottom: 32px;
+  margin-bottom: 0;
 }
 
 .cr-league-label {
@@ -355,7 +361,13 @@ button.cr-header-pill {
   display: flex;
   flex-direction: column;
   gap: 12px;
-  max-width: 520px;
+}
+
+@media (max-width: 900px) {
+  .cr-leagues-grid {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
 }
 
 .cr-team-card {
