@@ -55,6 +55,103 @@
     </div>
   <% end %>
 
+  <%# ── Playing Stats ── %>
+  <% if @playing_stats.present? %>
+    <section class="cr-section">
+      <h2 class="cr-section-title">Playing Stats</h2>
+
+      <%# Overall stats row %>
+      <div class="cr-playing-stats-grid">
+        <div class="cr-playing-stat-card">
+          <div class="cr-playing-stat-value"><%= @playing_stats[:overall][:pct] %>%</div>
+          <div class="cr-playing-stat-label">Overall Win %</div>
+          <div class="cr-playing-stat-detail"><%= @playing_stats[:overall][:won] %> of <%= @playing_stats[:overall][:total] %> matches</div>
+        </div>
+        <div class="cr-playing-stat-card">
+          <div class="cr-playing-stat-value"><%= @playing_stats[:singles][:pct] %>%</div>
+          <div class="cr-playing-stat-label">Singles Win %</div>
+          <div class="cr-playing-stat-detail"><%= @playing_stats[:singles][:won] %> of <%= @playing_stats[:singles][:total] %> matches</div>
+        </div>
+        <div class="cr-playing-stat-card">
+          <div class="cr-playing-stat-value"><%= @playing_stats[:doubles][:pct] %>%</div>
+          <div class="cr-playing-stat-label">Doubles Win %</div>
+          <div class="cr-playing-stat-detail"><%= @playing_stats[:doubles][:won] %> of <%= @playing_stats[:doubles][:total] %> matches</div>
+        </div>
+      </div>
+
+      <%# Win % by Line %>
+      <% if @playing_stats[:by_line].any? %>
+        <h3 class="cr-section-subtitle" style="margin-top: 20px;">Win % by Line</h3>
+        <div class="cr-playing-stats-table">
+          <div class="cr-playing-stats-header">
+            <span class="cr-ps-col-line">Line</span>
+            <span class="cr-ps-col-stat">Win %</span>
+            <span class="cr-ps-col-detail">Record</span>
+          </div>
+          <% @playing_stats[:by_line].sort_by { |k, _| k }.each do |label, data| %>
+            <div class="cr-playing-stats-row">
+              <span class="cr-ps-col-line"><%= label %></span>
+              <span class="cr-ps-col-stat" style="font-weight: 700; color: <%= data[:pct] >= 50 ? 'var(--cr-green)' : 'var(--cr-red)' %>;"><%= data[:pct] %>%</span>
+              <span class="cr-ps-col-detail"><%= data[:won] %> of <%= data[:total] %> matches</span>
+            </div>
+          <% end %>
+        </div>
+      <% end %>
+
+      <%# Doubles Partners %>
+      <% if @playing_stats[:partners].any? %>
+        <h3 class="cr-section-subtitle" style="margin-top: 20px;">Doubles Partner Win %</h3>
+        <div class="cr-playing-stats-table">
+          <div class="cr-playing-stats-header">
+            <span class="cr-ps-col-name">Partner</span>
+            <span class="cr-ps-col-stat">Win %</span>
+            <span class="cr-ps-col-detail">Record</span>
+          </div>
+          <% @playing_stats[:partners].each do |partner| %>
+            <div class="cr-playing-stats-row">
+              <span class="cr-ps-col-name"><%= partner[:name] %></span>
+              <span class="cr-ps-col-stat" style="font-weight: 700; color: <%= partner[:pct] >= 50 ? 'var(--cr-green)' : 'var(--cr-red)' %>;"><%= partner[:pct] %>%</span>
+              <span class="cr-ps-col-detail"><%= partner[:won] %> of <%= partner[:total] %> matches</span>
+            </div>
+          <% end %>
+        </div>
+        <% if @playing_stats[:best_partner] %>
+          <div style="margin-top: 8px; font-size: 0.85rem; color: var(--cr-text-muted);">
+            Best Doubles Partner: <strong><%= @playing_stats[:best_partner][:name] %></strong> (<%= @playing_stats[:best_partner][:pct] %>%)
+          </div>
+        <% end %>
+      <% end %>
+
+      <%# Recent Matches %>
+      <% if @playing_stats[:recent].any? %>
+        <h3 class="cr-section-subtitle" style="margin-top: 20px;">Recent Matches</h3>
+        <div class="cr-playing-stats-table">
+          <div class="cr-playing-stats-header">
+            <span class="cr-ps-col-name">Opponent</span>
+            <span class="cr-ps-col-line">Line</span>
+            <span class="cr-ps-col-stat">Score</span>
+            <span class="cr-ps-col-detail">Result</span>
+          </div>
+          <% @playing_stats[:recent].each do |match| %>
+            <div class="cr-playing-stats-row">
+              <span class="cr-ps-col-name">
+                vs. <%= match[:opponent] %>
+                <div style="font-size: 0.7rem; color: var(--cr-text-light);"><%= match[:team] %> · <%= match[:date].strftime("%-m/%-d/%y") %></div>
+              </span>
+              <span class="cr-ps-col-line"><%= match[:line_label] %></span>
+              <span class="cr-ps-col-stat"><%= match[:score].presence || "—" %></span>
+              <span class="cr-ps-col-detail">
+                <span class="cr-result-badge <%= match[:result] == 'win' ? 'cr-result-badge-win' : 'cr-result-badge-loss' %>">
+                  <%= match[:result] == 'win' ? 'W' : 'L' %>
+                </span>
+              </span>
+            </div>
+          <% end %>
+        </div>
+      <% end %>
+    </section>
+  <% end %>
+
   <%# ── Teams ── %>
   <% if @teams.any? %>
     <section class="cr-section">

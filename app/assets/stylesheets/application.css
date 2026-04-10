@@ -1848,6 +1848,85 @@ button.cr-header-pill {
 }
 
 /* ========================================================
+   Playing Stats (player profile)
+   ======================================================== */
+
+.cr-playing-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.cr-playing-stat-card {
+  background: var(--cr-white);
+  border: 1px solid var(--cr-border);
+  border-radius: 10px;
+  padding: 16px;
+  text-align: center;
+}
+
+.cr-playing-stat-value {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: var(--cr-gold);
+  line-height: 1.1;
+}
+
+.cr-playing-stat-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--cr-text-muted);
+  margin-top: 4px;
+}
+
+.cr-playing-stat-detail {
+  font-size: 0.75rem;
+  color: var(--cr-text-light);
+  margin-top: 2px;
+}
+
+.cr-playing-stats-table {
+  border: 1px solid var(--cr-border);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.cr-playing-stats-header {
+  display: flex;
+  align-items: center;
+  padding: 8px 16px;
+  background: var(--cr-bg);
+  border-bottom: 1px solid var(--cr-border);
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--cr-text-muted);
+}
+
+.cr-playing-stats-row {
+  display: flex;
+  align-items: center;
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--cr-border);
+  font-size: 0.85rem;
+}
+
+.cr-playing-stats-row:last-child { border-bottom: none; }
+
+.cr-ps-col-name { flex: 1; min-width: 0; }
+.cr-ps-col-line { width: 48px; text-align: center; flex-shrink: 0; font-weight: 600; }
+.cr-ps-col-stat { width: 64px; text-align: center; flex-shrink: 0; }
+.cr-ps-col-detail { width: 120px; text-align: right; flex-shrink: 0; color: var(--cr-text-muted); font-size: 0.8rem; }
+
+@media (max-width: 720px) {
+  .cr-playing-stats-grid { grid-template-columns: 1fr; }
+}
+
+/* ========================================================
    Lineup Preview (on schedule cards)
    ======================================================== */
 
