@@ -39,7 +39,7 @@ class TeamsController < ApplicationController
     @upcoming_matches = @team.matches.where("match_date >= ?", Time.current).order(match_date: :asc)
     @past_matches     = @team.matches.where("match_date < ?", Time.current).order(match_date: :desc)
     @player_count     = @team.team_memberships.count
-    @is_captain       = @team.captain?(current_user)
+    @is_captain       = @team.captain?(current_user) || current_user.admin?
     @wins             = @team.matches.where(result: "win").count
     @losses           = @team.matches.where(result: "loss").count
     @division_teams   = @team.division_teams.ranked
