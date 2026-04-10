@@ -1165,6 +1165,93 @@ button.cr-header-pill {
   font-size: 0.8rem;
 }
 
+/* ── Clickable year rows (match history) ── */
+
+.cr-year-row {
+  border-bottom: 1px solid var(--cr-border);
+}
+
+.cr-year-row:last-child { border-bottom: none; }
+
+.cr-year-header {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 16px 20px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  gap: 16px;
+  transition: background 0.15s;
+}
+
+.cr-year-header:hover { background: var(--cr-bg); }
+
+.cr-year-label {
+  font-size: 1.3rem;
+  font-weight: 900;
+  color: var(--cr-gold);
+  min-width: 56px;
+}
+
+.cr-year-summary {
+  flex: 1;
+  display: flex;
+  gap: 12px;
+  font-size: 0.85rem;
+  color: var(--cr-text-muted);
+}
+
+.cr-year-win { color: var(--cr-green); font-weight: 600; }
+.cr-year-loss { color: var(--cr-red); font-weight: 600; }
+.cr-year-pct { color: var(--cr-text); font-weight: 700; }
+
+.cr-year-caret {
+  font-size: 0.75rem;
+  color: var(--cr-text-light);
+  transition: transform 0.2s;
+}
+
+.cr-year-header-open .cr-year-caret {
+  transform: rotate(180deg);
+}
+
+.cr-year-detail {
+  display: none;
+  padding: 0 20px 20px;
+}
+
+.cr-year-detail-open { display: block; }
+
+.cr-year-detail-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 12px;
+}
+
+.cr-year-stat {
+  background: var(--cr-bg);
+  border-radius: 10px;
+  padding: 14px 16px;
+  text-align: center;
+}
+
+.cr-year-stat-value {
+  font-size: 1.4rem;
+  font-weight: 900;
+  color: var(--cr-text);
+}
+
+.cr-year-stat-label {
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: var(--cr-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-top: 4px;
+}
+
 /* ========================================================
    Responsive
    ======================================================== */

@@ -27,7 +27,7 @@
     </div>
   </div>
 
-  <%# ── Rating cards (only if they have ratings) ── %>
+  <%# ── Rating cards ── %>
   <% if @user.ntrp_rating.present? || @user.dynamic_rating.present? %>
     <div class="cr-stat-cards" style="margin-bottom: 32px;">
       <% if @user.ntrp_rating.present? %>
@@ -55,30 +55,10 @@
     </div>
   <% end %>
 
-  <%# ── Shared teams (only shown when viewing a teammate) ── %>
-  <% if !@is_self && @shared_teams.any? %>
-    <section class="cr-section">
-      <h2 class="cr-section-title">Teams You Share</h2>
-      <div class="cr-match-list">
-        <% @shared_teams.each do |team| %>
-          <%= link_to team_path(team), class: "cr-match-row", style: "text-decoration: none; color: inherit;" do %>
-            <div class="cr-match-date" style="min-width: auto; padding: 8px 14px;">
-              <div class="cr-match-date-month" style="font-size: 0.6rem;"><%= team.league_category == "Local" ? "DEL-TRI" : team.league_category.upcase %></div>
-            </div>
-            <div class="cr-match-info">
-              <div class="cr-match-opponent" style="font-size: 0.95rem;"><%= team.name %></div>
-              <div class="cr-match-location"><%= team.team_type %> · <%= team.season_name %></div>
-            </div>
-          <% end %>
-        <% end %>
-      </div>
-    </section>
-  <% end %>
-
-  <%# ── All teams ── %>
+  <%# ── Teams ── %>
   <% if @teams.any? %>
     <section class="cr-section">
-      <h2 class="cr-section-title"><%= @is_self ? "My Teams" : "#{@user.name.split.first}'s Teams" %></h2>
+      <h2 class="cr-section-title">Teams</h2>
       <div class="cr-match-list">
         <% @teams.each do |team| %>
           <%= link_to team_path(team), class: "cr-match-row", style: "text-decoration: none; color: inherit;" do %>
@@ -99,32 +79,73 @@
     </section>
   <% end %>
 
-  <%# ── Match history (only for users who have stats) ── %>
+  <%# ── Match history with clickable years ── %>
   <% if @stats.any? %>
     <section class="cr-section">
       <h2 class="cr-section-title">Match History</h2>
-      <table class="cr-table">
-        <thead>
-          <tr>
-            <th>Year</th>
-            <th>Matches</th>
-            <th>Won</th>
-            <th>Lost</th>
-            <th>Win %</th>
-          </tr>
-        </thead>
-        <tbody>
-          <% @stats.each do |s| %>
-            <tr>
-              <td style="font-weight: 700; color: var(--cr-gold);"><%= s.year %></td>
-              <td><%= s.matches_total || "—" %></td>
-              <td style="color: var(--cr-green);"><%= s.matches_won || "—" %></td>
-              <td style="color: var(--cr-red);"><%= s.matches_lost || "—" %></td>
-              <td><%= s.match_wpct ? "#{s.match_wpct}%" : "—" %></td>
-            </tr>
-          <% end %>
-        </tbody>
-      </table>
+      <div class="cr-match-list" data-controller="year-expand">
+        <% @stats.each do |s| %>
+          <div class="cr-year-row">
+            <button type="button"
+                    class="cr-year-header"
+                    data-action="click->year-expand#toggle"
+                    data-year-expand-target="header">
+              <div class="cr-year-label"><%= s.year %></div>
+              <div class="cr-year-summary">
+                <span><%= s.matches_total || 0 %> matches</span>
+                <% if s.matches_won %>
+                  <span class="cr-year-win"><%= s.matches_won %>W</span>
+                <% end %>
+                <% if s.matches_lost %>
+                  <span class="cr-year-loss"><%= s.matches_lost %>L</span>
+                <% end %>
+                <% if s.match_wpct %>
+                  <span class="cr-year-pct"><%= s.match_wpct %>%</span>
+                <% end %>
+              </div>
+              <div class="cr-year-caret">▾</div>
+            </button>
+            <div class="cr-year-detail" data-year-expand-target="detail">
+              <div class="cr-year-detail-grid">
+                <div class="cr-year-stat">
+                  <div class="cr-year-stat-value"><%= s.matches_total || "—" %></div>
+                  <div class="cr-year-stat-label">Matches</div>
+                </div>
+                <div class="cr-year-stat">
+                  <div class="cr-year-stat-value cr-year-win"><%= s.matches_won || "—" %></div>
+                  <div class="cr-year-stat-label">Won</div>
+                </div>
+                <div class="cr-year-stat">
+                  <div class="cr-year-stat-value cr-year-loss"><%= s.matches_lost || "—" %></div>
+                  <div class="cr-year-stat-label">Lost</div>
+                </div>
+                <div class="cr-year-stat">
+                  <div class="cr-year-stat-value"><%= s.match_wpct ? "#{s.match_wpct}%" : "—" %></div>
+                  <div class="cr-year-stat-label">Win %</div>
+                </div>
+                <% if s.sets_total %>
+                  <div class="cr-year-stat">
+                    <div class="cr-year-stat-value"><%= s.sets_won || "—" %>-<%= s.sets_lost || "—" %></div>
+                    <div class="cr-year-stat-label">Sets (W-L)</div>
+                  </div>
+                <% end %>
+                <% if s.games_total %>
+                  <div class="cr-year-stat">
+                    <div class="cr-year-stat-value"><%= s.games_won || "—" %>-<%= s.games_lost || "—" %></div>
+                    <div class="cr-year-stat-label">Games (W-L)</div>
+                  </div>
+                <% end %>
+                <% if s.defaults && s.defaults > 0 %>
+                  <div class="cr-year-stat">
+                    <div class="cr-year-stat-value"><%= s.defaults %></div>
+                    <div class="cr-year-stat-label">Defaults</div>
+                  </div>
+                <% end %>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      </div>
     </section>
   <% end %>
 
