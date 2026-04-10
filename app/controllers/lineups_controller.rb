@@ -44,6 +44,12 @@ class LineupsController < ApplicationController
       # Publish if requested
       if params[:publish] == "true" && !@lineup.published?
         @lineup.update!(published: true, published_at: Time.current)
+
+        # Email each player in the lineup who has an email
+        @lineup.lineup_slots.includes(:user).each do |slot|
+          next unless slot.user.email.present?
+          LineupMailer.lineup_posted(slot).deliver_later
+        end
       end
     end
 

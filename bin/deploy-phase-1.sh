@@ -143,9 +143,18 @@ fi
 # --------------------------------------------------------------
 step "Step 5/7: Starting new container..."
 
+# Load SMTP credentials if available
+SMTP_USERNAME=""
+SMTP_PASSWORD=""
+if [ -f "/root/.smtp_credentials" ]; then
+  source /root/.smtp_credentials
+fi
+
 docker run -d \
   -p 80:80 \
   -e RAILS_MASTER_KEY="$RAILS_MASTER_KEY" \
+  -e SMTP_USERNAME="$SMTP_USERNAME" \
+  -e SMTP_PASSWORD="$SMTP_PASSWORD" \
   -v /root/storage:/rails/storage \
   --name "$APP_NAME" \
   --restart unless-stopped \

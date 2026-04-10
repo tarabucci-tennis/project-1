@@ -1,0 +1,21 @@
+Hey <%= @player.name.split.first %>!
+
+You're in the lineup! Your captain just posted it and you've been selected to play.
+
+MATCH DETAILS
+=============
+<%= @team.name %> vs. <%= @match.opponent %>
+<%= @match.match_date.strftime("%A, %B %-d, %Y") %>
+<% if @match.match_time.present? %>Time: <%= @match.match_time %>
+<% end %>Location: <%= @match.location %>
+
+YOUR POSITION: <%= @line_label %>
+
+Can you make it? Click one:
+
+  I'm In!    → <%= @confirm_url %>
+  Can't Play → <%= @decline_url %>
+
+—
+Court Report
+http://146.190.112.29

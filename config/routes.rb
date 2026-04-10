@@ -18,6 +18,7 @@ Rails.application.routes.draw do
         patch "results", to: "matches#update_results", as: :results
       end
       resource :lineup, only: [ :edit, :update ] do
+        get "confirm", on: :member
         patch "confirm", on: :member
       end
     end
