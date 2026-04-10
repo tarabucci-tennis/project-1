@@ -48,11 +48,16 @@
 ## Current Status (as of April 10, 2026)
 
 ### What's actually live on the DigitalOcean server at http://146.190.112.29
-- Homepage: "Tara's Sandbox" (dark green + neon yellow theme — **NOT** Court Report branding yet)
-- Auth: email-only login (no password — just look up by email)
-- User management (admin can add/edit/delete users)
-- Player profile page with NTRP rating and match stats table
-- Tennis landing page with Sabalenka quotes
+**Phase 1 is deployed and working (verified by Tara, Session 7):**
+- Court Report branding: black header, white background, gold accents
+- Email-only login (tarabucci@gmail.com)
+- My Teams page with 3-column layout: USTA / Inter-Club / Local Leagues
+- 4 real teams with real rosters (43 users, 16 matches seeded)
+- Click a team → team detail page with hero, stats, schedule, roster
+- Roster shows captain badge, NTRP ratings, highlights "you" for current user
+- Player profile page (click "Tara Bucci" in header) with NTRP rating + match stats
+- Admin user management (Players page)
+- Deploy script: `bash /root/app/bin/deploy-phase-1.sh` (one command on the server)
 
 ### What's on a branch but NOT deployed and NOT tested
 **Branch: `claude/fix-teams-500-error-GPgeR`** contains two features sitting unverified:
@@ -72,10 +77,10 @@
 
 There are currently **two different things** both being called "Court Report":
 
-1. **The Rails app** (this repo) — deployed at http://146.190.112.29. Real backend, real database, can save data. Currently styled as "Tara's Sandbox."
-2. **The tiiny.host mockup** at `courtreport.tiiny.site` — static HTML/CSS built by Tara's husband as a **design example**. Pretty but not functional. `yourcourtreport.com` currently points here.
+1. **The Rails app** (this repo) — deployed at http://146.190.112.29. Real backend, real database, can save data. **Now styled as Court Report** (white/black/gold) with real team data. Phase 1 is LIVE.
+2. **The tiiny.host mockup** at `courtreport.tiiny.site` — static HTML/CSS built by Tara's husband as a **design example**. Pretty but not functional. `yourcourtreport.com` currently still points here.
 
-**The plan:** make #1 look like #2, then point the domain at #1.
+**Status:** #1 now looks like #2 and is functional. Domain switch is the final step (when Tara is ready).
 
 ## Real Team Data
 
@@ -371,7 +376,8 @@ Reconstructed from git log. Tara has built this app over ~6 sessions.
 | 3 | Tennis theme (Sabalenka quote), SVG icons, email-only login, user management | `f321583`, `4538c47`, `935dffe`, `1852951` | User login + management shipped |
 | 4 | Sandbox restructure, permissions, add Jody Staples user | `4de514b`, `62702c4` | Nav reorganized, second user added |
 | 5 | Player profile page with NTRP ratings and match stats | `68589da` | Profile page live |
-| 6 | Teams 500 fix + availability feature (this session) | `d456d37`, `50316cd` | **Code on branch, NOT deployed, NOT verified** |
+| 6 | Teams 500 fix + availability feature | `d456d37`, `50316cd` | Code on branch, untested |
+| 7 | CLAUDE.md overhaul, real team data capture, Phase 1 restyle + deploy | `ec55ae1`–`717881a` | **Phase 1 LIVE and verified by Tara** |
 
 ## Lessons Learned (honest notes from past sessions)
 
