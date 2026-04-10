@@ -2283,6 +2283,17 @@ button.cr-header-pill {
   text-transform: uppercase;
 }
 
+.cr-my-week-line-badge {
+  display: inline-block;
+  padding: 1px 8px;
+  border-radius: 4px;
+  font-size: 0.65rem;
+  font-weight: 800;
+  background: #1a1a1a;
+  color: #c8a415;
+  letter-spacing: 0.3px;
+}
+
 .cr-cal-btn {
   display: inline-flex;
   align-items: center;

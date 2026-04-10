@@ -24,8 +24,16 @@ class TeamsController < ApplicationController
     team_ids = all_teams.map(&:id)
     @upcoming_matches = Match.where(tennis_team_id: team_ids)
                              .where("match_date >= ? AND match_date <= ?", Time.current, 14.days.from_now)
-                             .includes(:tennis_team)
+                             .includes(:tennis_team, lineup: :lineup_slots)
                              .order(match_date: :asc)
+
+    # Build a hash of match_id => line_label for the current user's lineup positions
+    @my_lineup_lines = {}
+    @upcoming_matches.each do |match|
+      next unless match.lineup&.published?
+      slot = match.lineup.lineup_slots.detect { |s| s.user_id == current_user.id }
+      @my_lineup_lines[match.id] = slot.line_label if slot
+    end
   end
 
   def show

@@ -29,6 +29,9 @@
               <% elsif match.notes&.include?("Away") %>
                 <span class="cr-my-week-badge-away">Away</span>
               <% end %>
+              <% if @my_lineup_lines[match.id] %>
+                <span class="cr-my-week-line-badge"><%= @my_lineup_lines[match.id] %></span>
+              <% end %>
             </div>
           </div>
           <a href="<%= google_calendar_url(match) %>"
