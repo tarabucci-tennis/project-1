@@ -9,8 +9,13 @@ export default class extends Controller {
   }
 
   markIn() {
-    // Already "in" — do nothing (prevents accidental unclick)
-    if (this.statusValue === "in") return
+    // Already "in" — unclick (clear response) with confirmation
+    if (this.statusValue === "in") {
+      if (!confirm("Remove your In response?")) return
+      this.statusValue = "no_response"
+      this.save({ status: "no_response" })
+      return
+    }
 
     // Switching from "out" to "in" — confirm first
     if (this.statusValue === "out") {
@@ -22,8 +27,13 @@ export default class extends Controller {
   }
 
   markOut() {
-    // Already "out" — do nothing (prevents accidental unclick)
-    if (this.statusValue === "out") return
+    // Already "out" — unclick (clear response) with confirmation
+    if (this.statusValue === "out") {
+      if (!confirm("Remove your Out response?")) return
+      this.statusValue = "no_response"
+      this.save({ status: "no_response" })
+      return
+    }
 
     // Switching from "in" to "out" — confirm first
     if (this.statusValue === "in") {
