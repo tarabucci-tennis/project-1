@@ -32,12 +32,27 @@ tara.update!(
 # --------------------------------------------------------------
 # Clean out any old team data from previous seeds
 # --------------------------------------------------------------
+# Disable foreign key checks during cleanup so destroy_all works
+ActiveRecord::Base.connection.execute("PRAGMA foreign_keys = OFF")
+
 # Remove old team names that were placeholders before we had real data.
 old_team_names = [ "Quad Squad", "Over Served", "Tri Me", "AGC ACES", "Unmatchables" ]
-TennisTeam.where(name: old_team_names).destroy_all
+TennisTeam.where(name: old_team_names).each do |team|
+  team.matches.each { |m| m.match_lines.each { |l| l.match_line_players.delete_all }; m.match_lines.delete_all; m.availabilities.delete_all }
+  team.matches.delete_all
+  team.team_memberships.delete_all
+  team.destroy
+end
 
 # Remove any old teams owned by Tara so seeds is idempotent
-tara.tennis_teams.destroy_all
+tara.tennis_teams.each do |team|
+  team.matches.each { |m| m.match_lines.each { |l| l.match_line_players.delete_all }; m.match_lines.delete_all; m.availabilities.delete_all }
+  team.matches.delete_all
+  team.team_memberships.delete_all
+  team.destroy
+end
+
+ActiveRecord::Base.connection.execute("PRAGMA foreign_keys = ON")
 
 # --------------------------------------------------------------
 # Team 1: Kiss My Ace (USTA Adult 40+)
