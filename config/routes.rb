@@ -33,7 +33,9 @@ Rails.application.routes.draw do
       end
     end
     get "captain", to: "matches#captain", as: :captain
-    post "add_player", to: "teams#add_player", as: :add_player
+    member do
+      post "add_player", to: "teams#add_player"
+    end
   end
 
   # Availability AJAX endpoint (Phase 2 feature — routes preserved but unused on index page)
