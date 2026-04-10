@@ -8,6 +8,17 @@ class MatchesController < ApplicationController
     @is_captain = @team.captain?(current_user)
   end
 
+  def show
+    @match = @team.matches.find(params[:id])
+    @lineup = @match.lineup
+    @is_captain = @team.captain?(current_user) || current_user.admin?
+    @my_availability = @match.availability_for(current_user)
+
+    if @lineup&.published?
+      @slots = @lineup.lineup_slots.includes(:user).order(position: :asc)
+    end
+  end
+
   def new
     unless @team.captain?(current_user)
       return redirect_to team_matches_path(@team), alert: "Only captains can add matches."
