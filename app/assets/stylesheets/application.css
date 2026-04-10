@@ -1345,6 +1345,335 @@ button.cr-header-pill {
 }
 
 /* ========================================================
+   Enter Results Form
+   ======================================================== */
+
+.cr-results-form { max-width: 720px; }
+
+.cr-result-match-info {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 20px;
+  background: var(--cr-white);
+  border: 1px solid var(--cr-border);
+  border-radius: 10px;
+  margin-bottom: 28px;
+}
+
+.cr-form-section { margin-bottom: 28px; }
+
+.cr-form-section-title {
+  font-size: 1rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--cr-gold);
+  margin-bottom: 12px;
+}
+
+.cr-form-help {
+  font-size: 0.85rem;
+  color: var(--cr-text-muted);
+  margin-bottom: 16px;
+}
+
+/* Win / Loss radio toggle */
+.cr-result-toggle {
+  display: flex;
+  gap: 12px;
+}
+
+.cr-result-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 28px;
+  border: 2px solid var(--cr-border);
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 1.1rem;
+  font-weight: 700;
+  transition: all 0.2s;
+  background: var(--cr-white);
+}
+
+.cr-result-option input[type="radio"] { display: none; }
+
+.cr-result-win:has(input:checked) {
+  border-color: var(--cr-green);
+  background: #f0fdf4;
+  color: var(--cr-green);
+}
+
+.cr-result-loss:has(input:checked) {
+  border-color: var(--cr-red);
+  background: #fef2f2;
+  color: var(--cr-red);
+}
+
+/* Line cards */
+.cr-line-card {
+  background: var(--cr-white);
+  border: 1px solid var(--cr-border);
+  border-radius: 10px;
+  padding: 16px 20px;
+  margin-bottom: 12px;
+}
+
+.cr-line-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.cr-line-label {
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--cr-text);
+}
+
+.cr-line-result-toggle {
+  display: flex;
+  gap: 6px;
+}
+
+.cr-line-result-opt {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: 2px solid var(--cr-border);
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 0.9rem;
+  transition: all 0.2s;
+  background: var(--cr-white);
+}
+
+.cr-line-result-opt input[type="radio"] { display: none; }
+
+.cr-line-win-opt:has(input:checked) {
+  border-color: var(--cr-green);
+  background: #f0fdf4;
+  color: var(--cr-green);
+}
+
+.cr-line-loss-opt:has(input:checked) {
+  border-color: var(--cr-red);
+  background: #fef2f2;
+  color: var(--cr-red);
+}
+
+.cr-line-scores {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.cr-set-input label {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--cr-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
+}
+
+.cr-input-small {
+  width: 72px;
+  padding: 8px 10px;
+  border: 1px solid var(--cr-border);
+  border-radius: 6px;
+  font-size: 0.95rem;
+  text-align: center;
+  background: var(--cr-bg);
+}
+
+.cr-input-small:focus {
+  outline: none;
+  border-color: var(--cr-gold);
+  box-shadow: 0 0 0 2px rgba(201, 162, 74, 0.15);
+}
+
+.cr-line-players { margin-top: 8px; }
+
+.cr-line-players-label {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--cr-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
+}
+
+.cr-select {
+  width: 100%;
+  max-width: 280px;
+  padding: 8px 10px;
+  border: 1px solid var(--cr-border);
+  border-radius: 6px;
+  font-size: 0.9rem;
+  background: var(--cr-white);
+  margin-bottom: 6px;
+}
+
+.cr-select:focus {
+  outline: none;
+  border-color: var(--cr-gold);
+}
+
+.cr-form-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid var(--cr-border);
+}
+
+.cr-btn {
+  display: inline-block;
+  padding: 12px 28px;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s;
+}
+
+.cr-btn-gold {
+  background: var(--cr-gold);
+  color: var(--cr-white);
+}
+
+.cr-btn-gold:hover { background: var(--cr-gold-soft); }
+
+.cr-btn-outline {
+  background: transparent;
+  border: 2px solid var(--cr-border);
+  color: var(--cr-text-muted);
+}
+
+.cr-btn-outline:hover {
+  border-color: var(--cr-text-muted);
+  color: var(--cr-text);
+}
+
+/* Results display on team page */
+.cr-result-badge {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.cr-result-badge-win {
+  background: #f0fdf4;
+  color: var(--cr-green);
+  border: 1px solid #bbf7d0;
+}
+
+.cr-result-badge-loss {
+  background: #fef2f2;
+  color: var(--cr-red);
+  border: 1px solid #fecaca;
+}
+
+.cr-result-score {
+  font-size: 0.85rem;
+  color: var(--cr-text-muted);
+  font-weight: 600;
+}
+
+.cr-match-result-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.cr-enter-results-link {
+  font-size: 0.8rem;
+  color: var(--cr-gold);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.cr-enter-results-link:hover { text-decoration: underline; }
+
+/* ========================================================
+   Standings
+   ======================================================== */
+
+.cr-standings-own {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  background: var(--cr-black);
+  color: var(--cr-white);
+  border-radius: 10px;
+  margin-bottom: 8px;
+}
+
+.cr-standings-own-name {
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.cr-standings-own-record {
+  display: flex;
+  gap: 12px;
+  font-weight: 700;
+}
+
+.cr-standings-wins { color: var(--cr-green); }
+.cr-standings-losses { color: var(--cr-red); }
+.cr-standings-pct { color: var(--cr-gold); }
+
+.cr-standings-table {
+  border: 1px solid var(--cr-border);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.cr-standings-header {
+  padding: 10px 20px;
+  background: var(--cr-bg);
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--cr-text-muted);
+  border-bottom: 1px solid var(--cr-border);
+}
+
+.cr-standings-row {
+  padding: 12px 20px;
+  border-bottom: 1px solid var(--cr-border);
+  font-size: 0.9rem;
+}
+
+.cr-standings-row:last-child { border-bottom: none; }
+
+.cr-section-subtitle {
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--cr-text-muted);
+  margin-bottom: 8px;
+}
+
+/* ========================================================
    Responsive
    ======================================================== */
 

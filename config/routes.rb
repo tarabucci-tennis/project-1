@@ -12,7 +12,12 @@ Rails.application.routes.draw do
 
   # Core app
   resources :teams, only: [ :index, :show ] do
-    resources :matches, only: [ :index, :new, :create ]
+    resources :matches, only: [ :index, :new, :create ] do
+      member do
+        get  "results", to: "matches#edit_results", as: :edit_results
+        patch "results", to: "matches#update_results", as: :results
+      end
+    end
     get "captain", to: "matches#captain", as: :captain
   end
 

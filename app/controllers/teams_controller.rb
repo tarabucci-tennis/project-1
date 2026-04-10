@@ -40,6 +40,9 @@ class TeamsController < ApplicationController
     @past_matches     = @team.matches.where("match_date < ?", Time.current).order(match_date: :desc)
     @player_count     = @team.team_memberships.count
     @is_captain       = @team.captain?(current_user)
+    @wins             = @team.matches.where(result: "win").count
+    @losses           = @team.matches.where(result: "loss").count
+    @division_opponents = @team.matches.pluck(:opponent).compact.uniq.sort
 
     # Load current user's availability for each match
     match_ids = (@upcoming_matches + @past_matches).map(&:id)

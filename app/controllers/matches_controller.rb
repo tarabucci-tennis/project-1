@@ -28,6 +28,62 @@ class MatchesController < ApplicationController
     end
   end
 
+  def edit_results
+    @match = @team.matches.find(params[:id])
+    @members = @team.members.order(:name)
+
+    # Build empty lines if none exist yet (USTA 40+: 1 singles + 4 doubles)
+    if @match.match_lines.empty?
+      build_default_lines(@match)
+    end
+
+    @match_lines = @match.match_lines.includes(:players).order(position: :asc)
+  end
+
+  def update_results
+    @match = @team.matches.find(params[:id])
+
+    ActiveRecord::Base.transaction do
+      # Update overall match result
+      @match.update!(
+        result: params[:match_result],
+        score_summary: params[:score_summary]
+      )
+
+      # Update each line
+      if params[:lines].present?
+        params[:lines].each do |line_id, line_data|
+          line = @match.match_lines.find(line_id)
+          line.update!(
+            result: line_data[:result].presence,
+            set1_score: line_data[:set1_score].presence,
+            set2_score: line_data[:set2_score].presence,
+            set3_score: line_data[:set3_score].presence
+          )
+
+          # Update players on this line
+          line.match_line_players.destroy_all
+          if line_data[:player_ids].present?
+            line_data[:player_ids].reject(&:blank?).each do |player_id|
+              line.match_line_players.create!(user_id: player_id)
+            end
+          end
+        end
+      end
+
+      # Auto-calculate score summary from lines
+      if @match.match_lines.where.not(result: nil).any?
+        won = @match.lines_won
+        lost = @match.lines_lost
+        @match.update!(score_summary: "#{won}-#{lost}")
+      end
+    end
+
+    redirect_to team_path(@team), notice: "Match results saved!"
+  rescue ActiveRecord::RecordInvalid => e
+    redirect_to edit_results_team_match_path(@team, @match), alert: "Error saving results: #{e.message}"
+  end
+
   def captain
     unless @team.captain?(current_user)
       return redirect_to team_matches_path(@team), alert: "Only captains can view this."
@@ -39,6 +95,15 @@ class MatchesController < ApplicationController
   end
 
   private
+
+  def build_default_lines(match)
+    # Default USTA format: 1 singles + 4 doubles
+    MatchLine.create!(match: match, line_type: "singles", position: 1)
+    MatchLine.create!(match: match, line_type: "doubles", position: 2)
+    MatchLine.create!(match: match, line_type: "doubles", position: 3)
+    MatchLine.create!(match: match, line_type: "doubles", position: 4)
+    MatchLine.create!(match: match, line_type: "doubles", position: 5)
+  end
 
   def set_team
     @team = TennisTeam.find_by(id: params[:team_id])

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_08_210000) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_10_200001) do
   create_table "availabilities", force: :cascade do |t|
     t.integer "user_id", null: false
     t.integer "match_id", null: false
@@ -23,6 +23,30 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_08_210000) do
     t.index ["user_id"], name: "index_availabilities_on_user_id"
   end
 
+  create_table "match_line_players", force: :cascade do |t|
+    t.integer "match_line_id", null: false
+    t.integer "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["match_line_id", "user_id"], name: "index_match_line_players_on_match_line_id_and_user_id", unique: true
+    t.index ["match_line_id"], name: "index_match_line_players_on_match_line_id"
+    t.index ["user_id"], name: "index_match_line_players_on_user_id"
+  end
+
+  create_table "match_lines", force: :cascade do |t|
+    t.integer "match_id", null: false
+    t.string "line_type", null: false
+    t.integer "position", null: false
+    t.string "result"
+    t.string "set1_score"
+    t.string "set2_score"
+    t.string "set3_score"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["match_id", "position"], name: "index_match_lines_on_match_id_and_position", unique: true
+    t.index ["match_id"], name: "index_match_lines_on_match_id"
+  end
+
   create_table "matches", force: :cascade do |t|
     t.integer "tennis_team_id", null: false
     t.datetime "match_date", null: false
@@ -31,6 +55,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_08_210000) do
     t.text "notes"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "result"
+    t.string "score_summary"
+    t.string "home_away"
     t.index ["tennis_team_id", "match_date"], name: "index_matches_on_tennis_team_id_and_match_date"
     t.index ["tennis_team_id"], name: "index_matches_on_tennis_team_id"
   end
@@ -115,6 +142,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_08_210000) do
 
   add_foreign_key "availabilities", "matches"
   add_foreign_key "availabilities", "users"
+  add_foreign_key "match_line_players", "match_lines"
+  add_foreign_key "match_line_players", "users"
+  add_foreign_key "match_lines", "matches"
   add_foreign_key "matches", "tennis_teams"
   add_foreign_key "notifications", "matches"
   add_foreign_key "notifications", "tennis_teams"
