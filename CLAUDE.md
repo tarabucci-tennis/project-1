@@ -72,6 +72,23 @@ There are currently **two different things** both being called "Court Report":
 
 ## Real Team Data
 
+### League Structure (the "3 leagues, 4 teams" realization)
+
+**Tara plays in THREE different leagues across FOUR teams:**
+
+| League Category | League/Organizer | Team Name |
+|-----------------|------------------|-----------|
+| **USTA** | USTA Middle States (Philadelphia) | **Kiss My Ace** (Adult 40+) |
+| **USTA** | USTA Middle States (Philadelphia) | **Pour Decisions** (Adult 18+) |
+| **Inter-Club** | Philadelphia country-club league | **Philadelphia Country Club (PCC)** |
+| **Local Leagues** | Del-Tri (Delaware-Tri-State area) | **Legacy 2** |
+
+**This is the core problem Court Report solves.** These three leagues all live in different systems — USTA has TennisLink, Inter-Club has its own country-club scheduling, Del-Tri has its own website. Tara has to check FOUR different places to know her schedule. Court Report puts all four teams in one app.
+
+**The tiiny.host mockup already reflects this structure:** top-level tabs labeled USTA, Inter-Club, Local Leagues, with teams nested inside each league category.
+
+**Data model implication:** The current `tennis_teams` table has no concept of league category. We'll need a `league_category` field (or a separate `leagues` table) so teams group correctly in the UI. This is NOT blocking — we can ship with a simple string field for now.
+
 ### Kiss My Ace (captured from TennisLink, Session 7)
 
 **League & Format:**
@@ -196,9 +213,13 @@ These two teams are effectively **"sister teams"** with heavy roster overlap:
 
 **Design implication:** A player can be on many teams. The data model already supports this via `team_memberships`, but we need to make sure the UI treats "My Teams" as a list of all teams a user belongs to (not just teams they own or captain).
 
-### Legacy 2
+### Philadelphia Country Club (PCC) — Inter-Club
 
-_Details still needed._
+_Details still needed. This is the first "real" team under the Inter-Club league category. Inter-Club is a country club league — may not use TennisLink, so data may have to come from Tara directly (email, team page, spreadsheet)._
+
+### Legacy 2 — Local League (Del-Tri)
+
+_Details still needed. This is the first "real" team under the Local Leagues category. Del-Tri = Delaware-Tri-State local league. **Likely the April 21 "second team first match" but unconfirmed.**_
 
 ### Important notes
 
