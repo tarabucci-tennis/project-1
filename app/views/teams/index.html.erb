@@ -21,9 +21,9 @@
             </div>
             <h2 class="cr-team-card-name"><%= team.name %></h2>
             <div class="cr-team-card-meta">
-              <%= team.team_memberships.count %> players · <%= team.upcoming_matches.count %> upcoming
+              <span><%= team.team_memberships.count %> players · <%= team.upcoming_matches.count %> upcoming</span>
+              <span class="cr-team-card-record">0-0</span>
             </div>
-            <div class="cr-team-card-record">0-0</div>
           <% end %>
         <% end %>
       </div>
