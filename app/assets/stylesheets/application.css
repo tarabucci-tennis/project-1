@@ -32,6 +32,120 @@ body {
 a { color: inherit; text-decoration: none; }
 
 /* ========================================================
+   League sub-nav (tabs with dropdowns below main header)
+   ======================================================== */
+
+.cr-league-nav {
+  background: var(--cr-black);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  position: sticky;
+  top: 76px;
+  z-index: 90;
+}
+
+.cr-league-nav-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+  display: flex;
+  gap: 28px;
+  flex-wrap: wrap;
+}
+
+.cr-league-tab {
+  position: relative;
+}
+
+.cr-league-tab-button {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.55);
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  padding: 14px 4px;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: color 0.15s, border-color 0.15s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.cr-league-tab-button:hover { color: var(--cr-gold); }
+
+.cr-league-tab-caret {
+  font-size: 0.7rem;
+  opacity: 0.7;
+}
+
+/* Open on hover (desktop) OR when Stimulus toggles the class (mobile) */
+.cr-league-tab:hover .cr-league-dropdown,
+.cr-league-tab.cr-league-tab-open .cr-league-dropdown {
+  display: block;
+}
+
+.cr-league-tab:hover .cr-league-tab-button,
+.cr-league-tab.cr-league-tab-open .cr-league-tab-button {
+  color: var(--cr-gold);
+  border-bottom-color: var(--cr-gold);
+}
+
+.cr-league-dropdown {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  min-width: 300px;
+  background: var(--cr-black-soft);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  padding: 8px 0;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5);
+  z-index: 200;
+  margin-top: -1px;
+}
+
+.cr-league-dropdown-item {
+  display: block;
+  padding: 12px 20px;
+  color: var(--cr-white);
+  text-decoration: none;
+  transition: background 0.15s;
+  border-left: 3px solid transparent;
+}
+
+.cr-league-dropdown-item:hover {
+  background: rgba(201, 162, 74, 0.12);
+  border-left-color: var(--cr-gold);
+}
+
+.cr-league-dropdown-name {
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--cr-white);
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.cr-league-dropdown-meta {
+  font-size: 0.74rem;
+  color: rgba(255, 255, 255, 0.45);
+  margin-top: 3px;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+@media (max-width: 720px) {
+  .cr-league-nav { top: 64px; }
+  .cr-league-nav-inner { gap: 16px; padding: 0 16px; }
+  .cr-league-tab-button { font-size: 0.75rem; padding: 12px 4px; }
+  .cr-league-dropdown { min-width: calc(100vw - 32px); left: 0; }
+}
+
+/* ========================================================
    Header (Court Report)
    ======================================================== */
 

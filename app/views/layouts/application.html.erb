@@ -38,6 +38,10 @@
       </div>
     </nav>
 
+    <% if current_user %>
+      <%= render "shared/league_nav" %>
+    <% end %>
+
     <% if notice %>
       <div class="cr-flash cr-flash-notice"><%= notice %></div>
     <% end %>
