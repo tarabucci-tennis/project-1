@@ -125,9 +125,76 @@ There are currently **two different things** both being called "Court Report":
 | Vanessa Halloran | 4.0 |
 | Bridget Hallman | 4.0 |
 
-### Pour Decisions
+### Pour Decisions (captured from TennisLink, Session 7)
 
-_Details still needed. From tiiny.host mockup: USTA, 16 players, 8 upcoming, 0-0._
+**League & Format:**
+- League: **USTA Adult 18 & Over**
+- Flight: **4.0 Women Del-Ches** (Fridays, Sub-Flight 1)
+- Rating: **4.0**
+- Gender: **Women's**
+- Section: **Middle States** (District: Philadelphia)
+- Season: **April 13, 2026 — June 30, 2026**
+
+**Captain:**
+- **Lynn Sundblad** — `vino33@hotmail.com`, 267-253-2323
+- **Tara is a player, not the captain** (same as Kiss My Ace)
+
+**Home court:** Radnor Valley Country Club, 555 Sproul Rd, Villanova PA 19085
+
+**Full schedule (8 matches):**
+
+| Date | Opponent |
+|------|----------|
+| 4/17/2026 | No Drama Mamas |
+| 4/24/2026 | St. Albans |
+| 5/8/2026 | UD Smash Squad |
+| 5/15/2026 | Simply Smashing |
+| 5/29/2026 | Merion Cricket 18+ |
+| 6/5/2026 | Philly Cricket |
+| 6/12/2026 | Quad Squad |
+| 6/19/2026 | Kicking Aces |
+
+**NOTE:** Pour Decisions' first match is **April 17, NOT April 21.** The April 21 deadline Tara mentioned must belong to her **third** team (Legacy 2). Need to confirm.
+
+**Division opponents:**
+Quad Squad (was in old seed data!), UD Smash Squad, Kicking Aces, St. Albans, No Drama Mamas, Simply Smashing, Merion Cricket 18+, Philly Cricket
+
+**Full roster (17 players):**
+
+| Name | NTRP |
+|------|------|
+| Jaclyn Groenen (captain of Kiss My Ace) | 4.0 |
+| **Lynn Sundblad (captain)** | 4.0 |
+| Amanda Neill | 4.0 |
+| Rachel Chadwin | 4.0 |
+| Rebecca Feinberg | 3.5 |
+| Helen Lee | 3.5 |
+| Amanda Neczypor | 3.5 |
+| Kerry McDuffie | 4.0 |
+| Nicole Costelloe | 4.0 |
+| **Tara Bucci** | 4.0 |
+| Olivia Andrews | 4.0 |
+| Kristin Kobell | 3.5 |
+| Christina Faidley | 3.5 |
+| Lisa Tan | 3.5 |
+| Jody Staples | 3.5 |
+| Karli McGill | 4.0 |
+| Leslie Brinkley | 3.5 |
+
+### Observations about Kiss My Ace ↔ Pour Decisions
+
+These two teams are effectively **"sister teams"** with heavy roster overlap:
+
+- **14 of 17 Pour Decisions players also play on Kiss My Ace**
+- **Jaclyn Groenen** captains Kiss My Ace and plays on Pour Decisions
+- **Lynn Sundblad** captains Pour Decisions and plays on Kiss My Ace
+- **Tara plays on both** (as a player, not captain, on either one)
+
+**Small inconsistencies between the two TennisLink rosters:**
+- "Kerry McDuffle" (Kiss My Ace) vs "Kerry McDuffie" (Pour Decisions) — likely the Pour Decisions spelling is correct.
+- Christina Faidley: 4.0 on Kiss My Ace, 3.5 on Pour Decisions (NTRP may display differently by league type).
+
+**Design implication:** A player can be on many teams. The data model already supports this via `team_memberships`, but we need to make sure the UI treats "My Teams" as a list of all teams a user belongs to (not just teams they own or captain).
 
 ### Legacy 2
 
