@@ -1848,6 +1848,217 @@ button.cr-header-pill {
 }
 
 /* ========================================================
+   Lineup Preview (on schedule cards)
+   ======================================================== */
+
+.cr-lineup-preview {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--cr-border);
+}
+
+.cr-lineup-preview-title {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--cr-gold);
+  margin-bottom: 8px;
+}
+
+.cr-lineup-preview-slots {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+
+.cr-lineup-preview-line {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  background: var(--cr-bg);
+  border-radius: 6px;
+  font-size: 0.8rem;
+}
+
+.cr-lineup-preview-line-label {
+  font-weight: 700;
+  color: var(--cr-text-muted);
+  margin-right: 4px;
+  font-size: 0.7rem;
+}
+
+.cr-lineup-preview-player {
+  font-size: 0.8rem;
+}
+
+.cr-lineup-you {
+  font-weight: 700;
+  color: var(--cr-gold);
+}
+
+.cr-lineup-confirmed { color: var(--cr-green); font-weight: 700; }
+.cr-lineup-declined { color: var(--cr-red); font-weight: 700; }
+
+.cr-lineup-confirm-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  background: #fdf8ed;
+  border-radius: 8px;
+  margin-top: 8px;
+}
+
+/* Lineup builder (captain page) */
+.cr-lineup-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.cr-lineup-line-card {
+  background: var(--cr-white);
+  border: 1px solid var(--cr-border);
+  border-radius: 10px;
+  padding: 16px 20px;
+}
+
+.cr-lineup-line-label {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--cr-text);
+  margin-bottom: 10px;
+}
+
+/* ========================================================
+   My Week (upcoming matches on home page)
+   ======================================================== */
+
+.cr-my-week {
+  margin-bottom: 32px;
+}
+
+.cr-my-week-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--cr-text);
+  margin-bottom: 12px;
+  letter-spacing: 0.5px;
+}
+
+.cr-my-week-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.cr-my-week-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 20px;
+  background: var(--cr-white);
+  border: 1px solid var(--cr-border);
+  border-radius: 10px;
+  text-decoration: none;
+  color: inherit;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.cr-my-week-card:hover {
+  border-color: var(--cr-gold);
+  box-shadow: 0 2px 8px rgba(201, 162, 74, 0.1);
+}
+
+.cr-my-week-date {
+  text-align: center;
+  min-width: 52px;
+  flex-shrink: 0;
+}
+
+.cr-my-week-day-name {
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: var(--cr-gold);
+  letter-spacing: 1px;
+}
+
+.cr-my-week-month {
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: var(--cr-text-muted);
+  letter-spacing: 0.5px;
+}
+
+.cr-my-week-day {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: var(--cr-text);
+  line-height: 1.1;
+}
+
+.cr-my-week-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.cr-my-week-team {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--cr-text);
+}
+
+.cr-my-week-opponent {
+  font-size: 0.85rem;
+  color: var(--cr-text-muted);
+}
+
+.cr-my-week-detail {
+  font-size: 0.75rem;
+  color: var(--cr-text-light);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 2px;
+}
+
+.cr-my-week-badge-home {
+  display: inline-block;
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-size: 0.65rem;
+  font-weight: 700;
+  background: #eff6ff;
+  color: #2563eb;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.cr-my-week-badge-away {
+  display: inline-block;
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-size: 0.65rem;
+  font-weight: 700;
+  background: var(--cr-bg);
+  color: var(--cr-text-muted);
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.cr-my-week-league {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--cr-text-light);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  flex-shrink: 0;
+}
+
+/* ========================================================
    Responsive
    ======================================================== */
 

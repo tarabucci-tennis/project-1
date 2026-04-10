@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_10_200002) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_10_200004) do
   create_table "availabilities", force: :cascade do |t|
     t.integer "user_id", null: false
     t.integer "match_id", null: false
@@ -21,6 +21,29 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_10_200002) do
     t.index ["match_id"], name: "index_availabilities_on_match_id"
     t.index ["user_id", "match_id"], name: "index_availabilities_on_user_id_and_match_id", unique: true
     t.index ["user_id"], name: "index_availabilities_on_user_id"
+  end
+
+  create_table "lineup_slots", force: :cascade do |t|
+    t.integer "lineup_id", null: false
+    t.integer "user_id", null: false
+    t.string "line_type", null: false
+    t.integer "position", null: false
+    t.string "confirmation", default: "pending", null: false
+    t.datetime "confirmed_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["lineup_id", "user_id"], name: "index_lineup_slots_on_lineup_id_and_user_id", unique: true
+    t.index ["lineup_id"], name: "index_lineup_slots_on_lineup_id"
+    t.index ["user_id"], name: "index_lineup_slots_on_user_id"
+  end
+
+  create_table "lineups", force: :cascade do |t|
+    t.integer "match_id", null: false
+    t.boolean "published", default: false, null: false
+    t.datetime "published_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["match_id"], name: "index_lineups_on_match_id", unique: true
   end
 
   create_table "division_teams", force: :cascade do |t|
@@ -70,6 +93,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_10_200002) do
     t.string "result"
     t.string "score_summary"
     t.string "home_away"
+    t.string "match_time"
     t.index ["tennis_team_id", "match_date"], name: "index_matches_on_tennis_team_id_and_match_date"
     t.index ["tennis_team_id"], name: "index_matches_on_tennis_team_id"
   end
@@ -152,6 +176,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_10_200002) do
     t.index ["email"], name: "index_users_on_email", unique: true
   end
 
+  add_foreign_key "lineup_slots", "lineups"
+  add_foreign_key "lineup_slots", "users"
+  add_foreign_key "lineups", "matches"
   add_foreign_key "division_teams", "tennis_teams"
   add_foreign_key "availabilities", "matches"
   add_foreign_key "availabilities", "users"

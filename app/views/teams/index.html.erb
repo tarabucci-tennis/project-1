@@ -1,5 +1,44 @@
 <% content_for :title, "My Teams · Court Report" %>
 
+<%# ── Upcoming Matches (My Week) ────────────────────── %>
+<% if @upcoming_matches.present? && @upcoming_matches.any? %>
+  <div class="cr-my-week">
+    <h2 class="cr-my-week-title">Coming Up</h2>
+    <div class="cr-my-week-list">
+      <% @upcoming_matches.each do |match| %>
+        <% team = match.tennis_team %>
+        <%= link_to team_path(team), class: "cr-my-week-card" do %>
+          <div class="cr-my-week-date">
+            <div class="cr-my-week-day-name"><%= match.match_date.strftime("%a").upcase %></div>
+            <div class="cr-my-week-month"><%= match.match_date.strftime("%b").upcase %></div>
+            <div class="cr-my-week-day"><%= match.match_date.strftime("%-d") %></div>
+          </div>
+          <div class="cr-my-week-info">
+            <div class="cr-my-week-team"><%= team.name %></div>
+            <div class="cr-my-week-opponent">vs. <%= match.opponent %></div>
+            <div class="cr-my-week-detail">
+              <% if match.match_time.present? %>
+                <span style="font-weight: 600; color: var(--cr-text);"><%= match.match_time %></span>
+              <% end %>
+              <% if match.location.present? %>
+                <span><%= match.location.split(",").first %></span>
+              <% end %>
+              <% if match.notes&.include?("Home") || match.location&.include?(team.home_court.to_s.split(",").first.to_s) %>
+                <span class="cr-my-week-badge-home">Home</span>
+              <% elsif match.notes&.include?("Away") %>
+                <span class="cr-my-week-badge-away">Away</span>
+              <% end %>
+            </div>
+          </div>
+          <div class="cr-my-week-league">
+            <%= team.league_category == "Local" ? "Del-Tri" : team.league_category %>
+          </div>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+<% end %>
+
 <div class="cr-page-header">
   <h1 class="cr-page-title">My Teams</h1>
 </div>

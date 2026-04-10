@@ -17,6 +17,9 @@ Rails.application.routes.draw do
         get  "results", to: "matches#edit_results", as: :edit_results
         patch "results", to: "matches#update_results", as: :results
       end
+      resource :lineup, only: [ :edit, :update ] do
+        patch "confirm", on: :member
+      end
     end
     get "captain", to: "matches#captain", as: :captain
   end

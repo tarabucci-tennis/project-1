@@ -60,6 +60,14 @@ if all_cleanup_ids.any?
     conn.execute("DELETE FROM match_lines WHERE match_id IN (#{mids})")
     conn.execute("DELETE FROM availabilities WHERE match_id IN (#{mids})")
     conn.execute("DELETE FROM notifications WHERE match_id IN (#{mids})")
+
+    # Clean up lineups
+    lineup_ids = conn.select_values("SELECT id FROM lineups WHERE match_id IN (#{mids})") rescue []
+    if lineup_ids.any?
+      luids = lineup_ids.join(",")
+      conn.execute("DELETE FROM lineup_slots WHERE lineup_id IN (#{luids})")
+    end
+    conn.execute("DELETE FROM lineups WHERE match_id IN (#{mids})") rescue nil
   end
 
   conn.execute("DELETE FROM matches WHERE tennis_team_id IN (#{ids})")
@@ -134,9 +142,12 @@ kma_schedule = [
 ]
 
 kma_schedule.each do |date, opp|
-  kiss_my_ace.matches.find_or_create_by!(match_date: Time.zone.local(date.year, date.month, date.day, 19, 0)) do |m|
+  kiss_my_ace.matches.find_or_create_by!(match_date: Time.zone.local(date.year, date.month, date.day, 10, 30)) do |m|
     m.opponent = opp
     m.location = "Bryn Mawr Racquet Club"
+    m.match_time = "10:30 AM"
+    m.home_away = (opp == "Kinetix Deuces Wild" && date == Date.new(2026, 4, 14)) ? "home" : "away"
+    m.notes = (m.home_away == "home") ? "Home" : "Away"
   end
 end
 
@@ -265,6 +276,8 @@ pcc_schedule.each do |date, opp, home_away|
     m.opponent = opp
     m.location = home_away == "home" ? "Philadelphia Country Club" : "Away"
     m.notes    = home_away == "home" ? "Home match" : "Away match"
+    m.match_time = "10:00 AM"
+    m.home_away = home_away
   end
 end
 

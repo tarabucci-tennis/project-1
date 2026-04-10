@@ -3,6 +3,7 @@ class Match < ApplicationRecord
   has_many :availabilities, dependent: :destroy
   has_many :match_lines, -> { order(position: :asc) }, dependent: :destroy
   has_many :match_line_players, through: :match_lines
+  has_one :lineup, dependent: :destroy
 
   validates :match_date, presence: true
 

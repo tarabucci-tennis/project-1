@@ -19,10 +19,17 @@ class TeamsController < ApplicationController
         "Local"       => owned.select { |t| t.league_category == "Local" }
       }
     end
+
+    # My upcoming matches across all teams (next 14 days)
+    team_ids = all_teams.map(&:id)
+    @upcoming_matches = Match.where(tennis_team_id: team_ids)
+                             .where("match_date >= ? AND match_date <= ?", Time.current, 14.days.from_now)
+                             .includes(:tennis_team)
+                             .order(match_date: :asc)
   end
 
   def show
-    @team = TennisTeam.includes(team_memberships: :user, matches: {}).find_by(id: params[:id])
+    @team = TennisTeam.includes(team_memberships: :user, matches: :lineup).find_by(id: params[:id])
 
     unless @team
       redirect_to teams_path, alert: "Team not found."

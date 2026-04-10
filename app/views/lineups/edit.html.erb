@@ -1,0 +1,70 @@
+<% content_for :title, "Set Lineup · #{@team.name} · Court Report" %>
+
+<div class="cr-page">
+  <%= link_to "← #{@team.name}", team_path(@team), class: "cr-back-link" %>
+
+  <h1 class="cr-page-title">Set Lineup</h1>
+
+  <div class="cr-result-match-info" style="margin-bottom: 24px;">
+    <div class="cr-match-date">
+      <div class="cr-match-date-month"><%= @match.match_date.strftime("%b").upcase %></div>
+      <div class="cr-match-date-day"><%= @match.match_date.strftime("%-d") %></div>
+    </div>
+    <div class="cr-match-info">
+      <div class="cr-match-opponent">vs. <%= @match.opponent %></div>
+      <div class="cr-match-location">
+        <%= @match.location %>
+        <% if @match.match_time.present? %>
+          · <%= @match.match_time %>
+        <% end %>
+      </div>
+    </div>
+    <% counts = @match.availability_counts %>
+    <div style="text-align: right; font-size: 0.8rem; color: var(--cr-text-muted);">
+      <span style="color: var(--cr-green); font-weight: 700;"><%= counts[:in] %> In</span> ·
+      <span style="color: var(--cr-red); font-weight: 700;"><%= counts[:out] %> Out</span> ·
+      <span><%= counts[:no_response] %> ?</span>
+    </div>
+  </div>
+
+  <%= form_tag team_match_lineup_path(@team, @match), method: :patch do %>
+
+    <div class="cr-lineup-grid">
+      <%# Singles line %>
+      <div class="cr-lineup-line-card">
+        <div class="cr-lineup-line-label">1S — Singles</div>
+        <% singles_slot = @slots.find { |s| s.line_type == "singles" && s.position == 1 } %>
+        <% if singles_slot %>
+          <select name="slots[<%= singles_slot.id %>][user_id]" class="cr-select" style="max-width: 100%;">
+            <option value="">-- Select player --</option>
+            <% @members.each do |m| %>
+              <option value="<%= m.id %>" <%= "selected" if singles_slot.user_id == m.id %>><%= m.name %></option>
+            <% end %>
+          </select>
+        <% end %>
+      </div>
+
+      <%# Doubles lines %>
+      <% (1..4).each do |d| %>
+        <div class="cr-lineup-line-card">
+          <div class="cr-lineup-line-label"><%= d %>D — Doubles <%= d %></div>
+          <% doubles_slots = @slots.select { |s| s.line_type == "doubles" && s.position == d } %>
+          <% doubles_slots.each_with_index do |slot, i| %>
+            <select name="slots[<%= slot.id %>][user_id]" class="cr-select" style="max-width: 100%;">
+              <option value="">-- Select player <%= i + 1 %> --</option>
+              <% @members.each do |m| %>
+                <option value="<%= m.id %>" <%= "selected" if slot.user_id == m.id %>><%= m.name %></option>
+              <% end %>
+            </select>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+
+    <div class="cr-form-actions" style="margin-top: 24px;">
+      <%= submit_tag "Save Draft", class: "cr-btn cr-btn-outline", name: "publish", value: "false" %>
+      <%= submit_tag "Send to Team", class: "cr-btn cr-btn-gold", name: "publish", value: "true" %>
+      <%= link_to "Cancel", team_path(@team), class: "cr-btn cr-btn-outline" %>
+    </div>
+  <% end %>
+</div>
