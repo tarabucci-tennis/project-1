@@ -9,8 +9,99 @@
 **Background jobs:** Solid Queue (running inside Puma via `SOLID_QUEUE_IN_PUMA`)
 **WebSockets:** Solid Cable
 **JavaScript:** Import Maps + Stimulus + Turbo (Hotwire)
+**CSS:** Custom (no framework — tennis court-inspired dark green theme)
 **Web server:** Puma via Thruster (handles HTTP compression/caching)
 **Containerization:** Docker (multi-stage build, production-optimized)
+
+## App Features
+
+### Pages & Routes
+
+| Route | Controller | Description |
+|-------|-----------|-------------|
+| `GET /` | `pages#home` | Tara's Sandbox landing page with app cards (admins only — non-admins redirect to `/tennis`) |
+| `GET /tennis` | `pages#tennis` | Tennis hub with court-line design, random Sabalenka quote, feature cards (Leagues, Scores, Friends) |
+| `GET /profile` | `profiles#show` | Player profile: NTRP rating with visual meter, dynamic rating, recent teams table, match history by year |
+| `GET /login` | `sessions#new` | Email-only login form |
+| `POST /session` | `sessions#create` | Authenticate by email (no password) |
+| `DELETE /session` | `sessions#destroy` | Sign out |
+| `GET /users` | `users#index` | Admin: player management panel |
+| `POST /users` | `users#create` | Admin: add new player |
+| `GET /users/:id/edit` | `users#edit` | Admin: edit player details |
+| `PATCH /users/:id` | `users#update` | Admin: update player |
+| `DELETE /users/:id` | `users#destroy` | Admin: remove player |
+| `GET /up` | `rails/health#show` | Health check |
+
+### Authentication & Authorization
+
+- **Email-only login** — no passwords, session-based via `session[:user_id]`
+- `current_user` helper in `ApplicationController`
+- Unauthenticated users redirect to `/login` from `/` and `/tennis`
+- **Admin role:** `admin` boolean on User model
+  - Admins see full sandbox homepage, "Players" link, "Project 2" placeholder in nav
+  - Non-admins redirect from `/` to `/tennis` — can only see tennis pages
+- Admin-only routes protected by `require_admin` before_action
+
+### Models
+
+**User** — `name` (required), `email` (unique, optional), `admin` (boolean), `location`, `ntrp_rating`, `ntrp_rating_date`, `dynamic_rating`, `dynamic_rating_date`
+- `has_many :tennis_teams, dependent: :destroy`
+- `has_many :tennis_stats, dependent: :destroy`
+
+**TennisTeam** — `name`, `team_type`, `section`, `gender`, `rating`, `start_date`
+- `belongs_to :user`
+
+**TennisStat** — `year`, `matches_total/won/lost`, `sets_total/won/lost`, `games_total/won/lost`, `defaults`
+- `belongs_to :user`
+- Methods: `match_wpct`, `set_wpct`, `game_wpct`
+- Scope: `chronological` (orders by year DESC)
+
+### Seed Data
+
+- **Tara Bucci** — admin, 4.0 NTRP, dynamic 3.94, 5 teams, stats for 2026/2025/2024
+- **Jody Staples** — non-admin, no email yet
+
+### Navigation
+
+- **Left:** "Tara's Sandbox" brand (clickable for admins, static for non-admins)
+- **Center:** "Tennis" link, "Project 2" placeholder (admin-only, greyed out)
+- **Right:** "Players" (admin-only), user name (links to profile), Sign Out
+
+### Visual Design
+
+- Dark green background (`#1a472a`) — tennis court-inspired
+- Yellow accent (`#ccff00`) for highlights
+- Animated bouncing tennis ball on tennis page
+- 10 rotating Sabalenka quotes (random server-side)
+- SVG icons on feature cards (trophy, bar chart, people)
+- Responsive design, custom CSS (no Tailwind/Bootstrap)
+
+## CI/CD
+
+### GitHub Actions — CI (`.github/workflows/ci.yml`)
+
+Runs on PR and push to `main`:
+- **scan_ruby:** Brakeman security scan + bundler-audit
+- **scan_js:** `bin/importmap audit`
+- **lint:** RuboCop
+- **test:** `bin/rails test`
+- **system-test:** Capybara with Chrome (uploads failed screenshots)
+
+### GitHub Actions — Deploy (`.github/workflows/deploy.yml`)
+
+Triggers on push to `main` or `claude/**` branches (auto-deploy, no PR needed):
+1. SSH into droplet via `appleboy/ssh-action@v1.0.3`
+2. Clone repo if not present at `/root/app`
+3. Fetch latest, checkout branch, reset to remote
+4. `docker build -t project-1 .`
+5. Stop/remove old container, start new one (port 80, volume mount, RAILS_MASTER_KEY)
+6. Wait 5s, then `docker exec project-1 bin/rails db:migrate db:seed`
+
+**GitHub Secrets required:** `DEPLOY_HOST`, `DEPLOY_SSH_KEY`, `RAILS_MASTER_KEY`
+
+### Dependabot
+
+Weekly updates for bundler and GitHub Actions (max 10 open PRs each).
 
 ## DigitalOcean
 
@@ -43,17 +134,18 @@ The app is deployed via Docker on a DigitalOcean Droplet. On first boot, a cloud
 
 SQLite databases are persisted via a Docker volume mounted at `/root/storage` on the host.
 
-### Re-deploying
+### Re-deploying (Manual)
 
-To redeploy after pushing new code, SSH into the droplet and run:
+To redeploy manually, SSH into the droplet and run:
 ```bash
 cd /root/app && git pull && docker build -t project-1 . && docker stop project-1 && docker rm project-1 && docker run -d -p 80:80 -e RAILS_MASTER_KEY=<key> -v /root/storage:/rails/storage --name project-1 --restart unless-stopped project-1
 ```
 
+Note: Pushing to `main` or any `claude/**` branch auto-deploys via GitHub Actions.
+
 ## GitHub
 
 Repo: `tarabucci-tennis/project-1` (public)
-Branch: `claude/setup-planning-4PTsK`
 
 ## Learnings
 
