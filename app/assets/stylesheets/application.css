@@ -1669,13 +1669,13 @@ button.cr-header-pill {
 .cr-standings-row:last-child { border-bottom: none; }
 
 .cr-standings-row-self {
-  background: var(--cr-black);
-  color: var(--cr-white);
+  background: #fdf8ed;
+  border-left: 3px solid var(--cr-gold);
   font-weight: 700;
 }
 
-.cr-standings-row-self .cr-standings-wins { color: #4ade80; }
-.cr-standings-row-self .cr-standings-losses { color: #f87171; }
+.cr-standings-row-self .cr-standings-wins { color: var(--cr-green); }
+.cr-standings-row-self .cr-standings-losses { color: var(--cr-red); }
 
 .cr-standings-rank-col {
   width: 32px;
@@ -1684,7 +1684,7 @@ button.cr-header-pill {
   color: var(--cr-text-muted);
 }
 
-.cr-standings-row-self .cr-standings-rank-col { color: var(--cr-gold); }
+.cr-standings-row-self .cr-standings-rank-col { color: var(--cr-gold); font-weight: 700; }
 
 .cr-standings-team-col {
   flex: 1;
