@@ -3,6 +3,16 @@
  * White background / black header / gold accents
  */
 
+@keyframes cr-bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+.cr-bounce {
+  display: inline-block;
+  animation: cr-bounce 1.8s ease-in-out infinite;
+}
+
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
