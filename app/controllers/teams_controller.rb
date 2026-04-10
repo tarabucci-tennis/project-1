@@ -59,9 +59,12 @@ class TeamsController < ApplicationController
     end
     @standings.sort_by! { |s| [-s[:wins], s[:losses], s[:name]] }
 
+    # Player stats (visible to everyone on the Player Stats tab)
+    @player_stats_data = build_player_analytics
+
     # Captain analytics (only computed for captains)
     if @is_captain
-      @player_analytics = build_player_analytics
+      @player_analytics = @player_stats_data
       @doubles_pairings = build_doubles_pairings
     end
 

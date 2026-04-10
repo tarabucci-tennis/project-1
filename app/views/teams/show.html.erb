@@ -78,6 +78,7 @@
       <button class="cr-subtab cr-subtab-active" data-team-tabs-target="tab" data-action="click->team-tabs#switch">📅 Schedule</button>
       <button class="cr-subtab" data-team-tabs-target="tab" data-action="click->team-tabs#switch">✋ Availability</button>
       <button class="cr-subtab" data-team-tabs-target="tab" data-action="click->team-tabs#switch">👥 Roster</button>
+      <button class="cr-subtab" data-team-tabs-target="tab" data-action="click->team-tabs#switch">📊 Player Stats</button>
       <button class="cr-subtab" data-team-tabs-target="tab" data-action="click->team-tabs#switch">🏆 Standings</button>
       <% if @is_captain %>
         <button class="cr-subtab" data-team-tabs-target="tab" data-action="click->team-tabs#switch">👑 Captain</button>
@@ -304,7 +305,72 @@
       </section>
     </div>
 
-    <%# ── Tab 3: Standings ───────────────────────────── %>
+    <%# ── Tab 4: Player Stats ──────────────────────────── %>
+    <div data-team-tabs-target="panel" style="display: none;">
+      <section class="cr-section">
+        <h2 class="cr-section-title">Player Stats</h2>
+
+        <% if @player_stats_data.present? && @player_stats_data.any? %>
+          <%# Stats grid like your captain's spreadsheet %>
+          <div class="cr-captain-analytics-table">
+            <div class="cr-captain-analytics-header">
+              <span class="cr-captain-col-name">Player</span>
+              <span class="cr-captain-col-stat">Played</span>
+              <span class="cr-captain-col-stat">W</span>
+              <span class="cr-captain-col-stat">L</span>
+              <span class="cr-captain-col-stat">Win%</span>
+              <span class="cr-captain-col-stat">S%</span>
+              <span class="cr-captain-col-stat">D%</span>
+              <span class="cr-captain-col-stat">Line</span>
+            </div>
+            <% @player_stats_data.each do |ps| %>
+              <div class="cr-captain-analytics-row">
+                <span class="cr-captain-col-name">
+                  <%= link_to ps[:name], player_path(ps[:user_id]), style: "text-decoration: none; color: inherit; font-weight: 600;" %>
+                  <% if ps[:user_id] == current_user.id %>
+                    <span style="color: var(--cr-gold); font-size: 0.75rem;">(you)</span>
+                  <% end %>
+                </span>
+                <span class="cr-captain-col-stat"><%= ps[:matches_played] %></span>
+                <span class="cr-captain-col-stat" style="color: var(--cr-green);"><%= ps[:wins] %></span>
+                <span class="cr-captain-col-stat" style="color: var(--cr-red);"><%= ps[:losses] %></span>
+                <span class="cr-captain-col-stat" style="font-weight: 700;"><%= ps[:win_pct] %>%</span>
+                <span class="cr-captain-col-stat"><%= ps[:singles_pct] %>%</span>
+                <span class="cr-captain-col-stat"><%= ps[:doubles_pct] %>%</span>
+                <span class="cr-captain-col-stat"><%= ps[:most_common_line] || "—" %></span>
+              </div>
+            <% end %>
+          </div>
+
+          <p style="font-size: 0.8rem; color: var(--cr-text-muted); margin-top: 12px;">
+            S% = singles percentage · D% = doubles percentage · Line = most played line
+            <br>Click a player's name to see their full stats, doubles partner win %, and recent matches.
+          </p>
+        <% else %>
+          <div class="cr-coming-soon-card">
+            <div class="cr-coming-soon-icon">📊</div>
+            <h3 class="cr-coming-soon-title">Player Stats — Coming Soon</h3>
+            <p class="cr-coming-soon-text">
+              After each match, your captain enters who played on which line and the scores.
+              Court Report will automatically track:
+            </p>
+            <div class="cr-coming-soon-list">
+              <div class="cr-coming-soon-item">Overall Win %</div>
+              <div class="cr-coming-soon-item">Singles vs. Doubles %</div>
+              <div class="cr-coming-soon-item">Win % by Line (1S, 1D, 2D, 3D, 4D)</div>
+              <div class="cr-coming-soon-item">Doubles Partner Win %</div>
+              <div class="cr-coming-soon-item">Matches Played per Player</div>
+              <div class="cr-coming-soon-item">Recent Match Results</div>
+            </div>
+            <p class="cr-coming-soon-text" style="margin-top: 16px;">
+              Stats will appear here after your first match results are entered.
+            </p>
+          </div>
+        <% end %>
+      </section>
+    </div>
+
+    <%# ── Tab 5: Standings ───────────────────────────── %>
     <div data-team-tabs-target="panel" style="display: none;">
       <section class="cr-section">
         <h2 class="cr-section-title">

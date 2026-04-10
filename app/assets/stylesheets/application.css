@@ -1848,6 +1848,61 @@ button.cr-header-pill {
 }
 
 /* ========================================================
+   Coming Soon Card
+   ======================================================== */
+
+.cr-coming-soon-card {
+  background: var(--cr-white);
+  border: 1px solid var(--cr-border);
+  border-radius: 12px;
+  padding: 40px 32px;
+  text-align: center;
+  max-width: 520px;
+  margin: 0 auto;
+}
+
+.cr-coming-soon-icon { font-size: 2.5rem; margin-bottom: 12px; }
+
+.cr-coming-soon-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--cr-text);
+  margin-bottom: 12px;
+}
+
+.cr-coming-soon-text {
+  font-size: 0.85rem;
+  color: var(--cr-text-muted);
+  line-height: 1.5;
+}
+
+.cr-coming-soon-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 16px;
+  text-align: left;
+  max-width: 320px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.cr-coming-soon-item {
+  font-size: 0.85rem;
+  color: var(--cr-text);
+  padding: 6px 12px;
+  background: var(--cr-bg);
+  border-radius: 6px;
+  font-weight: 500;
+}
+
+.cr-coming-soon-item::before {
+  content: "✓ ";
+  color: var(--cr-gold);
+  font-weight: 700;
+}
+
+/* ========================================================
    Playing Stats (player profile)
    ======================================================== */
 
