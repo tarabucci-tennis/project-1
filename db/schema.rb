@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_08_200003) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_08_210000) do
   create_table "availabilities", force: :cascade do |t|
     t.integer "user_id", null: false
     t.integer "match_id", null: false
@@ -92,6 +92,10 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_08_200003) do
     t.string "team_type"
     t.datetime "updated_at", null: false
     t.integer "user_id", null: false
+    t.string "league_category", default: "USTA", null: false
+    t.string "home_court"
+    t.string "season_name"
+    t.index ["league_category"], name: "index_tennis_teams_on_league_category"
     t.index ["user_id"], name: "index_tennis_teams_on_user_id"
   end
 

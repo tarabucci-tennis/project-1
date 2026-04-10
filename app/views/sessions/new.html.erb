@@ -1,15 +1,12 @@
-<div class="auth-page">
-  <div class="auth-card">
-    <div class="auth-logo">🎾</div>
-    <h1>Sign In</h1>
-    <p class="auth-sub">Enter your email to continue</p>
+<% content_for :title, "Sign In · Court Report" %>
 
-    <% if alert %>
-      <div class="flash flash-alert"><%= alert %></div>
-    <% end %>
+<div class="cr-login-page">
+  <div class="cr-login-card">
+    <h1>Sign In</h1>
+    <p class="cr-login-sub">Enter your email to continue</p>
 
     <%= form_with url: session_path, method: :post do |f| %>
-      <div class="field">
+      <div class="cr-field">
         <%= f.label :email, "Email address" %>
         <%= f.email_field :email, placeholder: "you@example.com", autofocus: true %>
       </div>

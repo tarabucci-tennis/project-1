@@ -1,32 +1,36 @@
-<% content_for :title, "My Teams" %>
+<% content_for :title, "My Teams · Court Report" %>
 
-<div class="teams-page">
-  <div class="teams-header">
-    <h1>My Teams</h1>
-  </div>
-
-  <% if @teams.any? %>
-    <div class="team-cards">
-      <% @teams.each do |team| %>
-        <%= link_to team_path(team), class: "team-card" do %>
-          <div class="team-card-rating"><%= team.rating %></div>
-          <h2 class="team-card-name"><%= team.name %></h2>
-          <div class="team-card-details">
-            <span><%= team.team_type %></span>
-            <span class="team-card-dot">&middot;</span>
-            <span><%= team.gender == "F" ? "Women's" : "Men's" %></span>
-          </div>
-          <div class="team-card-meta">
-            <span><%= team.section %></span>
-            <span class="team-card-dot">&middot;</span>
-            <span>Started <%= team.start_date.strftime("%-m/%-d/%Y") %></span>
-          </div>
-        <% end %>
-      <% end %>
-    </div>
-  <% else %>
-    <div class="teams-empty">
-      <p>You haven't joined any teams yet.</p>
-    </div>
-  <% end %>
+<div class="cr-page-header">
+  <h1 class="cr-page-title">My Teams</h1>
 </div>
+
+<% any_teams = @teams_by_league.values.flatten.any? %>
+
+<% if any_teams %>
+  <% @teams_by_league.each do |league_key, teams| %>
+    <% next if teams.empty? %>
+    <section class="cr-league-section">
+      <div class="cr-league-label">
+        <%= league_key == "Local" ? "Local Leagues" : league_key %>
+      </div>
+      <div class="cr-team-cards">
+        <% teams.each do |team| %>
+          <%= link_to team_path(team), class: "cr-team-card" do %>
+            <div class="cr-team-card-league">
+              <%= team.league_category == "Local" ? "Del-Tri" : team.league_category %>
+            </div>
+            <h2 class="cr-team-card-name"><%= team.name %></h2>
+            <div class="cr-team-card-meta">
+              <%= team.team_memberships.count %> players · <%= team.upcoming_matches.count %> upcoming
+            </div>
+            <div class="cr-team-card-record">0-0</div>
+          <% end %>
+        <% end %>
+      </div>
+    </section>
+  <% end %>
+<% else %>
+  <div class="cr-empty">
+    <p>You haven't joined any teams yet.</p>
+  </div>
+<% end %>

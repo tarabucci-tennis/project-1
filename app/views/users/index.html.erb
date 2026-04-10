@@ -1,10 +1,12 @@
-<div class="admin-page">
-  <div class="admin-header">
-    <h1>Players</h1>
-    <%= link_to "+ Add Player", new_user_path, class: "btn" %>
+<% content_for :title, "Players · Court Report" %>
+
+<div class="cr-admin-page">
+  <div class="cr-page-header">
+    <h1 class="cr-page-title">Players</h1>
+    <%= link_to "+ Add Player", new_user_path, class: "cr-btn" %>
   </div>
 
-  <table class="users-table">
+  <table class="cr-table">
     <thead>
       <tr>
         <th>Name</th>
@@ -17,12 +19,22 @@
       <% @users.each do |user| %>
         <tr>
           <td><%= user.name %></td>
-          <td><%= user.email.presence || %(<span class="no-email">no email yet</span>).html_safe %></td>
-          <td><span class="badge <%= user.admin? ? 'badge-admin' : 'badge-player' %>"><%= user.admin? ? "Admin" : "Player" %></span></td>
-          <td class="row-actions">
-            <%= link_to "Edit", edit_user_path(user), class: "btn btn-secondary btn-sm" %>
+          <td>
+            <% if user.email.present? %>
+              <%= user.email %>
+            <% else %>
+              <span style="color: #9ca3af; font-style: italic;">no email yet</span>
+            <% end %>
+          </td>
+          <td>
+            <span class="cr-badge <%= user.admin? ? 'cr-badge-admin' : 'cr-badge-player' %>">
+              <%= user.admin? ? "Admin" : "Player" %>
+            </span>
+          </td>
+          <td>
+            <%= link_to "Edit", edit_user_path(user), class: "cr-btn cr-btn-secondary cr-btn-sm" %>
             <% unless user == current_user %>
-              <%= button_to "Remove", user_path(user), method: :delete, data: { turbo_confirm: "Remove #{user.name}?" }, class: "btn btn-danger btn-sm" %>
+              <%= button_to "Remove", user_path(user), method: :delete, data: { turbo_confirm: "Remove #{user.name}?" }, class: "cr-btn cr-btn-sm", form: { style: "display:inline" } %>
             <% end %>
           </td>
         </tr>

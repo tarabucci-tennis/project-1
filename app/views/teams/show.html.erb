@@ -1,45 +1,134 @@
-<% content_for :title, "#{@team.name} · Team" %>
+<% content_for :title, "#{@team.name} · Court Report" %>
 
-<div class="team-show-page">
-  <div class="team-show-back">
-    <%= link_to "&larr; My Teams".html_safe, teams_path, class: "back-link" %>
-  </div>
+<div class="cr-team-page">
 
-  <div class="team-show-header">
-    <div class="team-show-rating-badge"><%= @team.rating %></div>
-    <h1><%= @team.name %></h1>
-  </div>
+  <%= link_to "← My Teams", teams_path, class: "cr-back-link" %>
 
-  <% membership = @team.team_memberships.find_by(user: current_user) %>
-  <% if membership %>
-    <div class="team-show-actions">
-      <%= link_to "View Schedule", team_matches_path(@team), class: "btn" %>
-      <% if @team.captain?(current_user) %>
-        <%= link_to "Captain View", team_captain_path(@team), class: "btn btn-secondary" %>
-      <% end %>
+  <%# ── Hero ────────────────────────────────────────── %>
+  <div class="cr-team-hero">
+    <div class="cr-team-hero-content">
+      <div class="cr-team-hero-label">
+        <% if @captain %>
+          <%= @team.league_category == "Local" ? "Del-Tri" : @team.league_category %>
+          · Captain: <%= @captain.name %>
+        <% else %>
+          <%= @team.league_category == "Local" ? "Del-Tri" : @team.league_category %>
+          · <%= @team.team_type %>
+        <% end %>
+      </div>
+
+      <h1 class="cr-team-hero-name"><%= @team.name %></h1>
+
+      <div class="cr-team-hero-sub">
+        <% if @team.home_court.present? %>
+          <%= @team.home_court.split(",").first %>
+        <% end %>
+        <% if @team.rating.present? %>
+          · <%= @team.section %> <%= @team.rating %> <%= @team.gender == "F" ? "Women's" : "Men's" %>
+        <% else %>
+          · <%= @team.section %>
+        <% end %>
+        <% if @team.season_name.present? %>
+          · <%= @team.season_name %>
+        <% end %>
+      </div>
+
+      <div class="cr-team-hero-stats">
+        <div class="cr-hero-stat">
+          <div class="cr-hero-stat-value">0-0</div>
+          <div class="cr-hero-stat-label">Record</div>
+        </div>
+        <div class="cr-hero-stat">
+          <div class="cr-hero-stat-value"><%= @upcoming_matches.count %></div>
+          <div class="cr-hero-stat-label">Matches</div>
+        </div>
+        <% if @team.next_match %>
+          <div class="cr-hero-stat">
+            <div class="cr-hero-stat-value"><%= @team.next_match.match_date.strftime("%b %-d").upcase %></div>
+            <div class="cr-hero-stat-label">Starts</div>
+          </div>
+        <% end %>
+      </div>
     </div>
+  </div>
+
+  <%# ── Stat cards ───────────────────────────────────── %>
+  <div class="cr-stat-cards">
+    <div class="cr-stat-card">
+      <div class="cr-stat-card-value">0</div>
+      <div class="cr-stat-card-label">Wins</div>
+    </div>
+    <div class="cr-stat-card">
+      <div class="cr-stat-card-value">0</div>
+      <div class="cr-stat-card-label">Losses</div>
+    </div>
+    <div class="cr-stat-card">
+      <div class="cr-stat-card-value"><%= @upcoming_matches.count %></div>
+      <div class="cr-stat-card-label">Scheduled</div>
+    </div>
+    <div class="cr-stat-card">
+      <div class="cr-stat-card-value"><%= @player_count %></div>
+      <div class="cr-stat-card-label">Players</div>
+    </div>
+  </div>
+
+  <%# ── Schedule ────────────────────────────────────── %>
+  <% if @upcoming_matches.any? || @past_matches.any? %>
+    <section class="cr-section">
+      <h2 class="cr-section-title">
+        <%= @team.season_name.present? ? @team.season_name : "Schedule" %> Schedule
+      </h2>
+      <div class="cr-match-list">
+        <% @upcoming_matches.each do |match| %>
+          <div class="cr-match-row">
+            <div class="cr-match-date">
+              <div class="cr-match-date-month"><%= match.match_date.strftime("%b").upcase %></div>
+              <div class="cr-match-date-day"><%= match.match_date.strftime("%-d") %></div>
+            </div>
+            <div class="cr-match-info">
+              <div class="cr-match-opponent">vs. <%= match.opponent %></div>
+              <div class="cr-match-location"><%= match.location %></div>
+            </div>
+            <div class="cr-match-time"><%= match.match_date.strftime("%-I:%M %p") %></div>
+          </div>
+        <% end %>
+        <% @past_matches.first(10).each do |match| %>
+          <div class="cr-match-row cr-match-past">
+            <div class="cr-match-date">
+              <div class="cr-match-date-month"><%= match.match_date.strftime("%b").upcase %></div>
+              <div class="cr-match-date-day"><%= match.match_date.strftime("%-d") %></div>
+            </div>
+            <div class="cr-match-info">
+              <div class="cr-match-opponent">vs. <%= match.opponent %></div>
+              <div class="cr-match-location"><%= match.location %></div>
+            </div>
+            <div class="cr-match-time"><%= match.match_date.strftime("%-I:%M %p") %></div>
+          </div>
+        <% end %>
+      </div>
+    </section>
   <% end %>
 
-  <div class="team-show-details">
-    <div class="team-detail-card">
-      <div class="detail-label">Type</div>
-      <div class="detail-value"><%= @team.team_type %></div>
+  <%# ── Roster ─────────────────────────────────────── %>
+  <section class="cr-section">
+    <h2 class="cr-section-title">Roster (<%= @player_count %> Players)</h2>
+    <div class="cr-roster">
+      <% @roster.each do |membership| %>
+        <div class="cr-roster-row">
+          <div class="cr-roster-name <%= 'cr-roster-self' if membership.user_id == current_user.id %>">
+            <%= membership.user.name %>
+            <% if membership.user_id == current_user.id %>
+              (you)
+            <% end %>
+          </div>
+          <% if membership.user.ntrp_rating.present? %>
+            <div class="cr-roster-rating"><%= membership.user.ntrp_rating %></div>
+          <% end %>
+          <% if membership.captain? %>
+            <div class="cr-roster-role cr-roster-role-captain">Captain</div>
+          <% end %>
+        </div>
+      <% end %>
     </div>
-    <div class="team-detail-card">
-      <div class="detail-label">Section</div>
-      <div class="detail-value"><%= @team.section %></div>
-    </div>
-    <div class="team-detail-card">
-      <div class="detail-label">Gender</div>
-      <div class="detail-value"><%= @team.gender == "F" ? "Women's" : "Men's" %></div>
-    </div>
-    <div class="team-detail-card">
-      <div class="detail-label">Rating</div>
-      <div class="detail-value"><span class="rating-pill"><%= @team.rating %></span></div>
-    </div>
-    <div class="team-detail-card">
-      <div class="detail-label">Match Start</div>
-      <div class="detail-value"><%= @team.start_date.strftime("%-m/%-d/%Y") %></div>
-    </div>
-  </div>
+  </section>
 </div>

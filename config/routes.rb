@@ -1,33 +1,26 @@
 Rails.application.routes.draw do
-  # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
-
-  # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
-  # Can be used by load balancers and uptime monitors to verify that the app is live.
+  # Health check
   get "up" => "rails/health#show", as: :rails_health_check
 
-  # Render dynamic PWA files from app/views/pwa/* (remember to link manifest in application.html.erb)
-  # get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
-  # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
-
   # Auth
-  get  "login",  to: "sessions#new",     as: :login
-  post "session", to: "sessions#create",  as: :session
+  get    "login",   to: "sessions#new",     as: :login
+  post   "session", to: "sessions#create",  as: :session
   delete "session", to: "sessions#destroy"
 
   # Admin: user management
   resources :users, only: [ :index, :new, :create, :edit, :update, :destroy ]
 
+  # Core app
   resources :teams, only: [ :index, :show ] do
     resources :matches, only: [ :index, :new, :create ]
     get "captain", to: "matches#captain", as: :captain
   end
 
-  # Availability AJAX endpoint
+  # Availability AJAX endpoint (Phase 2 feature — routes preserved but unused on index page)
   post "matches/:match_id/availability", to: "availabilities#update", as: :match_availability
 
-  get "tennis",  to: "pages#tennis",    as: :tennis
-  get "profile", to: "profiles#show",  as: :profile
+  get "profile", to: "profiles#show", as: :profile
 
-  # Defines the root path route ("/")
+  # Root: sends logged-in users to My Teams; logged-out users to login
   root "pages#home"
 end
