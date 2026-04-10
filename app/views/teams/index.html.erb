@@ -7,13 +7,14 @@
     <div class="cr-my-week-list">
       <% @upcoming_matches.each do |match| %>
         <% team = match.tennis_team %>
-        <%= link_to team_path(team), class: "cr-my-week-card" do %>
+        <div class="cr-my-week-card">
           <div class="cr-my-week-date">
             <div class="cr-my-week-day-name"><%= match.match_date.strftime("%a").upcase %></div>
             <div class="cr-my-week-month"><%= match.match_date.strftime("%b").upcase %></div>
             <div class="cr-my-week-day"><%= match.match_date.strftime("%-d") %></div>
           </div>
           <div class="cr-my-week-info">
+            <div class="cr-my-week-league-label"><%= team.league_category == "Local" ? "DEL-TRI" : team.league_category.upcase %></div>
             <div class="cr-my-week-team"><%= team.name %></div>
             <div class="cr-my-week-opponent">vs. <%= match.opponent %></div>
             <div class="cr-my-week-detail">
@@ -30,21 +31,15 @@
               <% end %>
             </div>
           </div>
-          <div class="cr-my-week-right">
-            <div class="cr-my-week-league">
-              <%= team.league_category == "Local" ? "Del-Tri" : team.league_category %>
-            </div>
-            <a href="<%= google_calendar_url(match) %>"
-               target="_blank" rel="noopener"
-               class="cr-cal-btn"
-               title="Add to Google Calendar"
-               onclick="event.stopPropagation(); event.preventDefault(); window.open(this.href, '_blank');">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
-              </svg>
-            </a>
-          </div>
-        <% end %>
+          <a href="<%= google_calendar_url(match) %>"
+             target="_blank" rel="noopener"
+             class="cr-cal-btn"
+             title="Add to Google Calendar">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+            </svg>
+          </a>
+        </div>
       <% end %>
     </div>
   </div>

@@ -2184,49 +2184,42 @@ button.cr-header-pill {
 .cr-my-week-list {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 6px;
 }
 
 .cr-my-week-card {
   display: flex;
   align-items: center;
-  gap: 16px;
-  padding: 14px 20px;
+  gap: 12px;
+  padding: 10px 16px;
   background: var(--cr-white);
   border: 1px solid var(--cr-border);
-  border-radius: 10px;
-  text-decoration: none;
+  border-radius: 8px;
   color: inherit;
-  transition: border-color 0.2s, box-shadow 0.2s;
-}
-
-.cr-my-week-card:hover {
-  border-color: var(--cr-gold);
-  box-shadow: 0 2px 8px rgba(201, 162, 74, 0.1);
 }
 
 .cr-my-week-date {
   text-align: center;
-  min-width: 52px;
+  min-width: 40px;
   flex-shrink: 0;
 }
 
 .cr-my-week-day-name {
-  font-size: 0.65rem;
+  font-size: 0.55rem;
   font-weight: 700;
   color: var(--cr-gold);
-  letter-spacing: 1px;
+  letter-spacing: 0.5px;
 }
 
 .cr-my-week-month {
-  font-size: 0.65rem;
+  font-size: 0.55rem;
   font-weight: 700;
   color: var(--cr-text-muted);
   letter-spacing: 0.5px;
 }
 
 .cr-my-week-day {
-  font-size: 1.4rem;
+  font-size: 1.15rem;
   font-weight: 800;
   color: var(--cr-text);
   line-height: 1.1;
@@ -2237,24 +2230,33 @@ button.cr-header-pill {
   min-width: 0;
 }
 
+.cr-my-week-league-label {
+  font-size: 0.6rem;
+  font-weight: 700;
+  color: var(--cr-gold);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
 .cr-my-week-team {
-  font-size: 0.95rem;
+  font-size: 0.85rem;
   font-weight: 700;
   color: var(--cr-text);
+  line-height: 1.2;
 }
 
 .cr-my-week-opponent {
-  font-size: 0.85rem;
+  font-size: 0.78rem;
   color: var(--cr-text-muted);
 }
 
 .cr-my-week-detail {
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   color: var(--cr-text-light);
   display: flex;
   align-items: center;
-  gap: 8px;
-  margin-top: 2px;
+  gap: 6px;
+  margin-top: 1px;
 }
 
 .cr-my-week-badge-home {
@@ -2279,23 +2281,6 @@ button.cr-header-pill {
   color: var(--cr-text-muted);
   letter-spacing: 0.5px;
   text-transform: uppercase;
-}
-
-.cr-my-week-right {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 6px;
-  flex-shrink: 0;
-}
-
-.cr-my-week-league {
-  font-size: 0.7rem;
-  font-weight: 700;
-  color: var(--cr-text-light);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  flex-shrink: 0;
 }
 
 .cr-cal-btn {
