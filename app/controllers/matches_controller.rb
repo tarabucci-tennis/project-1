@@ -11,7 +11,7 @@ class MatchesController < ApplicationController
   def show
     @match = @team.matches.find(params[:id])
     @lineup = @match.lineup
-    @is_captain = @team.captain?(current_user) || current_user.admin?
+    @is_captain = @team.captain?(current_user) || @team.user_id == current_user.id
     @my_availability = @match.availability_for(current_user)
 
     if @lineup&.published?
