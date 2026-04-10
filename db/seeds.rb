@@ -320,6 +320,40 @@ TeamMembership.find_or_create_by!(user: tara, tennis_team: legacy_2) do |m|
   m.role = "player"
 end
 
+# Legacy 2 — full 18-match schedule with results (season completed)
+legacy_schedule = [
+  [ "2025-10-03", "Brandywine 5",        "away", "loss",  "2-4" ],
+  [ "2025-10-10", "DVTA 3",              "home", "loss",  "2-4" ],
+  [ "2025-10-17", "Brandywine 4",        "away", "loss",  "2-4" ],
+  [ "2025-10-24", "Tennis Addiction 4",   "home", "tie",   "3-3" ],
+  [ "2025-10-31", "Upper Main Line Y 2", "home", "win",   "4-2" ],
+  [ "2025-11-07", "Springfield YMCA 3",  "home", "tie",   "3-3" ],
+  [ "2025-11-14", "HPTA 6",             "away", "win",   "5-1" ],
+  [ "2025-11-21", "Radnor Racquet 3",   "home", "win",   "4-2" ],
+  [ "2025-12-05", "Penn Oaks 5",        "away", "win",   "4-2" ],
+  [ "2026-01-09", "Brandywine 5",       "home", "tie",   "3-3" ],
+  [ "2026-01-16", "DVTA 3",             "away", "win",   "4-2" ],
+  [ "2026-01-23", "Brandywine 4",       "home", "win",   "6-0" ],
+  [ "2026-01-30", "Tennis Addiction 4",  "away", "win",   "4-2" ],
+  [ "2026-02-06", "Upper Main Line Y 2","away", "win",   "4-2" ],
+  [ "2026-02-20", "Springfield YMCA 3", "away", "tie",   "3-3" ],
+  [ "2026-02-27", "HPTA 6",             "home", "win",   "6-0" ],
+  [ "2026-03-06", "Radnor Racquet 3",   "away", "win",   "5-1" ],
+  [ "2026-03-13", "Penn Oaks 5",        "home", "win",   "4-2" ]
+]
+
+legacy_schedule.each do |date_str, opp, ha, result, score|
+  d = Date.parse(date_str)
+  legacy_2.matches.find_or_create_by!(match_date: Time.zone.local(d.year, d.month, d.day, 10, 0)) do |m|
+    m.opponent = opp
+    m.location = (ha == "home") ? "Legacy Tennis" : opp.split(" ").first
+    m.home_away = ha
+    m.notes = (ha == "home") ? "Home" : "Away"
+    m.result = (result == "tie" ? "win" : result)  # Del-Tri ties count as draws, treating as wins for points
+    m.score_summary = score
+  end
+end
+
 # --------------------------------------------------------------
 # Tara's match stats (kept from earlier — USTA-focused)
 # --------------------------------------------------------------
