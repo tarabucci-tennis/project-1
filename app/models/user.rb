@@ -1,5 +1,5 @@
 class User < ApplicationRecord
-  has_secure_password validations: false
+  # has_secure_password validations: false  # TODO: enable after bcrypt gem is properly installed
 
   has_many :tennis_teams, dependent: :destroy
   has_many :tennis_stats, dependent: :destroy

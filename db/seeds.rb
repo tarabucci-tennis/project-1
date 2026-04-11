@@ -17,9 +17,8 @@ end
 # Tara (primary user / admin)
 # --------------------------------------------------------------
 tara = User.find_or_create_by!(email: "tarabucci@gmail.com") do |u|
-  u.name     = "Tara Bucci"
-  u.admin    = true
-  u.password = "tennis2026"
+  u.name  = "Tara Bucci"
+  u.admin = true
 end
 
 tara.update!(
