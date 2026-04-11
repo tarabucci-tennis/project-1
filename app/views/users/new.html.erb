@@ -19,6 +19,14 @@
         <%= f.label :email %>
         <%= f.email_field :email %>
       </div>
+      <div class="field">
+        <%= f.label :password %>
+        <%= f.password_field :password %>
+      </div>
+      <div class="field">
+        <%= f.label :password_confirmation, "Confirm password" %>
+        <%= f.password_field :password_confirmation %>
+      </div>
       <div class="field field-check">
         <%= f.check_box :admin %>
         <%= f.label :admin, "Admin privileges" %>

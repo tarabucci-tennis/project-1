@@ -40,6 +40,9 @@ class UsersController < ApplicationController
   private
 
   def user_params
-    params.expect(user: [ :name, :email, :admin ])
+    permitted = params.expect(user: [ :name, :email, :admin, :password, :password_confirmation ])
+    permitted.delete(:password) if permitted[:password].blank?
+    permitted.delete(:password_confirmation) if permitted[:password].blank?
+    permitted
   end
 end

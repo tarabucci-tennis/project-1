@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_02_28_221018) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_11_000000) do
   create_table "tennis_stats", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.integer "defaults"
@@ -46,6 +46,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_28_221018) do
     t.boolean "admin", default: false, null: false
     t.datetime "created_at", null: false
     t.decimal "dynamic_rating"
+    t.string "password_digest"
     t.date "dynamic_rating_date"
     t.string "email"
     t.string "location"

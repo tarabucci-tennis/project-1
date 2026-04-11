@@ -19,6 +19,14 @@
         <%= f.label :email, "Email (used to sign in)" %>
         <%= f.email_field :email, placeholder: "email@example.com" %>
       </div>
+      <div class="field">
+        <%= f.label :password, "New password (leave blank to keep current)" %>
+        <%= f.password_field :password %>
+      </div>
+      <div class="field">
+        <%= f.label :password_confirmation, "Confirm new password" %>
+        <%= f.password_field :password_confirmation %>
+      </div>
       <div class="field field-check">
         <%= f.check_box :admin %>
         <%= f.label :admin, "Admin privileges" %>

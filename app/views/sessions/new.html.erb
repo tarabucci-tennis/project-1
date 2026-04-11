@@ -13,6 +13,10 @@
         <%= f.label :email, "Email address" %>
         <%= f.email_field :email, placeholder: "you@example.com", autofocus: true %>
       </div>
+      <div class="field">
+        <%= f.label :password, "Password" %>
+        <%= f.password_field :password, placeholder: "Enter your password" %>
+      </div>
       <%= f.submit "Sign In →" %>
     <% end %>
   </div>

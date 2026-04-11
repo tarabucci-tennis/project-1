@@ -1,4 +1,6 @@
 class User < ApplicationRecord
+  has_secure_password validations: false
+
   has_many :tennis_teams, dependent: :destroy
   has_many :tennis_stats, dependent: :destroy
 
@@ -6,6 +8,7 @@ class User < ApplicationRecord
   validates :email, uniqueness: { case_sensitive: false },
                     format: { with: URI::MailTo::EMAIL_REGEXP },
                     allow_blank: true
+  validates :password, length: { minimum: 6 }, if: -> { password.present? }
 
   before_save { self.email = email&.downcase.presence }
 end
