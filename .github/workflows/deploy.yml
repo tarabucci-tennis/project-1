@@ -1,39 +1,17 @@
-name: Deploy to DigitalOcean
+# Auto-deploy is DISABLED.
+# Deploy manually from the Droplet console:
+#   cd /root/app && bash bin/deploy-phase-1.sh
+#
+# This prevents new Claude sessions from accidentally overwriting the live site.
+
+name: Deploy (disabled)
 
 on:
-  push:
-    branches:
-      - main
+  workflow_dispatch:
 
 jobs:
   deploy:
-    name: Deploy
+    name: Manual deploy only
     runs-on: ubuntu-latest
-
     steps:
-      - name: Deploy to droplet via SSH
-        uses: appleboy/ssh-action@v1.0.3
-        with:
-          host: ${{ secrets.DEPLOY_HOST }}
-          username: root
-          key: ${{ secrets.DEPLOY_SSH_KEY }}
-          script: |
-            set -e
-            if [ ! -d /root/app ]; then
-              git clone https://github.com/tarabucci-tennis/project-1 /root/app
-            fi
-            cd /root/app
-            git fetch origin
-            git checkout main
-            git reset --hard origin/main
-            docker build -t project-1 .
-            docker stop project-1 || true
-            docker rm project-1 || true
-            docker run -d \
-              -p 80:80 \
-              -e "RAILS_MASTER_KEY=${{ secrets.RAILS_MASTER_KEY }}" \
-              -v /root/storage:/rails/storage \
-              --name project-1 \
-              --restart unless-stopped \
-              project-1
-            echo "Deployed successfully"
+      - run: echo "Auto-deploy is disabled. Use bin/deploy-phase-1.sh on the Droplet."
