@@ -28,26 +28,31 @@ Token: stored in `doctl` auth config (run `doctl auth list` to verify)
 | Size | `s-1vcpu-1gb` |
 | Image | `docker-20-04` (Ubuntu 22.04 + Docker pre-installed) |
 | Firewall ID | `b6a72fad-0194-438c-9603-589490137155` |
-| Firewall | Ports 22 (SSH) and 80 (HTTP) open |
+| Firewall | Ports 22 (SSH), 80 (HTTP), and 443 (HTTPS) open |
 | Container Registry | `registry.digitalocean.com/tarabucci-tennis` |
 | SSH Key ID | `54458995` (name: `do-deploy`) |
 
-**App URL:** http://146.190.112.29
+**App URL:** https://yourcourtreport.com
+**Domain:** yourcourtreport.com (with www redirect)
+**SSL:** Auto-provisioned via Thruster + Let's Encrypt
 
 ### Deployment Method
 
 The app is deployed via Docker on a DigitalOcean Droplet. On first boot, a cloud-init user-data script:
 1. Clones the repo from `https://github.com/tarabucci-tennis/project-1`
 2. Runs `docker build -t project-1 .`
-3. Starts the container: `docker run -d -p 80:80 -e RAILS_MASTER_KEY=... -v /root/storage:/rails/storage --restart unless-stopped project-1`
+3. Starts the container: `docker run -d -p 80:80 -p 443:443 -e RAILS_MASTER_KEY=... -e TLS_DOMAIN=yourcourtreport.com,www.yourcourtreport.com -v /root/storage:/rails/storage -v /root/thruster-storage:/rails/.thruster --restart unless-stopped project-1`
+
+Thruster automatically provisions Let's Encrypt SSL certificates when the `TLS_DOMAIN` environment variable is set.
 
 SQLite databases are persisted via a Docker volume mounted at `/root/storage` on the host.
+Thruster's SSL certificates are persisted via a Docker volume mounted at `/root/thruster-storage`.
 
 ### Re-deploying
 
 To redeploy after pushing new code, SSH into the droplet and run:
 ```bash
-cd /root/app && git pull && docker build -t project-1 . && docker stop project-1 && docker rm project-1 && docker run -d -p 80:80 -e RAILS_MASTER_KEY=<key> -v /root/storage:/rails/storage --name project-1 --restart unless-stopped project-1
+cd /root/app && git pull && docker build -t project-1 . && docker stop project-1 && docker rm project-1 && docker run -d -p 80:80 -p 443:443 -e RAILS_MASTER_KEY=<key> -e TLS_DOMAIN=yourcourtreport.com,www.yourcourtreport.com -v /root/storage:/rails/storage -v /root/thruster-storage:/rails/.thruster --name project-1 --restart unless-stopped project-1
 ```
 
 ## GitHub
