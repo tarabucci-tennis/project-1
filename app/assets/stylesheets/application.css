@@ -1111,6 +1111,97 @@ button.cr-header-pill {
 .cr-login-card input[type="submit"]:hover { background: var(--cr-gold-bright); }
 
 /* ========================================================
+   Auth pages (sign in / sign up) — clean, focused cards
+   ======================================================== */
+
+.cr-auth-page {
+  min-height: calc(100vh - 140px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 20px 80px;
+}
+
+.cr-auth-card {
+  background: var(--cr-white);
+  border: 1px solid var(--cr-border);
+  border-radius: 16px;
+  padding: 40px 32px;
+  max-width: 400px;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.05);
+}
+
+.cr-auth-logo {
+  width: 56px;
+  height: 56px;
+  margin: 0 auto 16px;
+  background: linear-gradient(135deg, var(--cr-gold), var(--cr-gold-bright));
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.6rem;
+  box-shadow: 0 3px 14px rgba(201, 162, 74, 0.35);
+  overflow: hidden;
+}
+
+.cr-auth-logo-ball {
+  display: inline-block;
+  line-height: 1;
+  animation: cr-ball-bounce 1.6s ease-in-out infinite;
+}
+
+.cr-auth-title {
+  font-family: "Bebas Neue", "Helvetica Neue", sans-serif;
+  font-weight: 400;
+  font-size: 2.4rem;
+  letter-spacing: 4px;
+  line-height: 1;
+  color: var(--cr-text);
+  margin-bottom: 6px;
+}
+
+.cr-auth-sub {
+  color: var(--cr-text-muted);
+  font-size: 0.88rem;
+  margin-bottom: 28px;
+}
+
+.cr-auth-submit {
+  width: 100%;
+  padding: 12px;
+  background: var(--cr-gold);
+  color: var(--cr-black);
+  font-size: 0.95rem;
+  font-weight: 700;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 8px;
+  font-family: inherit;
+  letter-spacing: 0.5px;
+}
+
+.cr-auth-submit:hover { background: var(--cr-gold-bright); }
+
+.cr-auth-switch {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 0.85rem;
+  color: var(--cr-text-muted);
+}
+
+.cr-auth-switch a {
+  color: var(--cr-gold);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.cr-auth-switch a:hover { text-decoration: underline; }
+
+/* ========================================================
    Admin pages (users index, etc.)
    ======================================================== */
 
