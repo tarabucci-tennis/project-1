@@ -163,19 +163,25 @@ tr:hover td{background:rgba(201,168,76,.03);}
 .app-footer{background:var(--navy);color:rgba(255,255,255,.22);text-align:center;padding:20px;font-family:'JetBrains Mono',monospace;font-size:.65rem;letter-spacing:2px;border-top:1px solid rgba(255,255,255,.04);margin-top:40px;}
 .app-footer strong{color:rgba(255,255,255,.45);font-family:'Bebas Neue',sans-serif;font-size:.85rem;letter-spacing:3px;}
 @media(max-width:768px){
-  .header-inner{padding:12px 18px;gap:8px;}
-  .header-inner a,.header-inner span,.header-inner button{white-space:nowrap;flex-shrink:0;font-size:.55rem !important;padding:4px 8px !important;}
-  .logo-name{font-size:1.4rem;}
-  .logo-mark{width:32px;height:32px;font-size:1rem;}
-  .team-tabs{padding:0 12px;overflow-x:auto;-webkit-overflow-scrolling:touch;}
+  .header-inner{padding:10px 12px;gap:6px;}
+  .header-inner a,.header-inner span,.header-inner button,.header-inner form,.header-inner form button{white-space:nowrap !important;flex-shrink:0;font-size:.55rem !important;padding:4px 8px !important;letter-spacing:.5px !important;}
+  .header-inner form{margin:0;display:inline-flex;}
+  .logo{gap:8px;}
+  .logo-name{font-size:1.3rem;letter-spacing:3px;}
+  .logo-mark{width:30px;height:30px;font-size:.9rem;}
+  .search-btn{width:30px;height:30px;font-size:.8rem;}
+  .team-tabs{padding:0 12px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;}
+  .team-tabs::-webkit-scrollbar{display:none;}
   .team-tab{white-space:nowrap;flex-shrink:0;padding:10px 16px;font-size:.72rem;}
+  .desktop-nav{overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;}
+  .desktop-nav::-webkit-scrollbar{display:none;}
+  .dnav-btn{white-space:nowrap;flex-shrink:0;padding:12px 8px;font-size:.72rem;gap:4px;}
   .app-body{padding:0 16px;padding-bottom:80px;}
   .team-hero{margin:12px 0 0;padding:26px 22px 22px;border-radius:12px;}
   .th-name{font-size:2.2rem;}
   .th-content{flex-direction:column;gap:16px;}
   .two-col{grid-template-columns:1fr;}
   .quick-stats{grid-template-columns:repeat(2,1fr);gap:10px;}
-  .desktop-nav{display:none;}
   .mobile-nav{display:block;}
   .roster-grid{grid-template-columns:repeat(2,1fr);}
   .season-pill{display:none;}
