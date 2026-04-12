@@ -8,8 +8,8 @@
 > "It's an app for players and captains to have all tennis platforms in one app. We jump from schedule to schedule for different teams and leagues. It would be extremely beneficial for all players, coaches and teams to have it all in one place."
 
 - **Product name:** Court Report
-- **Domain (goal):** yourcourtreport.com
-- **Current production URL:** http://146.190.112.29 (DigitalOcean droplet)
+- **Production URL:** https://yourcourtreport.com (SSL via Thruster + Let's Encrypt)
+- **Droplet IP:** 146.190.112.29 (still works, but use the domain)
 - **Who it's for:** All racket sport players, captains, and coaches. Not just tennis — also pickleball, squash, padel, etc. (future). Not just USTA — any league.
 - **End goal:** Tara is building this for herself first, but wants to turn it into a real product that other people pay for.
 
@@ -45,42 +45,42 @@
 - **Verify before declaring victory.** Don't say "done" if you haven't actually tested it works in a browser.
 - **Ask before building.** If the task doesn't match what's in the code, ask clarifying questions first — don't just start coding on assumptions.
 
-## Current Status (as of April 10, 2026)
+## Current Status (as of April 12, 2026 — Session 9)
 
-### What's actually live on the DigitalOcean server at http://146.190.112.29
-**Phase 1 is deployed and working (verified by Tara, Session 7):**
-- Court Report branding: black header, white background, gold accents
-- Email-only login (tarabucci@gmail.com)
-- My Teams page with 3-column layout: USTA / Inter-Club / Local Leagues
-- 4 real teams with real rosters (43 users, 16 matches seeded)
-- Click a team → team detail page with hero, stats, schedule, roster
-- Roster shows captain badge, NTRP ratings, highlights "you" for current user
-- Player profile page (click "Tara Bucci" in header) with NTRP rating + match stats
-- Admin user management (Players page)
-- Deploy script: `bash /root/app/bin/deploy-phase-1.sh` (one command on the server)
+### What's actually live at https://yourcourtreport.com
+**Phase 1 is live with SSL and auto-deploy infrastructure:**
+- **HTTPS/SSL** — Auto-provisioned via Thruster + Let's Encrypt. Works on both `yourcourtreport.com` and `www.yourcourtreport.com`
+- **Court Report marketing homepage** — shows to logged-out users with "All Your Teams. One App." messaging and Sign In / Sign Up buttons
+- **Email-only login** (tarabucci@gmail.com)
+- **My Teams page** with real team data (43 users, 16 matches)
+- **Team detail pages** with hero, schedule, roster, availability
+- **Player profile pages** with NTRP rating + match stats
+- **Admin user management** (Players page)
+- **`/stats-test` page** — pulls live data from a public Google Sheet on every page load (proof of concept for dynamic external data). Sheet: `1OvOObnk_Sq5wZOX8sQHnUfn_PNTXrgSgGnqqS8QeIjI`
 
-### What's on a branch but NOT deployed and NOT tested
-**Branch: `claude/fix-teams-500-error-GPgeR`** contains two features sitting unverified:
+### What was fixed in Session 9 (April 12, 2026)
+- Enabled SSL/HTTPS via Thruster + Let's Encrypt (port 443, TLS_DOMAIN env var, thruster cert storage volume)
+- Fixed DNS: `www` CNAME now points to `yourcourtreport.com` (was pointing to `teamcourtreport.com`)
+- Opened port 443 in the DigitalOcean firewall
+- Created SSH `deploy_key` on the droplet for GitHub Actions auto-deploy
+- Added GitHub Actions deploy workflow (`.github/workflows/deploy.yml`)
+- **Consolidated main branch** — main is now the single source of truth, matching the deployed code. Previously, many parallel `claude/*` branches had diverged and main was outdated.
+- Added `/stats-test` page pulling from Google Sheets
 
-1. **Teams 500 error fix** — New TeamsController, routes, and views so clicking a team card shows team detail. Untested.
-2. **Match availability feature** — Schedule page, match cards with In/Out/message buttons, Captain View grid, in-app notifications. New database tables: `team_memberships`, `matches`, `availabilities`, `notifications`. **Never run. Never tested. May not even compile.**
+### What's still broken / pending
+- **GitHub Actions Deploy workflow is failing** — SSH authentication error (`ssh: no key found`). The `DEPLOY_SSH_KEY` secret in GitHub needs to be re-added correctly. Multi-line SSH keys can be hard to copy from mobile — recommend doing this from desktop. Until fixed, deploys must be done manually on the droplet.
+- **CI workflow may have test/lint failures** from code added in Session 9. Needs investigation.
+- **No captain auto-assignment.** When a team is created, there's no automatic team_membership record making the creator a captain.
+- **Mobile UI** — some tabs may still get cut off. Partially fixed in Session 9 but needs verification on actual deployed version.
 
-**Treat the code on this branch as a draft.** Before merging or deploying, someone needs to actually boot the app, run the database updates, and click through the features.
+## The Two "Court Reports" (historical context)
 
-### What's missing or broken
-- **Visual branding is wrong.** The app looks like "Tara's Sandbox," not Court Report. Needs full restyle to white background / black header / gold accents to match the tiiny.host mockup.
-- **Real team data is missing.** Seeds contain old team names (Quad Squad, Over Served, Tri Me, AGC ACES, Unmatchables). Tara's current real teams are **Kiss My Ace**, **Pour Decisions**, and **Legacy 2**. Seeds need updating.
-- **`yourcourtreport.com` does NOT point to the Rails app.** The domain currently points to a static HTML mockup on tiiny.host. DNS needs to move to DigitalOcean.
-- **No captain auto-assignment.** When a team is created, there's no automatic team_membership record making the creator a captain. Tara's seed teams get it manually in seeds.rb.
+There used to be **two different things** both being called "Court Report":
 
-## The Two "Court Reports" (important context)
+1. **The Rails app** (this repo) — now deployed at https://yourcourtreport.com with SSL. Real backend, real database, can save data.
+2. **The tiiny.host mockup** at `courtreport.tiiny.site` — static HTML/CSS built by Tara's husband as a **design example**. Pretty but not functional.
 
-There are currently **two different things** both being called "Court Report":
-
-1. **The Rails app** (this repo) — deployed at http://146.190.112.29. Real backend, real database, can save data. **Now styled as Court Report** (white/black/gold) with real team data. Phase 1 is LIVE.
-2. **The tiiny.host mockup** at `courtreport.tiiny.site` — static HTML/CSS built by Tara's husband as a **design example**. Pretty but not functional. `yourcourtreport.com` currently still points here.
-
-**Status:** #1 now looks like #2 and is functional. Domain switch is the final step (when Tara is ready).
+**Status (as of Session 9):** The Rails app is fully functional, styled, and live at yourcourtreport.com with SSL. The tiiny.host mockup is no longer in use for production.
 
 ## Real Team Data
 
@@ -378,6 +378,8 @@ Reconstructed from git log. Tara has built this app over ~6 sessions.
 | 5 | Player profile page with NTRP ratings and match stats | `68589da` | Profile page live |
 | 6 | Teams 500 fix + availability feature | `d456d37`, `50316cd` | Code on branch, untested |
 | 7 | CLAUDE.md overhaul, real team data capture, Phase 1 restyle + deploy | `ec55ae1`–`717881a` | **Phase 1 LIVE and verified by Tara** |
+| 8 | Password auth added then reverted (Gemfile.lock mismatch), Legacy 2 scoring fixes | `cf1e17a`, `db95ec2` | Reverted password; legacy scoring corrected |
+| 9 | SSL via Thruster, DNS fix, GitHub Actions auto-deploy, main consolidation, stats-test page | `6441e4b`, `3509a6b`, `68eb612` | **Site now on https://yourcourtreport.com; main = source of truth** |
 
 ## Lessons Learned (honest notes from past sessions)
 
@@ -386,6 +388,13 @@ Reconstructed from git log. Tara has built this app over ~6 sessions.
 - **Claude hand-edited `db/schema.rb`.** This file is auto-generated. Hand-editing it risks drift. Always run the database update command instead.
 - **Claude tried to fix a bug without verifying the bug was real.** The "500 error on /teams/1" couldn't be reproduced because the real broken site was on tiiny.host, not in this Rails app. Next time: ask "can you show me the bug first?" before writing a single line.
 - **Claude used technical language with a non-technical user.** Tara had to ask for plain English. Default to plain English always.
+
+### From Session 9 — DON'T REPEAT THESE
+- **Don't start work from a stale `claude/*` feature branch.** Always start from `main`. Previous sessions created many parallel branches; merging an old one wiped out features and broke the deployed site. **Main is the source of truth — always work from main.**
+- **Don't merge a branch to main without verifying it has all the deployed features.** If main is currently empty/skeleton and the deployed site has features, the deployed code lives on a different branch. Find that branch first, merge it into main, THEN add new changes.
+- **Bringing single files (like `courtreport.html.erb`) over from another branch without their controllers/routes/models breaks the app.** Either bring all dependent files or rebase the whole branch.
+- **Multi-line SSH keys are nearly impossible to copy from a phone correctly.** GitHub Actions Deploy workflow needs SSH key setup from a desktop, not mobile.
+- **Verify which branch the droplet is actually deploying from.** The `/root/app` directory on the droplet may be checked out to a branch other than `main`. Run `git branch` on the droplet before reasoning about what's deployed.
 
 ### From earlier sessions — deployment environment constraints
 - **No `ssh-keygen`** in this sandbox — had to use `openssl genpkey` + Python stdlib to generate RSA keys.
