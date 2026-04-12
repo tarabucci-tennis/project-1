@@ -13,6 +13,7 @@
 :root{--navy:#060f1e;--blue:#0a2240;--cobalt:#0e3d6e;--accent:#c9a84c;--accent2:#f0cc6e;--white:#fff;--off:#f7f9fc;--surface:#fff;--green:#16a34a;--red:#dc2626;--text:#0a0f1a;--sub:#64748b;--border:#e2e8f0;--pur:#3b0764;--pur2:#6d28d9;}
 body{font-family:'Inter',sans-serif;background:var(--off);color:var(--text);-webkit-font-smoothing:antialiased;}
 @keyframes glow{0%,100%{box-shadow:0 0 0 0 rgba(201,168,76,.4)}50%{box-shadow:0 0 0 8px rgba(201,168,76,0)}}
+@keyframes bounce-ball{0%,100%{transform:translateY(0)}25%{transform:translateY(-6px) rotate(-8deg)}50%{transform:translateY(0) rotate(0)}75%{transform:translateY(-3px) rotate(8deg)}}
 @keyframes fu{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 @keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
@@ -20,7 +21,7 @@ body{font-family:'Inter',sans-serif;background:var(--off);color:var(--text);-web
 .app-header{background:var(--navy);position:sticky;top:0;z-index:200;box-shadow:0 2px 20px rgba(0,0,0,.3);}
 .header-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:16px 32px;}
 .logo{display:flex;align-items:center;gap:12px;}
-.logo-mark{width:42px;height:42px;background:linear-gradient(135deg,var(--accent),var(--accent2));border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;animation:glow 3s ease infinite;box-shadow:0 3px 14px rgba(201,168,76,.4);}
+.logo-mark{width:42px;height:42px;background:linear-gradient(135deg,var(--accent),var(--accent2));border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;animation:glow 3s ease infinite,bounce-ball 1.6s ease-in-out infinite;box-shadow:0 3px 14px rgba(201,168,76,.4);}
 .logo-name{font-family:'Bebas Neue',sans-serif;font-size:2.2rem;letter-spacing:5px;color:var(--white);}
 .logo-name span{color:var(--accent);}
 .season-pill{font-family:'JetBrains Mono',monospace;font-size:.65rem;letter-spacing:2px;color:rgba(255,255,255,.35);border:1px solid rgba(255,255,255,.1);padding:5px 14px;border-radius:20px;}
