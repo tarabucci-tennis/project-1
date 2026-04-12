@@ -23,22 +23,12 @@
 
   <body>
     <nav class="navbar">
-      <% if current_user&.admin? %>
-        <a href="/" class="navbar-brand">Tara's Sandbox</a>
-      <% else %>
-        <span class="navbar-brand navbar-brand-static">Tara's Sandbox</span>
-      <% end %>
+      <a href="/" class="navbar-brand">🎾 Court Report</a>
       <div class="navbar-center">
-        <%= link_to "Tennis", tennis_path, class: "nav-link" %>
-        <% if current_user&.admin? %>
-          <span class="nav-link nav-link-coming-soon">Project 2</span>
-        <% end %>
+        <%= link_to "Stats", stats_test_path, class: "nav-link" %>
       </div>
       <div class="navbar-right">
         <% if current_user %>
-          <% if current_user.admin? %>
-            <%= link_to "Players", users_path, class: "nav-link" %>
-          <% end %>
           <%= link_to current_user.name, profile_path, class: "nav-user" %>
           <%= button_to "Sign Out", session_path, method: :delete, class: "btn btn-sm" %>
         <% else %>

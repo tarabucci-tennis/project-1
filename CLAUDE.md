@@ -9,7 +9,7 @@
 **Background jobs:** Solid Queue (running inside Puma via `SOLID_QUEUE_IN_PUMA`)
 **WebSockets:** Solid Cable
 **JavaScript:** Import Maps + Stimulus + Turbo (Hotwire)
-**Web server:** Puma via Thruster (handles HTTP compression/caching)
+**Web server:** Puma via Thruster (handles HTTP compression/caching/SSL)
 **Containerization:** Docker (multi-stage build, production-optimized)
 
 ## DigitalOcean
@@ -28,32 +28,58 @@ Token: stored in `doctl` auth config (run `doctl auth list` to verify)
 | Size | `s-1vcpu-1gb` |
 | Image | `docker-20-04` (Ubuntu 22.04 + Docker pre-installed) |
 | Firewall ID | `b6a72fad-0194-438c-9603-589490137155` |
-| Firewall | Ports 22 (SSH) and 80 (HTTP) open |
+| Firewall | Ports 22 (SSH), 80 (HTTP), and 443 (HTTPS) open |
 | Container Registry | `registry.digitalocean.com/tarabucci-tennis` |
 | SSH Key ID | `54458995` (name: `do-deploy`) |
 
-**App URL:** http://146.190.112.29
+**App URL:** https://yourcourtreport.com
+**Domain:** yourcourtreport.com (with www redirect)
+**SSL:** Auto-provisioned via Thruster + Let's Encrypt
 
 ### Deployment Method
 
 The app is deployed via Docker on a DigitalOcean Droplet. On first boot, a cloud-init user-data script:
 1. Clones the repo from `https://github.com/tarabucci-tennis/project-1`
 2. Runs `docker build -t project-1 .`
-3. Starts the container: `docker run -d -p 80:80 -e RAILS_MASTER_KEY=... -v /root/storage:/rails/storage --restart unless-stopped project-1`
+3. Starts the container: `docker run -d -p 80:80 -p 443:443 -e RAILS_MASTER_KEY=... -e TLS_DOMAIN=yourcourtreport.com,www.yourcourtreport.com -v /root/storage:/rails/storage -v /root/thruster-storage:/rails/.thruster --restart unless-stopped project-1`
+
+Thruster automatically provisions Let's Encrypt SSL certificates when the `TLS_DOMAIN` environment variable is set.
 
 SQLite databases are persisted via a Docker volume mounted at `/root/storage` on the host.
+Thruster's SSL certificates are persisted via a Docker volume mounted at `/root/thruster-storage`.
 
-### Re-deploying
+### Auto-Deploy (GitHub Actions)
 
-To redeploy after pushing new code, SSH into the droplet and run:
+Deployments are automated via GitHub Actions (`.github/workflows/deploy.yml`).
+
+**Trigger:** Any push to `main` or `claude/**` branches automatically deploys.
+
+**How it works:**
+1. GitHub Actions SSHes into the Droplet using the `deploy_key` SSH key
+2. Pulls the latest code from the pushed branch
+3. Builds a new Docker image
+4. Stops and removes the old container
+5. Starts a new container with SSL, volumes, and environment variables
+6. Runs `db:migrate` and `db:seed`
+
+**Required GitHub Secrets** (already configured):
+- `DEPLOY_HOST` — Droplet IP (`146.190.112.29`)
+- `DEPLOY_SSH_KEY` — Private key matching `~/.ssh/deploy_key` on the Droplet
+- `RAILS_MASTER_KEY` — Rails credentials master key
+
+**To deploy:** Just merge a PR to `main`. No manual steps needed.
+
+### Manual Re-deploy (fallback)
+
+If GitHub Actions fails, SSH into the droplet and run:
 ```bash
-cd /root/app && git pull && docker build -t project-1 . && docker stop project-1 && docker rm project-1 && docker run -d -p 80:80 -e RAILS_MASTER_KEY=<key> -v /root/storage:/rails/storage --name project-1 --restart unless-stopped project-1
+cd /root/app && git pull && docker build -t project-1 . && docker stop project-1 && docker rm project-1 && docker run -d -p 80:80 -p 443:443 -e RAILS_MASTER_KEY=$(cat /root/app/config/master.key) -e TLS_DOMAIN=yourcourtreport.com,www.yourcourtreport.com -v /root/storage:/rails/storage -v /root/thruster-storage:/rails/.thruster --name project-1 --restart unless-stopped project-1
 ```
 
 ## GitHub
 
 Repo: `tarabucci-tennis/project-1` (public)
-Branch: `claude/setup-planning-4PTsK`
+Default branch: `main`
 
 ## Learnings
 
