@@ -1,6 +1,32 @@
 class LineupsController < ApplicationController
   before_action :require_login
-  before_action :set_team_and_match
+  before_action :set_team_and_match, except: [ :dashboard ]
+
+  # GET /lineups — dashboard showing all upcoming matches across user's teams
+  def dashboard
+    owned_team_ids  = current_user.tennis_teams.pluck(:id) rescue []
+    member_team_ids = current_user.member_teams.pluck(:id) rescue []
+    @teams = TennisTeam.where(id: (owned_team_ids + member_team_ids).uniq)
+    @upcoming = []
+
+    @teams.each do |team|
+      next unless team.respond_to?(:matches)
+      team.matches.where("match_date >= ?", Date.current).order(:match_date).each do |match|
+        lineup = match.lineup rescue nil
+        slot   = lineup&.lineup_slots&.find_by(user_id: current_user.id) rescue nil
+        @upcoming << {
+          team: team,
+          match: match,
+          lineup: lineup,
+          published: lineup&.published?,
+          my_slot: slot,
+          is_captain: team.respond_to?(:captain?) ? team.captain?(current_user) : false
+        }
+      end
+    end
+
+    @upcoming.sort_by! { |u| u[:match].match_date }
+  end
 
   # GET /teams/:team_id/matches/:match_id/lineup/edit — captain sets lineup
   def edit

@@ -11,12 +11,14 @@ class LineupMailer < ApplicationMailer
     @confirm_url = confirm_team_match_lineup_url(
       @team, @match,
       status: "confirmed",
-      host: "146.190.112.29"
+      host: "yourcourtreport.com",
+      protocol: "https"
     )
     @decline_url = confirm_team_match_lineup_url(
       @team, @match,
       status: "declined",
-      host: "146.190.112.29"
+      host: "yourcourtreport.com",
+      protocol: "https"
     )
 
     mail(

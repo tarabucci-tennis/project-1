@@ -51,6 +51,9 @@ Rails.application.routes.draw do
   # Stats test page (pulls from Google Sheets)
   get "stats-test", to: "pages#stats_test", as: :stats_test
 
+  # Lineups dashboard — all upcoming matches across user's teams
+  get "lineups", to: "lineups#dashboard", as: :lineups_dashboard
+
   # Root: sends logged-in users to My Teams; logged-out users to login
   root "pages#home"
 end
