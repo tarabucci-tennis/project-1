@@ -18,6 +18,7 @@ Rails.application.routes.draw do
   resources :users, only: [ :index, :new, :create, :edit, :update, :destroy ]
 
   get "tennis",  to: "pages#tennis",    as: :tennis
+  get "stats-test", to: "pages#stats_test", as: :stats_test
   get "profile", to: "profiles#show",  as: :profile
 
   # Defines the root path route ("/")

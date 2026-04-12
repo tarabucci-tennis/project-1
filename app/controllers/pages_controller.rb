@@ -1,3 +1,6 @@
+require "net/http"
+require "csv"
+
 class PagesController < ApplicationController
   SABALENKA_QUOTES = [
     "I just want to keep fighting and keep believing.",
@@ -12,6 +15,8 @@ class PagesController < ApplicationController
     "The crowd gives me energy. I feed off their passion."
   ].freeze
 
+  SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/1OvOObnk_Sq5wZOX8sQHnUfn_PNTXrgSgGnqqS8QeIjI/export?format=csv".freeze
+
   def home
     return redirect_to login_path unless current_user
     redirect_to tennis_path unless current_user.admin?
@@ -20,5 +25,27 @@ class PagesController < ApplicationController
   def tennis
     return redirect_to login_path unless current_user
     @quote = SABALENKA_QUOTES.sample
+  end
+
+  def stats_test
+    @rows = []
+    @error = nil
+
+    begin
+      response = Net::HTTP.get_response(URI(SHEET_CSV_URL))
+      if response.is_a?(Net::HTTPRedirection)
+        response = Net::HTTP.get_response(URI(response["location"]))
+      end
+
+      if response.is_a?(Net::HTTPSuccess)
+        csv = CSV.parse(response.body, headers: true)
+        @headers = csv.headers
+        @rows = csv.to_a.map(&:to_h)
+      else
+        @error = "Failed to fetch sheet: #{response.code} #{response.message}"
+      end
+    rescue => e
+      @error = "Error: #{e.message}"
+    end
   end
 end
