@@ -207,9 +207,10 @@ h1 {
   }
   .navbar-center { gap: 12px; }
   .navbar-right { gap: 8px; }
-  .nav-link { font-size: 0.78rem; }
-  .btn { padding: 5px 10px; font-size: 0.75rem; }
-  .btn-sm { padding: 4px 8px; font-size: 0.72rem; }
+  .nav-link { font-size: 0.78rem; white-space: nowrap; }
+  .nav-user { font-size: 0.78rem; white-space: nowrap; }
+  .btn { padding: 5px 10px; font-size: 0.75rem; white-space: nowrap; }
+  .btn-sm { padding: 4px 8px; font-size: 0.72rem; white-space: nowrap; }
 }
 
 .nav-link-coming-soon {
