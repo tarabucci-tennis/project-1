@@ -48,6 +48,9 @@ Rails.application.routes.draw do
   get "profile",      to: "profiles#show", as: :profile
   get "players/:id",  to: "profiles#player", as: :player
 
+  # Stats test page (pulls from Google Sheets)
+  get "stats-test", to: "pages#stats_test", as: :stats_test
+
   # Root: sends logged-in users to My Teams; logged-out users to login
   root "pages#home"
 end
