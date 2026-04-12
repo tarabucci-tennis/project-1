@@ -20,9 +20,10 @@ body{font-family:'Inter',sans-serif;background:var(--off);color:var(--text);-web
 .fu{animation:fu .35s cubic-bezier(.22,1,.36,1) both;}
 .app-header{background:var(--navy);position:sticky;top:0;z-index:200;box-shadow:0 2px 20px rgba(0,0,0,.3);}
 .header-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:16px 32px;}
-.logo{display:flex;align-items:center;gap:12px;}
-.logo-mark{width:42px;height:42px;background:linear-gradient(135deg,var(--accent),var(--accent2));border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;animation:glow 3s ease infinite,bounce-ball 1.6s ease-in-out infinite;box-shadow:0 3px 14px rgba(201,168,76,.4);}
-.logo-name{font-family:'Bebas Neue',sans-serif;font-size:2.2rem;letter-spacing:5px;color:var(--white);}
+.logo{display:flex;align-items:center;gap:12px;flex-shrink:0;min-width:0;}
+.logo-mark{width:42px;height:42px;background:linear-gradient(135deg,var(--accent),var(--accent2));border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;animation:glow 3s ease infinite;box-shadow:0 3px 14px rgba(201,168,76,.4);overflow:hidden;flex-shrink:0;}
+.logo-ball{display:inline-block;line-height:1;animation:bounce-ball 1.6s ease-in-out infinite;}
+.logo-name{font-family:'Bebas Neue',sans-serif;font-size:2.2rem;letter-spacing:5px;color:var(--white);white-space:nowrap;}
 .logo-name span{color:var(--accent);}
 .season-pill{font-family:'JetBrains Mono',monospace;font-size:.65rem;letter-spacing:2px;color:rgba(255,255,255,.35);border:1px solid rgba(255,255,255,.1);padding:5px 14px;border-radius:20px;}
 .search-btn{width:38px;height:38px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1rem;cursor:pointer;color:rgba(255,255,255,.6);}
@@ -267,7 +268,7 @@ tr:hover td{background:rgba(201,168,76,.03);}
 </head>
 <body>
 <div class="app-header">
-<div class="header-inner"><div class="logo"><div class="logo-mark">🎾</div><div class="logo-name">Court <span>Report</span></div></div><div style="display:flex;align-items:center;gap:12px;"><div class="season-pill">Spring 2026</div><% if current_user %><a href="/teams" style="font-family:'JetBrains Mono',monospace;font-size:.65rem;letter-spacing:1px;color:var(--accent);text-decoration:none;border:1px solid rgba(201,168,76,.3);padding:5px 14px;border-radius:20px;">My Teams</a><span style="font-family:'JetBrains Mono',monospace;font-size:.65rem;color:rgba(255,255,255,.35);"><%= current_user.name %></span><%= button_to "Sign Out", "/session", method: :delete, style: "font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:1px;color:rgba(255,255,255,.4);background:none;border:1px solid rgba(255,255,255,.1);padding:5px 12px;border-radius:20px;cursor:pointer;" %><% else %><a href="/login" style="font-family:'JetBrains Mono',monospace;font-size:.65rem;letter-spacing:1px;color:var(--accent);text-decoration:none;border:1px solid rgba(201,168,76,.3);padding:5px 14px;border-radius:20px;">Sign In</a><a href="/signup" style="font-family:'JetBrains Mono',monospace;font-size:.65rem;letter-spacing:1px;color:var(--navy);text-decoration:none;background:linear-gradient(135deg,var(--accent),var(--accent2));padding:5px 14px;border-radius:20px;font-weight:600;">Sign Up</a><% end %><button class="search-btn" onclick="openSearch()">🔍</button></div></div>
+<div class="header-inner"><div class="logo"><div class="logo-mark"><span class="logo-ball">🎾</span></div><div class="logo-name">Court <span>Report</span></div></div><div style="display:flex;align-items:center;gap:12px;flex-shrink:0;flex-wrap:nowrap;"><div class="season-pill">Spring 2026</div><% if current_user %><a href="/teams" style="font-family:'JetBrains Mono',monospace;font-size:.65rem;letter-spacing:1px;color:var(--accent);text-decoration:none;border:1px solid rgba(201,168,76,.3);padding:5px 14px;border-radius:20px;white-space:nowrap;display:inline-block;">My Teams</a><span style="font-family:'JetBrains Mono',monospace;font-size:.65rem;color:rgba(255,255,255,.35);white-space:nowrap;"><%= current_user.name %></span><%= button_to "Sign Out", "/session", method: :delete, form: { style: "display:inline-flex;margin:0;" }, style: "font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:1px;color:rgba(255,255,255,.4);background:none;border:1px solid rgba(255,255,255,.1);padding:5px 12px;border-radius:20px;cursor:pointer;white-space:nowrap;" %><% else %><a href="/login" style="font-family:'JetBrains Mono',monospace;font-size:.65rem;letter-spacing:1px;color:var(--accent);text-decoration:none;border:1px solid rgba(201,168,76,.3);padding:5px 14px;border-radius:20px;white-space:nowrap;display:inline-block;">Sign In</a><a href="/signup" style="font-family:'JetBrains Mono',monospace;font-size:.65rem;letter-spacing:1px;color:var(--navy);text-decoration:none;background:linear-gradient(135deg,var(--accent),var(--accent2));padding:5px 14px;border-radius:20px;font-weight:600;white-space:nowrap;display:inline-block;">Sign Up</a><% end %><button class="search-btn" onclick="openSearch()">🔍</button></div></div>
 <div class="team-tabs-wrap"><div class="team-tabs">
 <div class="team-tab active" onclick="toggleDropdown(this)">USTA ▾
 <div class="league-dropdown">
@@ -345,6 +346,7 @@ tr:hover td{background:rgba(201,168,76,.03);}
 <div class="rcard" onclick="openProfile('Vanessa Halloran','VH','blue','4.0 NTRP','','4.0','')"><div class="rav blue" id="av-VH">VH</div><div class="rname">Vanessa Halloran</div><div class="rntrp">4.0 NTRP</div></div>
 <div class="rcard" onclick="openProfile('Bridget Hallman','BH','blue','4.0 NTRP','','4.0','')"><div class="rav blue" id="av-BH">BH</div><div class="rname">Bridget Hallman</div><div class="rntrp">4.0 NTRP</div></div>
 </div></div></div>
+<div id="fri-lineups" class="page-view fu"><div class="team-hero th-fri" style="margin-bottom:24px;"><div class="th-grid"></div><div class="th-glow"></div><div class="th-content"><div><div class="th-tag">Kiss My Ace · Captain Tools</div><div class="th-name">Lineups</div><div class="th-sub">Set doubles pairings and singles picks before each match</div></div></div></div><div class="one-col"><div class="no-results">📝 Lineups coming soon!<br><br>Captains will set lineups here and players can confirm availability before each match.</div></div></div>
 <div id="fri-whatsapp" class="page-view fu"><div class="team-hero th-fri" style="margin-bottom:24px;"><div class="th-grid"></div><div class="th-glow"></div><div class="th-content"><div><div class="th-tag">Kiss My Ace · Chat</div><div class="th-name">WhatsApp</div><div class="th-sub">Stay connected with your team</div></div></div></div><div class="wa-section"><div class="wa-icon">💬</div><div class="wa-title">Kiss My Ace Chat</div><div class="wa-sub">Tap below to open your team WhatsApp group.</div><a href="https://chat.whatsapp.com/" class="wa-btn" target="_blank"><span style="font-size:1.4rem;">💬</span><div><div>Open Group Chat</div><div class="wa-btn-sub">Kiss My Ace · Friday</div></div></a></div></div>
 </div>
 <div id="panel-tue" class="team-panel">
@@ -391,6 +393,7 @@ tr:hover td{background:rgba(201,168,76,.03);}
 <div class="rcard" onclick="openProfile('Jody Staples','JS2','pur','3.5 NTRP','','3.5','')"><div class="rav pur">JS</div><div class="rname">Jody Staples</div><div class="rntrp">3.5 NTRP</div></div>
 <div class="rcard" onclick="openProfile('Karli McGill','KM2','pur','4.0 NTRP','','4.0','')"><div class="rav pur">KM</div><div class="rname">Karli McGill</div><div class="rntrp">4.0 NTRP</div></div>
 </div></div></div>
+<div id="tue-lineups" class="page-view fu"><div class="team-hero th-tue" style="margin-bottom:24px;"><div class="th-grid"></div><div class="th-glow"></div><div class="th-content"><div><div class="th-tag">Pour Decisions · Captain Tools</div><div class="th-name">Lineups</div><div class="th-sub">Set doubles pairings and singles picks before each match</div></div></div></div><div class="one-col"><div class="no-results">📝 Lineups coming soon!<br><br>Captains will set lineups here and players can confirm availability before each match.</div></div></div>
 <div id="tue-whatsapp" class="page-view fu"><div class="team-hero th-tue" style="margin-bottom:24px;"><div class="th-grid"></div><div class="th-glow"></div><div class="th-content"><div><div class="th-tag">Pour Decisions · Chat</div><div class="th-name">WhatsApp</div><div class="th-sub">Stay connected with your team</div></div></div></div><div class="wa-section"><div class="wa-icon">💬</div><div class="wa-title">Pour Decisions Chat</div><div class="wa-sub">Tap below to open your team WhatsApp group.</div><a href="https://chat.whatsapp.com/" class="wa-btn" target="_blank"><span style="font-size:1.4rem;">💬</span><div><div>Open Group Chat</div><div class="wa-btn-sub">Pour Decisions · Friday Squad</div></div></a></div></div>
 </div>
 </div>
@@ -439,6 +442,7 @@ tr:hover td{background:rgba(201,168,76,.03);}
 <div class="rcard"><div class="rav blue">CN</div><div class="rname">Christi Neilly</div><div class="rntrp">Substitute</div></div>
 </div>
 </div></div>
+<div id="cup6-lineups" class="page-view fu"><div class="team-hero" style="background:linear-gradient(150deg,#0a1628,#1a3050 50%,#2a4a70);padding:40px;color:#fff;position:relative;overflow:hidden;border-radius:16px;margin-bottom:24px;"><div class="th-grid"></div><div class="th-glow"></div><div class="th-content" style="position:relative;"><div class="th-tag">Philadelphia Country #2 · Captain Tools</div><div class="th-name">Lineups</div><div class="th-sub">Set doubles pairings and singles picks before each match</div></div></div><div class="one-col"><div class="no-results">📝 Lineups coming soon!<br><br>Captains will set lineups here and players can confirm availability before each match.</div></div></div>
 <div id="cup6-whatsapp" class="page-view fu"><div class="wa-section"><div class="wa-icon">💬</div><div class="wa-title">Cup 6 Chat</div><div class="wa-sub">Tap below to open your team WhatsApp group.</div><a href="https://chat.whatsapp.com/" class="wa-btn" target="_blank"><span style="font-size:1.4rem;">💬</span><div><div>Open Group Chat</div><div class="wa-btn-sub">Philadelphia CC · Cup 6</div></div></a></div></div>
 </div>
 
@@ -450,7 +454,11 @@ tr:hover td{background:rgba(201,168,76,.03);}
 <div class="app-footer"><strong>Court Report</strong> &nbsp;·&nbsp; Spring 2026 &nbsp;·&nbsp; Build v1.0 — Auto-Deploy Test ✓</div>
 <nav class="mobile-nav"><div class="mobile-nav-inner">
 <button class="bnav-btn active" id="mob-schedule" onclick="switchPage('schedule',this)"><span class="bnav-icon">📅</span><span class="bnav-label">Schedule</span></button>
+<% if current_user %>
 <a class="bnav-btn" href="/lineups"><span class="bnav-icon">📝</span><span class="bnav-label">Lineups</span></a>
+<% else %>
+<button class="bnav-btn" id="mob-lineups" onclick="switchPage('lineups',this)"><span class="bnav-icon">📝</span><span class="bnav-label">Lineups</span></button>
+<% end %>
 <button class="bnav-btn" id="mob-standings" onclick="switchPage('standings',this)"><span class="bnav-icon">🏆</span><span class="bnav-label">Standings</span></button>
 <button class="bnav-btn" id="mob-roster" onclick="switchPage('roster',this)"><span class="bnav-icon">👥</span><span class="bnav-label">Roster</span></button>
 <button class="bnav-btn" id="mob-whatsapp" onclick="switchPage('whatsapp',this)"><span class="bnav-icon">💬</span><span class="bnav-label">WhatsApp</span></button>
