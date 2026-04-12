@@ -435,20 +435,56 @@ Reconstructed from git log. Tara has built this app over ~6 sessions.
 | Size | `s-1vcpu-1gb` |
 | Image | `docker-20-04` (Ubuntu 22.04 + Docker pre-installed) |
 | Firewall ID | `b6a72fad-0194-438c-9603-589490137155` |
-| Firewall | Ports 22 (SSH) and 80 (HTTP) open |
+| Firewall | Ports 22 (SSH), 80 (HTTP), and 443 (HTTPS) open |
 | Container Registry | `registry.digitalocean.com/tarabucci-tennis` |
 | SSH Key ID | `54458995` (name: `do-deploy`) |
 
-**App URL:** http://146.190.112.29
+**App URL:** https://yourcourtreport.com
+**Domain:** yourcourtreport.com (with www redirect)
+**SSL:** Auto-provisioned via Thruster + Let's Encrypt
 
-### Re-deploying after pushing new code
+### Branching Strategy — READ THIS BEFORE STARTING ANY WORK
 
-SSH into the droplet and run:
+**The single source of truth is `main`.** Always.
+
+- **Always start new work from `main`** — never from a stale `claude/*` feature branch.
+- **Always pull the latest `main` first:** `git fetch origin && git checkout main && git reset --hard origin/main`
+- **Feature branches should be short-lived** — create, push, merge PR to main, delete.
+- **Never commit directly to main from the droplet** — all changes go through GitHub PRs.
+- **Verify before merging:** if you're on a feature branch and unsure whether it has the latest main, rebase: `git rebase origin/main`
+
+**Why this matters:** Previously, parallel Claude sessions created a dozen stale feature branches, each built on a different starting point. When one branch got merged to main, it wiped out features from other branches. This caused the deployed site to break. Never let main fall behind the deployed code.
+
+### Auto-Deploy (GitHub Actions)
+
+Deployments are automated via `.github/workflows/deploy.yml`.
+
+**Trigger:** Any push to `main` automatically deploys.
+
+**How it works:**
+1. GitHub Actions SSHes into the Droplet
+2. Pulls the latest `main`
+3. Builds a new Docker image
+4. Stops and removes the old container
+5. Starts a new container with SSL, volumes, and env vars
+6. Runs `db:migrate` and `db:seed`
+
+**Required GitHub Secrets:**
+- `DEPLOY_HOST` — Droplet IP (`146.190.112.29`)
+- `DEPLOY_SSH_KEY` — Private key matching `~/.ssh/deploy_key` on the Droplet
+- `RAILS_MASTER_KEY` — Rails credentials master key
+
+**To deploy:** Just merge a PR to `main`. No terminal commands needed.
+
+### Manual Re-deploy (fallback)
+
+If GitHub Actions fails, SSH into the droplet and run:
 ```bash
-cd /root/app && git pull && docker build -t project-1 . && docker stop project-1 && docker rm project-1 && docker run -d -p 80:80 -e RAILS_MASTER_KEY=<key> -v /root/storage:/rails/storage --name project-1 --restart unless-stopped project-1
+cd /root/app && git fetch origin && git checkout main && git reset --hard origin/main && docker build -t project-1 . && docker stop project-1 && docker rm project-1 && docker run -d -p 80:80 -p 443:443 -e RAILS_MASTER_KEY=$(cat /root/app/config/master.key) -e TLS_DOMAIN=yourcourtreport.com,www.yourcourtreport.com -v /root/storage:/rails/storage -v /root/thruster-storage:/rails/.thruster --name project-1 --restart unless-stopped project-1
 ```
 
-SQLite databases are persisted via a Docker volume mounted at `/root/storage` on the host.
+SQLite databases are persisted via a Docker volume at `/root/storage`.
+Thruster SSL certs are persisted via a Docker volume at `/root/thruster-storage`.
 
 **Note:** After merging the Session 6 branch, you will also need to run database updates on the server: `docker exec project-1 bin/rails db:migrate db:seed`
 
