@@ -14,6 +14,7 @@
     <link rel="icon" href="/icon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/icon.png">
 
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
   </head>
@@ -22,7 +23,7 @@
     <nav class="cr-header">
       <div class="cr-header-inner">
         <%= link_to (current_user ? teams_path : root_path), class: "cr-brand" do %>
-          <span class="cr-brand-ball">🎾</span>
+          <span class="cr-brand-ball"><span class="cr-brand-ball-inner">🎾</span></span>
           <span class="cr-brand-text">COURT <span class="cr-brand-gold">REPORT</span></span>
         <% end %>
 
@@ -30,7 +31,7 @@
           <% if current_user %>
             <%= link_to "My Teams", teams_path, class: "cr-header-pill" %>
             <%= link_to current_user.name, profile_path, class: "cr-header-user" %>
-            <%= button_to "Sign Out", session_path, method: :delete, class: "cr-header-pill cr-header-signout", form: { style: "display:inline" } %>
+            <%= button_to "Sign Out", session_path, method: :delete, class: "cr-header-pill cr-header-signout", form: { style: "display:inline-flex; margin:0;" } %>
           <% else %>
             <%= link_to "Sign In", login_path, class: "cr-header-pill" %>
             <%= link_to "Sign Up", signup_path, class: "cr-header-pill cr-header-signup" %>
@@ -49,5 +50,32 @@
     <main class="cr-main">
       <%= yield %>
     </main>
+
+    <% if current_user %>
+      <nav class="cr-bottom-nav" aria-label="Primary">
+        <div class="cr-bottom-nav-inner">
+          <%= link_to teams_path, class: "cr-bnav-btn #{'cr-bnav-active' if controller_name == 'teams' && action_name == 'index'}" do %>
+            <span class="cr-bnav-icon">📅</span>
+            <span class="cr-bnav-label">Schedule</span>
+          <% end %>
+          <%= link_to lineups_dashboard_path, class: "cr-bnav-btn #{'cr-bnav-active' if controller_name == 'lineups'}" do %>
+            <span class="cr-bnav-icon">📝</span>
+            <span class="cr-bnav-label">Lineups</span>
+          <% end %>
+          <%= link_to teams_path(anchor: "standings"), class: "cr-bnav-btn" do %>
+            <span class="cr-bnav-icon">🏆</span>
+            <span class="cr-bnav-label">Standings</span>
+          <% end %>
+          <%= link_to teams_path(anchor: "roster"), class: "cr-bnav-btn" do %>
+            <span class="cr-bnav-icon">👥</span>
+            <span class="cr-bnav-label">Roster</span>
+          <% end %>
+          <a href="https://chat.whatsapp.com/" target="_blank" rel="noopener" class="cr-bnav-btn">
+            <span class="cr-bnav-icon">💬</span>
+            <span class="cr-bnav-label">WhatsApp</span>
+          </a>
+        </div>
+      </nav>
+    <% end %>
   </body>
 </html>
