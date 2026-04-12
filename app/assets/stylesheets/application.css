@@ -195,6 +195,23 @@ h1 {
 
 .navbar-brand-static { cursor: default; }
 
+/* ---- Navbar mobile ---- */
+@media (max-width: 600px) {
+  .navbar {
+    height: 44px;
+    padding: 0 12px;
+  }
+  .navbar-brand {
+    font-size: 0.8rem;
+    min-width: auto;
+  }
+  .navbar-center { gap: 12px; }
+  .navbar-right { gap: 8px; }
+  .nav-link { font-size: 0.78rem; }
+  .btn { padding: 5px 10px; font-size: 0.75rem; }
+  .btn-sm { padding: 4px 8px; font-size: 0.72rem; }
+}
+
 .nav-link-coming-soon {
   color: rgba(255,255,255,0.3);
   font-size: 0.9rem;
