@@ -9,11 +9,17 @@
       <%= form_with url: reset_password_path(token: params[:token]), method: :patch do |f| %>
         <div class="cr-field">
           <%= f.label :password, "New password" %>
-          <%= f.password_field :password, placeholder: "At least 6 characters" %>
+          <div class="cr-password-wrap">
+            <%= f.password_field :password, placeholder: "At least 6 characters" %>
+            <button type="button" class="cr-password-toggle" onclick="togglePassword(this)" aria-label="Show password">👁</button>
+          </div>
         </div>
         <div class="cr-field">
           <%= f.label :password_confirmation, "Confirm password" %>
-          <%= f.password_field :password_confirmation, placeholder: "Type it again" %>
+          <div class="cr-password-wrap">
+            <%= f.password_field :password_confirmation, placeholder: "Type it again" %>
+            <button type="button" class="cr-password-toggle" onclick="togglePassword(this)" aria-label="Show password">👁</button>
+          </div>
         </div>
         <%= f.submit "Reset Password →" %>
       <% end %>

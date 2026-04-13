@@ -784,31 +784,29 @@ button.cr-header-pill {
   padding: 14px 18px;
   gap: 14px;
   border-bottom: none;
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
   align-items: center;
   min-width: 0;
 }
 
-/* Inside a card, the info block can shrink and its text truncates
-   cleanly with an ellipsis instead of wrapping to multiple lines. */
+/* Inside a card, the info block gets a guaranteed minimum width
+   so it always has room for the opponent name and location, and
+   text wraps naturally instead of truncating to "V." */
 .cr-match-card .cr-match-info {
-  flex: 1 1 auto;
+  flex: 1 1 200px;
   min-width: 0;
-  overflow: hidden;
 }
 
 .cr-match-card .cr-match-opponent {
   font-size: 0.95rem;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  line-height: 1.25;
+  overflow-wrap: break-word;
 }
 
 .cr-match-card .cr-match-location {
   font-size: 0.78rem;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  line-height: 1.35;
+  overflow-wrap: break-word;
   margin-top: 1px;
 }
 
@@ -1137,6 +1135,41 @@ button.cr-header-pill {
 
 .cr-field input:focus,
 .cr-field select:focus { border-color: var(--cr-gold); }
+
+/* Password field with show/hide eye toggle */
+.cr-password-wrap {
+  position: relative;
+}
+
+.cr-password-wrap input[type="password"],
+.cr-password-wrap input[type="text"] {
+  padding-right: 44px !important;
+}
+
+.cr-password-toggle {
+  position: absolute;
+  right: 6px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  font-size: 1rem;
+  line-height: 1;
+  cursor: pointer;
+  color: var(--cr-text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.cr-password-toggle:hover {
+  background: var(--cr-bg);
+}
 
 .cr-login-card input[type="submit"] {
   width: 100%;
