@@ -7,9 +7,11 @@ class JoinsController < ApplicationController
     end
 
     unless current_user
-      # Save the join code in session so we can redirect after login/signup
+      # Save the join code in session so the signup / sign-in flow
+      # can consume it and auto-add the team.
       session[:pending_join_code] = params[:code]
-      redirect_to signup_path, notice: "Sign up first, then you'll be added to #{@team.name}."
+      redirect_to signup_path,
+                  notice: "Create your account to join #{@team.name} — already have one? Sign in instead."
       return
     end
 

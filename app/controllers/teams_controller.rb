@@ -203,11 +203,18 @@ class TeamsController < ApplicationController
     end
   end
 
-  # POST /teams/:team_id/add_player — captain adds a player by email
+  # POST /teams/:team_id/add_player — captain adds a player by email.
+  #
+  # Matching order, to avoid creating duplicate users:
+  #   1. Exact email match → reuse that User
+  #   2. Same-name placeholder already on this team with blank or
+  #      matching email and no password yet → attach the email to
+  #      that placeholder
+  #   3. Otherwise → create a brand-new User
   def add_player
     @team = TennisTeam.find(params[:team_id])
-    unless @team.captain?(current_user) || current_user.admin?
-      return redirect_to team_path(@team), alert: "Only captains can add players."
+    unless @team.can_set_lineup?(current_user) || current_user.admin?
+      return redirect_to team_path(@team), alert: "Only captains and co-captains can add players."
     end
 
     email = params[:email].to_s.downcase.strip
@@ -218,10 +225,25 @@ class TeamsController < ApplicationController
     end
 
     player = User.find_by(email: email)
+
     if player.nil? && name.present?
-      player = User.create!(name: name, email: email, admin: false)
+      # Look for a placeholder teammate (seeded or added earlier by
+      # the captain) with the same name, no password set, and an
+      # empty email slot.
+      placeholder = @team.members
+                         .where(password_digest: nil)
+                         .where("LOWER(name) = ?", name.downcase)
+                         .where("email IS NULL OR email = ''")
+                         .first
+      if placeholder
+        placeholder.update!(email: email)
+        player = placeholder
+      else
+        player = User.create!(name: name, email: email, admin: false)
+      end
     elsif player.nil?
-      return redirect_to team_path(@team), alert: "No account found for #{email}. Enter their name too so we can create one."
+      return redirect_to team_path(@team),
+                         alert: "No account found for #{email}. Enter their name too so we can create one."
     end
 
     if @team.team_memberships.exists?(user: player)
