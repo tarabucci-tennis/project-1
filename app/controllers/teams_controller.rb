@@ -254,6 +254,79 @@ class TeamsController < ApplicationController
     end
   end
 
+  # POST /teams/:id/paste_roster
+  #
+  # Accepts a big textarea of player names (one per line) and creates
+  # placeholder User rows + TeamMemberships for each of them. Handles a
+  # few common formats pasted from USTA TennisLink / Del-Tri / Inter-Club
+  # rosters:
+  #
+  #   Jaclyn Groenen
+  #   Jaclyn Groenen (4.0)
+  #   Jaclyn Groenen 4.0
+  #   Jaclyn Groenen                       4.0          F
+  #
+  # The regex strips any trailing rating and any non-name columns, then
+  # creates placeholders with blank email/password. Captains share the
+  # join link with their team — PR #51 / PR #54's placeholder-merge
+  # logic then attaches real email + password to the right row when the
+  # teammate signs up.
+  def paste_roster
+    @team = TennisTeam.find(params[:team_id])
+    unless @team.can_set_lineup?(current_user) || current_user.admin?
+      return redirect_to team_path(@team),
+                         alert: "Only captains and co-captains can paste a roster."
+    end
+
+    raw = params[:roster].to_s
+    lines = raw.split("\n").map(&:strip).reject(&:blank?)
+
+    if lines.empty?
+      return redirect_to team_path(@team),
+                         alert: "Paste some names into the box first."
+    end
+
+    added  = []
+    already = []
+    skipped = []
+
+    lines.each do |line|
+      # Strip trailing rating like "4.0", "(3.5)", "[4.0]", or anything
+      # that starts with a digit past the name. Also strip common USTA
+      # suffixes like "C" (captain) or "M/F" gender column.
+      name = line.dup
+      name = name.sub(/\s*[\(\[]?\d\.\d[\)\]]?.*$/, "")  # ratings
+      name = name.sub(/\s+[CcFfMm]\s*$/, "")             # lone role/gender
+      name = name.strip
+
+      if name.length < 2
+        skipped << line
+        next
+      end
+
+      # Case-insensitive match on existing team members
+      existing = @team.members.find { |u| u.name.to_s.downcase == name.downcase }
+      if existing
+        already << name
+        next
+      end
+
+      # Look for a User with this name who ISN'T on the team yet
+      reuse = User.where("LOWER(name) = ?", name.downcase).first
+      player = reuse || User.create!(name: name, admin: false)
+      TeamMembership.create!(user: player, tennis_team: @team, role: "player")
+      added << name
+    end
+
+    parts = []
+    parts << "Added #{added.size}: #{added.join(', ')}" if added.any?
+    parts << "Already on team: #{already.join(', ')}" if already.any?
+    parts << "Skipped #{skipped.size} line(s)" if skipped.any?
+
+    redirect_to team_path(@team, tab: "captain"),
+                notice: parts.join(" · ")
+  end
+
   private
 
   def require_login
