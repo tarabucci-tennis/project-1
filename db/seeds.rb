@@ -152,42 +152,43 @@ kma_schedule.each do |date, opp|
 end
 
 # Kiss My Ace — April 14 lineup vs. Kinetix Deuces Wild (from TennisLink, all confirmed)
+# This seed always resets the Apr 14 lineup to the canonical 9 slots. If Tara
+# edits it via the app, those edits will be overwritten on the next deploy —
+# remove this block when Tara starts managing lineups from the app directly.
 kma_apr14 = kiss_my_ace.matches.find_by(match_date: Time.zone.local(2026, 4, 14, 10, 30))
 if kma_apr14
   kma_lineup = kma_apr14.lineup || kma_apr14.create_lineup!
-  if kma_lineup.lineup_slots.empty?
-    def user_id_by_name(name)
-      User.find_by(name: name)&.id
-    end
 
-    apr14_slots = [
-      { line_type: "singles", position: 1, name: "Jaclyn Groenen"  },
-      { line_type: "doubles", position: 1, name: "Alison Vachris"  },
-      { line_type: "doubles", position: 1, name: "Tara Bucci"      },
-      { line_type: "doubles", position: 2, name: "Amanda Neill"    },
-      { line_type: "doubles", position: 2, name: "Rachel Chadwin"  },
-      { line_type: "doubles", position: 3, name: "Sarah Brautigan" },
-      { line_type: "doubles", position: 3, name: "Stephanie Giordano" },
-      { line_type: "doubles", position: 4, name: "Helen Lee"       },
-      { line_type: "doubles", position: 4, name: "Kerry McDuffie"  }
-    ]
+  # Wipe any stray slots from earlier test sessions
+  kma_lineup.lineup_slots.destroy_all
 
-    apr14_slots.each do |s|
-      uid = user_id_by_name(s[:name])
-      next unless uid
-      LineupSlot.create!(
-        lineup:       kma_lineup,
-        user_id:      uid,
-        line_type:    s[:line_type],
-        position:     s[:position],
-        confirmation: "confirmed",
-        confirmed_at: Time.current
-      )
-    end
+  apr14_slots = [
+    { line_type: "singles", position: 1, name: "Jaclyn Groenen"    },
+    { line_type: "doubles", position: 1, name: "Alison Vachris"    },
+    { line_type: "doubles", position: 1, name: "Tara Bucci"        },
+    { line_type: "doubles", position: 2, name: "Amanda Neill"      },
+    { line_type: "doubles", position: 2, name: "Rachel Chadwin"    },
+    { line_type: "doubles", position: 3, name: "Sarah Brautigan"   },
+    { line_type: "doubles", position: 3, name: "Stephanie Giordano" },
+    { line_type: "doubles", position: 4, name: "Helen Lee"         },
+    { line_type: "doubles", position: 4, name: "Kerry McDuffie"    }
+  ]
 
-    kma_lineup.update!(published: true, published_at: Time.current) unless kma_lineup.published?
-    puts "Seeded Kiss My Ace April 14 lineup (9 players, all confirmed)"
+  apr14_slots.each do |s|
+    u = User.find_by(name: s[:name])
+    next unless u
+    LineupSlot.create!(
+      lineup:       kma_lineup,
+      user:         u,
+      line_type:    s[:line_type],
+      position:     s[:position],
+      confirmation: "confirmed",
+      confirmed_at: Time.current
+    )
   end
+
+  kma_lineup.update!(published: true, published_at: Time.current)
+  puts "Seeded Kiss My Ace April 14 lineup (#{kma_lineup.lineup_slots.count} slots, all confirmed)"
 end
 
 # --------------------------------------------------------------

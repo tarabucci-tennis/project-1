@@ -2539,22 +2539,34 @@ button.cr-header-pill {
    ======================================================== */
 
 @media (max-width: 720px) {
-  .cr-header-inner { padding: 10px 12px; gap: 6px; }
-  .cr-brand { gap: 8px; }
-  .cr-brand-text { font-size: 1.4rem; letter-spacing: 2px; }
-  .cr-brand-ball { width: 34px; height: 34px; font-size: 1rem; border-radius: 8px; }
-  .cr-header-right { gap: 6px; }
+  .cr-header-inner { padding: 10px 12px; gap: 6px; flex-wrap: nowrap; }
+  .cr-brand { gap: 8px; min-width: 0; flex-shrink: 1; }
+  .cr-brand-text {
+    font-size: 1.1rem;
+    letter-spacing: 1.2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .cr-brand-ball { width: 32px; height: 32px; font-size: 0.95rem; border-radius: 7px; }
+  .cr-header-right { gap: 6px; flex-shrink: 0; flex-wrap: nowrap; }
   .cr-header-pill,
   button.cr-header-pill {
     padding: 5px 10px;
-    font-size: 0.65rem;
+    font-size: 0.62rem;
     letter-spacing: 0.2px;
+    white-space: nowrap !important;
+    word-break: keep-all !important;
   }
+  /* Hide user name and "My Teams" pill on mobile. Users can still navigate
+     via the logo click (which goes to /teams when logged in) or the bottom
+     nav bar. Keeps the header uncluttered on narrow viewports. */
+  .cr-header-user,
+  .cr-header-my-teams { display: none !important; }
   .cr-main { padding: 24px 16px 110px; }
   .cr-page-title { font-size: 1.6rem; }
   .cr-team-hero { padding: 24px; }
   .cr-team-hero-name { font-size: 1.8rem; }
-  .cr-header-user { display: none; }
 }
 
 /* ========================================================
