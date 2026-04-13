@@ -1904,6 +1904,92 @@ button.cr-header-pill {
 .cr-standings-losses { color: var(--cr-red); }
 .cr-standings-pct { color: var(--cr-gold); }
 
+/* ========================================================
+   TennisLink-style standings table
+   ======================================================== */
+
+.cr-standings-criteria {
+  font-size: 0.88rem;
+  color: var(--cr-text);
+  margin-bottom: 4px;
+}
+
+.cr-standings-note {
+  font-size: 0.75rem;
+  color: var(--cr-text-muted);
+  font-style: italic;
+  margin-bottom: 14px;
+}
+
+/* Horizontal scroll wrapper — lets the 8-column USTA table
+   be readable on narrow mobile viewports without squashing. */
+.cr-standings-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border: 1px solid var(--cr-border);
+  border-radius: 10px;
+  background: var(--cr-white);
+}
+
+.cr-standings-tbl {
+  width: 100%;
+  min-width: 640px;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+
+.cr-standings-tbl thead th {
+  background: var(--cr-bg);
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--cr-text-muted);
+  text-align: center;
+  padding: 10px 10px;
+  border-bottom: 1px solid var(--cr-border);
+  line-height: 1.25;
+  white-space: nowrap;
+}
+
+.cr-standings-tbl tbody td {
+  padding: 12px 10px;
+  border-bottom: 1px solid var(--cr-border);
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+  color: var(--cr-text);
+}
+
+.cr-standings-tbl tbody tr:last-child td { border-bottom: none; }
+
+.cr-standings-tbl .cr-standings-tbl-team {
+  text-align: left;
+  font-weight: 600;
+  color: var(--cr-text);
+  padding-left: 18px;
+  white-space: nowrap;
+}
+
+.cr-standings-tbl .cr-standings-tbl-rank {
+  width: 44px;
+  color: var(--cr-text-muted);
+}
+
+.cr-standings-tbl .cr-standings-tbl-highlight {
+  font-weight: 700;
+  color: var(--cr-text);
+}
+
+.cr-standings-tbl .cr-standings-tbl-self td {
+  background: #fdf8ed;
+  font-weight: 700;
+}
+
+.cr-standings-tbl .cr-standings-tbl-self .cr-standings-tbl-team {
+  color: var(--cr-gold);
+}
+
+/* Legacy standings table — still used by a few places */
 .cr-standings-table {
   border: 1px solid var(--cr-border);
   border-radius: 10px;
