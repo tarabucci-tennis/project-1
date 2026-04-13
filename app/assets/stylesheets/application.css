@@ -2514,6 +2514,37 @@ button.cr-header-pill {
 .cr-lineup-status-declined { color: var(--cr-red); font-weight: 600; font-size: 0.82rem; }
 .cr-lineup-status-pending { color: var(--cr-text-light); font-style: italic; font-size: 0.82rem; }
 
+/* Mobile: stack the lineup table columns so the full lineup is readable on narrow screens */
+@media (max-width: 720px) {
+  .cr-lineup-match-header {
+    flex-wrap: wrap;
+    gap: 10px !important;
+    padding: 14px !important;
+  }
+  .cr-lineup-table-header {
+    grid-template-columns: 60px 42px 1fr 90px;
+    padding: 8px 12px;
+    font-size: 0.62rem;
+  }
+  .cr-lineup-table-row {
+    grid-template-columns: 60px 42px 1fr 90px;
+    padding: 10px 12px;
+    font-size: 0.82rem;
+    gap: 4px;
+  }
+  .cr-lineup-col-player { word-break: break-word; }
+  .cr-lineup-status-confirmed,
+  .cr-lineup-status-declined,
+  .cr-lineup-status-pending {
+    font-size: 0.68rem;
+  }
+  .cr-lineup-confirm-prompt {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+}
+
 .cr-cal-btn {
   display: inline-flex;
   align-items: center;

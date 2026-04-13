@@ -191,6 +191,43 @@ if kma_apr14
   puts "Seeded Kiss My Ace April 14 lineup (#{kma_lineup.lineup_slots.count} slots, all confirmed)"
 end
 
+# Kiss My Ace — April 21 lineup vs. Unmatchables (from TennisLink, all confirmed)
+# Same pattern as Apr 14: destroy_all + recreate so the canonical state always
+# wins. Remove this block when Tara starts managing lineups from the app directly.
+kma_apr21 = kiss_my_ace.matches.find_by(match_date: Time.zone.local(2026, 4, 21, 10, 30))
+if kma_apr21
+  kma_apr21_lineup = kma_apr21.lineup || kma_apr21.create_lineup!
+  kma_apr21_lineup.lineup_slots.destroy_all
+
+  apr21_slots = [
+    { line_type: "singles", position: 1, name: "Tara Bucci"        },
+    { line_type: "doubles", position: 1, name: "Alison Vachris"    },
+    { line_type: "doubles", position: 1, name: "Bridget Hallman"   },
+    { line_type: "doubles", position: 2, name: "Sarah Brautigan"   },
+    { line_type: "doubles", position: 2, name: "Vanessa Halloran"  },
+    { line_type: "doubles", position: 3, name: "Lynn Sundblad"     },
+    { line_type: "doubles", position: 3, name: "Mary Marshall"     },
+    { line_type: "doubles", position: 4, name: "Christina Faidley" },
+    { line_type: "doubles", position: 4, name: "Jody Staples"      }
+  ]
+
+  apr21_slots.each do |s|
+    u = User.find_by(name: s[:name])
+    next unless u
+    LineupSlot.create!(
+      lineup:       kma_apr21_lineup,
+      user:         u,
+      line_type:    s[:line_type],
+      position:     s[:position],
+      confirmation: "confirmed",
+      confirmed_at: Time.current
+    )
+  end
+
+  kma_apr21_lineup.update!(published: true, published_at: Time.current)
+  puts "Seeded Kiss My Ace April 21 lineup (#{kma_apr21_lineup.lineup_slots.count} slots, all confirmed)"
+end
+
 # --------------------------------------------------------------
 # Team 2: Pour Decisions (USTA Adult 18+)
 # --------------------------------------------------------------
