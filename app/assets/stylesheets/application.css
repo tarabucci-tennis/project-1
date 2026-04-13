@@ -3361,6 +3361,23 @@ button.cr-header-pill {
 
 @media (max-width: 720px) {
   .cr-bottom-nav { display: block; }
+
+  /* On mobile, the bottom nav already covers Schedule / Standings /
+     Roster navigation, so the per-team sub-tabs at the top of the
+     team show page are redundant. Hide the sub-tab strip and show
+     ALL panels stacked vertically so nothing becomes unreachable
+     (Availability / Player Stats / Captain Dashboard still get
+     rendered, just one after another down the page). */
+  .cr-subtabs { display: none !important; }
+
+  [data-controller="team-tabs"] [data-team-tabs-target="panel"] {
+    display: block !important;
+    margin-bottom: 28px;
+  }
+
+  [data-controller="team-tabs"] [data-team-tabs-target="panel"]:last-of-type {
+    margin-bottom: 0;
+  }
 }
 
 @media (max-width: 380px) {
