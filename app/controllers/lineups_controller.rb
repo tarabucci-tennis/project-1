@@ -37,8 +37,12 @@ class LineupsController < ApplicationController
     @lineup = @match.lineup || @match.create_lineup!
     @members = @team.members.order(:name)
 
-    # Build default slots if none exist yet (1 singles slot + 2 per doubles line = 9 total)
-    build_default_slots(@lineup) if @lineup.lineup_slots.empty?
+    # Top up any missing slots so the lineup always has the canonical
+    # 1S + 4×2D structure (9 total). This is idempotent and preserves
+    # any existing slots, so if a stray slot was saved from a broken
+    # earlier edit session, we'll fill in what's missing instead of
+    # only creating slots when the lineup is completely empty.
+    ensure_default_slots(@lineup)
 
     @slots = @lineup.lineup_slots.includes(:user).order(position: :asc)
   end
@@ -51,8 +55,8 @@ class LineupsController < ApplicationController
 
     @lineup = @match.lineup || @match.create_lineup!
 
-    # Build default slots if first time
-    build_default_slots(@lineup) if @lineup.lineup_slots.empty?
+    # Make sure all 9 slots exist before we try to update them
+    ensure_default_slots(@lineup)
 
     ActiveRecord::Base.transaction do
       if params[:slots].present?
@@ -85,10 +89,13 @@ class LineupsController < ApplicationController
       if params[:publish] == "true" && !@lineup.published?
         @lineup.update!(published: true, published_at: Time.current)
 
-        # Only email players who are NOT already confirmed by the captain.
-        # If the captain checked "Already confirmed" for a slot, we skip the
-        # email — the captain already got a verbal yes via text / in person.
+        # Only email players who are NOT already confirmed by the captain
+        # AND have a real user assigned. If the captain checked "Already
+        # confirmed" for a slot, we skip the email — the captain already
+        # got a verbal yes via text / in person. Unfilled slots (user_id
+        # is nil) are also skipped.
         @lineup.lineup_slots.includes(:user).where(confirmation: "pending").each do |slot|
+          next if slot.user.nil?
           next unless slot.user.email.present?
           LineupMailer.lineup_posted(slot).deliver_later
         end
@@ -131,16 +138,37 @@ class LineupsController < ApplicationController
     redirect_to login_path unless current_user
   end
 
-  def build_default_slots(lineup)
-    # USTA format: 1S + 4D = 5 lines, but singles has 1 player, doubles has 2
-    # We create one slot per PLAYER position (not per line)
-    # 1S = 1 slot, 1D = 2 slots, 2D = 2 slots, 3D = 2 slots, 4D = 2 slots = 9 slots total
-    placeholder = @team.members.first
+  # Top up the lineup so it has the canonical USTA 40+ structure:
+  #   1 singles slot at position 1
+  #   2 doubles slots at positions 1, 2, 3, 4 (total 8 doubles slots)
+  #   = 9 slots total
+  #
+  # Idempotent: counts how many slots exist for each (line_type, position)
+  # pair and creates whatever is missing. New slots are created with
+  # user_id=NULL — the captain fills them in by picking players from the
+  # dropdowns on the edit form. This avoids the unique-index clash that
+  # a shared placeholder user would cause on the doubles positions.
+  def ensure_default_slots(lineup)
+    needed = {
+      [ "singles", 1 ] => 1,
+      [ "doubles", 1 ] => 2,
+      [ "doubles", 2 ] => 2,
+      [ "doubles", 3 ] => 2,
+      [ "doubles", 4 ] => 2
+    }
 
-    LineupSlot.create!(lineup: lineup, user: placeholder, line_type: "singles", position: 1)
-    (1..4).each do |d|
-      2.times do
-        LineupSlot.create!(lineup: lineup, user: placeholder, line_type: "doubles", position: d)
+    have = lineup.lineup_slots.group(:line_type, :position).count
+
+    needed.each do |(line_type, position), target_count|
+      current_count = have[[ line_type, position ]] || 0
+      missing = target_count - current_count
+      missing.times do
+        LineupSlot.create!(
+          lineup:    lineup,
+          user:      nil,
+          line_type: line_type,
+          position:  position
+        )
       end
     end
   end

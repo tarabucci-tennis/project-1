@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_10_400001) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_13_061302) do
   create_table "availabilities", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.integer "match_id", null: false
@@ -43,7 +43,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_10_400001) do
     t.integer "lineup_id", null: false
     t.integer "position", null: false
     t.datetime "updated_at", null: false
-    t.integer "user_id", null: false
+    t.integer "user_id"
     t.index ["lineup_id", "user_id"], name: "index_lineup_slots_on_lineup_id_and_user_id", unique: true
     t.index ["lineup_id"], name: "index_lineup_slots_on_lineup_id"
     t.index ["user_id"], name: "index_lineup_slots_on_user_id"
