@@ -3,6 +3,7 @@ class TennisTeam < ApplicationRecord
   has_many :team_memberships, dependent: :destroy
   has_many :members, through: :team_memberships, source: :user
   has_many :matches, dependent: :destroy
+  has_many :team_events, dependent: :destroy
   has_many :division_teams, dependent: :destroy
 
   LEAGUE_CATEGORIES = %w[USTA Inter-Club Local].freeze
@@ -31,6 +32,17 @@ class TennisTeam < ApplicationRecord
   def captain?(user)
     return false unless user
     team_memberships.captains.exists?(user: user)
+  end
+
+  # Anyone allowed to set the lineup: captain or co-captain. Admin users
+  # also pass this check at the controller level.
+  def can_set_lineup?(user)
+    return false unless user
+    team_memberships.where(user: user, role: %w[captain co_captain]).exists?
+  end
+
+  def co_captains
+    team_memberships.where(role: "co_captain").includes(:user).map(&:user)
   end
 
   def upcoming_matches

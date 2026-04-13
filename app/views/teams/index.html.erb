@@ -1,53 +1,218 @@
 <% content_for :title, "My Teams · Court Report" %>
 
-<%# ── Upcoming Matches (My Week) ────────────────────── %>
-<% if @upcoming_matches.present? && @upcoming_matches.any? %>
-  <div class="cr-my-week">
+<%# ── Coming Up: two-column layout ────────────────────── %>
+<%# Left: smaller cards for my next upcoming matches. %>
+<%# Right: full clickable month calendar with matches + team events. %>
+<div class="cr-home-top"
+     data-controller="dashboard-calendar"
+     data-dashboard-calendar-teams-value='<%= @my_teams.map { |t| { id: t.id, name: t.name, can_manage: (@team_can_manage ||= {})[t.id] ||= (t.can_set_lineup?(current_user) || current_user.admin?) } }.to_json %>'>
+
+  <div class="cr-home-left">
     <h2 class="cr-my-week-title">Coming Up</h2>
-    <div class="cr-my-week-list">
-      <% @upcoming_matches.each do |match| %>
-        <% team = match.tennis_team %>
-        <div class="cr-my-week-card" onclick="window.location='<%= team_match_path(team, match) %>'" style="cursor: pointer;">
-          <div class="cr-my-week-date">
-            <div class="cr-my-week-day-name"><%= match.match_date.strftime("%a").upcase %></div>
-            <div class="cr-my-week-month"><%= match.match_date.strftime("%b").upcase %></div>
-            <div class="cr-my-week-day"><%= match.match_date.strftime("%-d") %></div>
-          </div>
-          <div class="cr-my-week-info">
-            <div class="cr-my-week-league-label"><%= team.league_category == "Local" ? "DEL-TRI" : team.league_category.upcase %></div>
-            <div class="cr-my-week-team"><%= team.name %></div>
-            <div class="cr-my-week-opponent">vs. <%= match.opponent %></div>
-            <div class="cr-my-week-detail">
-              <% if match.match_time.present? %>
-                <span style="font-weight: 600; color: var(--cr-text);"><%= match.match_time %></span>
-              <% end %>
-              <% if match.location.present? %>
-                <span><%= match.location.split(",").first %></span>
-              <% end %>
-              <% if match.notes&.include?("Home") || match.location&.include?(team.home_court.to_s.split(",").first.to_s) %>
-                <span class="cr-my-week-badge-home">Home</span>
-              <% elsif match.notes&.include?("Away") %>
-                <span class="cr-my-week-badge-away">Away</span>
-              <% end %>
+
+    <% if @upcoming_matches.present? && @upcoming_matches.any? %>
+      <div class="cr-my-week-list cr-my-week-list-compact">
+        <% @upcoming_matches.each do |match| %>
+          <% team = match.tennis_team %>
+          <div class="cr-my-week-card cr-my-week-card-compact"
+               onclick="window.location='<%= team_match_path(team, match) %>'"
+               style="cursor: pointer;">
+            <div class="cr-my-week-date">
+              <div class="cr-my-week-day-name"><%= match.match_date.strftime("%a").upcase %></div>
+              <div class="cr-my-week-month"><%= match.match_date.strftime("%b").upcase %></div>
+              <div class="cr-my-week-day"><%= match.match_date.strftime("%-d") %></div>
+            </div>
+            <div class="cr-my-week-info">
+              <div class="cr-my-week-league-label"><%= team.league_category == "Local" ? "DEL-TRI" : team.league_category.upcase %></div>
+              <div class="cr-my-week-team"><%= team.name %></div>
+              <div class="cr-my-week-opponent">vs. <%= match.opponent %></div>
+              <div class="cr-my-week-detail">
+                <% if match.match_time.present? %>
+                  <span style="font-weight: 600; color: var(--cr-text);"><%= match.match_time %></span>
+                <% end %>
+                <% if match.location.present? %>
+                  <span><%= match.location.split(",").first %></span>
+                <% end %>
+                <% if match.notes&.include?("Home") || match.location&.include?(team.home_court.to_s.split(",").first.to_s) %>
+                  <span class="cr-my-week-badge-home">Home</span>
+                <% elsif match.notes&.include?("Away") %>
+                  <span class="cr-my-week-badge-away">Away</span>
+                <% end %>
+              </div>
+            </div>
+
+            <%# Right rail: calendar-add button ABOVE the line-position badge %>
+            <div class="cr-my-week-right">
+              <a href="<%= google_calendar_url(match) %>"
+                 target="_blank" rel="noopener"
+                 class="cr-cal-btn"
+                 title="Add to Google Calendar"
+                 onclick="event.stopPropagation(); window.open(this.href, '_blank'); return false;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+                </svg>
+              </a>
               <% if @my_lineup_lines[match.id] %>
                 <span class="cr-my-week-line-badge"><%= @my_lineup_lines[match.id] %></span>
               <% end %>
             </div>
           </div>
-          <a href="<%= google_calendar_url(match) %>"
-             target="_blank" rel="noopener"
-             class="cr-cal-btn"
-             title="Add to Google Calendar"
-             onclick="event.stopPropagation(); window.open(this.href, '_blank'); return false;">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
-            </svg>
-          </a>
-        </div>
-      <% end %>
+        <% end %>
+      </div>
+    <% else %>
+      <p class="cr-coming-up-empty">Nothing on the schedule in the next two weeks.</p>
+    <% end %>
+  </div>
+
+  <%# ── Right: clickable month calendar ── %>
+  <div class="cr-home-right">
+    <div class="cr-dash-cal">
+      <div class="cr-dash-cal-header">
+        <%= link_to "‹", teams_path(month: @calendar_prev_month), class: "cr-dash-cal-nav", title: "Previous month" %>
+        <h3 class="cr-dash-cal-title"><%= @calendar_month.strftime("%B %Y") %></h3>
+        <%= link_to "›", teams_path(month: @calendar_next_month), class: "cr-dash-cal-nav", title: "Next month" %>
+      </div>
+
+      <div class="cr-dash-cal-weekdays">
+        <span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span>
+      </div>
+
+      <div class="cr-dash-cal-grid">
+        <%# Leading blanks so day 1 lands under the correct weekday %>
+        <% @calendar_month.wday.times do %>
+          <div class="cr-dash-cal-day cr-dash-cal-day-blank"></div>
+        <% end %>
+
+        <% (@calendar_month..@calendar_month.end_of_month).each do |day| %>
+          <% matches_today = @calendar_matches_by_day[day] || [] %>
+          <% events_today  = @calendar_events_by_day[day]  || [] %>
+          <% has_items     = matches_today.any? || events_today.any? %>
+          <% is_today      = day == Date.current %>
+          <% payload = {
+               date: day.strftime("%Y-%m-%d"),
+               label: day.strftime("%A, %B %-d, %Y"),
+               matches: matches_today.map { |m|
+                 {
+                   opponent: m.opponent,
+                   time: m.match_time,
+                   location: m.location,
+                   team: m.tennis_team.name,
+                   url: team_match_path(m.tennis_team, m)
+                 }
+               },
+               events: events_today.map { |e|
+                 {
+                   title: e.title,
+                   kind: e.kind,
+                   kind_label: e.kind_label,
+                   time: e.start_time,
+                   location: e.location,
+                   team: e.tennis_team.name,
+                   id: e.id,
+                   team_id: e.tennis_team_id
+                 }
+               }
+             }.to_json %>
+
+          <button type="button"
+                  class="cr-dash-cal-day <%= 'cr-dash-cal-day-match'  if matches_today.any? %> <%= 'cr-dash-cal-day-event'  if events_today.any? && matches_today.empty? %> <%= 'cr-dash-cal-day-today' if is_today %>"
+                  data-action="click->dashboard-calendar#open"
+                  data-dashboard-calendar-payload-param='<%= payload %>'>
+            <span class="cr-dash-cal-day-num"><%= day.day %></span>
+            <% if has_items %>
+              <span class="cr-dash-cal-day-dots">
+                <% matches_today.each do |_| %>
+                  <span class="cr-dash-cal-dot cr-dash-cal-dot-match"></span>
+                <% end %>
+                <% events_today.each do |e| %>
+                  <span class="cr-dash-cal-dot cr-dash-cal-dot-<%= e.kind %>"></span>
+                <% end %>
+              </span>
+            <% end %>
+          </button>
+        <% end %>
+      </div>
+
+      <div class="cr-dash-cal-legend">
+        <span><span class="cr-dash-cal-dot cr-dash-cal-dot-match"></span> Match</span>
+        <span><span class="cr-dash-cal-dot cr-dash-cal-dot-practice"></span> Practice</span>
+        <span><span class="cr-dash-cal-dot cr-dash-cal-dot-clinic"></span> Clinic</span>
+        <span><span class="cr-dash-cal-dot cr-dash-cal-dot-friendly"></span> Friendly</span>
+      </div>
     </div>
   </div>
-<% end %>
+
+  <%# ── Modal: populated by Stimulus on day click ── %>
+  <div class="cr-dash-cal-modal"
+       data-dashboard-calendar-target="modal"
+       data-action="click->dashboard-calendar#closeBackdrop">
+    <div class="cr-dash-cal-modal-panel">
+      <button type="button" class="cr-dash-cal-modal-close"
+              data-action="click->dashboard-calendar#close"
+              aria-label="Close">&times;</button>
+      <h3 class="cr-dash-cal-modal-title" data-dashboard-calendar-target="title"></h3>
+      <div class="cr-dash-cal-modal-body" data-dashboard-calendar-target="body"></div>
+
+      <div class="cr-dash-cal-modal-add"
+           data-dashboard-calendar-target="addWrap"
+           style="display: none;">
+        <h4 class="cr-dash-cal-modal-add-title">Add to this day</h4>
+        <%= form_with url: "#", method: :post,
+                      data: { dashboard_calendar_target: "form",
+                              action: "submit->dashboard-calendar#submitForm" },
+                      local: true,
+                      class: "cr-dash-cal-form" do %>
+          <input type="hidden" name="event_date" data-dashboard-calendar-target="formDate">
+
+          <label class="cr-dash-cal-form-row">
+            <span>Team</span>
+            <select name="team_id" data-dashboard-calendar-target="formTeam" required>
+              <% @my_teams.each do |t| %>
+                <% if t.can_set_lineup?(current_user) || current_user.admin? %>
+                  <option value="<%= t.id %>"><%= t.name %></option>
+                <% end %>
+              <% end %>
+            </select>
+          </label>
+
+          <label class="cr-dash-cal-form-row">
+            <span>Type</span>
+            <select name="kind">
+              <option value="practice">Practice</option>
+              <option value="clinic">Clinic</option>
+              <option value="friendly">Friendly</option>
+            </select>
+          </label>
+
+          <label class="cr-dash-cal-form-row">
+            <span>Title</span>
+            <input type="text" name="title" placeholder="e.g. Saturday Drill">
+          </label>
+
+          <label class="cr-dash-cal-form-row">
+            <span>Time</span>
+            <input type="text" name="start_time" placeholder="e.g. 6:00 PM">
+          </label>
+
+          <label class="cr-dash-cal-form-row">
+            <span>Location</span>
+            <input type="text" name="location" placeholder="Court or club">
+          </label>
+
+          <div class="cr-dash-cal-form-actions">
+            <button type="submit" class="cr-btn cr-btn-gold cr-btn-compact">Add</button>
+          </div>
+        <% end %>
+      </div>
+
+      <p class="cr-dash-cal-modal-captain-note"
+         data-dashboard-calendar-target="captainNote"
+         style="display: none;">
+        Only captains and co-captains can add practices, clinics, or friendlies.
+      </p>
+    </div>
+  </div>
+</div>
 
 <div class="cr-page-header">
   <h1 class="cr-page-title">My Teams</h1>
