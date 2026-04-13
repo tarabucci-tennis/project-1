@@ -51,7 +51,7 @@
       <%= yield %>
     </main>
 
-    <%# Tiny inline script for the show/hide password eye toggle on auth forms %>
+    <%# Tiny inline scripts: password eye toggle + join-link copy button %>
     <script>
       function togglePassword(btn) {
         var wrapper = btn.parentElement;
@@ -65,6 +65,27 @@
           field.type = 'password';
           btn.textContent = '👁';
           btn.setAttribute('aria-label', 'Show password');
+        }
+      }
+
+      function crCopyJoinLink(btn) {
+        var targetId = btn.getAttribute('data-target');
+        var field = document.getElementById(targetId);
+        if (!field) return;
+        var value = field.value;
+        var original = btn.textContent;
+        var flash = function () {
+          btn.textContent = 'Copied!';
+          setTimeout(function () { btn.textContent = original; }, 1500);
+        };
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(value).then(flash, function () {
+            field.select();
+            try { document.execCommand('copy'); flash(); } catch (e) {}
+          });
+        } else {
+          field.select();
+          try { document.execCommand('copy'); flash(); } catch (e) {}
         }
       }
     </script>
