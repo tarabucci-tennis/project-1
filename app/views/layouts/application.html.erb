@@ -51,6 +51,24 @@
       <%= yield %>
     </main>
 
+    <%# Tiny inline script for the show/hide password eye toggle on auth forms %>
+    <script>
+      function togglePassword(btn) {
+        var wrapper = btn.parentElement;
+        var field = wrapper.querySelector('input[type="password"], input[type="text"]');
+        if (!field) return;
+        if (field.type === 'password') {
+          field.type = 'text';
+          btn.textContent = '🙈';
+          btn.setAttribute('aria-label', 'Hide password');
+        } else {
+          field.type = 'password';
+          btn.textContent = '👁';
+          btn.setAttribute('aria-label', 'Show password');
+        }
+      }
+    </script>
+
     <% if current_user %>
       <nav class="cr-bottom-nav" aria-label="Primary">
         <div class="cr-bottom-nav-inner">

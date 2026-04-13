@@ -53,7 +53,10 @@
         </div>
         <div class="cr-field">
           <%= f.label :password, "Password" %>
-          <%= f.password_field :password, placeholder: "Your password" %>
+          <div class="cr-password-wrap">
+            <%= f.password_field :password, placeholder: "Your password" %>
+            <button type="button" class="cr-password-toggle" onclick="togglePassword(this)" aria-label="Show password">👁</button>
+          </div>
         </div>
         <%= f.submit "Sign In →" %>
       <% end %>
