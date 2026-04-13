@@ -80,20 +80,38 @@
             <span class="cr-bnav-icon">📝</span>
             <span class="cr-bnav-label">Lineups</span>
           <% end %>
-          <%= link_to teams_path(anchor: "standings"), class: "cr-bnav-btn" do %>
+          <a href="/teams" data-bnav-tab="standings" class="cr-bnav-btn">
             <span class="cr-bnav-icon">🏆</span>
             <span class="cr-bnav-label">Standings</span>
-          <% end %>
-          <%= link_to teams_path(anchor: "roster"), class: "cr-bnav-btn" do %>
+          </a>
+          <a href="/teams" data-bnav-tab="roster" class="cr-bnav-btn">
             <span class="cr-bnav-icon">👥</span>
             <span class="cr-bnav-label">Roster</span>
-          <% end %>
+          </a>
           <a href="https://chat.whatsapp.com/" target="_blank" rel="noopener" class="cr-bnav-btn">
             <span class="cr-bnav-icon">💬</span>
             <span class="cr-bnav-label">WhatsApp</span>
           </a>
         </div>
       </nav>
+
+      <%# Smart bottom-nav: if we're on a team show page (/teams/:id),
+          rewrite the Roster and Standings buttons to deep-link to the
+          current team with ?tab=roster / ?tab=standings. The
+          team_tabs_controller reads the ?tab= param on connect and
+          switches to that sub-tab. When not on a team page, the buttons
+          just fall back to /teams. %>
+      <script>
+        (function () {
+          var teamMatch = window.location.pathname.match(/^\/teams\/(\d+)/);
+          if (!teamMatch) return;
+          var teamId = teamMatch[1];
+          document.querySelectorAll('[data-bnav-tab]').forEach(function (btn) {
+            var tab = btn.getAttribute('data-bnav-tab');
+            btn.setAttribute('href', '/teams/' + teamId + '?tab=' + tab);
+          });
+        })();
+      </script>
     <% end %>
   </body>
 </html>
