@@ -2683,7 +2683,9 @@ button.cr-header-pill {
   }
 
   /* Team show page match cards — fix the overflow and stack captain
-     actions below the match info so nothing runs off the right edge. */
+     actions below the match info so nothing runs off the right edge.
+     All selectors use `.cr-match-card` as a parent so they outrank
+     the desktop rules in specificity and actually apply on mobile. */
   .cr-match-card {
     padding: 0 !important;
     margin-bottom: 10px;
@@ -2698,33 +2700,40 @@ button.cr-header-pill {
     flex-wrap: wrap;
     align-items: flex-start;
   }
-  .cr-match-date {
+  .cr-match-card .cr-match-date {
     min-width: 50px;
     padding: 6px 8px;
+    flex-shrink: 0;
   }
-  .cr-match-date-day {
+  .cr-match-card .cr-match-date-day {
     font-size: 1.1rem;
   }
-  .cr-match-info {
-    flex: 1 1 calc(100% - 70px);
+  /* Force info to take the full row width next to the date box, so
+     the opponent text has ~280px of space instead of competing with
+     HOME badge + calendar icon on the same line. Badge/calendar then
+     wrap onto a second row of the flex container, below the info. */
+  .cr-match-card .cr-match-info {
+    flex: 1 1 calc(100% - 70px) !important;
     min-width: 0;
   }
-  .cr-match-opponent {
+  .cr-match-card .cr-match-opponent {
     font-size: 0.92rem;
+    line-height: 1.2;
     word-break: normal;
     overflow-wrap: break-word;
   }
-  .cr-match-location {
+  .cr-match-card .cr-match-location {
     font-size: 0.75rem;
+    line-height: 1.3;
     word-break: normal;
     overflow-wrap: break-word;
   }
-  .cr-match-badge {
+  .cr-match-card .cr-match-badge {
     font-size: 0.62rem;
     padding: 2px 8px;
     flex-shrink: 0;
   }
-  .cr-cal-btn {
+  .cr-match-card .cr-cal-btn {
     width: 28px;
     height: 28px;
     flex-shrink: 0;
