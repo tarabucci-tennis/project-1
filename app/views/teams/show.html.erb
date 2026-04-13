@@ -145,47 +145,56 @@
                     <% end %>
                   </div>
 
-                  <% if @is_captain %>
-                    <div class="cr-match-captain-actions">
-                      <%= link_to edit_team_match_lineup_path(@team, match), class: "cr-match-action-btn" do %>
-                        <span class="cr-match-action-icon">📋</span>
-                        <span>Set Lineup</span>
-                      <% end %>
-                      <%= link_to edit_results_team_match_path(@team, match), class: "cr-match-action-btn" do %>
-                        <span class="cr-match-action-icon"><%= match.played? ? "✏️" : "🎾" %></span>
-                        <span><%= match.played? ? "Edit Results" : "Enter Results" %></span>
-                      <% end %>
-                    </div>
-                  <% end %>
-
-                  <%# Show published lineup if one exists %>
+                  <%# Captain actions + posted lineup sit side by side on
+                      wider screens (captain on the left, lineup on the
+                      right) and stack vertically on mobile. Wrapper is a
+                      flex container when BOTH sections are present, a
+                      plain block otherwise. %>
                   <% lineup = match.lineup if match.respond_to?(:lineup) %>
-                  <% if lineup&.published? %>
-                    <div class="cr-lineup-preview">
-                      <div class="cr-lineup-preview-title">Lineup Posted</div>
-                      <div class="cr-lineup-preview-slots">
-                        <% lineup.lineup_slots.includes(:user).order(position: :asc).group_by { |s| "#{s.position}#{s.line_type == 'singles' ? 'S' : 'D'}" }.each do |line, slots| %>
-                          <div class="cr-lineup-preview-line">
-                            <span class="cr-lineup-preview-line-label"><%= line %></span>
-                            <% slots.each do |slot| %>
-                              <span class="cr-lineup-preview-player <%= 'cr-lineup-you' if slot.user_id == current_user.id %>">
-                                <%= slot.user.name.split.first %>
-                                <% if slot.confirmed? %>
-                                  <span class="cr-lineup-confirmed">✓</span>
-                                <% elsif slot.declined? %>
-                                  <span class="cr-lineup-declined">✗</span>
+                  <% show_preview = lineup&.published? %>
+                  <% if @is_captain || show_preview %>
+                    <div class="cr-match-card-body <%= 'cr-match-card-body-split' if @is_captain && show_preview %>">
+                      <% if @is_captain %>
+                        <div class="cr-match-captain-actions">
+                          <%= link_to edit_team_match_lineup_path(@team, match), class: "cr-match-action-btn" do %>
+                            <span class="cr-match-action-icon">📋</span>
+                            <span>Set Lineup</span>
+                          <% end %>
+                          <%= link_to edit_results_team_match_path(@team, match), class: "cr-match-action-btn" do %>
+                            <span class="cr-match-action-icon"><%= match.played? ? "✏️" : "🎾" %></span>
+                            <span><%= match.played? ? "Edit Results" : "Enter Results" %></span>
+                          <% end %>
+                        </div>
+                      <% end %>
+
+                      <% if show_preview %>
+                        <div class="cr-lineup-preview">
+                          <div class="cr-lineup-preview-title">Lineup Posted</div>
+                          <div class="cr-lineup-preview-slots">
+                            <% lineup.lineup_slots.includes(:user).order(position: :asc).group_by { |s| "#{s.position}#{s.line_type == 'singles' ? 'S' : 'D'}" }.each do |line, slots| %>
+                              <div class="cr-lineup-preview-line">
+                                <span class="cr-lineup-preview-line-label"><%= line %></span>
+                                <% slots.each do |slot| %>
+                                  <span class="cr-lineup-preview-player <%= 'cr-lineup-you' if slot.user_id == current_user.id %>">
+                                    <%= slot.user.name.split.first %>
+                                    <% if slot.confirmed? %>
+                                      <span class="cr-lineup-confirmed">✓</span>
+                                    <% elsif slot.declined? %>
+                                      <span class="cr-lineup-declined">✗</span>
+                                    <% end %>
+                                  </span>
                                 <% end %>
-                              </span>
+                              </div>
                             <% end %>
                           </div>
-                        <% end %>
-                      </div>
-                      <% my_slot = lineup.slot_for(current_user) %>
-                      <% if my_slot && my_slot.pending? %>
-                        <div class="cr-lineup-confirm-row">
-                          <span style="font-size: 0.85rem; font-weight: 600;">You're on <strong><%= my_slot.line_label %></strong> — can you play?</span>
-                          <%= link_to "✓ Confirm", confirm_team_match_lineup_path(@team, match, status: "confirmed"), method: :patch, class: "cr-btn cr-btn-gold", style: "padding: 6px 16px; font-size: 0.8rem;" %>
-                          <%= link_to "✗ Can't Play", confirm_team_match_lineup_path(@team, match, status: "declined"), method: :patch, class: "cr-btn cr-btn-outline", style: "padding: 6px 16px; font-size: 0.8rem;" %>
+                          <% my_slot = lineup.slot_for(current_user) %>
+                          <% if my_slot && my_slot.pending? %>
+                            <div class="cr-lineup-confirm-row">
+                              <span style="font-size: 0.85rem; font-weight: 600;">You're on <strong><%= my_slot.line_label %></strong> — can you play?</span>
+                              <%= link_to "✓ Confirm", confirm_team_match_lineup_path(@team, match, status: "confirmed"), method: :patch, class: "cr-btn cr-btn-gold", style: "padding: 6px 16px; font-size: 0.8rem;" %>
+                              <%= link_to "✗ Can't Play", confirm_team_match_lineup_path(@team, match, status: "declined"), method: :patch, class: "cr-btn cr-btn-outline", style: "padding: 6px 16px; font-size: 0.8rem;" %>
+                            </div>
+                          <% end %>
                         </div>
                       <% end %>
                     </div>
