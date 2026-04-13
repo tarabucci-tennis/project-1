@@ -73,8 +73,12 @@ body{
   align-items:center;
   justify-content:center;
   font-size:1.3rem;
-  animation:glow 3s ease infinite, bounce-ball 1.6s ease-in-out infinite;
+  animation:glow 3s ease infinite;
   box-shadow:0 3px 14px rgba(201,168,76,.4);
+}
+.cr-logo-ball{
+  display:inline-block;
+  animation:bounce-ball 1.6s ease-in-out infinite;
 }
 .cr-logo-name{
   font-family:'Bebas Neue',sans-serif;
@@ -312,13 +316,9 @@ body{
 <header class="cr-header">
   <div class="cr-header-inner">
     <a href="/" class="cr-logo">
-      <div class="cr-logo-mark">🎾</div>
+      <div class="cr-logo-mark"><span class="cr-logo-ball">🎾</span></div>
       <div class="cr-logo-name">COURT <span>REPORT</span></div>
     </a>
-    <div class="cr-header-actions">
-      <a href="<%= login_path %>" class="cr-btn-pill">Sign In</a>
-      <a href="<%= signup_path %>" class="cr-btn-pill cr-btn-primary">Sign Up</a>
-    </div>
   </div>
 </header>
 
