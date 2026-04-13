@@ -151,6 +151,45 @@ kma_schedule.each do |date, opp|
   end
 end
 
+# Kiss My Ace — April 14 lineup vs. Kinetix Deuces Wild (from TennisLink, all confirmed)
+kma_apr14 = kiss_my_ace.matches.find_by(match_date: Time.zone.local(2026, 4, 14, 10, 30))
+if kma_apr14
+  kma_lineup = kma_apr14.lineup || kma_apr14.create_lineup!
+  if kma_lineup.lineup_slots.empty?
+    def user_id_by_name(name)
+      User.find_by(name: name)&.id
+    end
+
+    apr14_slots = [
+      { line_type: "singles", position: 1, name: "Jaclyn Groenen"  },
+      { line_type: "doubles", position: 1, name: "Alison Vachris"  },
+      { line_type: "doubles", position: 1, name: "Tara Bucci"      },
+      { line_type: "doubles", position: 2, name: "Amanda Neill"    },
+      { line_type: "doubles", position: 2, name: "Rachel Chadwin"  },
+      { line_type: "doubles", position: 3, name: "Sarah Brautigan" },
+      { line_type: "doubles", position: 3, name: "Stephanie Giordano" },
+      { line_type: "doubles", position: 4, name: "Helen Lee"       },
+      { line_type: "doubles", position: 4, name: "Kerry McDuffie"  }
+    ]
+
+    apr14_slots.each do |s|
+      uid = user_id_by_name(s[:name])
+      next unless uid
+      LineupSlot.create!(
+        lineup:       kma_lineup,
+        user_id:      uid,
+        line_type:    s[:line_type],
+        position:     s[:position],
+        confirmation: "confirmed",
+        confirmed_at: Time.current
+      )
+    end
+
+    kma_lineup.update!(published: true, published_at: Time.current) unless kma_lineup.published?
+    puts "Seeded Kiss My Ace April 14 lineup (9 players, all confirmed)"
+  end
+end
+
 # --------------------------------------------------------------
 # Team 2: Pour Decisions (USTA Adult 18+)
 # --------------------------------------------------------------
