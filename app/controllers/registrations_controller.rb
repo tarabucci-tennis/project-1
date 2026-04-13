@@ -4,11 +4,23 @@ class RegistrationsController < ApplicationController
   end
 
   def create
-    email = params[:email].to_s.downcase.strip
-    name  = params[:name].to_s.strip
+    email                 = params[:email].to_s.downcase.strip
+    name                  = params[:name].to_s.strip
+    password              = params[:password].to_s
+    password_confirmation = params[:password_confirmation].to_s
 
     if email.blank? || name.blank?
       flash.now[:alert] = "Please fill in your name and email."
+      return render :new, status: :unprocessable_entity
+    end
+
+    if password.length < 6
+      flash.now[:alert] = "Password must be at least 6 characters."
+      return render :new, status: :unprocessable_entity
+    end
+
+    if password != password_confirmation
+      flash.now[:alert] = "Passwords don't match. Try again."
       return render :new, status: :unprocessable_entity
     end
 
@@ -18,7 +30,14 @@ class RegistrationsController < ApplicationController
       return render :new, status: :unprocessable_entity
     end
 
-    user = User.new(name: name, email: email, admin: false)
+    user = User.new(
+      name:                  name,
+      email:                 email,
+      admin:                 false,
+      password:              password,
+      password_confirmation: password_confirmation
+    )
+
     if user.save
       session[:user_id] = user.id
 
