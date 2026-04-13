@@ -109,6 +109,11 @@ class TeamsController < ApplicationController
     # Player stats (visible to everyone on the Player Stats tab)
     @player_stats_data = build_player_analytics
 
+    # Team chart data — always present (empty bars when no matches
+    # have been played). Feeds the CSS bar charts on the Player
+    # Stats tab.
+    @team_charts = build_team_chart_stats
+
     # Captain analytics (only computed for captains)
     if @is_captain
       @player_analytics = @player_stats_data
@@ -245,6 +250,114 @@ class TeamsController < ApplicationController
     end
 
     stats
+  end
+
+  # Aggregate team-level chart data for the Player Stats tab.
+  # Returns a hash that's safe to pass to the view whether or not
+  # any matches have been played yet — empty structures render as
+  # grey "0" bars.
+  def build_team_chart_stats
+    completed_matches = @team.matches.completed.includes(match_lines: { match_line_players: :user })
+
+    charts = {
+      overall:          { wins: 0, losses: 0, total: 0, pct: 0 },
+      singles_doubles:  { singles_total: 0, singles_wins: 0, singles_pct: 0,
+                          doubles_total: 0, doubles_wins: 0, doubles_pct: 0 },
+      by_line:          {},     # "1S" => { wins:, total:, pct: }, ...
+      matches_played:   [],     # [{ name:, count: }, ...] sorted desc
+      partnerships:     [],     # [{ names:, wins:, total:, pct: }, ...] sorted desc
+      recent_matches:   [],     # [{ date:, opponent:, result:, score: }]
+      is_empty:         completed_matches.empty?
+    }
+
+    # Seed by_line with zeroes for the canonical USTA 40+ lines so
+    # the chart always has 5 bars (1S, 1D, 2D, 3D, 4D) to draw.
+    %w[1S 1D 2D 3D 4D].each do |label|
+      charts[:by_line][label] = { wins: 0, total: 0, pct: 0 }
+    end
+
+    # Team overall record (per match, not per line)
+    charts[:overall][:wins]   = completed_matches.where(result: "win").count
+    charts[:overall][:losses] = completed_matches.where(result: "loss").count
+    charts[:overall][:total]  = charts[:overall][:wins] + charts[:overall][:losses]
+    if charts[:overall][:total] > 0
+      charts[:overall][:pct] = (charts[:overall][:wins].to_f / charts[:overall][:total] * 100).round(0)
+    end
+
+    return charts if completed_matches.empty?
+
+    # Line-level aggregates
+    player_counts = Hash.new(0)
+    partner_data  = Hash.new { |h, k| h[k] = { wins: 0, losses: 0, total: 0, names: k } }
+
+    completed_matches.each do |match|
+      match.match_lines.each do |line|
+        next unless line.result.present?
+
+        # Singles vs doubles totals
+        if line.line_type == "singles"
+          charts[:singles_doubles][:singles_total] += 1
+          charts[:singles_doubles][:singles_wins]  += 1 if line.won?
+        else
+          charts[:singles_doubles][:doubles_total] += 1
+          charts[:singles_doubles][:doubles_wins]  += 1 if line.won?
+        end
+
+        # Win % by line position
+        line_label = line.line_type == "singles" ? "#{line.position}S" : "#{line.position}D"
+        charts[:by_line][line_label] ||= { wins: 0, total: 0, pct: 0 }
+        charts[:by_line][line_label][:total] += 1
+        charts[:by_line][line_label][:wins]  += 1 if line.won?
+
+        # Matches-played-per-player count
+        line.match_line_players.each do |mlp|
+          player_counts[[ mlp.user_id, mlp.user.name ]] += 1
+        end
+
+        # Doubles partnerships
+        if line.line_type == "doubles"
+          users = line.match_line_players.map(&:user).sort_by(&:name)
+          next if users.size < 2
+          key = users.map(&:name).join(" & ")
+          partner_data[key][:total]  += 1
+          partner_data[key][:wins]   += 1 if line.won?
+          partner_data[key][:losses] += 1 if line.lost?
+        end
+      end
+    end
+
+    # Finalize singles/doubles percentages
+    sd = charts[:singles_doubles]
+    sd[:singles_pct] = sd[:singles_total] > 0 ? (sd[:singles_wins].to_f / sd[:singles_total] * 100).round(0) : 0
+    sd[:doubles_pct] = sd[:doubles_total] > 0 ? (sd[:doubles_wins].to_f / sd[:doubles_total] * 100).round(0) : 0
+
+    # Finalize by-line percentages
+    charts[:by_line].each do |_label, data|
+      data[:pct] = data[:total] > 0 ? (data[:wins].to_f / data[:total] * 100).round(0) : 0
+    end
+
+    # Matches played per player (sorted by count desc)
+    charts[:matches_played] = player_counts.map { |(_uid, name), count|
+      { name: name, count: count }
+    }.sort_by { |p| [ -p[:count], p[:name] ] }
+
+    # Top partnerships (sorted by win% desc, then total desc)
+    charts[:partnerships] = partner_data.values.map { |d|
+      pct = d[:total] > 0 ? (d[:wins].to_f / d[:total] * 100).round(0) : 0
+      d.merge(pct: pct)
+    }.sort_by { |p| [ -p[:pct], -p[:total] ] }
+
+    # Recent matches (last 5 played, newest first)
+    charts[:recent_matches] = completed_matches.sort_by(&:match_date).last(5).reverse.map { |m|
+      {
+        date:     m.match_date,
+        opponent: m.opponent,
+        result:   m.result,
+        score:    m.score_summary
+      }
+    }
+
+    charts
   end
 
   def build_player_analytics

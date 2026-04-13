@@ -358,60 +358,184 @@
           </a>
         </div>
 
-        <% if @player_stats_data.present? && @player_stats_data.any? %>
-          <%# Stats grid like your captain's spreadsheet %>
-          <div class="cr-captain-analytics-table">
-            <div class="cr-captain-analytics-header">
-              <span class="cr-captain-col-name">Player</span>
-              <span class="cr-captain-col-stat">Played</span>
-              <span class="cr-captain-col-stat">W</span>
-              <span class="cr-captain-col-stat">L</span>
-              <span class="cr-captain-col-stat">Win%</span>
-              <span class="cr-captain-col-stat">S%</span>
-              <span class="cr-captain-col-stat">D%</span>
-              <span class="cr-captain-col-stat">Line</span>
+        <%# Team stat charts — always rendered. Empty/zero bars when
+            no matches have been played yet; bars fill in automatically
+            as match results are entered via Enter Results. %>
+        <% charts = @team_charts %>
+
+        <% if charts[:is_empty] %>
+          <p class="cr-chart-empty-note">
+            🎾 No match results yet. Bars below will fill in as results are entered after each match.
+          </p>
+        <% end %>
+
+        <%# Overall team record + singles vs doubles split %>
+        <div class="cr-chart-top-row">
+          <div class="cr-chart-summary-card">
+            <div class="cr-chart-summary-label">Team Record</div>
+            <div class="cr-chart-summary-value">
+              <%= charts[:overall][:wins] %>–<%= charts[:overall][:losses] %>
             </div>
-            <% @player_stats_data.each do |ps| %>
-              <div class="cr-captain-analytics-row">
-                <span class="cr-captain-col-name">
-                  <%= link_to ps[:name], player_path(ps[:user_id]), style: "text-decoration: none; color: inherit; font-weight: 600;" %>
-                  <% if ps[:user_id] == current_user.id %>
-                    <span style="color: var(--cr-gold); font-size: 0.75rem;">(you)</span>
+            <div class="cr-chart-summary-detail">
+              <%= charts[:overall][:pct] %>% win rate
+              <% if charts[:overall][:total] > 0 %>
+                · <%= charts[:overall][:total] %> match<%= charts[:overall][:total] == 1 ? "" : "es" %>
+              <% end %>
+            </div>
+          </div>
+
+          <div class="cr-chart-summary-card">
+            <div class="cr-chart-summary-label">Singles vs Doubles</div>
+            <div class="cr-chart-split-bar">
+              <div class="cr-chart-split-left"
+                   style="width: <%= charts[:singles_doubles][:singles_total] + charts[:singles_doubles][:doubles_total] > 0 ?
+                                     (charts[:singles_doubles][:singles_total].to_f / (charts[:singles_doubles][:singles_total] + charts[:singles_doubles][:doubles_total]) * 100).round(0) : 50 %>%;">
+                <span>Singles</span>
+              </div>
+              <div class="cr-chart-split-right">
+                <span>Doubles</span>
+              </div>
+            </div>
+            <div class="cr-chart-summary-detail">
+              <%= charts[:singles_doubles][:singles_total] %> singles lines ·
+              <%= charts[:singles_doubles][:doubles_total] %> doubles lines
+            </div>
+          </div>
+        </div>
+
+        <%# Win % by Line (5 horizontal bars, one per line) %>
+        <div class="cr-chart-section">
+          <h3 class="cr-chart-section-title">Win % by Line</h3>
+          <div class="cr-chart-bars">
+            <% charts[:by_line].each do |label, data| %>
+              <div class="cr-bar-row">
+                <div class="cr-bar-label"><%= label %></div>
+                <div class="cr-bar-track">
+                  <div class="cr-bar-fill <%= 'cr-bar-fill-empty' if data[:total] == 0 %>"
+                       style="width: <%= data[:pct] %>%;">
+                    <% if data[:total] > 0 %>
+                      <span><%= data[:pct] %>%</span>
+                    <% end %>
+                  </div>
+                </div>
+                <div class="cr-bar-value">
+                  <% if data[:total] > 0 %>
+                    <%= data[:wins] %>/<%= data[:total] %>
+                  <% else %>
+                    <span style="color: var(--cr-text-light);">—</span>
                   <% end %>
-                </span>
-                <span class="cr-captain-col-stat"><%= ps[:matches_played] %></span>
-                <span class="cr-captain-col-stat" style="color: var(--cr-green);"><%= ps[:wins] %></span>
-                <span class="cr-captain-col-stat" style="color: var(--cr-red);"><%= ps[:losses] %></span>
-                <span class="cr-captain-col-stat" style="font-weight: 700;"><%= ps[:win_pct] %>%</span>
-                <span class="cr-captain-col-stat"><%= ps[:singles_pct] %>%</span>
-                <span class="cr-captain-col-stat"><%= ps[:doubles_pct] %>%</span>
-                <span class="cr-captain-col-stat"><%= ps[:most_common_line] || "—" %></span>
+                </div>
               </div>
             <% end %>
           </div>
+        </div>
 
-          <p style="font-size: 0.8rem; color: var(--cr-text-muted); margin-top: 12px;">
-            S% = singles percentage · D% = doubles percentage · Line = most played line
-            <br>Click a player's name to see their full stats, doubles partner win %, and recent matches.
-          </p>
-        <% else %>
-          <div class="cr-coming-soon-card">
-            <div class="cr-coming-soon-icon">📊</div>
-            <h3 class="cr-coming-soon-title">Player Stats — Coming Soon</h3>
-            <p class="cr-coming-soon-text">
-              After each match, your captain enters who played on which line and the scores.
-              Court Report will automatically track:
-            </p>
-            <div class="cr-coming-soon-list">
-              <div class="cr-coming-soon-item">Overall Win %</div>
-              <div class="cr-coming-soon-item">Singles vs. Doubles %</div>
-              <div class="cr-coming-soon-item">Win % by Line (1S, 1D, 2D, 3D, 4D)</div>
-              <div class="cr-coming-soon-item">Doubles Partner Win %</div>
-              <div class="cr-coming-soon-item">Matches Played per Player</div>
-              <div class="cr-coming-soon-item">Recent Match Results</div>
+        <%# Matches Played per Player %>
+        <div class="cr-chart-section">
+          <h3 class="cr-chart-section-title">Matches Played per Player</h3>
+          <% if charts[:matches_played].any? %>
+            <% max_count = charts[:matches_played].map { |p| p[:count] }.max %>
+            <div class="cr-chart-bars">
+              <% charts[:matches_played].each do |p| %>
+                <% width_pct = max_count > 0 ? (p[:count].to_f / max_count * 100).round(1) : 0 %>
+                <div class="cr-bar-row">
+                  <div class="cr-bar-label cr-bar-label-wide"><%= p[:name] %></div>
+                  <div class="cr-bar-track">
+                    <div class="cr-bar-fill cr-bar-fill-navy" style="width: <%= width_pct %>%;">
+                      <span><%= p[:count] %></span>
+                    </div>
+                  </div>
+                  <div class="cr-bar-value"><%= p[:count] %></div>
+                </div>
+              <% end %>
             </div>
-            <p class="cr-coming-soon-text" style="margin-top: 16px;">
-              Stats will appear here after your first match results are entered.
+          <% else %>
+            <p class="cr-chart-empty-inline">No player appearances yet.</p>
+          <% end %>
+        </div>
+
+        <%# Doubles Partner Win % %>
+        <div class="cr-chart-section">
+          <h3 class="cr-chart-section-title">Doubles Partner Win %</h3>
+          <% if charts[:partnerships].any? %>
+            <div class="cr-chart-bars">
+              <% charts[:partnerships].first(8).each do |p| %>
+                <div class="cr-bar-row">
+                  <div class="cr-bar-label cr-bar-label-wide"><%= p[:names] %></div>
+                  <div class="cr-bar-track">
+                    <div class="cr-bar-fill" style="width: <%= p[:pct] %>%;">
+                      <span><%= p[:pct] %>%</span>
+                    </div>
+                  </div>
+                  <div class="cr-bar-value"><%= p[:wins] %>/<%= p[:total] %></div>
+                </div>
+              <% end %>
+            </div>
+          <% else %>
+            <p class="cr-chart-empty-inline">No doubles results yet.</p>
+          <% end %>
+        </div>
+
+        <%# Recent Match Results %>
+        <div class="cr-chart-section">
+          <h3 class="cr-chart-section-title">Recent Results</h3>
+          <% if charts[:recent_matches].any? %>
+            <div class="cr-chart-recent">
+              <% charts[:recent_matches].each do |m| %>
+                <div class="cr-chart-recent-row">
+                  <span class="cr-chart-recent-date"><%= m[:date].strftime("%b %-d") %></span>
+                  <span class="cr-chart-recent-opponent">vs. <%= m[:opponent] %></span>
+                  <span class="cr-chart-recent-badge <%= m[:result] == 'win' ? 'cr-chart-recent-win' : 'cr-chart-recent-loss' %>">
+                    <%= m[:result] == 'win' ? 'W' : 'L' %>
+                  </span>
+                  <% if m[:score].present? %>
+                    <span class="cr-chart-recent-score"><%= m[:score] %></span>
+                  <% end %>
+                </div>
+              <% end %>
+            </div>
+          <% else %>
+            <p class="cr-chart-empty-inline">No matches played yet.</p>
+          <% end %>
+        </div>
+
+        <%# Per-player table (still useful for captains) — only when
+            there's actual data, otherwise the empty state above is
+            enough. %>
+        <% if @player_stats_data.present? && @player_stats_data.any? %>
+          <div class="cr-chart-section">
+            <h3 class="cr-chart-section-title">Per-Player Breakdown</h3>
+            <div class="cr-captain-analytics-table">
+              <div class="cr-captain-analytics-header">
+                <span class="cr-captain-col-name">Player</span>
+                <span class="cr-captain-col-stat">Played</span>
+                <span class="cr-captain-col-stat">W</span>
+                <span class="cr-captain-col-stat">L</span>
+                <span class="cr-captain-col-stat">Win%</span>
+                <span class="cr-captain-col-stat">S%</span>
+                <span class="cr-captain-col-stat">D%</span>
+                <span class="cr-captain-col-stat">Line</span>
+              </div>
+              <% @player_stats_data.each do |ps| %>
+                <div class="cr-captain-analytics-row">
+                  <span class="cr-captain-col-name">
+                    <%= link_to ps[:name], player_path(ps[:user_id]), style: "text-decoration: none; color: inherit; font-weight: 600;" %>
+                    <% if ps[:user_id] == current_user.id %>
+                      <span style="color: var(--cr-gold); font-size: 0.75rem;">(you)</span>
+                    <% end %>
+                  </span>
+                  <span class="cr-captain-col-stat"><%= ps[:matches_played] %></span>
+                  <span class="cr-captain-col-stat" style="color: var(--cr-green);"><%= ps[:wins] %></span>
+                  <span class="cr-captain-col-stat" style="color: var(--cr-red);"><%= ps[:losses] %></span>
+                  <span class="cr-captain-col-stat" style="font-weight: 700;"><%= ps[:win_pct] %>%</span>
+                  <span class="cr-captain-col-stat"><%= ps[:singles_pct] %>%</span>
+                  <span class="cr-captain-col-stat"><%= ps[:doubles_pct] %>%</span>
+                  <span class="cr-captain-col-stat"><%= ps[:most_common_line] || "—" %></span>
+                </div>
+              <% end %>
+            </div>
+            <p style="font-size: 0.8rem; color: var(--cr-text-muted); margin-top: 8px;">
+              Click a player's name for their full stats, doubles partner win %, and recent matches.
             </p>
           </div>
         <% end %>
