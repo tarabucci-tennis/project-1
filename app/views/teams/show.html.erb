@@ -672,6 +672,22 @@
             </div>
           </div>
 
+          <%# ── Paste Roster (bulk import from TennisLink / Del-Tri / Inter-Club) ── %>
+          <div style="background: var(--cr-white); border: 1px solid var(--cr-border); border-radius: 10px; padding: 16px; margin-bottom: 28px;">
+            <div style="font-size: 0.75rem; font-weight: 700; color: var(--cr-text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">Paste Roster</div>
+            <p style="font-size: 0.8rem; color: var(--cr-text-light); margin-bottom: 10px;">
+              Copy the roster from USTA TennisLink (or any other site) and paste it below — one player per line. Ratings in parentheses are OK.
+            </p>
+            <%= form_with url: paste_roster_team_path(@team), method: :post, local: true do |f| %>
+              <textarea name="roster" rows="8"
+                        placeholder="Jaclyn Groenen (4.0)&#10;Amanda Neill (3.5)&#10;Rachel Chadwin (4.0)&#10;..."
+                        style="width: 100%; padding: 10px 12px; font-size: 0.85rem; border: 1px solid var(--cr-border); border-radius: 6px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; resize: vertical;"></textarea>
+              <div style="display: flex; justify-content: flex-end; margin-top: 8px;">
+                <%= f.submit "Add These Players", class: "cr-btn cr-btn-gold", style: "padding: 8px 18px; font-size: 0.82rem;" %>
+              </div>
+            <% end %>
+          </div>
+
           <%# ── Availability overview for each upcoming match ── %>
           <% if @upcoming_matches.any? %>
             <h3 class="cr-captain-section-title">Upcoming — Who's Available</h3>
