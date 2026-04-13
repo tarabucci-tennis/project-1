@@ -256,21 +256,26 @@ class TeamsController < ApplicationController
 
   # POST /teams/:id/paste_roster
   #
-  # Accepts a big textarea of player names (one per line) and creates
-  # placeholder User rows + TeamMemberships for each of them. Handles a
-  # few common formats pasted from USTA TennisLink / Del-Tri / Inter-Club
-  # rosters:
+  # Accepts a big textarea of pasted roster text and creates placeholder
+  # User rows + TeamMemberships for each name found. Robust to a bunch
+  # of formats we've seen from USTA TennisLink / Del-Tri / Inter-Club:
   #
-  #   Jaclyn Groenen
-  #   Jaclyn Groenen (4.0)
-  #   Jaclyn Groenen 4.0
-  #   Jaclyn Groenen                       4.0          F
+  #   Single column with rating:
+  #     Jaclyn Groenen (4.0)
+  #     Jaclyn Groenen 4.0
   #
-  # The regex strips any trailing rating and any non-name columns, then
-  # creates placeholders with blank email/password. Captains share the
-  # join link with their team — PR #51 / PR #54's placeholder-merge
-  # logic then attaches real email + password to the right row when the
-  # teammate signs up.
+  #   Single column with position number (not a rating):
+  #     Demi Lin          27
+  #     Tricia MacKay     28
+  #
+  #   Multi-column grid (copy-paste from a table on the site):
+  #     Rachel Miller  3.5    Katharine Quigley  3      Demi Lin  3.5
+  #     Rebecca Feinberg 3.5  Lisa Tan  3.5            Tricia MacKay  3.5
+  #
+  # Strategy: scan the entire pasted blob for "First Last" or "First
+  # Middle Last" patterns (two-plus words starting with capitals),
+  # ignoring ratings, position numbers, role columns, and header
+  # garbage like "Team Roster" or "Player Name" via a stopword list.
   def paste_roster
     @team = TennisTeam.find(params[:team_id])
     unless @team.can_set_lineup?(current_user) || current_user.admin?
@@ -279,40 +284,29 @@ class TeamsController < ApplicationController
     end
 
     raw = params[:roster].to_s
-    lines = raw.split("\n").map(&:strip).reject(&:blank?)
-
-    if lines.empty?
+    if raw.strip.empty?
       return redirect_to team_path(@team),
                          alert: "Paste some names into the box first."
     end
 
-    added  = []
+    names = extract_names_from_paste(raw)
+
+    if names.empty?
+      return redirect_to team_path(@team, tab: "captain"),
+                         alert: "Couldn't find any player names in that paste. Make sure names use First Last format."
+    end
+
+    added   = []
     already = []
-    skipped = []
 
-    lines.each do |line|
-      # Strip trailing rating like "4.0", "(3.5)", "[4.0]", or anything
-      # that starts with a digit past the name. Also strip common USTA
-      # suffixes like "C" (captain) or "M/F" gender column.
-      name = line.dup
-      name = name.sub(/\s*[\(\[]?\d\.\d[\)\]]?.*$/, "")  # ratings
-      name = name.sub(/\s+[CcFfMm]\s*$/, "")             # lone role/gender
-      name = name.strip
-
-      if name.length < 2
-        skipped << line
-        next
-      end
-
-      # Case-insensitive match on existing team members
+    names.each do |name|
       existing = @team.members.find { |u| u.name.to_s.downcase == name.downcase }
       if existing
         already << name
         next
       end
 
-      # Look for a User with this name who ISN'T on the team yet
-      reuse = User.where("LOWER(name) = ?", name.downcase).first
+      reuse  = User.where("LOWER(name) = ?", name.downcase).first
       player = reuse || User.create!(name: name, admin: false)
       TeamMembership.create!(user: player, tennis_team: @team, role: "player")
       added << name
@@ -321,13 +315,53 @@ class TeamsController < ApplicationController
     parts = []
     parts << "Added #{added.size}: #{added.join(', ')}" if added.any?
     parts << "Already on team: #{already.join(', ')}" if already.any?
-    parts << "Skipped #{skipped.size} line(s)" if skipped.any?
+    parts << "Nothing added" if parts.empty?
 
     redirect_to team_path(@team, tab: "captain"),
                 notice: parts.join(" · ")
   end
 
   private
+
+  # Pull "First Last" / "First Middle Last" patterns out of pasted
+  # roster text. Works on multi-column grids as well as single-column
+  # lists by scanning the entire blob with one regex. Filters out
+  # obvious header garbage ("Team Roster", "Player Name", "Captain Name")
+  # via a stopword list so we don't create bogus placeholder rows.
+  # Match "First Last" or "First Middle Last" where the words are
+  # separated by horizontal whitespace ONLY — spaces and tabs, not
+  # newlines. Using `\s` here would chain names across lines, e.g.
+  # "Team Roster\nJane Doe" would be parsed as a single 4-word match.
+  NAME_REGEX = /[A-Z][a-zA-Z'\-]*(?:[ \t]+[A-Z][a-zA-Z'\-]*)+/
+
+  HEADER_STOPWORDS = %w[
+    team roster player players captain co-captain name names rating
+    ratings section division level division member members list schedule
+    match matches opponent opponents coach home away
+  ].freeze
+
+  def extract_names_from_paste(raw)
+    matches = raw.scan(NAME_REGEX).map(&:strip).reject(&:blank?)
+
+    seen = {}
+    result = []
+    matches.each do |m|
+      # Filter out things where every word is a known header/label.
+      words = m.downcase.split(/\s+/)
+      next if words.all? { |w| HEADER_STOPWORDS.include?(w) }
+
+      # Also filter out matches that are purely one word after stopword
+      # removal (defensive against something like "Roster Smith").
+      non_stop = words.reject { |w| HEADER_STOPWORDS.include?(w) }
+      next if non_stop.size < 2 && !non_stop.empty? && non_stop != words
+
+      key = m.downcase
+      next if seen[key]
+      seen[key] = true
+      result << m
+    end
+    result
+  end
 
   def require_login
     redirect_to login_path, alert: "Please sign in first." unless current_user
