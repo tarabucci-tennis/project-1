@@ -45,9 +45,24 @@ class ProfilesController < ApplicationController
                      .where.not(result: nil)
                      .includes(match: :tennis_team)
 
-    return nil if lines.empty?
+    # Always return a well-formed hash so the view can show the stat
+    # structure even before any matches have been played. Empty sections
+    # (partners, recent matches) degrade gracefully in the view.
+    stats = {
+      overall:        { won: 0, lost: 0, total: 0, pct: 0 },
+      singles:        { won: 0, total: 0, pct: 0 },
+      doubles:        { won: 0, total: 0, pct: 0 },
+      by_line:        {},
+      partners:       [],
+      best_partner:   nil,
+      recent:         [],
+      usual_doubles_line:    nil,  # e.g. "2D" — the line this player plays most often
+      matches_played_by_team: [],  # [{ team_name:, count: }]
+      matches_played_total:   0,
+      is_empty:       lines.empty?
+    }
 
-    stats = {}
+    return stats if lines.empty?
 
     # Overall
     total = lines.count
@@ -73,8 +88,28 @@ class ProfilesController < ApplicationController
       stats[:by_line][label] = { won: w, total: t, pct: pct(w, t) }
     end
 
+    # Usual doubles line — the doubles position this player plays most
+    # often. Useful at a glance for captains setting a lineup ("this
+    # player usually plays 2D").
+    doubles_by_position = doubles.group(:position).count
+    if doubles_by_position.any?
+      top_position, _ = doubles_by_position.max_by { |_, count| count }
+      stats[:usual_doubles_line] = "#{top_position}D"
+    end
+
+    # Matches played per team (distinct match count per team, not per line)
+    played_by_team = Hash.new(0)
+    lines.each do |l|
+      team_name = l.match.tennis_team&.name || "Unknown"
+      played_by_team[[ team_name, l.match_id ]] = 1
+    end
+    team_counts = played_by_team.keys.group_by(&:first).transform_values(&:count)
+    stats[:matches_played_by_team] = team_counts.map { |team_name, count|
+      { team_name: team_name, count: count }
+    }.sort_by { |t| -t[:count] }
+    stats[:matches_played_total] = team_counts.values.sum
+
     # Doubles partner stats
-    stats[:partners] = []
     doubles_lines = lines.where(line_type: "doubles").includes(match_line_players: :user)
     partner_data = Hash.new { |h, k| h[k] = { won: 0, lost: 0, total: 0 } }
 

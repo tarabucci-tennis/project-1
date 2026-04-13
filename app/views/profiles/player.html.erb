@@ -55,8 +55,68 @@
     </div>
   <% end %>
 
-  <%# ── Playing Stats ── %>
+  <%# ── Lineup Quick Facts — at-a-glance info captains need when setting a lineup ── %>
   <% if @playing_stats.present? %>
+    <section class="cr-section cr-lineup-facts">
+      <h2 class="cr-section-title">Lineup Quick Facts</h2>
+      <div class="cr-lineup-facts-grid">
+        <div class="cr-lineup-fact">
+          <div class="cr-lineup-fact-label">Matches Played</div>
+          <div class="cr-lineup-fact-value">
+            <%= @playing_stats[:matches_played_total] %>
+          </div>
+        </div>
+
+        <div class="cr-lineup-fact">
+          <div class="cr-lineup-fact-label">Plays Singles?</div>
+          <div class="cr-lineup-fact-value">
+            <% if @playing_stats[:singles][:total] > 0 %>
+              Yes · <%= @playing_stats[:singles][:total] %> match<%= @playing_stats[:singles][:total] == 1 ? "" : "es" %>
+            <% else %>
+              Not yet
+            <% end %>
+          </div>
+        </div>
+
+        <div class="cr-lineup-fact">
+          <div class="cr-lineup-fact-label">Usual Doubles Line</div>
+          <div class="cr-lineup-fact-value">
+            <%= @playing_stats[:usual_doubles_line] || "—" %>
+          </div>
+        </div>
+
+        <div class="cr-lineup-fact">
+          <div class="cr-lineup-fact-label">Best Partner</div>
+          <div class="cr-lineup-fact-value">
+            <% if @playing_stats[:best_partner] %>
+              <%= @playing_stats[:best_partner][:name] %>
+              <span style="color: var(--cr-text-muted); font-weight: 500; font-size: 0.85rem;">(<%= @playing_stats[:best_partner][:pct] %>%)</span>
+            <% else %>
+              —
+            <% end %>
+          </div>
+        </div>
+      </div>
+
+      <% if @playing_stats[:matches_played_by_team].any? %>
+        <div class="cr-lineup-fact-breakdown">
+          <strong>Matches by team:</strong>
+          <% @playing_stats[:matches_played_by_team].each_with_index do |t, i| %>
+            <%= t[:team_name] %> (<%= t[:count] %>)<%= "," unless i == @playing_stats[:matches_played_by_team].size - 1 %>
+          <% end %>
+        </div>
+      <% end %>
+
+      <% if @playing_stats[:is_empty] %>
+        <p style="text-align: center; padding: 10px; color: var(--cr-text-muted); font-size: 0.82rem; font-style: italic;">
+          Stats will fill in here as match results are entered.
+        </p>
+      <% end %>
+    </section>
+  <% end %>
+
+  <%# ── Playing Stats ── %>
+  <% if @playing_stats.present? && !@playing_stats[:is_empty] %>
     <section class="cr-section">
       <h2 class="cr-section-title">Playing Stats</h2>
 
