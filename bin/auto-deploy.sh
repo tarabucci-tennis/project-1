@@ -71,7 +71,17 @@ docker run -d \
 sleep 5
 
 if docker ps --filter "name=project-1" --filter "status=running" --format '{{.Names}}' | grep -q "project-1"; then
-  echo "$LOG_PREFIX Deploy successful. Container is running."
+  echo "$LOG_PREFIX Container is running. Applying database migrations and seeds..."
+  # Run migrations and seeds inside the running container. Seeds are idempotent —
+  # they find_or_create_by! most records and destroy_all + recreate for the Apr 14
+  # lineup. Safe to run on every deploy.
+  if docker exec project-1 bin/rails db:migrate db:seed; then
+    echo "$LOG_PREFIX Migrations and seeds applied."
+    echo "$LOG_PREFIX Deploy successful."
+  else
+    echo "$LOG_PREFIX ERROR: db:migrate or db:seed failed. Check: docker logs project-1"
+    exit 1
+  fi
 else
   echo "$LOG_PREFIX ERROR: Container is NOT running after deploy. Check: docker logs project-1"
   exit 1
