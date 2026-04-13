@@ -464,6 +464,24 @@ Reconstructed from git log. Tara has built this app over ~6 sessions.
 
 **Why this matters:** Previously, parallel Claude sessions created a dozen stale feature branches, each built on a different starting point. When one branch got merged to main, it wiped out features from other branches. This caused the deployed site to break. Never let main fall behind the deployed code.
 
+### Auto-merge authorization (standing permission from Tara, Session 10)
+
+Tara has given Claude **standing permission to auto-merge PRs** in `tarabucci-tennis/project-1` without waiting for explicit "merge it" every time. Normal flow:
+
+1. Make changes, commit, push to the feature branch.
+2. Open a PR via `mcp__github__create_pull_request`.
+3. **Immediately merge it** via `mcp__github__merge_pull_request` in the same turn.
+4. Tell Tara in the reply what was merged and what to do on her phone to see it (clear Safari cache, etc.).
+
+**Still ask before merging** in these cases:
+- The PR touches data-destructive operations — database migrations that drop columns, delete records, reset seeds, or otherwise can't be undone.
+- The PR is a large refactor or architectural change Tara might want to look at first.
+- Claude is not fully confident the change is correct (tests failing, unsure about logic, couldn't verify locally).
+- The PR touches deploy infrastructure, SSH keys, secrets, GitHub Actions workflows, or domain/DNS config.
+- The PR would affect code outside `tarabucci-tennis/project-1`.
+
+When in doubt, pause and ask. Auto-merge is for normal day-to-day feature work and bug fixes, not for "I think this is probably fine" changes.
+
 ### Auto-Deploy (GitHub Actions)
 
 Deployments are automated via `.github/workflows/deploy.yml`.
