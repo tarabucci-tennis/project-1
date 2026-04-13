@@ -170,7 +170,7 @@
       <% team = item[:team] %>
       <% lineup = item[:lineup] %>
       <% slot = item[:my_slot] %>
-      <div class="lineup-card">
+      <div class="lineup-card" style="cursor: pointer;" onclick="if (!event.target.closest('a,button,form')) window.location='<%= team_match_path(team, match) %>'">
         <div class="lineup-card-head">
           <div class="lineup-date">
             <div class="lineup-date-mon"><%= match.match_date.strftime("%b") %></div>

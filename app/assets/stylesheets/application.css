@@ -2543,6 +2543,81 @@ button.cr-header-pill {
     align-items: stretch;
     gap: 10px;
   }
+
+  /* "Set Lineup" button on match detail page — compact on mobile */
+  .cr-set-lineup-btn {
+    padding: 6px 10px !important;
+    font-size: 0.72rem !important;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  /* Team show page match cards — fix the overflow and stack captain
+     actions below the match info so nothing runs off the right edge. */
+  .cr-match-card {
+    padding: 0 !important;
+    margin-bottom: 10px;
+    border: 1px solid var(--cr-border);
+    border-radius: 12px;
+    overflow: hidden;
+    background: var(--cr-white);
+  }
+  .cr-match-card .cr-match-row {
+    padding: 12px 14px;
+    gap: 10px;
+    flex-wrap: wrap;
+    align-items: flex-start;
+  }
+  .cr-match-date {
+    min-width: 50px;
+    padding: 6px 8px;
+  }
+  .cr-match-date-day {
+    font-size: 1.1rem;
+  }
+  .cr-match-info {
+    flex: 1 1 calc(100% - 70px);
+    min-width: 0;
+  }
+  .cr-match-opponent {
+    font-size: 0.92rem;
+    word-break: normal;
+    overflow-wrap: break-word;
+  }
+  .cr-match-location {
+    font-size: 0.75rem;
+    word-break: normal;
+    overflow-wrap: break-word;
+  }
+  .cr-match-badge {
+    font-size: 0.62rem;
+    padding: 2px 8px;
+    flex-shrink: 0;
+  }
+  .cr-cal-btn {
+    width: 28px;
+    height: 28px;
+    flex-shrink: 0;
+  }
+  /* Captain action buttons (+ Add Match / Set Lineup / Enter Results) stack
+     below the match row, full width, side-by-side, small, never overflow. */
+  .cr-match-captain-actions {
+    display: flex !important;
+    gap: 6px !important;
+    padding: 8px 14px 12px !important;
+    margin-top: 0 !important;
+    border-top: 1px solid var(--cr-border) !important;
+    flex-wrap: nowrap;
+  }
+  .cr-match-captain-actions .cr-btn {
+    flex: 1 1 0;
+    padding: 7px 4px !important;
+    font-size: 0.7rem !important;
+    white-space: nowrap;
+    text-align: center;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 }
 
 .cr-cal-btn {
@@ -2615,14 +2690,16 @@ button.cr-header-pill {
   -webkit-backdrop-filter: blur(20px);
   border-top: 1px solid rgba(201, 162, 74, 0.15);
   padding: 0 0 env(safe-area-inset-bottom);
-  z-index: 200;
+  z-index: 9999;
   box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.4);
+  pointer-events: auto;
 }
 
 .cr-bottom-nav-inner {
   display: flex;
   max-width: 600px;
   margin: 0 auto;
+  pointer-events: auto;
 }
 
 .cr-bnav-btn {
@@ -2638,9 +2715,16 @@ button.cr-header-pill {
   color: rgba(255, 255, 255, 0.4);
   transition: all 0.2s ease;
   position: relative;
-  -webkit-tap-highlight-color: transparent;
+  -webkit-tap-highlight-color: rgba(201, 162, 74, 0.2);
   text-decoration: none;
   font-family: inherit;
+  pointer-events: auto;
+  touch-action: manipulation;
+  min-height: 48px;
+}
+
+.cr-bnav-btn > * {
+  pointer-events: none;
 }
 
 .cr-bnav-btn:active { transform: scale(0.92); }

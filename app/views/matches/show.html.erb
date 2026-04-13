@@ -28,7 +28,7 @@
         </svg>
       </a>
       <% if @is_captain %>
-        <%= link_to "Set Lineup", edit_team_match_lineup_path(@team, @match), class: "cr-btn cr-btn-gold", style: "padding: 6px 14px; font-size: 0.8rem;" %>
+        <%= link_to "Set Lineup", edit_team_match_lineup_path(@team, @match), class: "cr-btn cr-btn-gold cr-set-lineup-btn" %>
       <% end %>
     </div>
   </div>
