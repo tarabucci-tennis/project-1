@@ -30,7 +30,35 @@ class RegistrationsController < ApplicationController
       return render :new, status: :unprocessable_entity
     end
 
-    user = User.new(
+    # If the visitor came in through a team join link, see if the
+    # captain already seeded them as a placeholder on that team
+    # (same name, no password, maybe no email). If so, claim that
+    # placeholder instead of creating a duplicate user — this
+    # preserves their lineup assignments, match history, etc.
+    pending_team = nil
+    if session[:pending_join_code].present?
+      pending_team = TennisTeam.find_by(join_code: session[:pending_join_code])
+    end
+
+    user = nil
+    if pending_team
+      placeholder = pending_team.members
+                                .where(password_digest: nil)
+                                .where("LOWER(name) = ?", name.downcase)
+                                .first
+      # Only reuse a placeholder if its email slot is empty or already
+      # matches what the signup form says (we don't want to overwrite
+      # an email a captain may have typed in).
+      if placeholder && (placeholder.email.blank? || placeholder.email.to_s.downcase == email)
+        user = placeholder
+        user.email                 = email
+        user.password              = password
+        user.password_confirmation = password_confirmation
+      end
+    end
+
+    # No placeholder → normal fresh account creation.
+    user ||= User.new(
       name:                  name,
       email:                 email,
       admin:                 false,
@@ -45,7 +73,10 @@ class RegistrationsController < ApplicationController
         team = TennisTeam.find_by(join_code: session.delete(:pending_join_code))
         if team && !team.team_memberships.exists?(user: user)
           TeamMembership.create!(user: user, tennis_team: team, role: "player")
-          redirect_to team_path(team), notice: "Welcome to Court Report! You've joined #{team.name}."
+        end
+        if team
+          redirect_to team_path(team),
+                      notice: "Welcome to Court Report! You're all set on #{team.name}."
           return
         end
       end
