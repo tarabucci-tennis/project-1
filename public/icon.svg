@@ -4,10 +4,13 @@
       <stop offset="0" stop-color="#c9a24a"/>
       <stop offset="1" stop-color="#f0cc6e"/>
     </linearGradient>
+    <radialGradient id="ball" cx="0.4" cy="0.35" r="0.7">
+      <stop offset="0" stop-color="#e6ff66"/>
+      <stop offset="1" stop-color="#9bbf2e"/>
+    </radialGradient>
   </defs>
-  <rect width="512" height="512" rx="96" fill="#0a1628"/>
-  <circle cx="256" cy="256" r="170" fill="url(#gold)"/>
-  <circle cx="256" cy="256" r="170" fill="#dfff3f" opacity="0.85"/>
-  <path d="M 212 100 Q 96 256 212 412" stroke="#ffffff" stroke-width="16" fill="none" stroke-linecap="round"/>
-  <path d="M 300 100 Q 416 256 300 412" stroke="#ffffff" stroke-width="16" fill="none" stroke-linecap="round"/>
+  <rect width="512" height="512" rx="96" fill="url(#gold)"/>
+  <circle cx="256" cy="256" r="168" fill="url(#ball)"/>
+  <path d="M 212 100 Q 96 256 212 412" stroke="#ffffff" stroke-width="14" fill="none" stroke-linecap="round"/>
+  <path d="M 300 100 Q 416 256 300 412" stroke="#ffffff" stroke-width="14" fill="none" stroke-linecap="round"/>
 </svg>
