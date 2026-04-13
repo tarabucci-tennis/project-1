@@ -43,6 +43,16 @@
   <%# ── Sign in card ── %>
   <div class="cr-landing-signin">
     <div class="cr-login-card">
+      <% if flash[:admin_reset_url].present? %>
+        <div class="cr-admin-reset-box">
+          <div class="cr-admin-reset-label">Admin reset link</div>
+          <p class="cr-admin-reset-note">
+            Click below to set a new password. Link expires in 2 hours.
+          </p>
+          <%= link_to "Reset my password →", flash[:admin_reset_url], class: "cr-btn cr-btn-gold cr-admin-reset-btn" %>
+        </div>
+      <% end %>
+
       <h2 style="font-size: 1.3rem; margin-bottom: 4px;">Get on the court</h2>
       <p class="cr-login-sub">Sign in with your email to see your teams</p>
 
