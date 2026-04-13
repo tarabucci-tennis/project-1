@@ -270,9 +270,14 @@ class TeamsController < ApplicationController
       is_empty:         completed_matches.empty?
     }
 
-    # Seed by_line with zeroes for the canonical USTA 40+ lines so
-    # the chart always has 5 bars (1S, 1D, 2D, 3D, 4D) to draw.
-    %w[1S 1D 2D 3D 4D].each do |label|
+    # Seed by_line with zeros for whichever lines this team's league
+    # uses so the chart always has the right number of bars to draw:
+    #   USTA:       1S, 1D, 2D, 3D, 4D    (5 bars)
+    #   Inter-Club: 1D, 2D, 3D, 4D, 5D, 6D (6 bars)
+    #   Del-Tri:    1D, 2D, 3D, 4D, 5D, 6D (6 bars)
+    @team.lineup_slot_plan.keys.map { |lt, pos|
+      lt == "singles" ? "#{pos}S" : "#{pos}D"
+    }.uniq.each do |label|
       charts[:by_line][label] = { wins: 0, total: 0, pct: 0 }
     end
 

@@ -138,25 +138,19 @@ class LineupsController < ApplicationController
     redirect_to login_path unless current_user
   end
 
-  # Top up the lineup so it has the canonical USTA 40+ structure:
-  #   1 singles slot at position 1
-  #   2 doubles slots at positions 1, 2, 3, 4 (total 8 doubles slots)
-  #   = 9 slots total
+  # Top up the lineup so it has the canonical slot structure for this
+  # team's league format:
+  #   - USTA:       1 singles + 4 doubles = 9 slots
+  #   - Inter-Club: 6 doubles               = 12 slots
+  #   - Del-Tri:    6 doubles               = 12 slots
   #
-  # Idempotent: counts how many slots exist for each (line_type, position)
-  # pair and creates whatever is missing. New slots are created with
-  # user_id=NULL — the captain fills them in by picking players from the
-  # dropdowns on the edit form. This avoids the unique-index clash that
-  # a shared placeholder user would cause on the doubles positions.
+  # Idempotent: counts existing slots per (line_type, position) and
+  # creates whatever is missing. New slots are created with
+  # user_id=NULL so the unique (lineup_id, user_id) index doesn't
+  # clash when multiple default slots need to coexist for the same
+  # doubles line. Captain fills them in from the dropdowns.
   def ensure_default_slots(lineup)
-    needed = {
-      [ "singles", 1 ] => 1,
-      [ "doubles", 1 ] => 2,
-      [ "doubles", 2 ] => 2,
-      [ "doubles", 3 ] => 2,
-      [ "doubles", 4 ] => 2
-    }
-
+    needed = @team.lineup_slot_plan
     have = lineup.lineup_slots.group(:line_type, :position).count
 
     needed.each do |(line_type, position), target_count|
