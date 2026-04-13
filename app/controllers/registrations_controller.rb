@@ -7,8 +7,8 @@ class RegistrationsController < ApplicationController
     email = params[:email].to_s.downcase.strip
     name  = params[:name].to_s.strip
 
-    if email.blank? || name.blank? || params[:password].blank?
-      flash.now[:alert] = "Please fill in all fields."
+    if email.blank? || name.blank?
+      flash.now[:alert] = "Please fill in your name and email."
       return render :new, status: :unprocessable_entity
     end
 
@@ -18,7 +18,7 @@ class RegistrationsController < ApplicationController
       return render :new, status: :unprocessable_entity
     end
 
-    user = User.new(name: name, email: email, admin: false, password: params[:password], password_confirmation: params[:password_confirmation])
+    user = User.new(name: name, email: email, admin: false)
     if user.save
       session[:user_id] = user.id
 

@@ -1,48 +1,28 @@
 <% content_for :title, "Sign Up — Court Report" %>
 
-<div class="cr-landing">
-
-  <div class="cr-landing-hero">
-    <div class="cr-landing-hero-content">
-      <h1 class="cr-landing-headline">
-        Join <span class="cr-landing-headline-gold">Court Report</span>
-      </h1>
-      <p class="cr-landing-tagline">
-        Create your free account to see your teams, set availability, and track your stats.
-      </p>
+<div class="cr-auth-page">
+  <div class="cr-auth-card">
+    <div class="cr-auth-logo">
+      <span class="cr-auth-logo-ball">🎾</span>
     </div>
+    <h1 class="cr-auth-title">Sign Up</h1>
+    <p class="cr-auth-sub">Create your free Court Report account</p>
+
+    <%= form_with url: signup_path, method: :post do |f| %>
+      <div class="cr-field">
+        <%= f.label :name, "Your name" %>
+        <%= f.text_field :name, placeholder: "Jane Smith", autofocus: true, value: params[:name] %>
+      </div>
+      <div class="cr-field">
+        <%= f.label :email, "Email address" %>
+        <%= f.email_field :email, placeholder: "you@example.com", value: params[:email] %>
+      </div>
+      <%= f.submit "Sign Up →", class: "cr-auth-submit" %>
+    <% end %>
+
+    <p class="cr-auth-switch">
+      Already have an account?
+      <%= link_to "Sign in", login_path %>
+    </p>
   </div>
-
-  <div class="cr-landing-signin">
-    <div class="cr-login-card">
-      <h2 style="font-size: 1.3rem; margin-bottom: 4px;">Create your account</h2>
-      <p class="cr-login-sub">Takes 10 seconds</p>
-
-      <%= form_with url: signup_path, method: :post do |f| %>
-        <div class="cr-field">
-          <%= f.label :name, "Your name" %>
-          <%= f.text_field :name, placeholder: "Jane Smith", autofocus: true, value: params[:name] %>
-        </div>
-        <div class="cr-field">
-          <%= f.label :email, "Email address" %>
-          <%= f.email_field :email, placeholder: "you@example.com", value: params[:email] %>
-        </div>
-        <div class="cr-field">
-          <%= f.label :password, "Password" %>
-          <%= f.password_field :password, placeholder: "At least 6 characters" %>
-        </div>
-        <div class="cr-field">
-          <%= f.label :password_confirmation, "Confirm password" %>
-          <%= f.password_field :password_confirmation, placeholder: "Type it again" %>
-        </div>
-        <%= f.submit "Sign Up →" %>
-      <% end %>
-
-      <p style="text-align: center; margin-top: 16px; font-size: 0.85rem; color: var(--cr-text-muted);">
-        Already have an account?
-        <%= link_to "Sign in", login_path, style: "color: var(--cr-gold); font-weight: 600;" %>
-      </p>
-    </div>
-  </div>
-
 </div>
