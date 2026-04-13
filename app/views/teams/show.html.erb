@@ -90,9 +90,16 @@
       <div class="cr-schedule-layout">
         <%# Left: upcoming matches %>
         <div>
-          <h2 class="cr-section-title">
-            <%= @team.season_name.present? ? @team.season_name : "" %> Schedule
-          </h2>
+          <div class="cr-section-header-row" style="display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 14px; flex-wrap: wrap;">
+            <h2 class="cr-section-title" style="margin-bottom: 0;">
+              <%= @team.season_name.present? ? @team.season_name : "" %> Schedule
+            </h2>
+            <% if @is_captain %>
+              <%= link_to new_team_match_path(@team), class: "cr-btn cr-btn-gold", style: "padding: 8px 16px; font-size: 0.85rem; font-weight: 700; text-decoration: none; white-space: nowrap;" do %>
+                + Add Match
+              <% end %>
+            <% end %>
+          </div>
           <% all_matches = (@upcoming_matches + @past_matches).sort_by(&:match_date) %>
           <% if all_matches.any? %>
             <div class="cr-match-list">
@@ -137,6 +144,13 @@
                       </div>
                     <% end %>
                   </div>
+
+                  <% if @is_captain %>
+                    <div class="cr-match-captain-actions" style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--cr-border);">
+                      <%= link_to "📋 Set Lineup", edit_team_match_lineup_path(@team, match), class: "cr-btn cr-btn-outline", style: "padding: 6px 12px; font-size: 0.78rem; font-weight: 600; text-decoration: none;" %>
+                      <%= link_to (match.played? ? "✏️ Edit Results" : "🎾 Enter Results"), edit_results_team_match_path(@team, match), class: "cr-btn cr-btn-outline", style: "padding: 6px 12px; font-size: 0.78rem; font-weight: 600; text-decoration: none;" %>
+                    </div>
+                  <% end %>
 
                   <%# Show published lineup if one exists %>
                   <% lineup = match.lineup if match.respond_to?(:lineup) %>

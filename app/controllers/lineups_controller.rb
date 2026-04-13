@@ -34,13 +34,11 @@ class LineupsController < ApplicationController
       return redirect_to team_path(@team), alert: "Only captains can set lineups."
     end
 
-    @lineup = @match.lineup || @match.build_lineup
+    @lineup = @match.lineup || @match.create_lineup!
     @members = @team.members.order(:name)
 
-    # Build default slots if none exist
-    if @lineup.lineup_slots.empty? && @lineup.persisted?
-      build_default_slots(@lineup)
-    end
+    # Build default slots if none exist yet (1 singles slot + 2 per doubles line = 9 total)
+    build_default_slots(@lineup) if @lineup.lineup_slots.empty?
 
     @slots = @lineup.lineup_slots.includes(:user).order(position: :asc)
   end
@@ -60,10 +58,26 @@ class LineupsController < ApplicationController
       if params[:slots].present?
         params[:slots].each do |slot_id, slot_data|
           slot = @lineup.lineup_slots.find(slot_id)
+          update_attrs = {}
+
           new_user_id = slot_data[:user_id].presence
-          if new_user_id
-            slot.update!(user_id: new_user_id, confirmation: "pending", confirmed_at: nil)
+          if new_user_id && slot.user_id.to_s != new_user_id.to_s
+            update_attrs[:user_id] = new_user_id
           end
+
+          # Captain override: "Already confirmed" checkbox
+          if slot_data.key?(:confirmed)
+            if slot_data[:confirmed] == "1"
+              update_attrs[:confirmation] = "confirmed"
+              update_attrs[:confirmed_at] = Time.current
+            else
+              # Unchecked — reset to pending so the player still gets emailed
+              update_attrs[:confirmation] = "pending"
+              update_attrs[:confirmed_at] = nil
+            end
+          end
+
+          slot.update!(update_attrs) if update_attrs.any?
         end
       end
 
@@ -71,8 +85,10 @@ class LineupsController < ApplicationController
       if params[:publish] == "true" && !@lineup.published?
         @lineup.update!(published: true, published_at: Time.current)
 
-        # Email each player in the lineup who has an email
-        @lineup.lineup_slots.includes(:user).each do |slot|
+        # Only email players who are NOT already confirmed by the captain.
+        # If the captain checked "Already confirmed" for a slot, we skip the
+        # email — the captain already got a verbal yes via text / in person.
+        @lineup.lineup_slots.includes(:user).where(confirmation: "pending").each do |slot|
           next unless slot.user.email.present?
           LineupMailer.lineup_posted(slot).deliver_later
         end

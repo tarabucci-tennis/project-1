@@ -27,6 +27,10 @@
     </div>
   </div>
 
+  <p class="cr-lineup-help" style="font-size: 0.85rem; color: var(--cr-text-muted); margin-bottom: 16px; padding: 12px 14px; background: rgba(201, 162, 74, 0.08); border-left: 3px solid var(--cr-gold); border-radius: 6px;">
+    Pick a player for each line. Leave <strong>Already confirmed</strong> checked if you've already gotten a yes via text or in person — those players won't get an email asking them to confirm again. Uncheck it only if you want the app to email the player and ask.
+  </p>
+
   <%= form_tag team_match_lineup_path(@team, @match), method: :patch do %>
 
     <div class="cr-lineup-grid">
@@ -35,12 +39,19 @@
         <div class="cr-lineup-line-label">1S — Singles</div>
         <% singles_slot = @slots.find { |s| s.line_type == "singles" && s.position == 1 } %>
         <% if singles_slot %>
-          <select name="slots[<%= singles_slot.id %>][user_id]" class="cr-select" style="max-width: 100%;">
-            <option value="">-- Select player --</option>
-            <% @members.each do |m| %>
-              <option value="<%= m.id %>" <%= "selected" if singles_slot.user_id == m.id %>><%= m.name %></option>
-            <% end %>
-          </select>
+          <div class="cr-lineup-slot-row">
+            <select name="slots[<%= singles_slot.id %>][user_id]" class="cr-select" style="max-width: 100%;">
+              <option value="">-- Select player --</option>
+              <% @members.each do |m| %>
+                <option value="<%= m.id %>" <%= "selected" if singles_slot.user_id == m.id %>><%= m.name %></option>
+              <% end %>
+            </select>
+            <label class="cr-lineup-confirmed-toggle">
+              <input type="hidden" name="slots[<%= singles_slot.id %>][confirmed]" value="0">
+              <input type="checkbox" name="slots[<%= singles_slot.id %>][confirmed]" value="1" <%= "checked" unless singles_slot.declined? %>>
+              <span>Already confirmed</span>
+            </label>
+          </div>
         <% end %>
       </div>
 
@@ -50,20 +61,27 @@
           <div class="cr-lineup-line-label"><%= d %>D — Doubles <%= d %></div>
           <% doubles_slots = @slots.select { |s| s.line_type == "doubles" && s.position == d } %>
           <% doubles_slots.each_with_index do |slot, i| %>
-            <select name="slots[<%= slot.id %>][user_id]" class="cr-select" style="max-width: 100%;">
-              <option value="">-- Select player <%= i + 1 %> --</option>
-              <% @members.each do |m| %>
-                <option value="<%= m.id %>" <%= "selected" if slot.user_id == m.id %>><%= m.name %></option>
-              <% end %>
-            </select>
+            <div class="cr-lineup-slot-row">
+              <select name="slots[<%= slot.id %>][user_id]" class="cr-select" style="max-width: 100%;">
+                <option value="">-- Select player <%= i + 1 %> --</option>
+                <% @members.each do |m| %>
+                  <option value="<%= m.id %>" <%= "selected" if slot.user_id == m.id %>><%= m.name %></option>
+                <% end %>
+              </select>
+              <label class="cr-lineup-confirmed-toggle">
+                <input type="hidden" name="slots[<%= slot.id %>][confirmed]" value="0">
+                <input type="checkbox" name="slots[<%= slot.id %>][confirmed]" value="1" <%= "checked" unless slot.declined? %>>
+                <span>Already confirmed</span>
+              </label>
+            </div>
           <% end %>
         </div>
       <% end %>
     </div>
 
     <div class="cr-form-actions" style="margin-top: 24px;">
-      <%= submit_tag "Save Draft", class: "cr-btn cr-btn-outline", name: "publish", value: "false" %>
-      <%= submit_tag "Send to Team", class: "cr-btn cr-btn-gold", name: "publish", value: "true" %>
+      <%= button_tag "Save Draft", type: :submit, name: "publish", value: "false", class: "cr-btn cr-btn-outline" %>
+      <%= button_tag "Send to Team", type: :submit, name: "publish", value: "true", class: "cr-btn cr-btn-gold" %>
       <%= link_to "Cancel", team_path(@team), class: "cr-btn cr-btn-outline" %>
     </div>
   <% end %>
