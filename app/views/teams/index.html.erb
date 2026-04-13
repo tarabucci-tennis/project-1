@@ -214,8 +214,12 @@
   </div>
 </div>
 
-<div class="cr-page-header">
+<div class="cr-page-header cr-page-header-row">
   <h1 class="cr-page-title">My Teams</h1>
+  <div class="cr-page-header-actions">
+    <%= link_to "+ Join a Team", find_team_path, class: "cr-btn cr-btn-gold cr-btn-compact" %>
+    <%= link_to "Create a Team", new_team_path, class: "cr-btn cr-btn-outline cr-btn-compact" %>
+  </div>
 </div>
 
 <% any_teams = @teams_by_league.values.flatten.any? %>

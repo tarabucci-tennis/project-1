@@ -335,6 +335,12 @@ button.cr-header-pill {
   margin-bottom: 32px;
 }
 
+.cr-page-header-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
 .cr-page-title {
   font-size: 2.2rem;
   font-weight: 900;

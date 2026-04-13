@@ -3,16 +3,20 @@ class PasswordResetsController < ApplicationController
   def new
   end
 
-  # POST /forgot-password — send reset email (and for admins, also show
-  # the reset link on screen as a fallback in case SMTP isn't working).
+  # POST /forgot-password — generate a reset link. SMTP is not yet
+  # configured on the droplet, so emails would never arrive. For this
+  # beta we show the reset link directly on the login page to every
+  # user who requests one, regardless of admin status, so nobody gets
+  # locked out. We also still try to email — once SMTP_USERNAME /
+  # SMTP_PASSWORD are set on the server, the email path will start
+  # working in parallel.
   def create
     user = User.find_by(email: params[:email].to_s.downcase.strip)
 
     if user&.email.present?
       token = user.generate_reset_token!
 
-      # Try to email. If SMTP isn't configured on the droplet
-      # (SMTP_USERNAME / SMTP_PASSWORD missing), the job will quietly
+      # Try to email. If SMTP isn't configured, the job will quietly
       # fail in the background — we don't want to block the request.
       begin
         PasswordResetMailer.reset_email(user, token).deliver_later
@@ -20,28 +24,20 @@ class PasswordResetsController < ApplicationController
         Rails.logger.warn "[password_reset] deliver_later failed: #{e.message}"
       end
 
-      # Admin users get the reset link shown directly on screen so
-      # they can't get locked out when Gmail SMTP isn't wired up. Safe
-      # because:
-      #   - You still need to know an admin's registered email to get
-      #     a link at all
-      #   - The token expires in 2 hours
-      #   - Regular non-admin users never see this bypass
-      if user.admin?
-        reset_url = edit_password_reset_url(
-          token:    token,
-          host:     request.host,
-          protocol: request.protocol.sub(/:\/\/$/, "")
-        )
-        flash[:admin_reset_url] = reset_url
-        redirect_to login_path,
-                    notice: "Admin bypass — use the reset link below to set a new password."
-        return
-      end
+      reset_url = edit_password_reset_url(
+        token:    token,
+        host:     request.host,
+        protocol: request.protocol.sub(/:\/\/$/, "")
+      )
+      flash[:admin_reset_url] = reset_url
+      redirect_to login_path,
+                  notice: "Here's your reset link — tap the gold button below to set a new password."
+      return
     end
 
-    # Always show success (don't reveal whether email exists)
-    redirect_to login_path, notice: "If that email is registered, you'll receive a password reset link."
+    # Email not found (and don't reveal whether it exists)
+    redirect_to login_path,
+                notice: "If that email is registered, you'll see a reset link below."
   end
 
   # GET /reset-password/:token — show reset form
