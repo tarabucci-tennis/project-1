@@ -1,14 +1,16 @@
 #!/bin/bash
 # Force deploy — pull latest main, rebuild image, restart container,
-# run db:migrate + db:seed. Unlike bin/auto-deploy.sh this has no
-# "no new commits" short-circuit so it ALWAYS does a full rebuild.
+# run db:migrate. Unlike bin/auto-deploy.sh this has no "no new
+# commits" short-circuit so it ALWAYS does a full rebuild.
+#
+# IMPORTANT: This script does NOT run db:seed. The seed file is
+# destructive — it wipes every team_membership for your four teams
+# and recreates them from scratch, which would blow away every real
+# teammate's join. If you need to reset the seeded data, run
+# `bash /root/app/bin/seed.sh` manually.
 #
 # Usage on the droplet:
 #   bash /root/app/bin/force-deploy.sh
-#
-# Designed to be pasted into the DigitalOcean web console as a single
-# short command, instead of a long chain of && commands that can get
-# garbled by clipboard / terminal rendering.
 
 set -e
 
@@ -55,9 +57,10 @@ if ! docker ps --filter "name=project-1" --filter "status=running" --format '{{.
   exit 1
 fi
 
-echo "$LOG_PREFIX Running migrations and seeds..."
-docker exec project-1 bin/rails db:migrate db:seed
+echo "$LOG_PREFIX Running migrations (seeds intentionally skipped)..."
+docker exec project-1 bin/rails db:migrate
 
 echo "$LOG_PREFIX =============================="
 echo "$LOG_PREFIX DEPLOY COMPLETE"
+echo "$LOG_PREFIX (To reseed sample data, run: bash /root/app/bin/seed.sh)"
 echo "$LOG_PREFIX =============================="

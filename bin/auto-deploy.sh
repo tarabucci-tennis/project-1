@@ -71,15 +71,18 @@ docker run -d \
 sleep 5
 
 if docker ps --filter "name=project-1" --filter "status=running" --format '{{.Names}}' | grep -q "project-1"; then
-  echo "$LOG_PREFIX Container is running. Applying database migrations and seeds..."
-  # Run migrations and seeds inside the running container. Seeds are idempotent —
-  # they find_or_create_by! most records and destroy_all + recreate for the Apr 14
-  # lineup. Safe to run on every deploy.
-  if docker exec project-1 bin/rails db:migrate db:seed; then
-    echo "$LOG_PREFIX Migrations and seeds applied."
+  echo "$LOG_PREFIX Container is running. Applying database migrations..."
+  # Run migrations only. We deliberately do NOT run db:seed here — the
+  # seed file is destructive (destroy_all on team_memberships + the
+  # four canonical teams, then recreate) and would wipe every real
+  # teammate's join every time we deploy. If you ever need to reset
+  # the seeded data, run `bash /root/app/bin/seed.sh` manually from
+  # the droplet.
+  if docker exec project-1 bin/rails db:migrate; then
+    echo "$LOG_PREFIX Migrations applied."
     echo "$LOG_PREFIX Deploy successful."
   else
-    echo "$LOG_PREFIX ERROR: db:migrate or db:seed failed. Check: docker logs project-1"
+    echo "$LOG_PREFIX ERROR: db:migrate failed. Check: docker logs project-1"
     exit 1
   fi
 else
