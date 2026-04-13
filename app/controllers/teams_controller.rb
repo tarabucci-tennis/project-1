@@ -75,11 +75,35 @@ class TeamsController < ApplicationController
       end
       @standings.sort_by! { |s| [-s[:points], s[:name]] }
     else
-      @standings << { name: @team.name, wins: @wins, losses: @losses, is_self: true }
+      # USTA-style standings (matches the TennisLink layout):
+      #   Team · Matches Played · Points · Sets Won · Sets Lost · Games Won · Games Lost · Games Won %
+      #
+      # Our team's stats are computed live from match_lines as results
+      # are entered. Division opponents currently show zeros — that data
+      # isn't tracked yet. When we either (a) start scraping TennisLink
+      # or (b) let captains manually enter opponent standings, it'll
+      # populate the same row format.
+      my_stats = compute_team_standings_stats(@team)
+      @standings << my_stats.merge(name: @team.name, is_self: true)
+
       @division_teams.each do |dt|
-        @standings << { name: dt.name, wins: dt.wins, losses: dt.losses, is_self: false }
+        @standings << {
+          name: dt.name,
+          is_self: false,
+          matches_played: (dt.wins + dt.losses),
+          points: dt.wins * 2,  # USTA format: 2 pts per match win (rough)
+          sets_won: 0,
+          sets_lost: 0,
+          games_won: 0,
+          games_lost: 0,
+          games_won_pct: 0.0
+        }
       end
-      @standings.sort_by! { |s| [-s[:wins], s[:losses], s[:name]] }
+
+      # Sort: most points first, then matches played, then team name
+      @standings.sort_by! { |s|
+        [-s[:points].to_i, -s[:matches_played].to_i, s[:name]]
+      }
     end
 
     # Player stats (visible to everyone on the Player Stats tab)
@@ -171,6 +195,56 @@ class TeamsController < ApplicationController
 
   def member_of?(team)
     team.team_memberships.exists?(user: current_user) || team.user_id == current_user.id
+  end
+
+  # Compute TennisLink-style standings stats for a team from its
+  # entered match results. Returns a hash with matches_played, points,
+  # sets_won, sets_lost, games_won, games_lost, games_won_pct.
+  #
+  # Scores are assumed to be entered from OUR team's perspective:
+  # "6-3" means our team won 6 games, opponent won 3 in that set.
+  # All stats default to 0 if no results have been entered yet.
+  def compute_team_standings_stats(team)
+    completed = team.matches.completed.includes(:match_lines)
+
+    stats = {
+      matches_played: completed.count,
+      points:         completed.where(result: "win").count * 2,
+      sets_won:       0,
+      sets_lost:      0,
+      games_won:      0,
+      games_lost:     0,
+      games_won_pct:  0.0
+    }
+
+    completed.each do |match|
+      match.match_lines.each do |line|
+        [ line.set1_score, line.set2_score, line.set3_score ].each do |score|
+          next if score.blank?
+
+          # Strip tiebreak notation like "7-6(5)" → "7-6"
+          cleaned = score.to_s.gsub(/\(.*?\)/, "").strip
+          parts = cleaned.split(/[-–]/).map { |n| n.to_s.strip.to_i }
+          next unless parts.size == 2
+
+          our_games, their_games = parts
+          stats[:games_won]  += our_games
+          stats[:games_lost] += their_games
+          if our_games > their_games
+            stats[:sets_won] += 1
+          else
+            stats[:sets_lost] += 1
+          end
+        end
+      end
+    end
+
+    total_games = stats[:games_won] + stats[:games_lost]
+    if total_games > 0
+      stats[:games_won_pct] = (stats[:games_won].to_f / total_games * 100).round(2)
+    end
+
+    stats
   end
 
   def build_player_analytics

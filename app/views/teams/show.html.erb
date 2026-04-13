@@ -421,66 +421,85 @@
     <%# ── Tab 5: Standings ───────────────────────────── %>
     <div data-team-tabs-target="panel" style="display: none;">
       <section class="cr-section">
-        <h2 class="cr-section-title">
-          <%= @team.league_category == "Local" ? "Del-Tri" : @team.section %> Standings
-        </h2>
+        <h2 class="cr-section-title">Team Standings</h2>
 
-        <div class="cr-standings-table">
+        <% unless @is_points_league %>
+          <p class="cr-standings-criteria">
+            Match Win Criteria: <strong>Points per Position</strong>
+          </p>
+          <p class="cr-standings-note">
+            * Calculation of game-winning percentage does not include defaulted matches.
+          </p>
+        <% end %>
+
+        <%# Horizontal scroll wrapper so the wide table is readable
+            on narrow mobile viewports %>
+        <div class="cr-standings-scroll">
           <% if @is_points_league %>
-            <div class="cr-standings-header-row">
-              <span class="cr-standings-rank-col">#</span>
-              <span class="cr-standings-team-col">Team</span>
-              <span class="cr-standings-stat-col">Pts</span>
-            </div>
-
-            <% @standings.each_with_index do |entry, idx| %>
-              <div class="cr-standings-row <%= 'cr-standings-row-self' if entry[:is_self] %>">
-                <span class="cr-standings-rank-col"><%= idx + 1 %></span>
-                <span class="cr-standings-team-col">
-                  <%= entry[:name] %>
-                  <% if entry[:is_self] %>
-                    <span class="cr-standings-you-badge">You</span>
-                  <% end %>
-                </span>
-                <span class="cr-standings-stat-col cr-standings-wins"><%= entry[:points] %></span>
-              </div>
-            <% end %>
+            <table class="cr-standings-tbl">
+              <thead>
+                <tr>
+                  <th class="cr-standings-tbl-rank">#</th>
+                  <th class="cr-standings-tbl-team">Team</th>
+                  <th>Pts</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% @standings.each_with_index do |entry, idx| %>
+                  <tr class="<%= 'cr-standings-tbl-self' if entry[:is_self] %>">
+                    <td class="cr-standings-tbl-rank"><%= idx + 1 %></td>
+                    <td class="cr-standings-tbl-team">
+                      <%= entry[:name] %>
+                      <% if entry[:is_self] %>
+                        <span class="cr-standings-you-badge">You</span>
+                      <% end %>
+                    </td>
+                    <td class="cr-standings-tbl-highlight"><%= entry[:points] %></td>
+                  </tr>
+                <% end %>
+              </tbody>
+            </table>
           <% else %>
-            <div class="cr-standings-header-row">
-              <span class="cr-standings-rank-col">#</span>
-              <span class="cr-standings-team-col">Team</span>
-              <span class="cr-standings-stat-col">W</span>
-              <span class="cr-standings-stat-col">L</span>
-              <span class="cr-standings-stat-col">Win%</span>
-            </div>
-
-            <% @standings.each_with_index do |entry, idx| %>
-              <div class="cr-standings-row <%= 'cr-standings-row-self' if entry[:is_self] %>">
-                <span class="cr-standings-rank-col"><%= idx + 1 %></span>
-                <span class="cr-standings-team-col">
-                  <%= entry[:name] %>
-                  <% if entry[:is_self] %>
-                    <span class="cr-standings-you-badge">You</span>
-                  <% end %>
-                </span>
-                <span class="cr-standings-stat-col cr-standings-wins"><%= entry[:wins] %></span>
-                <span class="cr-standings-stat-col cr-standings-losses"><%= entry[:losses] %></span>
-                <span class="cr-standings-stat-col">
-                  <% total = entry[:wins] + entry[:losses] %>
-                  <% if total > 0 %>
-                    <%= sprintf("%.0f%%", entry[:wins].to_f / total * 100) %>
-                  <% else %>
-                    —
-                  <% end %>
-                </span>
-              </div>
-            <% end %>
+            <%# USTA-style standings — TennisLink layout %>
+            <table class="cr-standings-tbl">
+              <thead>
+                <tr>
+                  <th class="cr-standings-tbl-team">Team</th>
+                  <th>Matches<br>Played</th>
+                  <th>Points*</th>
+                  <th>Sets<br>Won</th>
+                  <th>Sets<br>Lost</th>
+                  <th>Games<br>Won</th>
+                  <th>Games<br>Lost</th>
+                  <th>* Games<br>Won %</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% @standings.each do |entry| %>
+                  <tr class="<%= 'cr-standings-tbl-self' if entry[:is_self] %>">
+                    <td class="cr-standings-tbl-team">
+                      <%= entry[:name] %>
+                      <% if entry[:is_self] %>
+                        <span class="cr-standings-you-badge">You</span>
+                      <% end %>
+                    </td>
+                    <td><%= entry[:matches_played] %></td>
+                    <td class="cr-standings-tbl-highlight"><%= entry[:points] %></td>
+                    <td><%= entry[:sets_won] %></td>
+                    <td><%= entry[:sets_lost] %></td>
+                    <td><%= entry[:games_won] %></td>
+                    <td><%= entry[:games_lost] %></td>
+                    <td><%= sprintf("%.2f%%", entry[:games_won_pct] || 0) %></td>
+                  </tr>
+                <% end %>
+              </tbody>
+            </table>
           <% end %>
         </div>
 
         <% if @wins == 0 && @losses == 0 && @division_teams.none? { |dt| dt.wins > 0 || dt.losses > 0 } %>
-          <div style="text-align: center; padding: 20px; color: var(--cr-text-light); font-size: 0.85rem;">
-            🏆 Standings will update as the season progresses.
+          <div style="text-align: center; padding: 16px 8px; color: var(--cr-text-light); font-size: 0.82rem;">
+            🎾 Standings will fill in here as match results are entered.
           </div>
         <% end %>
       </section>
