@@ -34,36 +34,21 @@
   <%= form_tag team_match_lineup_path(@team, @match), method: :patch do %>
 
     <div class="cr-lineup-grid">
-      <%# Singles line %>
-      <div class="cr-lineup-line-card">
-        <div class="cr-lineup-line-label">1S — Singles</div>
-        <% singles_slot = @slots.find { |s| s.line_type == "singles" && s.position == 1 } %>
-        <% if singles_slot %>
-          <div class="cr-lineup-slot-row">
-            <select name="slots[<%= singles_slot.id %>][user_id]" class="cr-select" style="max-width: 100%;">
-              <option value="">-- Select player --</option>
-              <% @members.each do |m| %>
-                <option value="<%= m.id %>" <%= "selected" if singles_slot.user_id == m.id %>><%= m.name %></option>
-              <% end %>
-            </select>
-            <label class="cr-lineup-confirmed-toggle">
-              <input type="hidden" name="slots[<%= singles_slot.id %>][confirmed]" value="0">
-              <input type="checkbox" name="slots[<%= singles_slot.id %>][confirmed]" value="1" <%= "checked" unless singles_slot.declined? %>>
-              <span>Already confirmed</span>
-            </label>
-          </div>
-        <% end %>
-      </div>
-
-      <%# Doubles lines %>
-      <% (1..4).each do |d| %>
+      <%# Iterate over the team's lineup_slot_plan so USTA teams get
+          1S + 4×2D while Inter-Club and Del-Tri teams get 6×2D. %>
+      <% @team.lineup_slot_plan.each do |(line_type, position), _slot_count| %>
+        <% line_label = line_type == "singles" ? "#{position}S — Singles" : "#{position}D — Doubles #{position}" %>
         <div class="cr-lineup-line-card">
-          <div class="cr-lineup-line-label"><%= d %>D — Doubles <%= d %></div>
-          <% doubles_slots = @slots.select { |s| s.line_type == "doubles" && s.position == d } %>
-          <% doubles_slots.each_with_index do |slot, i| %>
+          <div class="cr-lineup-line-label"><%= line_label %></div>
+          <% slots_for_line = @slots.select { |s| s.line_type == line_type && s.position == position } %>
+          <% slots_for_line.each_with_index do |slot, i| %>
             <div class="cr-lineup-slot-row">
               <select name="slots[<%= slot.id %>][user_id]" class="cr-select" style="max-width: 100%;">
-                <option value="">-- Select player <%= i + 1 %> --</option>
+                <% if line_type == "singles" %>
+                  <option value="">-- Select player --</option>
+                <% else %>
+                  <option value="">-- Select player <%= i + 1 %> --</option>
+                <% end %>
                 <% @members.each do |m| %>
                   <option value="<%= m.id %>" <%= "selected" if slot.user_id == m.id %>><%= m.name %></option>
                 <% end %>

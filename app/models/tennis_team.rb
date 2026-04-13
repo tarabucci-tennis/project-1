@@ -52,6 +52,47 @@ class TennisTeam < ApplicationRecord
     join_code
   end
 
+  # ── Lineup format (tells the Set Lineup form how many slots to show) ──
+  #
+  # USTA format: 1 singles line + 4 doubles lines = 5 lines, 9 player slots
+  #   1S(1) + 1D(2) + 2D(2) + 3D(2) + 4D(2)
+  #
+  # Inter-Club (Cup) and Del-Tri (Local): 6 doubles lines, no singles
+  #   1D(2) + 2D(2) + 3D(2) + 4D(2) + 5D(2) + 6D(2) = 12 player slots
+  #
+  # Returns an ordered hash of [line_type, position] => target_slot_count
+  # that lineups_controller#ensure_default_slots uses to top up the slots
+  # on a lineup, and that lineups/edit.html.erb iterates over to render
+  # the form.
+  def lineup_slot_plan
+    case league_category
+    when "Inter-Club", "Local"
+      # 6 doubles, no singles
+      plan = {}
+      (1..6).each { |p| plan[[ "doubles", p ]] = 2 }
+      plan
+    else
+      # USTA: 1 singles + 4 doubles
+      {
+        [ "singles", 1 ] => 1,
+        [ "doubles", 1 ] => 2,
+        [ "doubles", 2 ] => 2,
+        [ "doubles", 3 ] => 2,
+        [ "doubles", 4 ] => 2
+      }
+    end
+  end
+
+  # Does this team's league include a singles line?
+  def has_singles_line?
+    lineup_slot_plan.keys.any? { |(line_type, _)| line_type == "singles" }
+  end
+
+  # How many doubles lines does this team's league use? (4 or 6)
+  def doubles_line_count
+    lineup_slot_plan.keys.count { |(line_type, _)| line_type == "doubles" }
+  end
+
   private
 
   def generate_join_code
