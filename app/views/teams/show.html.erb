@@ -337,7 +337,17 @@
     <%# ── Tab 4: Player Stats ──────────────────────────── %>
     <div data-team-tabs-target="panel" style="display: none;">
       <section class="cr-section">
-        <h2 class="cr-section-title">Player Stats</h2>
+        <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 14px;">
+          <h2 class="cr-section-title" style="margin-bottom: 0;">Player Stats</h2>
+          <a href="https://docs.google.com/spreadsheets/d/15tSu5Ytoly4AU_YBrzVHsV0DL4yz2XSlN3Dk3eqe7Ak/edit?gid=0#gid=0"
+             target="_blank"
+             rel="noopener"
+             class="cr-btn cr-btn-outline"
+             style="padding: 8px 14px; font-size: 0.78rem; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; white-space: nowrap;">
+            <span style="font-size: 0.95rem;">📊</span>
+            <span>Open Full Stats Sheet</span>
+          </a>
+        </div>
 
         <% if @player_stats_data.present? && @player_stats_data.any? %>
           <%# Stats grid like your captain's spreadsheet %>
