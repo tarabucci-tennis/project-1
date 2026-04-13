@@ -55,6 +55,24 @@ cd /root/app && git pull && docker build -t project-1 . && docker stop project-1
 Repo: `tarabucci-tennis/project-1` (public)
 Branch: `claude/setup-planning-4PTsK`
 
+## Current Work
+
+> **Update this section at the end of every session** so the next session can pick up cleanly. Claude should read this first when asked "where did we leave off?".
+
+**Active branch:** `claude/review-progress-notes-66FMD`
+
+**Last completed commit:** `68589da` — Add tennis player profile page with NTRP stats
+
+**In progress:** Captains page with copy/paste roster import.
+- Goal: let a team captain paste a roster (from email, spreadsheet, etc.) into a textarea and have the app parse it into player records.
+- Status as of 2026-04-13: **no code committed yet.** User reported working on it, but nothing by that name exists in the repo on any branch or stash. Likely lost / never committed, or was in a different session.
+- Open questions before resuming:
+  - What's the expected paste format? (one player per line? CSV? `Name <email>`?)
+  - Does it create new `User` records or a new `Player`/`RosterEntry` model?
+  - Which team does the roster belong to — is there a `Team` model yet?
+
+**Next session should:** confirm the above with the user before writing code.
+
 ## Learnings
 
 ### Deployment Environment Constraints
