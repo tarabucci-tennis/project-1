@@ -2352,6 +2352,70 @@ button.cr-header-pill {
 }
 
 /* ========================================================
+   Lineup Quick Facts (player profile)
+   ======================================================== */
+
+.cr-lineup-facts {
+  background: linear-gradient(135deg, #fdf8ed 0%, #fffaf0 100%);
+  border: 1px solid rgba(201, 162, 74, 0.35);
+  border-radius: 14px;
+  padding: 18px 22px;
+  margin-bottom: 24px;
+}
+
+.cr-lineup-facts-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  margin-top: 4px;
+}
+
+.cr-lineup-fact {
+  background: var(--cr-white);
+  border: 1px solid rgba(201, 162, 74, 0.2);
+  border-radius: 10px;
+  padding: 12px 14px;
+}
+
+.cr-lineup-fact-label {
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--cr-text-muted);
+  margin-bottom: 6px;
+}
+
+.cr-lineup-fact-value {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--cr-text);
+  line-height: 1.2;
+}
+
+.cr-lineup-fact-breakdown {
+  margin-top: 14px;
+  font-size: 0.82rem;
+  color: var(--cr-text-muted);
+  line-height: 1.5;
+}
+
+.cr-lineup-fact-breakdown strong {
+  color: var(--cr-text);
+  font-weight: 700;
+}
+
+@media (max-width: 720px) {
+  .cr-lineup-facts { padding: 14px 16px; }
+  .cr-lineup-facts-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+  .cr-lineup-fact { padding: 10px 12px; }
+  .cr-lineup-fact-value { font-size: 0.92rem; }
+}
+
+/* ========================================================
    Playing Stats (player profile)
    ======================================================== */
 
