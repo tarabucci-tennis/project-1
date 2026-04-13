@@ -104,7 +104,7 @@
           <% if all_matches.any? %>
             <div class="cr-match-list">
               <% all_matches.each do |match| %>
-                <div class="cr-match-card" style="padding: 12px 16px;">
+                <div class="cr-match-card" style="padding: 12px 16px; cursor: pointer;" onclick="if (!event.target.closest('a,button,form')) window.location='<%= team_match_path(@team, match) %>'">
                   <div class="cr-match-row">
                     <div class="cr-match-date">
                       <div class="cr-match-date-month"><%= match.match_date.strftime("%b").upcase %></div>
