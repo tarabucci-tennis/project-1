@@ -3872,3 +3872,34 @@ button.cr-header-pill {
     width: 100%;
   }
 }
+
+/* ── Admin reset bypass box on login page ── */
+.cr-admin-reset-box {
+  margin-bottom: 16px;
+  padding: 14px 16px;
+  background: #fffdf5;
+  border: 1px solid #f0dca0;
+  border-left: 4px solid var(--cr-gold);
+  border-radius: 8px;
+}
+
+.cr-admin-reset-label {
+  font-size: 0.62rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  color: var(--cr-gold);
+  margin-bottom: 4px;
+}
+
+.cr-admin-reset-note {
+  font-size: 0.78rem;
+  color: var(--cr-text);
+  margin: 0 0 10px;
+}
+
+.cr-admin-reset-btn {
+  display: inline-block;
+  font-size: 0.85rem;
+  padding: 8px 16px;
+}
