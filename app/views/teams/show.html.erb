@@ -176,10 +176,10 @@
                                 <span class="cr-lineup-preview-line-label"><%= line %></span>
                                 <% slots.each do |slot| %>
                                   <span class="cr-lineup-preview-player <%= 'cr-lineup-you' if slot.user_id == current_user.id %>">
-                                    <%= slot.user.name.split.first %>
-                                    <% if slot.confirmed? %>
+                                    <%= slot.user ? slot.user.name.split.first : "—" %>
+                                    <% if slot.user && slot.confirmed? %>
                                       <span class="cr-lineup-confirmed">✓</span>
-                                    <% elsif slot.declined? %>
+                                    <% elsif slot.user && slot.declined? %>
                                       <span class="cr-lineup-declined">✗</span>
                                     <% end %>
                                   </span>
