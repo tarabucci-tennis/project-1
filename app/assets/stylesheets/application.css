@@ -2759,12 +2759,13 @@ button.cr-header-pill {
 
 .cr-match-card-body-split {
   display: flex;
-  align-items: stretch;
+  align-items: flex-start;
 }
 
 .cr-match-card-body-split > .cr-match-captain-actions {
-  flex: 0 0 220px;
+  flex: 0 0 170px;
   border-right: 1px solid var(--cr-border);
+  background: var(--cr-white);
 }
 
 .cr-match-card-body-split > .cr-lineup-preview {
@@ -2773,27 +2774,28 @@ button.cr-header-pill {
 }
 
 /* Captain actions (Set Lineup / Enter Results) stacked vertically
-   within their column. */
+   within their column. Matches the lineup-preview background so
+   the two sides of a split card feel like one continuous surface. */
 .cr-match-captain-actions {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  padding: 14px 18px;
+  padding: 14px 14px;
   border-top: 1px solid var(--cr-border);
-  background: var(--cr-bg);
+  background: var(--cr-white);
 }
 
 .cr-match-action-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
-  padding: 9px 12px;
+  gap: 5px;
+  padding: 7px 10px;
   border: 1px solid rgba(201, 162, 74, 0.4);
-  border-radius: 10px;
+  border-radius: 8px;
   background: var(--cr-white);
   color: var(--cr-text);
-  font-size: 0.8rem;
+  font-size: 0.74rem;
   font-weight: 600;
   text-decoration: none;
   transition: all 0.15s;
@@ -2809,14 +2811,15 @@ button.cr-header-pill {
 }
 
 .cr-match-action-icon {
-  font-size: 0.92rem;
+  font-size: 0.85rem;
   line-height: 1;
 }
 
 @media (max-width: 720px) {
   /* On mobile, the split layout falls back to stacked so the
      lineup preview sits below the captain actions and each
-     has the full card width. */
+     has the full card width. Buttons get a bit more room
+     since they're alone on a line. */
   .cr-match-card-body-split {
     flex-direction: column;
   }
@@ -2829,8 +2832,8 @@ button.cr-header-pill {
     gap: 8px;
   }
   .cr-match-action-btn {
-    padding: 10px 12px;
-    font-size: 0.82rem;
+    padding: 9px 12px;
+    font-size: 0.8rem;
   }
 }
 
