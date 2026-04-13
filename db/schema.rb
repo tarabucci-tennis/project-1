@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_13_061302) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_13_120000) do
   create_table "availabilities", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.integer "match_id", null: false
@@ -115,6 +115,20 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_13_061302) do
     t.index ["user_id"], name: "index_notifications_on_user_id"
   end
 
+  create_table "team_events", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.date "event_date", null: false
+    t.string "kind", null: false
+    t.string "location"
+    t.text "notes"
+    t.string "start_time"
+    t.integer "tennis_team_id", null: false
+    t.string "title", null: false
+    t.datetime "updated_at", null: false
+    t.index ["tennis_team_id", "event_date"], name: "index_team_events_on_tennis_team_id_and_event_date"
+    t.index ["tennis_team_id"], name: "index_team_events_on_tennis_team_id"
+  end
+
   create_table "team_memberships", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "notification_preference", default: "every_update", null: false
@@ -196,6 +210,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_13_061302) do
   add_foreign_key "notifications", "tennis_teams"
   add_foreign_key "notifications", "users"
   add_foreign_key "notifications", "users", column: "actor_id"
+  add_foreign_key "team_events", "tennis_teams"
   add_foreign_key "team_memberships", "tennis_teams"
   add_foreign_key "team_memberships", "users"
   add_foreign_key "tennis_stats", "users"

@@ -20,8 +20,10 @@ class TeamsController < ApplicationController
       }
     end
 
-    # My upcoming matches across all teams (next 14 days)
-    team_ids = all_teams.map(&:id)
+    # My upcoming matches across all teams (next 14 days) — powers the
+    # smaller cards in the left column of "Coming Up".
+    @my_teams = (@teams_by_league.values.flatten).uniq
+    team_ids  = @my_teams.map(&:id)
     @upcoming_matches = Match.where(tennis_team_id: team_ids)
                              .where("match_date >= ? AND match_date <= ?", Time.current, 14.days.from_now)
                              .includes(:tennis_team, lineup: :lineup_slots)
@@ -34,6 +36,38 @@ class TeamsController < ApplicationController
       slot = match.lineup.lineup_slots.detect { |s| s.user_id == current_user.id }
       @my_lineup_lines[match.id] = slot.line_label if slot
     end
+
+    # ── Calendar data for the clickable month widget on the right ──
+    #
+    # Show the month that contains our next upcoming match (or today if
+    # nothing upcoming). Support ?month=YYYY-MM to let users page forward
+    # and back via the chevron arrows in the calendar header.
+    anchor =
+      if params[:month].present? && params[:month].match?(/\A\d{4}-\d{1,2}\z/)
+        year, month = params[:month].split("-").map(&:to_i)
+        Date.new(year, month, 1)
+      else
+        next_match = Match.where(tennis_team_id: team_ids)
+                          .where("match_date >= ?", Date.current)
+                          .order(match_date: :asc).first
+        (next_match&.match_date&.to_date || Date.current)
+      end
+
+    @calendar_month = anchor.beginning_of_month
+    @calendar_prev_month = (@calendar_month - 1.month).strftime("%Y-%m")
+    @calendar_next_month = (@calendar_month + 1.month).strftime("%Y-%m")
+    month_range = @calendar_month..@calendar_month.end_of_month
+
+    # Matches in the visible month, keyed by date.
+    matches_in_month = Match.where(tennis_team_id: team_ids)
+                            .where(match_date: month_range.first.beginning_of_day..month_range.last.end_of_day)
+                            .includes(:tennis_team)
+    @calendar_matches_by_day = matches_in_month.group_by { |m| m.match_date.to_date }
+
+    # Team events (practices / clinics / friendlies) in the visible month.
+    @calendar_events_by_day = TeamEvent.where(tennis_team_id: team_ids, event_date: month_range)
+                                       .includes(:tennis_team)
+                                       .group_by(&:event_date)
   end
 
   def show
@@ -54,7 +88,7 @@ class TeamsController < ApplicationController
     @upcoming_matches = @team.matches.where("match_date >= ?", Time.current).order(match_date: :asc)
     @past_matches     = @team.matches.where("match_date < ?", Time.current).order(match_date: :desc)
     @player_count     = @team.team_memberships.count
-    @is_captain       = @team.captain?(current_user) || current_user.admin?
+    @is_captain       = @team.can_set_lineup?(current_user) || current_user.admin?
     @wins             = @team.matches.where(result: "win").count
     @losses           = @team.matches.where(result: "loss").count
     @division_teams   = @team.division_teams.ranked

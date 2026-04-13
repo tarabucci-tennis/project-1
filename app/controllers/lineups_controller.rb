@@ -30,8 +30,8 @@ class LineupsController < ApplicationController
 
   # GET /teams/:team_id/matches/:match_id/lineup/edit — captain sets lineup
   def edit
-    unless @team.captain?(current_user) || current_user.admin?
-      return redirect_to team_path(@team), alert: "Only captains can set lineups."
+    unless @team.can_set_lineup?(current_user) || current_user.admin?
+      return redirect_to team_path(@team), alert: "Only captains and co-captains can set lineups."
     end
 
     @lineup = @match.lineup || @match.create_lineup!
@@ -49,8 +49,8 @@ class LineupsController < ApplicationController
 
   # PATCH /teams/:team_id/matches/:match_id/lineup — captain saves lineup
   def update
-    unless @team.captain?(current_user) || current_user.admin?
-      return redirect_to team_path(@team), alert: "Only captains can set lineups."
+    unless @team.can_set_lineup?(current_user) || current_user.admin?
+      return redirect_to team_path(@team), alert: "Only captains and co-captains can set lineups."
     end
 
     @lineup = @match.lineup || @match.create_lineup!
