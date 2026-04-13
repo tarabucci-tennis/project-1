@@ -764,14 +764,59 @@ button.cr-header-pill {
 /* ── Match card (with availability) ── */
 
 .cr-match-card {
-  border-bottom: 1px solid var(--cr-border);
+  background: var(--cr-white);
+  border: 1px solid var(--cr-border);
+  border-radius: 12px;
+  margin-bottom: 12px;
+  overflow: hidden;
+  transition: box-shadow 0.15s, border-color 0.15s;
 }
 
-.cr-match-card:last-child { border-bottom: none; }
+.cr-match-card:hover {
+  border-color: rgba(201, 162, 74, 0.4);
+  box-shadow: 0 4px 14px rgba(10, 22, 40, 0.06);
+}
 
+.cr-match-card:last-child { border-bottom: 1px solid var(--cr-border); margin-bottom: 0; }
+
+/* Override the top-row padding + gap inside cards so it fits without wrapping */
 .cr-match-card .cr-match-row {
+  padding: 14px 18px;
+  gap: 14px;
   border-bottom: none;
+  flex-wrap: nowrap;
+  align-items: center;
+  min-width: 0;
 }
+
+/* Inside a card, the info block can shrink and its text truncates
+   cleanly with an ellipsis instead of wrapping to multiple lines. */
+.cr-match-card .cr-match-info {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.cr-match-card .cr-match-opponent {
+  font-size: 0.95rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cr-match-card .cr-match-location {
+  font-size: 0.78rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-top: 1px;
+}
+
+.cr-match-card .cr-match-date {
+  min-width: 56px;
+  padding: 7px 10px;
+}
+.cr-match-card .cr-match-date-day { font-size: 1.15rem; }
 
 .cr-match-counts {
   font-size: 0.78rem;
@@ -2221,13 +2266,65 @@ button.cr-header-pill {
 }
 
 /* ========================================================
+   Match card captain actions (Set Lineup / Enter Results)
+   ======================================================== */
+
+.cr-match-captain-actions {
+  display: flex;
+  gap: 8px;
+  padding: 10px 18px;
+  border-top: 1px solid var(--cr-border);
+  background: var(--cr-bg);
+}
+
+.cr-match-action-btn {
+  flex: 1 1 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 12px;
+  border: 1px solid rgba(201, 162, 74, 0.35);
+  border-radius: 8px;
+  background: var(--cr-white);
+  color: var(--cr-text);
+  font-size: 0.78rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+
+.cr-match-action-btn:hover {
+  background: rgba(201, 162, 74, 0.08);
+  border-color: var(--cr-gold);
+}
+
+.cr-match-action-icon {
+  font-size: 0.92rem;
+  line-height: 1;
+}
+
+@media (max-width: 720px) {
+  .cr-match-captain-actions {
+    padding: 8px 14px;
+    gap: 6px;
+  }
+  .cr-match-action-btn {
+    padding: 7px 6px;
+    font-size: 0.7rem;
+    gap: 4px;
+  }
+}
+
+/* ========================================================
    Lineup Preview (on schedule cards)
    ======================================================== */
 
 .cr-lineup-preview {
-  margin-top: 12px;
-  padding-top: 12px;
+  padding: 12px 18px 14px;
   border-top: 1px solid var(--cr-border);
+  background: var(--cr-white);
 }
 
 .cr-lineup-preview-title {
@@ -2599,25 +2696,8 @@ button.cr-header-pill {
     height: 28px;
     flex-shrink: 0;
   }
-  /* Captain action buttons (+ Add Match / Set Lineup / Enter Results) stack
-     below the match row, full width, side-by-side, small, never overflow. */
-  .cr-match-captain-actions {
-    display: flex !important;
-    gap: 6px !important;
-    padding: 8px 14px 12px !important;
-    margin-top: 0 !important;
-    border-top: 1px solid var(--cr-border) !important;
-    flex-wrap: nowrap;
-  }
-  .cr-match-captain-actions .cr-btn {
-    flex: 1 1 0;
-    padding: 7px 4px !important;
-    font-size: 0.7rem !important;
-    white-space: nowrap;
-    text-align: center;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
+  /* Captain action button styles on mobile live in the main
+     .cr-match-captain-actions / .cr-match-action-btn section above. */
 }
 
 .cr-cal-btn {

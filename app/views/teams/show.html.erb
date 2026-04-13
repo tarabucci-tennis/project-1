@@ -146,9 +146,15 @@
                   </div>
 
                   <% if @is_captain %>
-                    <div class="cr-match-captain-actions" style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--cr-border);">
-                      <%= link_to "📋 Set Lineup", edit_team_match_lineup_path(@team, match), class: "cr-btn cr-btn-outline", style: "padding: 6px 12px; font-size: 0.78rem; font-weight: 600; text-decoration: none;" %>
-                      <%= link_to (match.played? ? "✏️ Edit Results" : "🎾 Enter Results"), edit_results_team_match_path(@team, match), class: "cr-btn cr-btn-outline", style: "padding: 6px 12px; font-size: 0.78rem; font-weight: 600; text-decoration: none;" %>
+                    <div class="cr-match-captain-actions">
+                      <%= link_to edit_team_match_lineup_path(@team, match), class: "cr-match-action-btn" do %>
+                        <span class="cr-match-action-icon">📋</span>
+                        <span>Set Lineup</span>
+                      <% end %>
+                      <%= link_to edit_results_team_match_path(@team, match), class: "cr-match-action-btn" do %>
+                        <span class="cr-match-action-icon"><%= match.played? ? "✏️" : "🎾" %></span>
+                        <span><%= match.played? ? "Edit Results" : "Enter Results" %></span>
+                      <% end %>
                     </div>
                   <% end %>
 
