@@ -12,6 +12,9 @@ Rails.application.routes.draw do
   post   "forgot-password", to: "password_resets#create"
   get    "reset-password/:token", to: "password_resets#edit", as: :edit_password_reset
   patch  "reset-password/:token", to: "password_resets#update", as: :reset_password
+  # Legacy-user password setup (they signed in with email only and now need a password)
+  get    "set-password",   to: "passwords#new",    as: :set_password
+  patch  "set-password",   to: "passwords#update"
 
   # Admin: user management
   resources :users, only: [ :index, :new, :create, :edit, :update, :destroy ]

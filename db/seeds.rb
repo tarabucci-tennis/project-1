@@ -21,6 +21,16 @@ tara = User.find_or_create_by!(email: "tarabucci@gmail.com") do |u|
   u.admin = true
 end
 
+# Set Tara's temp password. Seeds are idempotent so this resets her password
+# to "changeme" on every deploy UNTIL she removes this line (or changes her
+# password via /set-password afterwards). Once she changes the password in
+# the app, remove this reset so subsequent deploys don't clobber her change.
+# TODO: remove when Tara has set her own password in production.
+if tara.password_digest.blank?
+  tara.update!(password: "changeme", password_confirmation: "changeme")
+  puts "Set temporary password for Tara (changeme) — change this via /set-password after signing in."
+end
+
 tara.update!(
   location:            "Villanova, PA",
   ntrp_rating:         4.0,

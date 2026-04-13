@@ -51,8 +51,16 @@
           <%= f.label :email, "Email address" %>
           <%= f.email_field :email, placeholder: "you@example.com", autofocus: true %>
         </div>
+        <div class="cr-field">
+          <%= f.label :password, "Password" %>
+          <%= f.password_field :password, placeholder: "Your password" %>
+        </div>
         <%= f.submit "Sign In →" %>
       <% end %>
+
+      <p style="text-align: center; margin-top: 10px; font-size: 0.82rem; color: var(--cr-text-muted);">
+        <%= link_to "Forgot password?", forgot_password_path, style: "color: var(--cr-gold); font-weight: 600;" %>
+      </p>
 
       <p style="text-align: center; margin-top: 16px; font-size: 0.85rem; color: var(--cr-text-muted);">
         New here?

@@ -17,6 +17,14 @@
         <%= f.label :email, "Email address" %>
         <%= f.email_field :email, placeholder: "you@example.com", value: params[:email] %>
       </div>
+      <div class="cr-field">
+        <%= f.label :password, "Password" %>
+        <%= f.password_field :password, placeholder: "At least 6 characters" %>
+      </div>
+      <div class="cr-field">
+        <%= f.label :password_confirmation, "Confirm password" %>
+        <%= f.password_field :password_confirmation, placeholder: "Type it again" %>
+      </div>
       <%= f.submit "Sign Up →", class: "cr-auth-submit" %>
     <% end %>
 
