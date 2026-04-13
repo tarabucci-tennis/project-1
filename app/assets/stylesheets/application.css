@@ -761,60 +761,106 @@ button.cr-header-pill {
   color: var(--cr-text-muted);
 }
 
-/* ── Match card (with availability) ── */
+/* ── Match card (with availability) ──
+
+   Forced vertical layout:
+     [match row]
+     [captain actions] (if captain)
+     [lineup preview]  (if posted)
+
+   display: flex + flex-direction: column guarantees these three
+   sections stack vertically regardless of any stray inherited
+   styles. */
 
 .cr-match-card {
+  display: flex;
+  flex-direction: column;
   background: var(--cr-white);
   border: 1px solid var(--cr-border);
-  border-radius: 12px;
-  margin-bottom: 12px;
+  border-radius: 14px;
+  margin-bottom: 14px;
   overflow: hidden;
   transition: box-shadow 0.15s, border-color 0.15s;
 }
 
 .cr-match-card:hover {
-  border-color: rgba(201, 162, 74, 0.4);
-  box-shadow: 0 4px 14px rgba(10, 22, 40, 0.06);
+  border-color: rgba(201, 162, 74, 0.45);
+  box-shadow: 0 6px 18px rgba(10, 22, 40, 0.06);
 }
 
-.cr-match-card:last-child { border-bottom: 1px solid var(--cr-border); margin-bottom: 0; }
+.cr-match-card:last-child { margin-bottom: 0; }
 
-/* Override the top-row padding + gap inside cards so it fits without wrapping */
+/* Top row — date box on the left, opponent/location in the middle
+   taking whatever space is left, badge + calendar on the right. */
 .cr-match-card .cr-match-row {
-  padding: 14px 18px;
-  gap: 14px;
-  border-bottom: none;
-  flex-wrap: wrap;
+  display: flex;
   align-items: center;
+  gap: 18px;
+  padding: 18px 22px;
+  border-bottom: none;
   min-width: 0;
+  flex-wrap: nowrap;
 }
 
-/* Inside a card, the info block gets a guaranteed minimum width
-   so it always has room for the opponent name and location, and
-   text wraps naturally instead of truncating to "V." */
+.cr-match-card .cr-match-date {
+  background: var(--cr-black);
+  color: var(--cr-white);
+  min-width: 64px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  flex-shrink: 0;
+  text-align: center;
+}
+
+.cr-match-card .cr-match-date-month {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  color: var(--cr-gold);
+}
+
+.cr-match-card .cr-match-date-day {
+  font-size: 1.6rem;
+  font-weight: 900;
+  line-height: 1;
+  margin-top: 3px;
+  color: var(--cr-white);
+}
+
 .cr-match-card .cr-match-info {
-  flex: 1 1 200px;
+  flex: 1 1 auto;
   min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
 }
 
 .cr-match-card .cr-match-opponent {
-  font-size: 0.95rem;
+  font-size: 1.05rem;
+  font-weight: 700;
   line-height: 1.25;
+  color: var(--cr-text);
   overflow-wrap: break-word;
 }
 
 .cr-match-card .cr-match-location {
-  font-size: 0.78rem;
-  line-height: 1.35;
+  font-size: 0.82rem;
+  line-height: 1.4;
+  color: var(--cr-text-muted);
   overflow-wrap: break-word;
-  margin-top: 1px;
 }
 
-.cr-match-card .cr-match-date {
-  min-width: 56px;
-  padding: 7px 10px;
+.cr-match-card .cr-match-badge {
+  font-size: 0.68rem;
+  padding: 3px 10px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  flex-shrink: 0;
 }
-.cr-match-card .cr-match-date-day { font-size: 1.15rem; }
+
+.cr-match-card .cr-cal-btn {
+  flex-shrink: 0;
+}
 
 .cr-match-counts {
   font-size: 0.78rem;
@@ -2300,53 +2346,56 @@ button.cr-header-pill {
 
 /* ========================================================
    Match card captain actions (Set Lineup / Enter Results)
+   Stacked vertically — Set Lineup on top, Enter Results below.
    ======================================================== */
 
 .cr-match-captain-actions {
   display: flex;
+  flex-direction: column;
   gap: 8px;
-  padding: 10px 18px;
+  padding: 14px 22px;
   border-top: 1px solid var(--cr-border);
   background: var(--cr-bg);
 }
 
 .cr-match-action-btn {
-  flex: 1 1 0;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
-  padding: 8px 12px;
-  border: 1px solid rgba(201, 162, 74, 0.35);
-  border-radius: 8px;
+  gap: 8px;
+  padding: 11px 16px;
+  border: 1px solid rgba(201, 162, 74, 0.4);
+  border-radius: 10px;
   background: var(--cr-white);
   color: var(--cr-text);
-  font-size: 0.78rem;
+  font-size: 0.88rem;
   font-weight: 600;
   text-decoration: none;
   transition: all 0.15s;
   white-space: nowrap;
+  text-align: center;
+  width: 100%;
 }
 
 .cr-match-action-btn:hover {
   background: rgba(201, 162, 74, 0.08);
   border-color: var(--cr-gold);
+  transform: translateY(-1px);
 }
 
 .cr-match-action-icon {
-  font-size: 0.92rem;
+  font-size: 1rem;
   line-height: 1;
 }
 
 @media (max-width: 720px) {
   .cr-match-captain-actions {
-    padding: 8px 14px;
-    gap: 6px;
+    padding: 12px 16px;
+    gap: 8px;
   }
   .cr-match-action-btn {
-    padding: 7px 6px;
-    font-size: 0.7rem;
-    gap: 4px;
+    padding: 10px 12px;
+    font-size: 0.82rem;
   }
 }
 
@@ -2355,46 +2404,54 @@ button.cr-header-pill {
    ======================================================== */
 
 .cr-lineup-preview {
-  padding: 12px 18px 14px;
+  padding: 16px 22px 18px;
   border-top: 1px solid var(--cr-border);
   background: var(--cr-white);
 }
 
 .cr-lineup-preview-title {
-  font-size: 0.7rem;
+  font-size: 0.72rem;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 1px;
+  letter-spacing: 1.5px;
   color: var(--cr-gold);
-  margin-bottom: 8px;
+  margin-bottom: 12px;
 }
 
 .cr-lineup-preview-slots {
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
   gap: 6px;
-  margin-bottom: 8px;
+  margin-bottom: 0;
 }
 
 .cr-lineup-preview-line {
   display: flex;
   align-items: center;
-  gap: 4px;
-  padding: 4px 8px;
+  gap: 12px;
+  padding: 8px 12px;
   background: var(--cr-bg);
-  border-radius: 6px;
-  font-size: 0.8rem;
+  border-radius: 8px;
+  font-size: 0.88rem;
+  flex-wrap: wrap;
 }
 
 .cr-lineup-preview-line-label {
   font-weight: 700;
   color: var(--cr-text-muted);
-  margin-right: 4px;
-  font-size: 0.7rem;
+  font-size: 0.72rem;
+  letter-spacing: 0.8px;
+  min-width: 26px;
+  flex-shrink: 0;
 }
 
 .cr-lineup-preview-player {
-  font-size: 0.8rem;
+  font-size: 0.88rem;
+  font-weight: 500;
+  color: var(--cr-text);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
 }
 
 .cr-lineup-you {
@@ -2682,64 +2739,45 @@ button.cr-header-pill {
     flex-shrink: 0;
   }
 
-  /* Team show page match cards — fix the overflow and stack captain
-     actions below the match info so nothing runs off the right edge.
-     All selectors use `.cr-match-card` as a parent so they outrank
-     the desktop rules in specificity and actually apply on mobile. */
-  .cr-match-card {
-    padding: 0 !important;
-    margin-bottom: 10px;
-    border: 1px solid var(--cr-border);
-    border-radius: 12px;
-    overflow: hidden;
-    background: var(--cr-white);
-  }
+  /* Team show page match cards — slight mobile polish over the
+     main desktop rules. Just tightens padding and font sizes,
+     keeps the same vertical column structure. */
   .cr-match-card .cr-match-row {
-    padding: 12px 14px;
-    gap: 10px;
-    flex-wrap: wrap;
-    align-items: flex-start;
+    padding: 14px 16px;
+    gap: 12px;
   }
   .cr-match-card .cr-match-date {
-    min-width: 50px;
-    padding: 6px 8px;
-    flex-shrink: 0;
+    min-width: 54px;
+    padding: 8px 10px;
   }
   .cr-match-card .cr-match-date-day {
-    font-size: 1.1rem;
-  }
-  /* Force info to take the full row width next to the date box, so
-     the opponent text has ~280px of space instead of competing with
-     HOME badge + calendar icon on the same line. Badge/calendar then
-     wrap onto a second row of the flex container, below the info. */
-  .cr-match-card .cr-match-info {
-    flex: 1 1 calc(100% - 70px) !important;
-    min-width: 0;
+    font-size: 1.3rem;
   }
   .cr-match-card .cr-match-opponent {
-    font-size: 0.92rem;
-    line-height: 1.2;
-    word-break: normal;
-    overflow-wrap: break-word;
+    font-size: 0.95rem;
   }
   .cr-match-card .cr-match-location {
     font-size: 0.75rem;
-    line-height: 1.3;
-    word-break: normal;
-    overflow-wrap: break-word;
   }
   .cr-match-card .cr-match-badge {
     font-size: 0.62rem;
     padding: 2px 8px;
-    flex-shrink: 0;
   }
   .cr-match-card .cr-cal-btn {
-    width: 28px;
-    height: 28px;
-    flex-shrink: 0;
+    width: 30px;
+    height: 30px;
   }
-  /* Captain action button styles on mobile live in the main
-     .cr-match-captain-actions / .cr-match-action-btn section above. */
+  .cr-lineup-preview {
+    padding: 14px 16px 16px;
+  }
+  .cr-lineup-preview-line {
+    font-size: 0.82rem;
+    padding: 7px 10px;
+    gap: 10px;
+  }
+  .cr-lineup-preview-player {
+    font-size: 0.82rem;
+  }
 }
 
 .cr-cal-btn {
