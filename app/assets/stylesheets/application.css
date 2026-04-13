@@ -2416,6 +2416,257 @@ button.cr-header-pill {
 }
 
 /* ========================================================
+   Team stat charts (Player Stats tab on team show page)
+   CSS horizontal bar charts — no JS dependency, data comes
+   from @team_charts in teams_controller.
+   ======================================================== */
+
+.cr-chart-empty-note {
+  text-align: center;
+  padding: 14px 18px;
+  margin-bottom: 20px;
+  background: rgba(201, 162, 74, 0.08);
+  border: 1px dashed rgba(201, 162, 74, 0.4);
+  border-radius: 10px;
+  font-size: 0.85rem;
+  color: var(--cr-text-muted);
+}
+
+.cr-chart-top-row {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+  margin-bottom: 28px;
+}
+
+.cr-chart-summary-card {
+  background: var(--cr-white);
+  border: 1px solid var(--cr-border);
+  border-radius: 12px;
+  padding: 18px 20px;
+}
+
+.cr-chart-summary-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--cr-text-muted);
+  margin-bottom: 6px;
+}
+
+.cr-chart-summary-value {
+  font-size: 2rem;
+  font-weight: 900;
+  color: var(--cr-text);
+  line-height: 1;
+  margin-bottom: 4px;
+}
+
+.cr-chart-summary-detail {
+  font-size: 0.8rem;
+  color: var(--cr-text-muted);
+  margin-top: 8px;
+}
+
+.cr-chart-split-bar {
+  display: flex;
+  height: 26px;
+  background: var(--cr-bg);
+  border-radius: 8px;
+  overflow: hidden;
+  margin-top: 8px;
+  position: relative;
+}
+
+.cr-chart-split-left,
+.cr-chart-split-right {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--cr-white);
+  transition: width 0.3s ease;
+}
+
+.cr-chart-split-left {
+  background: linear-gradient(90deg, var(--cr-gold), var(--cr-gold-bright));
+  color: var(--cr-black);
+}
+
+.cr-chart-split-right {
+  flex: 1;
+  background: var(--cr-black);
+}
+
+.cr-chart-section {
+  margin-bottom: 28px;
+}
+
+.cr-chart-section-title {
+  font-size: 0.82rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  color: var(--cr-text-muted);
+  margin-bottom: 12px;
+}
+
+.cr-chart-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.cr-bar-row {
+  display: grid;
+  grid-template-columns: 42px 1fr 70px;
+  gap: 12px;
+  align-items: center;
+}
+
+.cr-bar-label {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--cr-text);
+  text-align: right;
+}
+
+.cr-bar-label-wide {
+  grid-column: 1 / span 1;
+  text-align: left;
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+.cr-bar-row:has(.cr-bar-label-wide) {
+  grid-template-columns: minmax(110px, 30%) 1fr 70px;
+}
+
+.cr-bar-track {
+  height: 22px;
+  background: var(--cr-bg);
+  border: 1px solid var(--cr-border);
+  border-radius: 6px;
+  position: relative;
+  overflow: hidden;
+}
+
+.cr-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--cr-gold), var(--cr-gold-bright));
+  border-radius: 6px 0 0 6px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 0 8px;
+  color: var(--cr-black);
+  font-weight: 700;
+  font-size: 0.72rem;
+  transition: width 0.3s ease;
+  min-width: 2px;
+}
+
+.cr-bar-fill-navy {
+  background: linear-gradient(90deg, var(--cr-black), var(--cr-black-soft));
+  color: var(--cr-white);
+}
+
+.cr-bar-fill-empty {
+  background: var(--cr-bg);
+}
+
+.cr-bar-value {
+  font-size: 0.78rem;
+  color: var(--cr-text-muted);
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  font-weight: 600;
+}
+
+.cr-chart-empty-inline {
+  padding: 18px;
+  background: var(--cr-bg);
+  border-radius: 8px;
+  color: var(--cr-text-light);
+  font-size: 0.82rem;
+  text-align: center;
+  font-style: italic;
+}
+
+.cr-chart-recent {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.cr-chart-recent-row {
+  display: grid;
+  grid-template-columns: 60px 1fr 36px auto;
+  gap: 12px;
+  align-items: center;
+  padding: 10px 14px;
+  background: var(--cr-white);
+  border: 1px solid var(--cr-border);
+  border-radius: 8px;
+}
+
+.cr-chart-recent-date {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--cr-text-muted);
+  text-transform: uppercase;
+}
+
+.cr-chart-recent-opponent {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--cr-text);
+}
+
+.cr-chart-recent-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  font-size: 0.82rem;
+  font-weight: 900;
+}
+
+.cr-chart-recent-win {
+  background: #dcfce7;
+  color: var(--cr-green);
+}
+
+.cr-chart-recent-loss {
+  background: #fee2e2;
+  color: var(--cr-red);
+}
+
+.cr-chart-recent-score {
+  font-size: 0.78rem;
+  color: var(--cr-text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+@media (max-width: 720px) {
+  .cr-chart-top-row { grid-template-columns: 1fr; }
+  .cr-chart-summary-card { padding: 14px 16px; }
+  .cr-chart-summary-value { font-size: 1.7rem; }
+  .cr-bar-row { grid-template-columns: 34px 1fr 54px; gap: 8px; }
+  .cr-bar-label { font-size: 0.75rem; }
+  .cr-bar-label-wide { font-size: 0.78rem; }
+  .cr-bar-row:has(.cr-bar-label-wide) {
+    grid-template-columns: minmax(80px, 32%) 1fr 52px;
+  }
+  .cr-chart-recent-row { grid-template-columns: 50px 1fr 28px; }
+  .cr-chart-recent-score { grid-column: 1 / -1; padding-top: 4px; }
+}
+
+/* ========================================================
    Playing Stats (player profile)
    ======================================================== */
 
