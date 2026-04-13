@@ -84,6 +84,8 @@ if all_cleanup_ids.any?
   conn.execute("DELETE FROM division_teams WHERE tennis_team_id IN (#{ids})")
   conn.execute("DELETE FROM team_memberships WHERE tennis_team_id IN (#{ids})")
   conn.execute("DELETE FROM notifications WHERE tennis_team_id IN (#{ids})")
+  # team_events (practices / clinics / friendlies) also FK to tennis_teams
+  conn.execute("DELETE FROM team_events WHERE tennis_team_id IN (#{ids})") rescue nil
   conn.execute("DELETE FROM tennis_teams WHERE id IN (#{ids})")
 end
 
