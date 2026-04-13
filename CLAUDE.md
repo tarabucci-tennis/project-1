@@ -45,7 +45,7 @@
 - **Verify before declaring victory.** Don't say "done" if you haven't actually tested it works in a browser.
 - **Ask before building.** If the task doesn't match what's in the code, ask clarifying questions first — don't just start coding on assumptions.
 
-## Current Status (as of April 12, 2026 — Session 9 continued into morning)
+## Current Status (as of April 13, 2026 — Session 10)
 
 ### What's actually live at https://yourcourtreport.com
 **Phase 1 is live with SSL, mobile polish, and a Lineups feature:**
@@ -82,12 +82,37 @@
 - **Fix that worked:** `docker stop && rm && docker build && docker run` with `RAILS_MASTER_KEY=$(cat /root/app/config/master.key)` — a clean rebuild from scratch resolved it
 - Lesson: if you see `ActiveSupport::MessageEncryptor::InvalidMessage` after a droplet reboot, try a full rebuild before digging deeper
 
+### What was added / fixed in Session 10 (April 13, 2026)
+Six PRs all merged to main and auto-deployed: **#20, #21, #22, #23, #24, #25.**
+
+- **PR #20 — Mobile nav + ball bounce + logo unity + bottom tab bar.** Fixed the "click Lineups → bounces to opening page" bug on the marketing page (the bnav's `<a href="/lineups">` was redirecting logged-out visitors through `login → sessions/new.html.erb`, which looks identical to the landing page — felt like a redirect loop). For logged-out visitors the Lineups bnav button now calls `switchPage('lineups')` and shows an inline mock panel. Logged-in users still get the real `/lineups` page. Also contained the ball-bounce animation to just the 🎾 (wrapped emoji in an inner `<span>` with the animation, outer tile now only glows). Unified the logo font across marketing and app layouts (Bebas Neue 2.2rem / 5px tracking; app layout loads it from Google Fonts). Added `white-space: nowrap !important` + `flex-shrink: 0` to Sign In/Sign Up/Sign Out pills. Added a mobile bottom nav bar (Schedule / Lineups / Standings / Roster / WhatsApp) to logged-in pages via `application.html.erb` + `.cr-bottom-nav` in `application.css`.
+- **PR #21 — Auth page cleanup.** Removed the top-right Sign In / Sign Up pills from the main marketing page header (`courtreport.html.erb`) because they were wrapping on mobile. Added small "Sign In · Sign Up" links in the app-footer as the way in. Also hid the pills on `/login` and `/signup` themselves via a `controller_name ∈ {sessions, registrations}` check in `application.html.erb`. Simplified `/signup` to a clean name + email form — removed password fields because the User model has no `has_secure_password` (bcrypt was reverted in Session 8). Tara initially had Claude strip the hero from `/login` too; she preferred the marketing content, so it was restored.
+- **PR #22 — Gold tennis-ball favicon.** The old `public/icon.svg` was literally `<circle fill="red"/>`. Replaced with a hand-written SVG (gold gradient tile + yellow-green ball + white seam curves) and a matching 256×256 RGBA PNG generated with pure-Python stdlib (zlib + struct) since no image conversion libraries were available in the sandbox.
+- **PR #23 — Set Lineup form end-to-end + captain buttons + Apr 14 seed.** Three related fixes:
+  - `submit_tag("Save Draft", value: "false")` was rendering the button label as literally "false" because `value:` on `<input type="submit">` is the visible label. Switched to `button_tag "Save Draft", type: :submit, name: "publish", value: "false"` which keeps label and form value separate.
+  - `lineups#edit` was doing `@match.build_lineup` (which doesn't persist) and gating `build_default_slots` on `&& @lineup.persisted?`, so brand-new lineups never got slots created and only the hand-seeded 1S slot was visible. Switched to `@match.create_lineup!` so the lineup is always saved first, then all 9 slots (1S + 4×2D) get built.
+  - New "Already confirmed" checkbox next to every lineup slot, checked by default. Matches how real captains work (text player, get yes, then enter lineup). `LineupMailer` now only emails slots where `confirmation == "pending"` — pre-confirmed slots are skipped.
+  - `teams/show.html.erb` now has a **+ Add Match** button at the top of the Schedule section and **📋 Set Lineup** / **🎾 Enter Results** / **✏️ Edit Results** buttons on every match card for captains. No more digging through sub-tabs.
+  - `db/seeds.rb` now seeds the real April 14 Kiss My Ace lineup from TennisLink (Jaclyn 1S; Alison+Tara 1D; Amanda+Rachel 2D; Sarah+Stephanie 3D; Helen+Kerry 4D), all confirmed, published.
+- **PR #24 — Documented auto-merge permission** in `CLAUDE.md` (the "Auto-merge authorization" section further down). Tara gave Claude standing permission to auto-merge PRs in this repo without asking each time, with safety exceptions for destructive migrations, large refactors, low-confidence changes, deploy infra/secrets, and anything outside this repo.
+- **PR #25 — Mobile header hardening + force-reset Apr 14 lineup seed.** Mobile header was still wrapping ("COURT / REPORT", "My / Teams", "Sign / Out" all on two lines). Fixed by: (a) shrinking the logo to 1.1rem / 1.2px tracking on mobile and adding `overflow: hidden; text-overflow: ellipsis;` as a safety net, (b) adding `white-space: nowrap !important` to all header pills with `word-break: keep-all`, (c) hiding the "My Teams" pill entirely on mobile via a new `.cr-header-my-teams` class (users navigate via logo click or bottom nav Schedule button), (d) adding `flex-wrap: nowrap` and `flex-shrink: 0` to the header-right container. Also fixed the Apr 14 seed: the original version was gated on `if lineup_slots.empty?` but Tara had a stray single slot from an earlier test session with the broken form, so the canonical 9 slots were never written. Now `destroy_all` runs before recreate, so the canonical lineup always wins on the next `db:seed`.
+
+### Key discussions and decisions in Session 10
+- **Render cancelled.** Tara had a legacy Render service running in parallel with the DigitalOcean droplet. She cancelled it.
+- **GoDaddy DNS verified.** A record `@` → `146.190.112.29`, CNAME `www` → `yourcourtreport.com.`, Forwarding off. All correct.
+- **Scraping vs in-app forms vs Google Sheets vs Claude Cowork.** Tara asked about scraping TennisLink. `WebFetch` confirmed the stats page redirects to USTA OAuth login — server-side scraping would need stored credentials and token management. Rejected. Discussed Claude Cowork (real product, runs on Mac/Windows desktop, operates the browser for her) and Google Sheets as alternatives. Eventually found the app already has `matches#new`, `matches#edit_results`, and `lineups#edit` forms built — they just weren't surfaced on the team page. Final decision: use the in-app forms for April 14 first, reassess other options after real-world use.
+- **Mobile browser cache** was a recurring source of confusion. Private/Incognito mode is the reliable way to see a fresh version after deploy. Documented in lessons.
+- **Sign-in page design waffling.** Claude stripped the "All Your Teams" hero from `/login` to differentiate it from `/`, Tara preferred the hero, Claude restored it. Takeaway: don't guess at design preferences.
+
 ### What's still broken / pending
-- **GitHub Actions Deploy workflow still failing** — SSH authentication error. Switched to a base64-encoded key approach, but the new `DEPLOY_SSH_KEY_BASE64` secret hasn't been added yet. Until this is fixed, deploys must be done manually on the droplet.
-- **Gmail SMTP credentials not set** — `LineupMailer` exists and the `/lineups` page shows confirm/decline, but emails won't actually send until `SMTP_USERNAME` and `SMTP_PASSWORD` are set on the droplet. Tara needs to create a Gmail App Password.
-- **CI workflow may have test/lint failures** from code added in Session 9. Not yet investigated.
-- **No captain auto-assignment.** When a team is created, there's no automatic team_membership record making the creator a captain.
-- **Bouncing logo** — animation code is in main (`bounce-ball` keyframe in courtreport.html.erb) but Tara couldn't see it in her browser. Likely a browser cache issue — needs hard refresh. Verify with `grep -n "bounce-ball" /root/app/app/views/pages/courtreport.html.erb` on the droplet.
+- **Mobile browser cache is relentless.** Chrome and Safari hold onto old HTML/CSS for hours even after a deploy. Tara repeatedly saw stale layouts on her regular browser tabs until she cleared cache or used Private mode. **Private mode is the reliable workaround when testing fresh deploys.**
+- **CI workflow failures** (lint / scan_ruby / test) are pre-existing from Session 9 code and unrelated to any Session 10 change. Deploy workflow is separate and works fine.
+- **Gmail SMTP credentials not set** — `LineupMailer` exists, but emails won't actually send until `SMTP_USERNAME` / `SMTP_PASSWORD` are set on the droplet. Tara needs to create a Gmail App Password. (Note: now that captain override defaults slots to "already confirmed", the email path is less critical.)
+- **Session 6's availability feature** — still never verified end-to-end in production.
+- **No captain auto-assignment** when a team is created.
+- **`/lineups` dashboard** exists but hasn't been tested with real data. Once Tara's matches start this week, we'll see if it works.
+- **Google Sheets integration deferred.** Tara will decide after using the in-app forms on April 14 whether she wants the Sheets layer too.
+- **USTA / Inter-Club / Del-Tri scraping** — not started. Waiting on Tara's experience with manual entry this week.
 - **Lineups standard/default** — Tara noted that Del-Tri and Cup lineups stay the same week-to-week and only change when a sub is needed. Future enhancement: let captains save a "standard lineup" that auto-loads for each new match.
 
 ## The Two "Court Reports" (historical context)
@@ -397,6 +422,7 @@ Reconstructed from git log. Tara has built this app over ~6 sessions.
 | 7 | CLAUDE.md overhaul, real team data capture, Phase 1 restyle + deploy | `ec55ae1`–`717881a` | **Phase 1 LIVE and verified by Tara** |
 | 8 | Password auth added then reverted (Gemfile.lock mismatch), Legacy 2 scoring fixes | `cf1e17a`, `db95ec2` | Reverted password; legacy scoring corrected |
 | 9 | SSL via Thruster, DNS fix, GitHub Actions auto-deploy, main consolidation, stats-test page | `6441e4b`, `3509a6b`, `68eb612` | **Site now on https://yourcourtreport.com; main = source of truth** |
+| 10 | Mobile nav fix (Lineups loop), contained ball bounce, logo unity, bottom tab bar, gold tile favicon, Set Lineup form fix (true/false buttons + missing doubles), captain override for confirmations, team show captain buttons, Apr 14 lineup seeded, auto-merge policy, mobile header hardening | PRs #20, #21, #22, #23, #24, #25 | **Set Lineup form works end-to-end; Apr 14 lineup posted; Render cancelled; auto-merge enabled** |
 
 ## Lessons Learned (honest notes from past sessions)
 
@@ -415,6 +441,18 @@ Reconstructed from git log. Tara has built this app over ~6 sessions.
 - **Watch out for `bcrypt` in the Gemfile without matching `Gemfile.lock`.** Several `claude/*` branches had this broken state — the Gemfile had `gem "bcrypt"` but the lockfile didn't, so Docker builds failed in production with `bundle install` errors in frozen mode. The `claude/clarify-team-members-1ycVZ` branch has it correctly reverted.
 - **Don't pile on new features when something is broken.** Morning recovery went sideways because we stacked bouncing-logo debugging on top of Xcode install on top of Claude Code desktop app setup on top of droplet container crash. Always fix the biggest fire first, then move on.
 - **Tara doesn't need the Claude Code desktop app.** She can use claude.ai/code in a browser. The desktop app's "Git is required" error and the `xcode-select --install` stuck-on-"Finding software" dialog are both avoidable by just using the web version.
+
+### From Session 10 — DON'T REPEAT THESE
+- **`submit_tag("Label", value: "x")` overrides the visible label.** On `<input type="submit">`, the `value` attribute IS the displayed text. Passing `value: "false"` made the button literally say "false". When you need the form value to differ from the label, use `button_tag "Label", type: :submit, value: "x"` — `button_tag` renders a `<button>` with separate content and `value` attribute.
+- **`build_lineup` is NOT persisted.** The AR association builder returns an unsaved record. Gating "create default slots if empty" on `if empty? && persisted?` will never create slots for a brand-new lineup. Use `create_lineup!` when you need to persist immediately and reference the record right away.
+- **"If empty" seed guards can be defeated by stray data from earlier broken sessions.** If you seed "the canonical Apr 14 lineup" only when `lineup_slots.empty?`, a single stray slot from an earlier test session will skip the seed forever. For canonical seed data, `destroy_all` first, then create.
+- **Mobile browser cache is ruthless and a recurring source of false bug reports.** Tara saw stale HTML/CSS on her regular Chrome tabs for hours after deploys. Private/Incognito mode is the only reliable way to see fresh content. **Default response when Tara says "I'm still seeing the same thing":** ask her to try a Private/Incognito tab before debugging code.
+- **When the same page shows different content in different tabs, it's cache, not a session bug.** Screenshots from Private mode showing the correct state while regular mode shows stale content = browser cache. Don't chase session bugs before ruling out cache.
+- **Don't strip content without asking.** Claude stripped the marketing hero from `/login` in PR #21 to differentiate it from `/`, but Tara preferred the hero and pushed back. For visual/design changes, ask Tara (or show before/after) before making opinionated cuts.
+- **Captains don't wait for players to click "confirm" in-app.** Real flow: captain texts players, gets "yes"/"no", enters the lineup. The app should default new lineup slots to `confirmed` (with a checkbox to un-confirm if captain actually needs the app to chase the player). Don't email pre-confirmed players.
+- **Narrow mobile viewports can't fit "COURT REPORT" at full size AND two pill buttons.** On `max-width: 720px` the logo has to shrink, and something has to be hidden. Hiding "My Teams" on mobile is fine — the logo is already a link to `/teams`. Don't rely on `white-space: nowrap` alone; also use `flex-shrink: 0` on inner elements and `flex-wrap: nowrap` on the container.
+- **Scope of user approvals matters.** "Yes, merge it" for one PR is not blanket approval for all future PRs. Record durable permissions (like Tara's auto-merge grant in Session 10) in `CLAUDE.md` so future sessions don't default back to asking each time.
+- **In-app forms are usually simpler than Google Sheets integration.** Before building a Sheets pipeline for "let me edit match data without touching code", check if the app already has `new`/`edit` forms and just surface them in the UI with a button. Session 10 saved about a week of plumbing by realizing the Add Match and Enter Results forms already existed.
 
 ### Rails / Docker operational lessons (Session 9 morning)
 - **If you see `ActiveSupport::MessageEncryptor::InvalidMessage` after a droplet reboot**, try a full clean rebuild first: `docker stop project-1 && docker rm project-1 && docker build -t project-1 . && docker run -d ...`. Don't immediately assume the master.key is corrupt — a stale container can get into a bad state that a clean rebuild resolves.
@@ -547,18 +585,25 @@ Thruster SSL certs are persisted via a Docker volume at `/root/thruster-storage`
 - ✅ End goal — personal use first, then a real product for anyone who plays a racket sport.
 - ✅ Who it's for — players, captains, coaches across any racket sport.
 - ✅ Husband's involvement — none beyond the tiiny.host mockup.
+- ✅ **Real team data** — all four teams captured (Kiss My Ace, Pour Decisions, Philadelphia Country #2, Legacy 2). Full rosters, schedules, captains, ratings in seeds.
+
+**Answered in Session 10 (April 13, 2026):**
+- ✅ **Domain DNS verified** — GoDaddy A record `@` → `146.190.112.29`, CNAME `www` → `yourcourtreport.com.`, Forwarding off. All correct.
+- ✅ **Render cancelled** — Tara cancelled her legacy Render service. Site runs only on DigitalOcean droplet now.
+- ✅ **Auto-merge policy** — Tara granted standing permission for Claude to auto-merge routine PRs in this repo (with safety exceptions documented in CLAUDE.md).
+- ✅ **Claude Cowork vs in-app forms vs Google Sheets** — Tara chose in-app forms first. Will reassess after April 14.
 
 **Still open:**
-- [ ] **Real team data** — for each of Tara's current teams (Kiss My Ace, Pour Decisions, Legacy 2):
-  - League (USTA?), rating (e.g. 4.0), gender, section
-  - Number of players and their names/emails
-  - Which team has the April 14 match and which has the April 21 match
-  - Is Tara the captain of each?
-  - Start date of the season
-- [x] **Domain registrar** — `yourcourtreport.com` was purchased from **GoDaddy**. Tara will need to log in to GoDaddy and change the DNS A record to point to `146.190.112.29` (the DigitalOcean droplet) when we're ready to switch.
-- [ ] **tiiny.host source files** — does Tara have access to the HTML/CSS files used for the mockup? Would help match the Court Report visual design exactly.
-- [ ] **Has Session 6's code been tested?** Before merging `claude/fix-teams-500-error-GPgeR`, verify the teams page and availability feature actually work.
-- [ ] **Future racket sports** — how soon does Tara want pickleball/squash/padel support? MVP = tennis only, but we should avoid baking "tennis" into the data model in ways that'll hurt later.
+- [ ] **Does the in-app form flow feel good for a real match?** Tara enters April 14 results via Enter Results on Tuesday/Wednesday and reports back.
+- [ ] **Google Sheets decision** — deferred until after April 14 in-app form use. If Tara says "annoying", set up a Google Cloud service account with a private key on the droplet.
+- [ ] **USTA TennisLink scraping** — not started. TennisLink requires OAuth login. Wait for in-app form verdict first.
+- [ ] **Session 6's availability feature** — still never verified end-to-end in production.
+- [ ] **Captain auto-assignment** — creating a team via `/create-team` doesn't automatically make the creator a captain. Tara hasn't hit this yet because she's admin, but a real new-team flow is broken.
+- [ ] **CI failures** (lint / scan_ruby / test) — pre-existing, unrelated to Session 10, worth cleaning up eventually.
+- [ ] **Gmail SMTP credentials** — `LineupMailer` exists but emails won't send until `SMTP_USERNAME` / `SMTP_PASSWORD` are set on the droplet. Less urgent now that captain override defaults slots to "confirmed".
+- [ ] **Lineups standard/default** — Del-Tri and Cup lineups stay the same week-to-week. Future enhancement: save a "standard lineup" that auto-loads for each new match.
+- [ ] **tiiny.host source files** — low priority, design is working.
+- [ ] **Future racket sports** — how soon does Tara want pickleball/squash/padel support?
 
 ## Working Norms Going Forward
 
@@ -708,3 +753,44 @@ Note: "Tara Buchakjian" in Del-Tri results = Tara Bucci (different last name spe
 - **Route helper names matter** — `post "add_player"` inside a resources block generates a different helper name than expected. Use `member do` blocks for clarity.
 - **Del-Tri uses a points system, not W-L** — storing points as "wins" caused confusion. Need separate handling for points-based leagues.
 - **"Tara Buchakjian" is NOT "Tara Bucci"** — they are two different people. Tara Buchakjian is a separate player on Legacy 2 who often plays Line 2 with Khue Feigenberg. Tara Bucci is the app builder.
+
+## Session 10 (April 13, 2026)
+
+Tara's Kiss My Ace season opener is **Tuesday April 14** — tomorrow. Everything in this session was scoped to "make the app usable on her phone for a real match this week." She was iterating through fixes on her phone in real time while the session was running, repeatedly hitting browser cache weirdness and reporting each new issue as she found it.
+
+### Work shipped — six PRs, all auto-deployed from `main`
+
+- **PR #20** — Mobile nav fix + contained ball bounce + logo unity + bottom tab bar. Fixed the "click Lineups → bounces to opening page" redirect loop (marketing bnav button was a real `<a>` to `/lineups` which redirected to login, which looked like the marketing hero). Contained the bounce animation to just the 🎾 (not the whole gold tile). Unified the logo font between marketing and app layouts. Added a mobile bottom nav bar to logged-in pages.
+- **PR #21** — Auth page cleanup. Removed Sign In/Up pills from the marketing header + both auth pages. Moved entry points to footer links. Simplified `/signup` to name + email (no password — bcrypt was reverted in Session 8). Kept the marketing hero on `/login` per Tara's preference (Claude initially stripped it, Tara pushed back, Claude restored it).
+- **PR #22** — Gold tennis-ball favicon replacing the old red-dot placeholder. SVG hand-written, PNG generated via pure-Python stdlib (no image libs in the sandbox).
+- **PR #23** — Set Lineup form finally works end-to-end. Fixed the "false"/"true" button labels (`submit_tag`'s `value:` is the visible label — switched to `button_tag`). Fixed the missing doubles dropdowns (`build_lineup` wasn't persisted so `build_default_slots` never ran — switched to `create_lineup!`). Added the "Already confirmed" captain override checkbox, checked by default, matching how real captains work. Surfaced captain action buttons (+ Add Match / Set Lineup / Enter Results / Edit Results) on every team-show match card. Seeded the real April 14 Kiss My Ace lineup from TennisLink.
+- **PR #24** — Documented Tara's standing auto-merge permission in the "Auto-merge authorization" section of this file. Future Claude sessions pick up the same policy.
+- **PR #25** — Mobile header hardening. Shrunk logo to 1.1rem on mobile. Hid "My Teams" pill on mobile. Added `white-space: nowrap !important` everywhere the header pills live. Force-reset the April 14 lineup seed so a stray single slot from an earlier broken form session no longer blocks the canonical 9 slots from being written.
+
+### Key discussions and decisions
+
+- **Scraping vs in-app forms vs Google Sheets vs Claude Cowork.** Tara asked about pulling data from TennisLink automatically. `WebFetch` confirmed the TennisLink stats page redirects to USTA OAuth — server-side scraping would need stored credentials and token management, plus USTA actively blocks scrapers. Discussed Claude Cowork (real product, runs on macOS/Windows desktop, agentic browser automation — a viable future path). Discussed a Google Sheets pipeline. **Eventually discovered that the app already has `matches#new`, `matches#edit_results`, and `lineups#edit` forms fully built — they just weren't surfaced on the team page.** Final decision: use the in-app forms for April 14 first, reassess Google Sheets / scraping / Cowork after real-world use. This discovery saved ~a week of Sheets integration plumbing.
+- **Render cancelled.** Tara had a legacy Render service in parallel with the DigitalOcean droplet. She cancelled it. Site runs only on the droplet now.
+- **GoDaddy DNS verified.** A record `@` → `146.190.112.29`, CNAME `www` → `yourcourtreport.com.`, Forwarding off — all correct.
+- **Mobile browser cache** was a recurring source of confusion. Multiple times Tara reported "I'm still seeing the same thing" after a deploy that Claude had already shipped correctly. The reliable workaround is Private/Incognito mode, which skips cache. Documented in Session 10 lessons.
+- **Auto-merge grant.** Tara gave Claude standing permission to auto-merge routine PRs in this repo. Documented with safety exceptions in CLAUDE.md. PRs #24 and #25 were the first to test the new policy — Claude opened and merged them in the same turn without pausing to ask.
+
+### April 14 readiness (as of end of Session 10)
+
+- ✅ April 14 Kiss My Ace vs. Kinetix Deuces Wild match exists in the schedule (seeded from TennisLink)
+- ✅ Full 9-player lineup seeded, all confirmed, published: Jaclyn 1S; Alison+Tara 1D; Amanda+Rachel 2D; Sarah+Stephanie 3D; Helen+Kerry 4D
+- ✅ Captain action buttons (Set Lineup / Enter Results) reachable from the team page
+- ✅ Set Lineup form works: all 5 lines render with correct button labels and captain override
+- ✅ Enter Results form already worked, now reachable without hunting through sub-tabs
+- ✅ Mobile header on logged-in pages: no wrapping, gold tile + "COURT REPORT" + Sign Out pill, bottom nav bar for navigation
+- ✅ Gold tile favicon showing in Chrome tabs (confirmed by Tara: "no red ball")
+- ⏳ Not yet tested: entering real post-match results via the app. Happens Tuesday after the match.
+
+### Next session priorities
+
+1. **Wait for Tara's April 14 match report.** See what she reports after entering results via the in-app form. That's the decision point for Google Sheets vs not.
+2. **If in-app form was painful** → start the Google Sheets pipeline (Google Cloud service account, private JSON key on the droplet, `google-apis-sheets_v4` gem, background job to sync). If fine → skip Sheets and focus on other features she asks for.
+3. **Fix CI failures** (lint, scan_ruby, test) — pre-existing from Session 9, unrelated to any Session 10 change, but they keep showing red X's on every PR.
+4. **Captain auto-assignment** on new teams via `/create-team`. Not blocking Tara's use case (she's admin) but will bite future users.
+5. **Verify Session 6's availability feature** actually works end-to-end in production.
+6. **Consider an admin-style "bulk edit" for upcoming matches** if Tara ends up wanting to pre-populate lineups for all 8 matches at once.
