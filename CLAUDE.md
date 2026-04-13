@@ -45,33 +45,50 @@
 - **Verify before declaring victory.** Don't say "done" if you haven't actually tested it works in a browser.
 - **Ask before building.** If the task doesn't match what's in the code, ask clarifying questions first — don't just start coding on assumptions.
 
-## Current Status (as of April 12, 2026 — Session 9)
+## Current Status (as of April 12, 2026 — Session 9 continued into morning)
 
 ### What's actually live at https://yourcourtreport.com
-**Phase 1 is live with SSL and auto-deploy infrastructure:**
+**Phase 1 is live with SSL, mobile polish, and a Lineups feature:**
 - **HTTPS/SSL** — Auto-provisioned via Thruster + Let's Encrypt. Works on both `yourcourtreport.com` and `www.yourcourtreport.com`
-- **Court Report marketing homepage** — shows to logged-out users with "All Your Teams. One App." messaging and Sign In / Sign Up buttons
+- **Court Report marketing homepage** — shown to logged-out users ("All Your Teams. One App." + feature cards + Sign In/Sign Up + mobile bottom nav)
 - **Email-only login** (tarabucci@gmail.com)
 - **My Teams page** with real team data (43 users, 16 matches)
 - **Team detail pages** with hero, schedule, roster, availability
 - **Player profile pages** with NTRP rating + match stats
 - **Admin user management** (Players page)
-- **`/stats-test` page** — pulls live data from a public Google Sheet on every page load (proof of concept for dynamic external data). Sheet: `1OvOObnk_Sq5wZOX8sQHnUfn_PNTXrgSgGnqqS8QeIjI`
+- **`/stats-test` page** — pulls live data from a public Google Sheet on every page load. Sheet: `1OvOObnk_Sq5wZOX8sQHnUfn_PNTXrgSgGnqqS8QeIjI`
+- **`/lineups` page** — dashboard showing all upcoming matches across user's teams with lineup status, confirm/decline buttons, and captain "Set Lineup" button
+- **Mobile polish** — no wrapping on Sign In/Up, top tabs scroll horizontally, bottom nav has glass-morphism and gold accent line, bouncing tennis ball logo
+- **LineupMailer** — sends branded HTML email when captain publishes a lineup (needs Gmail SMTP credentials on server to actually send)
 
-### What was fixed in Session 9 (April 12, 2026)
+### What was fixed / added in Session 9 (April 11–12, 2026)
 - Enabled SSL/HTTPS via Thruster + Let's Encrypt (port 443, TLS_DOMAIN env var, thruster cert storage volume)
 - Fixed DNS: `www` CNAME now points to `yourcourtreport.com` (was pointing to `teamcourtreport.com`)
 - Opened port 443 in the DigitalOcean firewall
 - Created SSH `deploy_key` on the droplet for GitHub Actions auto-deploy
 - Added GitHub Actions deploy workflow (`.github/workflows/deploy.yml`)
-- **Consolidated main branch** — main is now the single source of truth, matching the deployed code. Previously, many parallel `claude/*` branches had diverged and main was outdated.
+- **Consolidated main branch** — main is now the single source of truth, matching the deployed code. Previously, many parallel `claude/*` branches had diverged and main was outdated. Main was reset to `claude/clarify-team-members-1ycVZ` (the last known-good branch without the bcrypt Gemfile.lock mismatch) and then layered with new changes.
 - Added `/stats-test` page pulling from Google Sheets
+- Added `/lineups` page + Lineups bottom-nav button (replaces "Docket")
+- Fixed `LineupMailer` URLs to use `yourcourtreport.com` instead of bare IP
+- Added bouncing tennis ball animation to `.logo-mark` (alongside existing gold glow)
+- Comprehensive mobile CSS: `white-space: nowrap !important` on header buttons, horizontal-scroll on `.team-tabs` and `.cr-subtabs`, compact spacing, glass-morphism bottom nav with gold accent line and tap feedback
+- Updated deploy workflow to decode SSH key from base64 (`DEPLOY_SSH_KEY_BASE64` secret) so it can be copied from mobile without losing newlines
+
+### Morning recovery: container crash after droplet reboot
+- Droplet rebooted overnight (likely auto system update — saw "System restart required" banner)
+- Container was stuck in a restart loop: `ActiveSupport::MessageEncryptor::InvalidMessage` on boot
+- Root cause was unclear — master.key was 32 bytes, credentials.yml.enc unchanged, branch was clean
+- **Fix that worked:** `docker stop && rm && docker build && docker run` with `RAILS_MASTER_KEY=$(cat /root/app/config/master.key)` — a clean rebuild from scratch resolved it
+- Lesson: if you see `ActiveSupport::MessageEncryptor::InvalidMessage` after a droplet reboot, try a full rebuild before digging deeper
 
 ### What's still broken / pending
-- **GitHub Actions Deploy workflow is failing** — SSH authentication error (`ssh: no key found`). The `DEPLOY_SSH_KEY` secret in GitHub needs to be re-added correctly. Multi-line SSH keys can be hard to copy from mobile — recommend doing this from desktop. Until fixed, deploys must be done manually on the droplet.
-- **CI workflow may have test/lint failures** from code added in Session 9. Needs investigation.
+- **GitHub Actions Deploy workflow still failing** — SSH authentication error. Switched to a base64-encoded key approach, but the new `DEPLOY_SSH_KEY_BASE64` secret hasn't been added yet. Until this is fixed, deploys must be done manually on the droplet.
+- **Gmail SMTP credentials not set** — `LineupMailer` exists and the `/lineups` page shows confirm/decline, but emails won't actually send until `SMTP_USERNAME` and `SMTP_PASSWORD` are set on the droplet. Tara needs to create a Gmail App Password.
+- **CI workflow may have test/lint failures** from code added in Session 9. Not yet investigated.
 - **No captain auto-assignment.** When a team is created, there's no automatic team_membership record making the creator a captain.
-- **Mobile UI** — some tabs may still get cut off. Partially fixed in Session 9 but needs verification on actual deployed version.
+- **Bouncing logo** — animation code is in main (`bounce-ball` keyframe in courtreport.html.erb) but Tara couldn't see it in her browser. Likely a browser cache issue — needs hard refresh. Verify with `grep -n "bounce-ball" /root/app/app/views/pages/courtreport.html.erb` on the droplet.
+- **Lineups standard/default** — Tara noted that Del-Tri and Cup lineups stay the same week-to-week and only change when a sub is needed. Future enhancement: let captains save a "standard lineup" that auto-loads for each new match.
 
 ## The Two "Court Reports" (historical context)
 
@@ -393,8 +410,16 @@ Reconstructed from git log. Tara has built this app over ~6 sessions.
 - **Don't start work from a stale `claude/*` feature branch.** Always start from `main`. Previous sessions created many parallel branches; merging an old one wiped out features and broke the deployed site. **Main is the source of truth — always work from main.**
 - **Don't merge a branch to main without verifying it has all the deployed features.** If main is currently empty/skeleton and the deployed site has features, the deployed code lives on a different branch. Find that branch first, merge it into main, THEN add new changes.
 - **Bringing single files (like `courtreport.html.erb`) over from another branch without their controllers/routes/models breaks the app.** Either bring all dependent files or rebase the whole branch.
-- **Multi-line SSH keys are nearly impossible to copy from a phone correctly.** GitHub Actions Deploy workflow needs SSH key setup from a desktop, not mobile.
+- **Multi-line SSH keys are nearly impossible to copy from a phone correctly.** GitHub Actions Deploy workflow needs SSH key setup from a desktop, not mobile. (Workaround: base64-encode the key to a single line.)
 - **Verify which branch the droplet is actually deploying from.** The `/root/app` directory on the droplet may be checked out to a branch other than `main`. Run `git branch` on the droplet before reasoning about what's deployed.
+- **Watch out for `bcrypt` in the Gemfile without matching `Gemfile.lock`.** Several `claude/*` branches had this broken state — the Gemfile had `gem "bcrypt"` but the lockfile didn't, so Docker builds failed in production with `bundle install` errors in frozen mode. The `claude/clarify-team-members-1ycVZ` branch has it correctly reverted.
+- **Don't pile on new features when something is broken.** Morning recovery went sideways because we stacked bouncing-logo debugging on top of Xcode install on top of Claude Code desktop app setup on top of droplet container crash. Always fix the biggest fire first, then move on.
+- **Tara doesn't need the Claude Code desktop app.** She can use claude.ai/code in a browser. The desktop app's "Git is required" error and the `xcode-select --install` stuck-on-"Finding software" dialog are both avoidable by just using the web version.
+
+### Rails / Docker operational lessons (Session 9 morning)
+- **If you see `ActiveSupport::MessageEncryptor::InvalidMessage` after a droplet reboot**, try a full clean rebuild first: `docker stop project-1 && docker rm project-1 && docker build -t project-1 . && docker run -d ...`. Don't immediately assume the master.key is corrupt — a stale container can get into a bad state that a clean rebuild resolves.
+- **The droplet may auto-reboot** for system updates. The container has `--restart unless-stopped` which normally handles this, but it's not bulletproof. Check `docker ps -a` if the site suddenly goes down.
+- **The Court Report homepage is rendered without a layout** (`render "courtreport", layout: false`). It's a full standalone HTML page with inline `<style>` tags. Don't try to use the main app layout for it.
 
 ### From earlier sessions — deployment environment constraints
 - **No `ssh-keygen`** in this sandbox — had to use `openssl genpkey` + Python stdlib to generate RSA keys.
