@@ -20,14 +20,17 @@ class TeamsController < ApplicationController
       }
     end
 
-    # My upcoming matches across all teams (next 14 days) — powers the
-    # smaller cards in the left column of "Coming Up".
+    # My upcoming matches across all teams — powers the smaller cards
+    # in the left column of "Coming Up". Show up to the next 10 matches
+    # (within 60 days) so all four teams' openers show up without
+    # overwhelming the list.
     @my_teams = (@teams_by_league.values.flatten).uniq
     team_ids  = @my_teams.map(&:id)
     @upcoming_matches = Match.where(tennis_team_id: team_ids)
-                             .where("match_date >= ? AND match_date <= ?", Time.current, 14.days.from_now)
+                             .where("match_date >= ? AND match_date <= ?", Time.current.beginning_of_day, 60.days.from_now)
                              .includes(:tennis_team, lineup: :lineup_slots)
                              .order(match_date: :asc)
+                             .limit(10)
 
     # Build a hash of match_id => line_label for the current user's lineup positions
     @my_lineup_lines = {}
