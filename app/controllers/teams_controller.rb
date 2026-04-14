@@ -341,6 +341,12 @@ class TeamsController < ApplicationController
   ].freeze
 
   def extract_names_from_paste(raw)
+    # Normalize horizontal Unicode whitespace to regular spaces. Web
+    # tables (TennisLink especially) copy with non-breaking spaces
+    # (U+00A0) between first and last names. Those look identical to
+    # regular spaces but don't match the `[ \t]+` in NAME_REGEX, so
+    # without this pass the parser returns 0 matches on a real paste.
+    raw = raw.to_s.gsub(/[\u00A0\u2000-\u200A\u202F\u205F\u3000]/, " ")
     matches = raw.scan(NAME_REGEX).map(&:strip).reject(&:blank?)
 
     seen = {}
