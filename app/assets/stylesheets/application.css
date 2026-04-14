@@ -2956,10 +2956,6 @@ button.cr-header-pill {
   margin-top: 0;
   margin-bottom: 12px;
   letter-spacing: 0.5px;
-  /* Line the title up with "April 2026" inside the calendar panel on
-     the right. The calendar panel has 14px top padding before its
-     header, so we match it here so the two top lines read as even. */
-  padding-top: 14px;
 }
 
 .cr-my-week-list {
@@ -3412,11 +3408,13 @@ button.cr-header-pill {
 
 .cr-home-top {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(260px, 400px);
+  grid-template-columns: minmax(260px, 400px) minmax(260px, 400px);
   gap: 24px;
-  margin-bottom: 32px;
+  margin: 0 auto 32px;           /* center the grid inside .cr-main */
+  max-width: 824px;              /* 2 × 400 + 24 gap — clean balanced panel */
+  justify-content: center;
   align-items: flex-start;
-  overflow: hidden;   /* safety net so nothing inside can push the page wider */
+  overflow: hidden;              /* safety net so nothing can push wider */
 }
 
 .cr-home-left,
@@ -3484,8 +3482,11 @@ button.cr-header-pill {
   border-radius: 12px;
   padding: 12px 14px 14px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
-  max-width: 100%;    /* never overflow the grid column */
-  margin: 0 auto;     /* if the column is wider than this, center the panel */
+  max-width: 100%;
+  /* Push the calendar panel down so its top edge aligns with the first
+     card on the left. The left column starts with "Coming Up" (h2 ~26px
+     tall + 12px margin-bottom = 38px), so we match that here. */
+  margin: 38px auto 0;
 }
 
 .cr-dash-cal-header {
