@@ -3412,19 +3412,15 @@ button.cr-header-pill {
 
 .cr-home-top {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  gap: 20px;
+  grid-template-columns: minmax(0, 1fr) minmax(260px, 400px);
+  gap: 24px;
   margin-bottom: 32px;
   align-items: flex-start;
+  overflow: hidden;   /* safety net so nothing inside can push the page wider */
 }
 
 .cr-home-left,
 .cr-home-right { min-width: 0; }
-
-.cr-home-left,
-.cr-home-right {
-  min-width: 0;
-}
 
 /* Compact card overrides (smaller than the default .cr-my-week-card) */
 .cr-my-week-list-compact { gap: 6px; }
@@ -3486,8 +3482,10 @@ button.cr-header-pill {
   background: var(--cr-white);
   border: 1px solid var(--cr-border);
   border-radius: 12px;
-  padding: 14px 16px 16px;
+  padding: 12px 14px 14px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  max-width: 100%;    /* never overflow the grid column */
+  margin: 0 auto;     /* if the column is wider than this, center the panel */
 }
 
 .cr-dash-cal-header {
@@ -3550,14 +3548,17 @@ button.cr-header-pill {
 
 .cr-dash-cal-day {
   position: relative;
-  aspect-ratio: 1 / 1;
-  min-height: 36px;
+  /* Explicit compact height. NO aspect-ratio — that was causing the grid
+     to balloon on wide viewports because aspect-ratio made square cells
+     as wide as the 1fr column, which pushed the page past the viewport. */
+  height: 44px;
+  min-width: 0;
   border: 1px solid var(--cr-border);
   border-radius: 6px;
   background: var(--cr-white);
   color: var(--cr-text);
   font: inherit;
-  padding: 4px 4px 2px;
+  padding: 3px 3px 2px;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
