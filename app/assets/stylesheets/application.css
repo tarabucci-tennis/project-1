@@ -2953,8 +2953,13 @@ button.cr-header-pill {
   font-size: 1.1rem;
   font-weight: 700;
   color: var(--cr-text);
+  margin-top: 0;
   margin-bottom: 12px;
   letter-spacing: 0.5px;
+  /* Line the title up with "April 2026" inside the calendar panel on
+     the right. The calendar panel has 14px top padding before its
+     header, so we match it here so the two top lines read as even. */
+  padding-top: 14px;
 }
 
 .cr-my-week-list {
