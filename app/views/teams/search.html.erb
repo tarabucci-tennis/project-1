@@ -19,7 +19,10 @@
       <% if @results.any? %>
         <div style="display: flex; flex-direction: column; gap: 8px;">
           <% @results.each do |team| %>
-            <div class="cr-match-card" style="padding: 14px 18px;">
+            <% joined = team.team_memberships.exists?(user: current_user) %>
+            <div class="cr-match-card"
+                 style="padding: 14px 18px;<%= ' cursor: pointer;' if joined %>"
+                 <%= "onclick=\"location.href='#{team_path(team)}'\" role=\"link\" tabindex=\"0\"".html_safe if joined %>>
               <div style="display: flex; align-items: center; justify-content: space-between;">
                 <div>
                   <div style="font-size: 0.6rem; font-weight: 700; color: var(--cr-gold); letter-spacing: 1px; text-transform: uppercase;">
@@ -32,7 +35,7 @@
                     <% if team.rating.present? %>· <%= team.rating %><% end %>
                   </div>
                 </div>
-                <% if team.team_memberships.exists?(user: current_user) %>
+                <% if joined %>
                   <span style="font-size: 0.8rem; color: var(--cr-green); font-weight: 600;">Joined</span>
                 <% else %>
                   <%= button_to "Join", join_team_path(team.ensure_join_code!), method: :get,
