@@ -48,6 +48,13 @@ class MatchesController < ApplicationController
       build_default_lines(@match)
     end
 
+    # Pre-populate player dropdowns from the published lineup so captains
+    # don't have to re-pick the same names they already set in Set Lineup.
+    # Only runs for match_lines that currently have ZERO players — once the
+    # captain has saved at least one player on a line, we respect their
+    # choice and don't auto-fill anymore (so subs stick).
+    populate_players_from_lineup(@match) if @match.lineup&.published?
+
     @match_lines = @match.match_lines.includes(:players).order(position: :asc)
   end
 
@@ -114,6 +121,39 @@ class MatchesController < ApplicationController
     MatchLine.create!(match: match, line_type: "doubles", position: 3)
     MatchLine.create!(match: match, line_type: "doubles", position: 4)
     MatchLine.create!(match: match, line_type: "doubles", position: 5)
+  end
+
+  # Copy players from the published lineup into match_line_players, so the
+  # Enter Results form shows pre-filled dropdowns instead of empty ones.
+  #
+  # Mapping: lineup_slot positions are 1-based within line_type (singles=1,
+  # doubles=1..4). match_line positions are offset by the number of singles
+  # lines because match_lines has a unique index on [match_id, position] —
+  # so for USTA, lineup doubles pos 1 maps to match_line doubles pos 2, etc.
+  #
+  # Only populates match_lines that currently have ZERO players, so once
+  # the captain has saved changes to a line (e.g. swapped in a sub), we
+  # respect that and don't auto-overwrite on subsequent page loads.
+  def populate_players_from_lineup(match)
+    lineup = match.lineup
+    return unless lineup
+
+    singles_offset = match.match_lines.where(line_type: "singles").count
+
+    lineup.lineup_slots.where.not(user_id: nil).find_each do |slot|
+      match_line_position =
+        if slot.line_type == "singles"
+          slot.position
+        else
+          slot.position + singles_offset
+        end
+
+      match_line = match.match_lines.find_by(line_type: slot.line_type, position: match_line_position)
+      next unless match_line
+      next if match_line.match_line_players.any?  # respect captain's edits
+
+      match_line.match_line_players.create!(user_id: slot.user_id)
+    end
   end
 
   def set_team
