@@ -59,8 +59,18 @@
           </div>
         <% end %>
       </div>
+
+      <%# "See Full Schedule" button — only shown if there are more matches
+          beyond the 4 shown inline. Clicking reveals the popup modal below. %>
+      <% if @full_upcoming_matches.size > @upcoming_matches.size %>
+        <button type="button"
+                class="cr-see-full-schedule-btn"
+                onclick="document.getElementById('cr-full-schedule-modal').style.display='flex'">
+          See Full Schedule (<%= @full_upcoming_matches.size %> matches)
+        </button>
+      <% end %>
     <% else %>
-      <p class="cr-coming-up-empty">Nothing on the schedule in the next two weeks.</p>
+      <p class="cr-coming-up-empty">No upcoming matches on any of your teams.</p>
     <% end %>
   </div>
 
@@ -210,6 +220,57 @@
          style="display: none;">
         Only captains and co-captains can add practices, clinics, or friendlies.
       </p>
+    </div>
+  </div>
+</div>
+
+<%# ── Full schedule popup modal ─────────────────────────
+    Hidden by default. Triggered by the "See Full Schedule"
+    button under the Coming Up list. Click the backdrop or
+    the X button to close. %>
+<div id="cr-full-schedule-modal"
+     class="cr-full-schedule-modal"
+     style="display: none;"
+     onclick="if (event.target === this) this.style.display='none'">
+  <div class="cr-full-schedule-modal-panel">
+    <button type="button"
+            class="cr-full-schedule-modal-close"
+            onclick="document.getElementById('cr-full-schedule-modal').style.display='none'"
+            aria-label="Close">&times;</button>
+    <h3 class="cr-full-schedule-modal-title">Full Schedule</h3>
+    <div class="cr-full-schedule-modal-body">
+      <% if @full_upcoming_matches && @full_upcoming_matches.any? %>
+        <% @full_upcoming_matches.each do |match| %>
+          <% team = match.tennis_team %>
+          <div class="cr-my-week-card cr-my-week-card-compact"
+               onclick="window.location='<%= team_match_path(team, match) %>'"
+               style="cursor: pointer; margin-bottom: 6px;">
+            <div class="cr-my-week-date">
+              <div class="cr-my-week-day-name"><%= match.match_date.strftime("%a").upcase %></div>
+              <div class="cr-my-week-month"><%= match.match_date.strftime("%b").upcase %></div>
+              <div class="cr-my-week-day"><%= match.match_date.strftime("%-d") %></div>
+            </div>
+            <div class="cr-my-week-info">
+              <div class="cr-my-week-league-label"><%= team.league_category == "Local" ? "DEL-TRI" : team.league_category.upcase %></div>
+              <div class="cr-my-week-team"><%= team.name %></div>
+              <div class="cr-my-week-opponent">vs. <%= match.opponent %></div>
+              <div class="cr-my-week-detail">
+                <% if match.match_time.present? %>
+                  <span style="font-weight: 600; color: var(--cr-text);"><%= match.match_time %></span>
+                <% end %>
+                <% if match.location.present? %>
+                  <span><%= match.location.split(",").first %></span>
+                <% end %>
+                <% if match.notes&.include?("Home") || match.location&.include?(team.home_court.to_s.split(",").first.to_s) %>
+                  <span class="cr-my-week-badge-home">Home</span>
+                <% elsif match.notes&.include?("Away") %>
+                  <span class="cr-my-week-badge-away">Away</span>
+                <% end %>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      <% end %>
     </div>
   </div>
 </div>

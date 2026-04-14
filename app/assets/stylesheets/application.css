@@ -3475,6 +3475,93 @@ button.cr-header-pill {
   font-size: 0.85rem;
 }
 
+/* ── "See Full Schedule" button under the Coming Up list ── */
+.cr-see-full-schedule-btn {
+  display: block;
+  width: 100%;
+  margin-top: 10px;
+  padding: 10px 16px;
+  background: var(--cr-white);
+  border: 1px solid var(--cr-border);
+  border-radius: 8px;
+  color: var(--cr-text);
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s, background 0.15s;
+}
+.cr-see-full-schedule-btn:hover {
+  border-color: var(--cr-gold);
+  color: var(--cr-gold);
+  background: #fffdf5;
+}
+
+/* ── Full schedule popup modal ── */
+.cr-full-schedule-modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(10, 22, 40, 0.55);
+  z-index: 10000;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.cr-full-schedule-modal-panel {
+  position: relative;
+  background: var(--cr-white);
+  border-radius: 14px;
+  padding: 22px 22px 18px;
+  max-width: 520px;
+  width: 100%;
+  max-height: 85vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.18);
+}
+
+.cr-full-schedule-modal-title {
+  margin: 0 0 16px;
+  padding-right: 36px;   /* leave room for the X button */
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--cr-text);
+  letter-spacing: 0.3px;
+}
+
+.cr-full-schedule-modal-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--cr-border);
+  border-radius: 999px;
+  background: var(--cr-white);
+  color: var(--cr-text);
+  font-size: 1.3rem;
+  line-height: 1;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 0.15s, color 0.15s, background 0.15s;
+}
+.cr-full-schedule-modal-close:hover {
+  border-color: var(--cr-gold);
+  color: var(--cr-gold);
+  background: #fffdf5;
+}
+
+.cr-full-schedule-modal-body {
+  overflow-y: auto;
+  flex: 1 1 auto;
+  padding-right: 4px;    /* breathing room next to the scrollbar */
+}
+
 /* ── Dashboard month calendar ── */
 .cr-dash-cal {
   background: var(--cr-white);
