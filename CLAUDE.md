@@ -277,12 +277,12 @@ There used to be **two different things** both being called "Court Report":
 | Helen Lee | 3.5 |
 | Helen He | 4.0 |
 | Sarah Brautigan | 4.0 |
-| Mary Marshall | 4.0 |
+| Mary Marshall | 3.5 (plays up) |
 | Alison Vachris | 4.0 |
 | Doris Kerr | 4.0 |
 | **Tara Bucci** | 4.0 |
 | Nicole Costelloe | 4.0 |
-| Christina Faidley | 4.0 |
+| Christina Faidley | 3.5 (plays up) |
 | Jody Staples | 3.5 |
 | Karli McGill | 4.0 |
 | Kerry McDuffle | 4.0 |
@@ -356,7 +356,7 @@ These two teams are effectively **"sister teams"** with heavy roster overlap:
 
 **Small inconsistencies between the two TennisLink rosters:**
 - "Kerry McDuffle" (Kiss My Ace) vs "Kerry McDuffie" (Pour Decisions) — likely the Pour Decisions spelling is correct.
-- Christina Faidley: 4.0 on Kiss My Ace, 3.5 on Pour Decisions (NTRP may display differently by league type).
+- Christina Faidley and Mary Marshall are **3.5 players who play up** to Kiss My Ace (a 4.0 team). USTA convention is one true rating per player; when they play on a higher-level team it's "playing up." Both should display as 3.5 everywhere, NOT as 4.0 on Kiss My Ace. Earlier seeds had this wrong — fixed in Session 11 evening via a `User.update!(ntrp_rating: 3.5)` Rails runner script.
 
 **Design implication:** A player can be on many teams. The data model already supports this via `team_memberships`, but we need to make sure the UI treats "My Teams" as a list of all teams a user belongs to (not just teams they own or captain).
 
