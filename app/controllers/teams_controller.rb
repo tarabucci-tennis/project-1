@@ -28,12 +28,16 @@ class TeamsController < ApplicationController
     # get filtered when Rails booted earlier in the morning.
     @my_teams = (@teams_by_league.values.flatten).uniq
     team_ids  = @my_teams.map(&:id)
+    # Coming Up: next 4 upcoming matches within 14 days. Tara asked for
+    # 4 cards so the left column visually balances against the month
+    # calendar on the right.
     @upcoming_matches = Match.where(tennis_team_id: team_ids)
                              .where("match_date >= ? AND match_date <= ?",
                                     Time.current.beginning_of_day,
                                     14.days.from_now.end_of_day)
                              .includes(:tennis_team, lineup: :lineup_slots)
                              .order(match_date: :asc)
+                             .limit(4)
 
     # Build a hash of match_id => line_label for the current user's lineup positions
     @my_lineup_lines = {}
