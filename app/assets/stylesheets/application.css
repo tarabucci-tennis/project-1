@@ -3480,12 +3480,11 @@ button.cr-header-pill {
 
 /* ── Dashboard month calendar ── */
 .cr-dash-cal {
-  background: var(--cr-dark-panel);
-  border: 1px solid var(--cr-dark-border);
+  background: var(--cr-white);
+  border: 1px solid var(--cr-border);
   border-radius: 12px;
   padding: 14px 16px 16px;
-  box-shadow: 0 2px 10px rgba(3, 10, 26, 0.25);
-  color: #f4e8b6;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
   height: 100%;                     /* stretch to match the Coming Up column */
   display: flex;
   flex-direction: column;
@@ -3501,7 +3500,7 @@ button.cr-header-pill {
 .cr-dash-cal-title {
   font-size: 1rem;
   font-weight: 700;
-  color: var(--cr-gold-soft);
+  color: var(--cr-text);
   margin: 0;
   letter-spacing: 0.3px;
 }
@@ -3512,20 +3511,19 @@ button.cr-header-pill {
   justify-content: center;
   width: 28px;
   height: 28px;
-  border: 1px solid var(--cr-dark-border);
+  border: 1px solid var(--cr-border);
   border-radius: 6px;
-  color: rgba(255, 255, 255, 0.8);
-  background: transparent;
+  color: var(--cr-text);
+  background: var(--cr-white);
   text-decoration: none;
   font-size: 1.1rem;
   line-height: 1;
-  transition: border-color 0.15s, color 0.15s, background 0.15s;
+  transition: border-color 0.15s, color 0.15s;
 }
 
 .cr-dash-cal-nav:hover {
   border-color: var(--cr-gold);
   color: var(--cr-gold);
-  background: rgba(201, 162, 74, 0.08);
 }
 
 .cr-dash-cal-weekdays {
@@ -3539,7 +3537,7 @@ button.cr-header-pill {
   text-align: center;
   font-size: 0.6rem;
   font-weight: 700;
-  color: rgba(255, 255, 255, 0.5);
+  color: var(--cr-text-muted);
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
@@ -3555,10 +3553,10 @@ button.cr-header-pill {
   position: relative;
   aspect-ratio: 1 / 1;
   min-height: 36px;
-  border: 1px solid var(--cr-dark-border);
+  border: 1px solid var(--cr-border);
   border-radius: 6px;
-  background: var(--cr-dark-panel-soft);
-  color: rgba(255, 255, 255, 0.9);
+  background: var(--cr-white);
+  color: var(--cr-text);
   font: inherit;
   padding: 4px 4px 2px;
   display: flex;
@@ -3571,7 +3569,7 @@ button.cr-header-pill {
 
 .cr-dash-cal-day:hover {
   border-color: var(--cr-gold);
-  background: rgba(201, 162, 74, 0.12);
+  background: #fffdf5;
 }
 
 .cr-dash-cal-day:active {
@@ -3588,23 +3586,23 @@ button.cr-header-pill {
 .cr-dash-cal-day-num {
   font-size: 0.72rem;
   font-weight: 700;
-  color: rgba(255, 255, 255, 0.85);
+  color: var(--cr-text);
   line-height: 1;
 }
 
 .cr-dash-cal-day-today {
   border: 2px solid var(--cr-gold);
-  background: rgba(201, 162, 74, 0.2);
+  background: #fffdf5;
 }
 
 .cr-dash-cal-day-today .cr-dash-cal-day-num {
-  color: var(--cr-gold-bright);
+  color: var(--cr-gold);
 }
 
 .cr-dash-cal-day-match {
-  background: #000;
+  background: var(--cr-black);
   color: var(--cr-gold-bright);
-  border-color: rgba(201, 162, 74, 0.45);
+  border-color: var(--cr-black);
 }
 
 .cr-dash-cal-day-match .cr-dash-cal-day-num {
@@ -3612,13 +3610,13 @@ button.cr-header-pill {
 }
 
 .cr-dash-cal-day-match:hover {
-  background: #0a0a0a;
+  background: var(--cr-black-soft);
   border-color: var(--cr-gold);
 }
 
 .cr-dash-cal-day-event {
-  background: rgba(201, 162, 74, 0.08);
-  border-color: rgba(201, 162, 74, 0.35);
+  background: #fffdf5;
+  border-color: #f0dca0;
 }
 
 .cr-dash-cal-day-dots {
@@ -3649,7 +3647,7 @@ button.cr-header-pill {
   display: flex;
   gap: 12px;
   font-size: 0.62rem;
-  color: rgba(255, 255, 255, 0.6);
+  color: var(--cr-text-muted);
   flex-wrap: wrap;
 }
 
