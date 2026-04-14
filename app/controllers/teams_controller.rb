@@ -28,16 +28,23 @@ class TeamsController < ApplicationController
     # get filtered when Rails booted earlier in the morning.
     @my_teams = (@teams_by_league.values.flatten).uniq
     team_ids  = @my_teams.map(&:id)
-    # Coming Up: next 4 upcoming matches within 14 days. Tara asked for
-    # 4 cards so the left column visually balances against the month
-    # calendar on the right.
-    @upcoming_matches = Match.where(tennis_team_id: team_ids)
-                             .where("match_date >= ? AND match_date <= ?",
-                                    Time.current.beginning_of_day,
-                                    14.days.from_now.end_of_day)
-                             .includes(:tennis_team, lineup: :lineup_slots)
-                             .order(match_date: :asc)
-                             .limit(4)
+
+    # Full list of upcoming matches (no upper bound, no count cap). Used
+    # by the "See Full Schedule" popup modal at the bottom of the inline
+    # list. Past matches are filtered out via Time.current.beginning_of_day
+    # which keeps today's match visible until midnight but drops yesterday
+    # and earlier.
+    @full_upcoming_matches = Match.where(tennis_team_id: team_ids)
+                                  .where("match_date >= ?", Time.current.beginning_of_day)
+                                  .includes(:tennis_team, lineup: :lineup_slots)
+                                  .order(match_date: :asc)
+                                  .to_a
+
+    # Coming Up: next 4 upcoming matches shown inline next to the calendar.
+    # Tara's preference — keeps the left column balanced against the month
+    # calendar on the right. If there are more than 4, the "See Full
+    # Schedule" button reveals all of @full_upcoming_matches in a modal.
+    @upcoming_matches = @full_upcoming_matches.first(4)
 
     # Build a hash of match_id => line_label for the current user's lineup positions
     @my_lineup_lines = {}
