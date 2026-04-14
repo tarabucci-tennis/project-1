@@ -3415,13 +3415,11 @@ button.cr-header-pill {
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   gap: 20px;
   margin-bottom: 32px;
-  align-items: stretch;
+  align-items: flex-start;
 }
 
-/* Stretch the left list container so its background (if any) and
-   bottom edge line up with the calendar panel on the right. */
-.cr-home-left { display: flex; flex-direction: column; }
-.cr-home-left .cr-my-week-list { flex: 1 1 auto; }
+.cr-home-left,
+.cr-home-right { min-width: 0; }
 
 .cr-home-left,
 .cr-home-right {
@@ -3490,9 +3488,6 @@ button.cr-header-pill {
   border-radius: 12px;
   padding: 14px 16px 16px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
-  height: 100%;                     /* stretch to match the Coming Up column */
-  display: flex;
-  flex-direction: column;
 }
 
 .cr-dash-cal-header {
@@ -3551,7 +3546,6 @@ button.cr-header-pill {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   gap: 2px;
-  flex: 1 1 auto;                   /* grow inside the flex column */
 }
 
 .cr-dash-cal-day {
