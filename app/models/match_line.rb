@@ -23,7 +23,16 @@ class MatchLine < ApplicationRecord
     if line_type == "singles"
       "Singles #{position}"
     else
-      "Doubles #{position}"
+      # USTA matches store doubles at positions 2-5 because singles
+      # takes position 1 and the unique index is [match_id, position].
+      # For the Enter Results display we want "Doubles 1" to "Doubles 4",
+      # so subtract the number of singles lines in this match.
+      # Inter-Club / Del-Tri matches have no singles, so the subtract
+      # is 0 and positions render 1:1.
+      singles_offset = match.match_lines.where(line_type: "singles").count
+      display_position = position - singles_offset
+      display_position = position if display_position < 1  # safety fallback
+      "Doubles #{display_position}"
     end
   end
 end
