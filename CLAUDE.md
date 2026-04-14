@@ -45,7 +45,7 @@
 - **Verify before declaring victory.** Don't say "done" if you haven't actually tested it works in a browser.
 - **Ask before building.** If the task doesn't match what's in the code, ask clarifying questions first — don't just start coding on assumptions.
 
-## Current Status (as of April 13, 2026 — Session 10)
+## Current Status (as of April 14, 2026 — Session 11, in progress)
 
 ### What's actually live at https://yourcourtreport.com
 **Phase 1 is live with SSL, mobile polish, and a Lineups feature:**
@@ -110,6 +110,54 @@ Six PRs all merged to main and auto-deployed: **#20, #21, #22, #23, #24, #25.**
 - **Scraping vs in-app forms vs Google Sheets vs Claude Cowork.** Tara asked about scraping TennisLink. `WebFetch` confirmed the stats page redirects to USTA OAuth login — server-side scraping would need stored credentials and token management. Rejected. Discussed Claude Cowork (real product, runs on Mac/Windows desktop, operates the browser for her) and Google Sheets as alternatives. Eventually found the app already has `matches#new`, `matches#edit_results`, and `lineups#edit` forms built — they just weren't surfaced on the team page. Final decision: use the in-app forms for April 14 first, reassess other options after real-world use.
 - **Mobile browser cache** was a recurring source of confusion. Private/Incognito mode is the reliable way to see a fresh version after deploy. Documented in lessons.
 - **Sign-in page design waffling.** Claude stripped the "All Your Teams" hero from `/login` to differentiate it from `/`, Tara preferred the hero, Claude restored it. Takeaway: don't guess at design preferences.
+
+### What happened in Session 11 (April 14, 2026 — Kiss My Ace match day morning, in progress)
+
+**Today is the Kiss My Ace season opener.** Scope was to keep the site usable on Tara's phone through match prep. Three things happened in order:
+
+**1. Branch-off-main verification at session start**
+- Session opened on `claude/add-branch-verification-7wqfi`, which was **~180 commits behind `origin/main`**. HEAD was an ancestor of origin/main — not a valid feature-branch starting point.
+- Caught by running `git rev-parse HEAD` / `git rev-parse origin/main` / `git merge-base HEAD origin/main` at session start (merge-base equaled HEAD, proving HEAD was an ancestor of origin/main).
+- Reset the working copy to `origin/main` before doing any code work so local context matched what was actually deployed.
+- Later Tara asked to switch to `claude/fix-mobile-lineups-nav-m3fIC` — the branch where Session 10/early-Session-11 Paste Roster work (PRs #55 and #56) lived — to "go back to where she left off." That branch was code-equivalent to main (one merge-commit behind).
+- **Lesson:** the "what branch am I on and is it branched off origin/main?" pre-flight check Tara added after Session 9's parallel-branch fiasco actually works. Run it at the start of every session.
+
+**2. Site down — `MessageEncryptor::InvalidMessage` crash loop, same as Session 9 morning**
+- Tara reported `yourcourtreport.com` wasn't loading.
+- Droplet MOTD showed **"System restart required"** — same signal as Session 9. The droplet auto-rebooted overnight for a system update.
+- `docker ps -a --filter name=project-1` showed status `Restarting (1) 10 seconds ago` — container stuck in a restart loop with exit code 1.
+- `docker logs project-1 --tail 50` showed exactly the Session 9 pattern, on repeat:
+  ```
+  ActiveSupport::MessageEncryptor::InvalidMessage
+  /rails/config/environment.rb:5:in `<main>'
+  Tasks: TOP => db:prepare => db:load_config => environment
+  bin/rails aborted!
+  ```
+- **Fix (documented Session 9 lesson, worked first try):**
+  ```
+  cd /root/app && git fetch origin main && git reset --hard origin/main && bash bin/force-deploy.sh
+  ```
+- Container rebuilt cleanly, migrations ran, `DEPLOY COMPLETE`. Site came back in about 3 minutes total.
+- Small UX stumble: Claude's response included a literal example block `[HH:MM:SS] DEPLOY COMPLETE` to show her what success would look like. Tara pasted those example lines into her terminal as commands. Fixed by clarifying which block was "paste this" and which was "look for this." New Session 11 lesson recorded below.
+
+**3. PR #57 — Paste Roster nbsp fix + Find-a-Team clickable joined cards**
+
+Two fixes bundled in one PR, both merged to main + auto-deployed:
+
+**Fix A — Paste Roster returning 0 matches on real TennisLink copies.** Tara tried pasting her actual TennisLink 3-column roster grid and got the "Couldn't find any player names in that paste" alert. Running the current parser locally against her exact text produced all 24 names — which was the clue. Traced to TennisLink HTML-table copies containing **non-breaking spaces (U+00A0)** between first and last names instead of regular spaces. They look identical to the eye but the regex `NAME_REGEX = /[A-Z][a-zA-Z'\-]*(?:[ \t]+[A-Z][a-zA-Z'\-]*)+/` only matches ASCII space and tab, so `raw.scan(NAME_REGEX)` returned `[]`. Fix is a one-line gsub at the top of `extract_names_from_paste`:
+```ruby
+raw = raw.to_s.gsub(/[\u00A0\u2000-\u200A\u202F\u205F\u3000]/, " ")
+```
+Verified locally: 24/24 names on nbsp-corrupted input, 24/24 on regular-space input (no regression), stopword filter still works, "Ming Chen Pu" 3-word name still works.
+
+**Fix B — Find a Team search results: joined-team cards now clickable.** Tara wanted any search result card — including teams she's already on — to click through to the team detail page. Scope decision: `teams#show` blocks non-members with a redirect (`"You're not a member of that team"`), so making unjoined cards clickable would bounce with an error. Only joined cards get `onclick` / `cursor: pointer` / `role="link"`; unjoined cards stay as-is with the Join button.
+
+**4. Paste Roster STILL not working after PR #57 deployed**
+
+- After `force-deploy.sh` confirmed PR #57 was live, Tara tried the Paste Roster again with her real TennisLink text and still got no green flash and no players added.
+- Form code is fine (`form_with url:, method: :post, local: true`, CSRF auto-added). Flash IS rendered in `application.html.erb` layout. No visible HTML nesting issue. No Turbo interference (Rails 8 defaults `form_with` to local anyway).
+- **Diagnostic pending:** next step is `docker logs project-1 -f --tail 0` to watch HTTP requests arrive in real time while Tara clicks Add These Players. Hypotheses to rule out: (a) stale CSRF session cookie from cached regular-Safari tab → 422 Unprocessable Entity, (b) Turbo issue despite `local: true`, (c) request not leaving phone at all (Safari form cache), (d) different variant of invisible whitespace the nbsp fix didn't catch, (e) authorization failure (user isn't admin/captain on the team she's editing — unlikely since Tara is admin).
+- Unresolved at the time of this CLAUDE.md snapshot. When the root cause is found, come back and update this section.
 
 ### What's still broken / pending
 - **Mobile browser cache is relentless.** Chrome and Safari hold onto old HTML/CSS for hours even after a deploy. Tara repeatedly saw stale layouts on her regular browser tabs until she cleared cache or used Private mode. **Private mode is the reliable workaround when testing fresh deploys.**
@@ -430,6 +478,8 @@ Reconstructed from git log. Tara has built this app over ~6 sessions.
 | 8 | Password auth added then reverted (Gemfile.lock mismatch), Legacy 2 scoring fixes | `cf1e17a`, `db95ec2` | Reverted password; legacy scoring corrected |
 | 9 | SSL via Thruster, DNS fix, GitHub Actions auto-deploy, main consolidation, stats-test page | `6441e4b`, `3509a6b`, `68eb612` | **Site now on https://yourcourtreport.com; main = source of truth** |
 | 10 | Mobile nav fix (Lineups loop), contained ball bounce, logo unity, bottom tab bar, gold tile favicon, Set Lineup form fix (true/false buttons + missing doubles), captain override for confirmations, team show captain buttons, Apr 14 lineup seeded, auto-merge policy, mobile header hardening | PRs #20, #21, #22, #23, #24, #25 | **Set Lineup form works end-to-end; Apr 14 lineup posted; Render cancelled; auto-merge enabled** |
+| 11 | Kiss My Ace match-day morning: droplet auto-rebooted overnight → `MessageEncryptor::InvalidMessage` crash loop (same as Session 9 morning), fixed with `force-deploy.sh` one-liner. PR #57: Paste Roster nbsp fix (TennisLink copies use U+00A0 non-breaking spaces) + Find-a-Team clickable joined cards. Branch-off-main verification caught that session started on a branch ~180 commits behind main | PR #57 | **Site restored after reboot; nbsp fix + clickable joined cards shipped. Paste Roster STILL not adding players after PR #57 — diagnostic via `docker logs -f` pending at time of snapshot** |
+| 11 | Kiss My Ace match-day morning: droplet auto-rebooted overnight → `MessageEncryptor::InvalidMessage` crash loop (same as Session 9 morning), fixed with `force-deploy.sh` one-liner. PR #57: Paste Roster nbsp fix (TennisLink copies use U+00A0 non-breaking spaces) + Find-a-Team clickable joined cards. Branch-off-main verification caught that session started on a branch ~180 commits behind main | PR #57 | **Site restored after reboot; nbsp fix + clickable joined cards shipped. Paste Roster STILL not adding players after PR #57 — diagnostic via `docker logs -f` pending at time of snapshot** |
 
 ## Lessons Learned (honest notes from past sessions)
 
@@ -460,6 +510,41 @@ Reconstructed from git log. Tara has built this app over ~6 sessions.
 - **Narrow mobile viewports can't fit "COURT REPORT" at full size AND two pill buttons.** On `max-width: 720px` the logo has to shrink, and something has to be hidden. Hiding "My Teams" on mobile is fine — the logo is already a link to `/teams`. Don't rely on `white-space: nowrap` alone; also use `flex-shrink: 0` on inner elements and `flex-wrap: nowrap` on the container.
 - **Scope of user approvals matters.** "Yes, merge it" for one PR is not blanket approval for all future PRs. Record durable permissions (like Tara's auto-merge grant in Session 10) in `CLAUDE.md` so future sessions don't default back to asking each time.
 - **In-app forms are usually simpler than Google Sheets integration.** Before building a Sheets pipeline for "let me edit match data without touching code", check if the app already has `new`/`edit` forms and just surface them in the UI with a button. Session 10 saved about a week of plumbing by realizing the Add Match and Enter Results forms already existed.
+
+### From Session 11 (April 14, 2026 — match day morning) — DON'T REPEAT THESE
+
+- **"System restart required" banner + 503 + `docker ps` showing `Restarting` = the Session 9 morning `MessageEncryptor::InvalidMessage` crash loop, every time.** Recovery is a documented one-liner, not a diagnosis:
+  ```
+  cd /root/app && git fetch origin main && git reset --hard origin/main && bash bin/force-deploy.sh
+  ```
+  Session 11 morning resolved this in ~3 minutes because it was the first hypothesis. If you see those three symptoms together, run the one-liner FIRST, then look at logs only if it doesn't fix it.
+- **TennisLink HTML table copies contain non-breaking spaces (U+00A0) between words**, not regular spaces. They render identically to the eye but ASCII regexes like `[ \t]+` won't match them. Any parser that tokenizes user-pasted text on whitespace MUST normalize horizontal Unicode whitespace (`\u00A0`, plus `\u2000-\u200A`, `\u202F`, `\u205F`, `\u3000`) to regular spaces BEFORE the regex runs. This isn't TennisLink being hostile — it's how browsers copy HTML `<td>`-separated text by default. The `extract_names_from_paste` parser had this bug from PR #55/#56 and was fixed in PR #57.
+- **When a parser works on "test data copied from a PR description" but fails on real user-pasted production data, suspect whitespace encoding first.** The visible characters are identical; the bytes aren't. Test against the actual bytes the user pasted, not your eyeball transcription of them — e.g., paste `"Rachel\u00A0Miller"` into a Ruby REPL with the parser's regex and watch it return nothing.
+- **Don't paste example output in the same fenced code-block style as copy-paste commands when talking to a non-technical user.** In Session 11 Claude wrote a block showing what `bin/force-deploy.sh` output would look like (`[HH:MM:SS] DEPLOY COMPLETE`), and Tara pasted that block into her terminal as commands because it looked identical to the "paste this" blocks above it. Her shell returned `command not found` and she thought the deploy had failed. Fix the habit: use prose or blockquotes for sample output, and reserve fenced code blocks for literal paste-this-into-the-terminal content. When in doubt, label it explicitly: "(this is what you'll see on screen — don't type it)."
+- **"What branch am I on, and is it branched off origin/main?" is a real pre-flight check that catches real bugs.** Session 11 opened on `claude/add-branch-verification-7wqfi`, which was **~180 commits behind origin/main**. `git merge-base HEAD origin/main` returned HEAD's SHA — proving HEAD was an ancestor of origin/main, not a branch point off it. Without the check Claude would have been reading stale controller/view code (no `bin/auto-deploy.sh`, no `bin/force-deploy.sh`, no Paste Roster, no Captain Dashboard) while debugging against the real deployed app. The single-command check is:
+  ```
+  git rev-parse HEAD && git rev-parse origin/main && git merge-base HEAD origin/main
+  ```
+  If HEAD equals merge-base, you're behind main — `git reset --hard origin/main` before doing any work.
+- **`form_with local: true` is the Rails 8 default and doesn't protect against "form silently fails to submit."** If a form tap appears to do nothing, don't keep staring at the ERB template — `docker logs project-1 -f --tail 0` on the droplet and click the button in a Private tab. You'll see the `Started POST ...` line (or nothing, if the request never left the phone) in real time, and the problem space collapses to client-side vs. server-side immediately.
+- **When debugging a post-deploy bug, always force the user into a Private/Incognito tab before troubleshooting code.** Session 11 lost time on both the force-deploy verification ("I'm still seeing the same thing") and the post-PR-#57 Paste Roster re-test because regular Safari was serving cached HTML/CSRF tokens/session cookies. Default first question when a user reports "still broken after deploy": "Are you in a Private tab?"
+
+### From Session 11 (April 14, 2026 — match day morning) — DON'T REPEAT THESE
+
+- **"System restart required" banner + 503 + `docker ps` showing `Restarting` = the Session 9 morning `MessageEncryptor::InvalidMessage` crash loop, every time.** Recovery is a documented one-liner, not a diagnosis:
+  ```
+  cd /root/app && git fetch origin main && git reset --hard origin/main && bash bin/force-deploy.sh
+  ```
+  Session 11 morning resolved this in ~3 minutes because it was the first hypothesis. If you see those three symptoms together, run the one-liner FIRST, then look at logs only if it doesn't fix it.
+- **TennisLink HTML table copies contain non-breaking spaces (U+00A0) between words**, not regular spaces. They render identically to the eye but ASCII regexes like `[ \t]+` won't match them. Any parser that tokenizes user-pasted text on whitespace MUST normalize horizontal Unicode whitespace (`\u00A0`, plus `\u2000-\u200A`, `\u202F`, `\u205F`, `\u3000`) to regular spaces BEFORE the regex runs. This isn't TennisLink being hostile — it's how browsers copy HTML `<td>`-separated text by default. The `extract_names_from_paste` parser had this bug from PR #55/#56 and was fixed in PR #57.
+- **When a parser works on "test data copied from a PR description" but fails on real user-pasted production data, suspect whitespace encoding first.** The visible characters are identical; the bytes aren't. Test against the actual bytes the user pasted, not your eyeball transcription of them — e.g., paste `"Rachel\u00A0Miller"` into a Ruby REPL with the parser's regex and watch it return nothing.
+- **Don't paste example output in the same fenced code-block style as copy-paste commands when talking to a non-technical user.** In Session 11 Claude wrote a block showing what `bin/force-deploy.sh` output would look like (`[HH:MM:SS] DEPLOY COMPLETE`), and Tara pasted that block into her terminal as commands because it looked identical to the "paste this" blocks above it. Her shell returned `command not found` and she thought the deploy had failed. Fix the habit: use prose or blockquotes for sample output, and reserve fenced code blocks for literal paste-this-into-the-terminal content. When in doubt, label it explicitly: "(this is what you'll see on screen — don't type it)."
+- **"What branch am I on, and is it branched off origin/main?" is a real pre-flight check that catches real bugs.** Session 11 opened on `claude/add-branch-verification-7wqfi`, which was **~180 commits behind origin/main**. `git merge-base HEAD origin/main` returned HEAD's SHA — proving HEAD was an ancestor of origin/main, not a branch point off it. Without the check Claude would have been reading stale controller/view code (no `bin/auto-deploy.sh`, no `bin/force-deploy.sh`, no Paste Roster, no Captain Dashboard) while debugging against the real deployed app. The single-command check is:
+  ```
+  git rev-parse HEAD && git rev-parse origin/main && git merge-base HEAD origin/main
+  ```
+  If HEAD equals merge-base, you're behind main — `git reset --hard origin/main` before doing any work.
+- **`form_with local: true` is the Rails 8 default and doesn't protect against "form silently fails to submit."** If a form tap appears to do nothing, don't keep staring at the ERB template — `docker logs project-1 -f --tail 0` on the droplet and click the button in a Private tab. You'll see the `Started POST ...` line (or nothing, if the request never left the phone) in real time, and the problem space collapses to client-side vs. server-side immediately.
 
 ### Rails / Docker operational lessons (Session 9 morning)
 - **If you see `ActiveSupport::MessageEncryptor::InvalidMessage` after a droplet reboot**, try a full clean rebuild first: `docker stop project-1 && docker rm project-1 && docker build -t project-1 . && docker run -d ...`. Don't immediately assume the master.key is corrupt — a stale container can get into a bad state that a clean rebuild resolves.
