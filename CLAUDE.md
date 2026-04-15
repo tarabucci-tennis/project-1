@@ -75,3 +75,11 @@ Branch: `claude/setup-planning-4PTsK`
 ### SSH Key Generation Without ssh-keygen
 - OpenSSL can generate RSA keys: `openssl genpkey -algorithm RSA -pkeyopt rsa_keygen_bits:4096`
 - Converting OpenSSL RSA PKCS#1 DER format to SSH `authorized_keys` format requires parsing ASN.1 DER manually and encoding with `struct.pack('>I', ...)` length prefixes — doable in Python stdlib with no external dependencies.
+
+## Next Session Priorities
+
+1. **TennisLink deep-link for team standings and schedules** — replace TennisRecord for team-level data (keep TennisRecord for player-level data). Waiting on Tara for example URLs (three URLs at most, to be pasted into the next session prompt). Once provided, verify they're publicly accessible, figure out the URL patterns, build the integration, and ship it.
+
+## Known Issues
+
+- **Misleading "Match results saved!" flash** — the flash fires even when nothing actually changed. Needs to be smarter: should only fire if something was actually saved/updated.
