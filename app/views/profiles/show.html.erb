@@ -78,7 +78,12 @@
           <tbody>
             <% @teams.each do |team| %>
               <tr>
-                <td class="td-primary"><%= team.name %></td>
+                <td class="td-primary">
+                  <%= team.name %>
+                  <% if team.tennislink_standings_url %>
+                    <%= link_to "Standings ↗", team.tennislink_standings_url, target: "_blank", rel: "noopener noreferrer", class: "tennislink-link" %>
+                  <% end %>
+                </td>
                 <td><%= team.team_type %></td>
                 <td><%= team.section %></td>
                 <td><%= team.gender %></td>

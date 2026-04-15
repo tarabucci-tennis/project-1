@@ -680,6 +680,19 @@ h1 {
 
 .td-primary { color: #fff; font-weight: 600; }
 .td-muted   { color: rgba(255,255,255,0.45); font-size: 0.82rem; }
+
+.tennislink-link {
+  margin-left: 10px;
+  padding: 2px 8px;
+  background: rgba(204,255,0,0.08);
+  color: #ccff00;
+  border-radius: 10px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-decoration: none;
+  vertical-align: middle;
+}
+.tennislink-link:hover { background: rgba(204,255,0,0.18); }
 .td-year    { color: #ccff00; font-weight: 700; font-size: 0.95rem; }
 .td-win     { color: #86efac; }
 .td-loss    { color: #fca5a5; }
