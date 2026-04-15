@@ -80,7 +80,7 @@
               <tr>
                 <td class="td-primary">
                   <%= team.name %>
-                  <% if team.tennislink_standings_url %>
+                  <% if team.tennislink_standings_url.present? %>
                     <%= link_to "Standings ↗", team.tennislink_standings_url, target: "_blank", rel: "noopener noreferrer", class: "tennislink-link" %>
                   <% end %>
                 </td>

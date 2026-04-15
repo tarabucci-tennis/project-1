@@ -37,7 +37,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_15_120000) do
     t.string "section"
     t.date "start_date"
     t.string "team_type"
-    t.string "tennislink_team_id"
+    t.string "tennislink_standings_url"
     t.datetime "updated_at", null: false
     t.integer "user_id", null: false
     t.index ["user_id"], name: "index_tennis_teams_on_user_id"
