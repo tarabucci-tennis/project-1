@@ -83,6 +83,9 @@
                   <% if team.tennislink_standings_url.present? %>
                     <%= link_to "Standings ↗", team.tennislink_standings_url, target: "_blank", rel: "noopener noreferrer", class: "tennislink-link" %>
                   <% end %>
+                  <% if team.tennislink_schedule_url.present? %>
+                    <%= link_to "Schedule ↗", team.tennislink_schedule_url, target: "_blank", rel: "noopener noreferrer", class: "tennislink-link" %>
+                  <% end %>
                 </td>
                 <td><%= team.team_type %></td>
                 <td><%= team.section %></td>

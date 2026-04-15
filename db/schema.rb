@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_15_120000) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_15_130000) do
   create_table "tennis_stats", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.integer "defaults"
@@ -37,6 +37,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_15_120000) do
     t.string "section"
     t.date "start_date"
     t.string "team_type"
+    t.string "tennislink_schedule_url"
     t.string "tennislink_standings_url"
     t.datetime "updated_at", null: false
     t.integer "user_id", null: false
