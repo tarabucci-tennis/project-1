@@ -10,6 +10,30 @@ module ApplicationHelper
     teams.group_by(&:league_category)
   end
 
+  # TennisRecord.com profile URL for a player by name. TennisRecord is
+  # a public, login-free aggregator of USTA match results + computed
+  # dynamic ratings. We deep-link every player name in Court Report to
+  # their TennisRecord profile so captains and players can instantly see
+  # opponent rating, win %, and recent match history — data that USTA
+  # TennisLink hides behind personal-account login.
+  def tennis_record_url(name_or_user)
+    name = name_or_user.respond_to?(:name) ? name_or_user.name : name_or_user.to_s
+    return "#" if name.blank?
+    "https://www.tennisrecord.com/adult/profile.aspx?playername=#{CGI.escape(name)}"
+  end
+
+  # Convenience wrapper: renders a player name as a link that opens
+  # their TennisRecord profile in a new tab. Accepts either a User
+  # record or a plain name string; forwards any html_options (class,
+  # style, etc.) to link_to.
+  def link_to_tennis_record(name_or_user, html_options = {})
+    name = name_or_user.respond_to?(:name) ? name_or_user.name : name_or_user.to_s
+    return name if name.blank?
+    link_to name,
+            tennis_record_url(name_or_user),
+            html_options.merge(target: "_blank", rel: "noopener", title: "View #{name} on TennisRecord")
+  end
+
   def google_calendar_url(match)
     team_name = match.tennis_team.name
     title = "#{team_name} vs. #{match.opponent}"

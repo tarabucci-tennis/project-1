@@ -59,7 +59,7 @@
                 <% end %>
               </span>
               <span class="cr-lineup-col-player">
-                <%= slot.user.name %>
+                <%= link_to_tennis_record(slot.user, style: "color: inherit; text-decoration: none;") %>
               </span>
               <span class="cr-lineup-col-status">
                 <% if slot.confirmed? %>
