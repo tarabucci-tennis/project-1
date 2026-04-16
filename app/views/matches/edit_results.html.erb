@@ -1,0 +1,100 @@
+<% content_for :title, "Enter Results · #{@team.name} · Court Report" %>
+
+<div class="cr-page">
+  <%= link_to "← #{@team.name}", team_path(@team), class: "cr-back-link" %>
+
+  <div class="cr-results-form">
+    <h1 class="cr-page-title">Enter Match Results</h1>
+
+    <div class="cr-result-match-info">
+      <div class="cr-match-date">
+        <div class="cr-match-date-month"><%= @match.match_date.strftime("%b").upcase %></div>
+        <div class="cr-match-date-day"><%= @match.match_date.strftime("%-d") %></div>
+      </div>
+      <div class="cr-match-info">
+        <div class="cr-match-opponent">vs. <%= @match.opponent %></div>
+        <div class="cr-match-location"><%= @match.location %></div>
+      </div>
+    </div>
+
+    <%= form_tag results_team_match_path(@team, @match), method: :patch, class: "cr-enter-results" do %>
+
+      <%# Overall result %>
+      <div class="cr-form-section">
+        <h2 class="cr-form-section-title">Match Result</h2>
+        <div class="cr-result-toggle">
+          <label class="cr-result-option cr-result-win">
+            <%= radio_button_tag :match_result, "win", @match.result == "win" %>
+            <span class="cr-result-label">🎉 WIN</span>
+          </label>
+          <label class="cr-result-option cr-result-loss">
+            <%= radio_button_tag :match_result, "loss", @match.result == "loss" %>
+            <span class="cr-result-label">😤 LOSS</span>
+          </label>
+        </div>
+      </div>
+
+      <%# Line scores %>
+      <div class="cr-form-section">
+        <h2 class="cr-form-section-title">Line Scores</h2>
+        <p class="cr-form-help">Fill in each line's result and players. Leave blank if a line wasn't played.</p>
+
+        <% @match_lines.each do |line| %>
+          <div class="cr-line-card">
+            <div class="cr-line-header">
+              <span class="cr-line-label"><%= line.line_label %></span>
+              <div class="cr-line-result-toggle">
+                <label class="cr-line-result-opt cr-line-win-opt">
+                  <%= radio_button_tag "lines[#{line.id}][result]", "win", line.won?, id: "line_#{line.id}_win" %>
+                  <span>W</span>
+                </label>
+                <label class="cr-line-result-opt cr-line-loss-opt">
+                  <%= radio_button_tag "lines[#{line.id}][result]", "loss", line.lost?, id: "line_#{line.id}_loss" %>
+                  <span>L</span>
+                </label>
+              </div>
+            </div>
+
+            <div class="cr-line-scores">
+              <div class="cr-set-input">
+                <label>Set 1</label>
+                <%= text_field_tag "lines[#{line.id}][set1_score]", line.set1_score, placeholder: "6-3", class: "cr-input-small", maxlength: 7 %>
+              </div>
+              <div class="cr-set-input">
+                <label>Set 2</label>
+                <%= text_field_tag "lines[#{line.id}][set2_score]", line.set2_score, placeholder: "4-6", class: "cr-input-small", maxlength: 7 %>
+              </div>
+              <div class="cr-set-input">
+                <label>Set 3</label>
+                <%= text_field_tag "lines[#{line.id}][set3_score]", line.set3_score, placeholder: "10-7", class: "cr-input-small", maxlength: 7 %>
+              </div>
+            </div>
+
+            <div class="cr-line-players">
+              <label class="cr-line-players-label">
+                <%= line.line_type == "singles" ? "Player" : "Players" %>
+              </label>
+              <% player_count = line.line_type == "singles" ? 1 : 2 %>
+              <% existing_player_ids = line.players.map(&:id) %>
+              <% player_count.times do |i| %>
+                <select name="lines[<%= line.id %>][player_ids][]" class="cr-select">
+                  <option value="">-- Select player --</option>
+                  <% @members.each do |member| %>
+                    <option value="<%= member.id %>" <%= "selected" if existing_player_ids[i] == member.id %>>
+                      <%= member.name %> (<%= member.ntrp_rating %>)
+                    </option>
+                  <% end %>
+                </select>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+
+      <div class="cr-form-actions">
+        <%= submit_tag "Save Results", class: "cr-btn cr-btn-gold" %>
+        <%= link_to "Cancel", team_path(@team), class: "cr-btn cr-btn-outline" %>
+      </div>
+    <% end %>
+  </div>
+</div>

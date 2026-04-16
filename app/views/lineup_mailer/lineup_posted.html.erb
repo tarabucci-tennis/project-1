@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body { margin: 0; padding: 0; background: #f4f4f4; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    .wrapper { max-width: 520px; margin: 0 auto; padding: 24px 16px; }
+    .card { background: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 2px 12px rgba(0,0,0,0.08); }
+    .header { background: #1a1a1a; padding: 28px 32px; text-align: center; }
+    .header-ball { font-size: 2.5rem; margin-bottom: 8px; }
+    .header-brand { font-size: 0.75rem; letter-spacing: 2px; color: rgba(255,255,255,0.5); text-transform: uppercase; }
+    .header-title { font-size: 1.5rem; font-weight: 800; color: #ffffff; margin-top: 12px; line-height: 1.3; }
+    .header-gold { color: #c8a415; }
+    .body { padding: 32px; }
+    .greeting { font-size: 1.1rem; font-weight: 700; color: #1a1a1a; margin-bottom: 16px; }
+    .message { font-size: 0.95rem; color: #555; line-height: 1.6; margin-bottom: 24px; }
+    .match-card { background: #fafafa; border: 1px solid #eee; border-radius: 12px; padding: 20px; margin-bottom: 24px; }
+    .match-date { display: inline-block; background: linear-gradient(135deg, #c8a415, #dab832); border-radius: 8px; padding: 8px 12px; text-align: center; margin-right: 16px; vertical-align: top; }
+    .match-month { font-size: 0.55rem; font-weight: 700; letter-spacing: 1px; color: rgba(0,0,0,0.5); display: block; }
+    .match-day { font-size: 1.3rem; font-weight: 900; color: #1a1a1a; display: block; line-height: 1; }
+    .match-detail { display: inline-block; vertical-align: top; }
+    .match-opponent { font-size: 1rem; font-weight: 700; color: #1a1a1a; }
+    .match-meta { font-size: 0.85rem; color: #888; margin-top: 4px; }
+    .line-badge { display: inline-block; background: #1a1a1a; color: #c8a415; font-weight: 800; font-size: 1rem; padding: 6px 16px; border-radius: 8px; margin-top: 12px; }
+    .buttons { text-align: center; margin: 28px 0 8px; }
+    .btn { display: inline-block; padding: 14px 32px; border-radius: 10px; text-decoration: none; font-weight: 700; font-size: 0.95rem; margin: 0 6px; }
+    .btn-confirm { background: linear-gradient(135deg, #c8a415, #dab832); color: #1a1a1a; }
+    .btn-decline { background: #f0f0f0; color: #666; }
+    .footer { text-align: center; padding: 20px 32px 28px; border-top: 1px solid #f0f0f0; }
+    .footer-text { font-size: 0.8rem; color: #aaa; line-height: 1.5; }
+    .footer-brand { font-size: 0.7rem; color: #ccc; margin-top: 12px; letter-spacing: 1px; }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <div class="card">
+
+      <div class="header">
+        <div class="header-ball">🎾</div>
+        <div class="header-brand">Court Report</div>
+        <div class="header-title">
+          You're in the <span class="header-gold">lineup!</span>
+        </div>
+      </div>
+
+      <div class="body">
+        <div class="greeting">Hey <%= @player.name.split.first %>!</div>
+
+        <div class="message">
+          Your captain just posted the lineup and you've been selected to play.
+          Here are the details:
+        </div>
+
+        <div class="match-card">
+          <div class="match-date">
+            <span class="match-month"><%= @match.match_date.strftime("%b").upcase %></span>
+            <span class="match-day"><%= @match.match_date.day %></span>
+          </div>
+          <div class="match-detail">
+            <div class="match-opponent"><%= @team.name %> vs. <%= @match.opponent %></div>
+            <div class="match-meta">
+              <% if @match.match_time.present? %><%= @match.match_time %> · <% end %>
+              <%= @match.location %>
+            </div>
+          </div>
+          <br>
+          <div class="line-badge">You're playing <%= @line_label %></div>
+        </div>
+
+        <div class="message">
+          Can you make it? Let your captain know:
+        </div>
+
+        <div class="buttons">
+          <a href="<%= @confirm_url %>" class="btn btn-confirm">I'm In!</a>
+          <a href="<%= @decline_url %>" class="btn btn-decline">Can't Play</a>
+        </div>
+      </div>
+
+      <div class="footer">
+        <div class="footer-text">
+          This email was sent because you're on the <%= @team.name %> roster.<br>
+          Sign in at <a href="http://146.190.112.29" style="color: #c8a415;">Court Report</a> to see the full lineup.
+        </div>
+        <div class="footer-brand">COURT REPORT</div>
+      </div>
+
+    </div>
+  </div>
+</body>
+</html>

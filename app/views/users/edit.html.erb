@@ -1,31 +1,33 @@
-<div class="auth-page">
-  <div class="auth-card">
+<% content_for :title, "Edit #{@user.name} · Court Report" %>
+
+<div class="cr-login-page">
+  <div class="cr-login-card">
     <h1>Edit <%= @user.name %></h1>
 
     <%= form_with model: @user do |f| %>
       <% if @user.errors.any? %>
-        <div class="flash flash-alert">
-          <% @user.errors.full_messages.each do |msg| %>
-            <div><%= msg %></div>
-          <% end %>
+        <div class="cr-flash cr-flash-alert" style="margin-bottom: 16px;">
+          <%= @user.errors.full_messages.join(", ") %>
         </div>
       <% end %>
 
-      <div class="field">
+      <div class="cr-field">
         <%= f.label :name %>
         <%= f.text_field :name %>
       </div>
-      <div class="field">
+      <div class="cr-field">
         <%= f.label :email, "Email (used to sign in)" %>
         <%= f.email_field :email, placeholder: "email@example.com" %>
       </div>
-      <div class="field field-check">
-        <%= f.check_box :admin %>
-        <%= f.label :admin, "Admin privileges" %>
+      <div class="cr-field">
+        <label>
+          <%= f.check_box :admin %>
+          Admin privileges
+        </label>
       </div>
-      <div class="form-actions">
-        <%= f.submit "Save Changes" %>
-        <%= link_to "Cancel", users_path, class: "btn btn-secondary" %>
+      <%= f.submit "Save Changes" %>
+      <div style="margin-top: 12px;">
+        <%= link_to "Cancel", users_path, class: "cr-btn cr-btn-secondary" %>
       </div>
     <% end %>
   </div>

@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#060f1e">
+<title>Court Report · All Your Teams. One App.</title>
+<%= csrf_meta_tags %>
+<%= csp_meta_tag %>
+<link rel="icon" href="/icon.png?v=3" type="image/png">
+<link rel="icon" href="/icon.svg?v=3" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/icon.png?v=3">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+:root{
+  --navy:#060f1e;
+  --blue:#0a2240;
+  --accent:#c9a84c;
+  --accent2:#f0cc6e;
+  --white:#fff;
+  --off:#f7f9fc;
+  --surface:#fff;
+  --text:#0a0f1a;
+  --sub:#64748b;
+  --border:#e2e8f0;
+}
+body{
+  font-family:'Inter',sans-serif;
+  background:var(--off);
+  color:var(--text);
+  -webkit-font-smoothing:antialiased;
+  min-height:100vh;
+}
+
+/* Keyframes */
+@keyframes glow{0%,100%{box-shadow:0 0 0 0 rgba(201,168,76,.4)}50%{box-shadow:0 0 0 8px rgba(201,168,76,0)}}
+@keyframes bounce-ball{0%,100%{transform:translateY(0)}25%{transform:translateY(-6px) rotate(-8deg)}50%{transform:translateY(0)}75%{transform:translateY(-3px) rotate(8deg)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+
+/* Header */
+.cr-header{
+  background:var(--navy);
+  position:sticky;
+  top:0;
+  z-index:100;
+  box-shadow:0 2px 20px rgba(0,0,0,.3);
+}
+.cr-header-inner{
+  max-width:1200px;
+  margin:0 auto;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:16px 32px;
+  gap:12px;
+}
+.cr-logo{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  text-decoration:none;
+  flex-shrink:0;
+}
+.cr-logo-mark{
+  width:42px;
+  height:42px;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  border-radius:10px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:1.3rem;
+  animation:glow 3s ease infinite;
+  box-shadow:0 3px 14px rgba(201,168,76,.4);
+}
+.cr-logo-ball{
+  display:inline-block;
+  animation:bounce-ball 1.6s ease-in-out infinite;
+}
+.cr-logo-name{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:2rem;
+  letter-spacing:4px;
+  color:var(--white);
+  white-space:nowrap;
+}
+.cr-logo-name span{color:var(--accent);}
+.cr-header-actions{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  flex-shrink:0;
+}
+.cr-btn-pill{
+  font-size:.78rem;
+  letter-spacing:.5px;
+  padding:8px 18px;
+  border-radius:20px;
+  border:1px solid rgba(201,168,76,.35);
+  color:var(--accent);
+  background:transparent;
+  text-decoration:none;
+  font-weight:600;
+  cursor:pointer;
+  white-space:nowrap;
+  font-family:inherit;
+  transition:background .15s;
+}
+.cr-btn-pill:hover{background:rgba(201,168,76,.08);}
+.cr-btn-primary{
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  color:var(--navy);
+  border-color:transparent;
+  font-weight:700;
+}
+.cr-btn-primary:hover{opacity:.9;}
+
+/* Hero */
+.cr-hero{
+  max-width:900px;
+  margin:0 auto;
+  padding:80px 24px 60px;
+  text-align:center;
+  animation:fadeUp .6s cubic-bezier(.22,1,.36,1);
+}
+.cr-hero h1{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:4rem;
+  letter-spacing:2px;
+  line-height:1;
+  color:var(--text);
+  margin-bottom:4px;
+}
+.cr-hero h1 .gold{color:var(--accent);}
+.cr-hero p{
+  font-size:1.1rem;
+  line-height:1.6;
+  color:var(--sub);
+  max-width:620px;
+  margin:24px auto 36px;
+}
+.cr-cta-row{
+  display:flex;
+  gap:12px;
+  justify-content:center;
+  flex-wrap:wrap;
+}
+.cr-cta-row .cr-btn-pill{padding:14px 32px;font-size:.88rem;}
+
+/* Features */
+.cr-features{
+  max-width:1200px;
+  margin:0 auto;
+  padding:20px 24px 80px;
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:18px;
+}
+.cr-feature{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:18px;
+  padding:32px 24px;
+  text-align:center;
+  transition:transform .2s, box-shadow .2s;
+}
+.cr-feature:hover{
+  transform:translateY(-6px);
+  box-shadow:0 16px 40px rgba(6,15,30,.08);
+}
+.cr-feature-icon{
+  font-size:2.4rem;
+  margin-bottom:14px;
+  display:block;
+}
+.cr-feature h3{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:1.3rem;
+  letter-spacing:2px;
+  color:var(--text);
+  margin-bottom:8px;
+}
+.cr-feature p{
+  font-size:.85rem;
+  line-height:1.5;
+  color:var(--sub);
+}
+
+/* How it works */
+.cr-how{
+  background:var(--navy);
+  color:var(--white);
+  padding:60px 24px;
+}
+.cr-how-inner{
+  max-width:900px;
+  margin:0 auto;
+  text-align:center;
+}
+.cr-how h2{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:2.2rem;
+  letter-spacing:3px;
+  color:var(--accent);
+  margin-bottom:28px;
+}
+.cr-steps{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:30px;
+  margin-top:20px;
+  text-align:left;
+}
+.cr-step{padding:18px 0;}
+.cr-step-num{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:2.2rem;
+  color:var(--accent);
+  line-height:1;
+  margin-bottom:8px;
+}
+.cr-step h4{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:1.1rem;
+  letter-spacing:1.5px;
+  margin-bottom:6px;
+}
+.cr-step p{
+  font-size:.84rem;
+  color:rgba(255,255,255,.55);
+  line-height:1.6;
+}
+
+/* Final CTA */
+.cr-final-cta{
+  max-width:700px;
+  margin:0 auto;
+  padding:70px 24px;
+  text-align:center;
+}
+.cr-final-cta h2{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:2.4rem;
+  letter-spacing:3px;
+  color:var(--text);
+  margin-bottom:14px;
+}
+.cr-final-cta p{
+  color:var(--sub);
+  margin-bottom:28px;
+  font-size:1rem;
+}
+
+/* Footer */
+.cr-footer{
+  background:var(--navy);
+  color:rgba(255,255,255,.3);
+  text-align:center;
+  padding:28px 20px;
+  font-size:.72rem;
+  letter-spacing:2px;
+  text-transform:uppercase;
+}
+.cr-footer strong{
+  color:rgba(255,255,255,.5);
+  font-family:'Bebas Neue',sans-serif;
+  font-size:.9rem;
+  letter-spacing:3px;
+}
+
+/* Flash messages */
+.cr-flash{
+  max-width:900px;
+  margin:14px auto 0;
+  padding:12px 20px;
+  border-radius:10px;
+  font-size:.85rem;
+  font-weight:500;
+}
+.cr-flash-notice{background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.25);color:#8b6914;}
+.cr-flash-alert{background:rgba(220,38,38,.08);border:1px solid rgba(220,38,38,.25);color:#dc2626;}
+
+/* Mobile */
+@media(max-width:768px){
+  .cr-header-inner{padding:12px 16px;}
+  .cr-logo-mark{width:34px;height:34px;font-size:1rem;}
+  .cr-logo-name{font-size:1.4rem;letter-spacing:2.5px;}
+  .cr-btn-pill{padding:6px 12px;font-size:.68rem;}
+  .cr-hero{padding:50px 20px 30px;}
+  .cr-hero h1{font-size:2.6rem;letter-spacing:1.5px;}
+  .cr-hero p{font-size:.95rem;margin:20px auto 28px;}
+  .cr-cta-row .cr-btn-pill{padding:12px 22px;font-size:.8rem;}
+  .cr-features{grid-template-columns:repeat(2,1fr);gap:12px;padding:10px 16px 60px;}
+  .cr-feature{padding:24px 16px;}
+  .cr-feature-icon{font-size:2rem;}
+  .cr-feature h3{font-size:1.1rem;}
+  .cr-feature p{font-size:.78rem;}
+  .cr-how{padding:50px 20px;}
+  .cr-how h2{font-size:1.8rem;}
+  .cr-steps{grid-template-columns:1fr;gap:20px;text-align:center;}
+  .cr-final-cta{padding:50px 20px;}
+  .cr-final-cta h2{font-size:1.9rem;}
+}
+@media(max-width:380px){
+  .cr-logo-name{font-size:1.2rem;}
+  .cr-hero h1{font-size:2.2rem;}
+  .cr-btn-pill{font-size:.62rem;padding:5px 10px;}
+}
+</style>
+</head>
+<body>
+
+<header class="cr-header">
+  <div class="cr-header-inner">
+    <a href="/" class="cr-logo">
+      <div class="cr-logo-mark"><span class="cr-logo-ball">🎾</span></div>
+      <div class="cr-logo-name">COURT <span>REPORT</span></div>
+    </a>
+  </div>
+</header>
+
+<% if notice %><div class="cr-flash cr-flash-notice"><%= notice %></div><% end %>
+<% if alert %><div class="cr-flash cr-flash-alert"><%= alert %></div><% end %>
+
+<section class="cr-hero">
+  <h1>All Your Teams.<br><span class="gold">One App.</span></h1>
+  <p>Stop jumping between apps, group chats, and websites for different teams and leagues. Court Report puts your schedules, availability, lineups, and stats all in one place.</p>
+  <div class="cr-cta-row">
+    <a href="<%= signup_path %>" class="cr-btn-pill cr-btn-primary">Get Started — It's Free</a>
+    <a href="<%= login_path %>" class="cr-btn-pill">Sign In</a>
+  </div>
+</section>
+
+<section class="cr-features">
+  <div class="cr-feature">
+    <span class="cr-feature-icon">📅</span>
+    <h3>See Your Week</h3>
+    <p>Every match from every team, in one calendar. Know where to be and when.</p>
+  </div>
+  <div class="cr-feature">
+    <span class="cr-feature-icon">✋</span>
+    <h3>Set Availability</h3>
+    <p>Tell your captain you're in or out with one tap. No more lost texts.</p>
+  </div>
+  <div class="cr-feature">
+    <span class="cr-feature-icon">📝</span>
+    <h3>Lineup Confirmations</h3>
+    <p>Captains post the lineup. Players get an email and confirm in one click.</p>
+  </div>
+  <div class="cr-feature">
+    <span class="cr-feature-icon">📊</span>
+    <h3>Track Your Stats</h3>
+    <p>Win %, doubles partners, line history — tracked automatically as you play.</p>
+  </div>
+</section>
+
+<section class="cr-how">
+  <div class="cr-how-inner">
+    <h2>How It Works</h2>
+    <div class="cr-steps">
+      <div class="cr-step">
+        <div class="cr-step-num">01</div>
+        <h4>Create an account</h4>
+        <p>Sign up with your email. Takes 30 seconds. No credit card.</p>
+      </div>
+      <div class="cr-step">
+        <div class="cr-step-num">02</div>
+        <h4>Join your teams</h4>
+        <p>Captains invite players with a join link. Players self-add. Done.</p>
+      </div>
+      <div class="cr-step">
+        <div class="cr-step-num">03</div>
+        <h4>Play tennis, not phone tag</h4>
+        <p>Your schedule, your availability, your lineups — all in one place.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="cr-final-cta">
+  <h2>Ready to Ditch the Text Threads?</h2>
+  <p>Court Report is free for players and captains. Built by a player who got tired of checking four apps a day.</p>
+  <div class="cr-cta-row">
+    <a href="<%= signup_path %>" class="cr-btn-pill cr-btn-primary">Create Your Account</a>
+  </div>
+</section>
+
+<footer class="cr-footer">
+  <strong>Court Report</strong> &nbsp;·&nbsp; Spring 2026 &nbsp;·&nbsp; Built for Players
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,42 @@
+<% content_for :title, "Sign Up — Court Report" %>
+
+<div class="cr-auth-page">
+  <div class="cr-auth-card">
+    <div class="cr-auth-logo">
+      <span class="cr-auth-logo-ball">🎾</span>
+    </div>
+    <h1 class="cr-auth-title">Sign Up</h1>
+    <p class="cr-auth-sub">Create your free Court Report account</p>
+
+    <%= form_with url: signup_path, method: :post do |f| %>
+      <div class="cr-field">
+        <%= f.label :name, "Your name" %>
+        <%= f.text_field :name, placeholder: "Jane Smith", autofocus: true, value: params[:name] %>
+      </div>
+      <div class="cr-field">
+        <%= f.label :email, "Email address" %>
+        <%= f.email_field :email, placeholder: "you@example.com", value: params[:email] %>
+      </div>
+      <div class="cr-field">
+        <%= f.label :password, "Password" %>
+        <div class="cr-password-wrap">
+          <%= f.password_field :password, placeholder: "At least 6 characters" %>
+          <button type="button" class="cr-password-toggle" onclick="togglePassword(this)" aria-label="Show password">👁</button>
+        </div>
+      </div>
+      <div class="cr-field">
+        <%= f.label :password_confirmation, "Confirm password" %>
+        <div class="cr-password-wrap">
+          <%= f.password_field :password_confirmation, placeholder: "Type it again" %>
+          <button type="button" class="cr-password-toggle" onclick="togglePassword(this)" aria-label="Show password">👁</button>
+        </div>
+      </div>
+      <%= f.submit "Sign Up →", class: "cr-auth-submit" %>
+    <% end %>
+
+    <p class="cr-auth-switch">
+      Already have an account?
+      <%= link_to "Sign in", login_path %>
+    </p>
+  </div>
+</div>

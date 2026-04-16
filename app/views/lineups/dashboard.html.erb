@@ -1,0 +1,219 @@
+<% content_for(:title) { "Lineups - Court Report" } %>
+
+<style>
+  .lineups-page {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 24px 16px 100px;
+  }
+  .lineups-header {
+    margin-bottom: 24px;
+  }
+  .lineups-header h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2.4rem;
+    letter-spacing: 4px;
+    color: var(--text);
+    margin-bottom: 4px;
+  }
+  .lineups-header p {
+    color: var(--sub);
+    font-size: 0.88rem;
+  }
+  .lineup-empty {
+    background: var(--surface);
+    border: 1px dashed var(--border);
+    border-radius: 14px;
+    padding: 48px 24px;
+    text-align: center;
+    color: var(--sub);
+  }
+  .lineup-empty .ball {
+    font-size: 3rem;
+    display: block;
+    margin-bottom: 12px;
+  }
+  .lineup-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 18px 20px;
+    margin-bottom: 14px;
+    transition: box-shadow .15s, transform .15s;
+  }
+  .lineup-card:hover {
+    box-shadow: 0 8px 24px rgba(0,0,0,.06);
+    transform: translateY(-2px);
+  }
+  .lineup-card-head {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 14px;
+  }
+  .lineup-date {
+    background: var(--navy);
+    color: var(--white);
+    border-radius: 8px;
+    padding: 8px 10px;
+    text-align: center;
+    flex-shrink: 0;
+    min-width: 50px;
+  }
+  .lineup-date-mon {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.55rem;
+    letter-spacing: 1.5px;
+    color: var(--accent);
+    text-transform: uppercase;
+  }
+  .lineup-date-day {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.6rem;
+    line-height: 1;
+  }
+  .lineup-info { flex: 1; min-width: 0; }
+  .lineup-team {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.6rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--accent);
+    margin-bottom: 4px;
+  }
+  .lineup-opponent {
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: var(--text);
+  }
+  .lineup-status-pill {
+    display: inline-block;
+    font-size: 0.62rem;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    flex-shrink: 0;
+  }
+  .pill-pending { background: rgba(100,116,139,0.12); color: #64748b; }
+  .pill-published { background: rgba(201,168,76,0.15); color: var(--accent); }
+  .pill-confirmed { background: rgba(22,163,74,0.12); color: var(--green); }
+  .pill-declined { background: rgba(220,38,38,0.12); color: var(--red); }
+
+  .my-slot-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 14px;
+    background: rgba(201,168,76,0.06);
+    border: 1px solid rgba(201,168,76,0.18);
+    border-radius: 10px;
+    margin-top: 10px;
+  }
+  .my-slot-label {
+    font-size: 0.78rem;
+    color: var(--sub);
+  }
+  .my-slot-line {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.1rem;
+    color: var(--accent);
+    margin-left: 6px;
+  }
+  .lineup-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 12px;
+    flex-wrap: wrap;
+  }
+  .lineup-btn {
+    flex: 1;
+    min-width: 120px;
+    padding: 10px 14px;
+    border-radius: 10px;
+    border: none;
+    font-family: inherit;
+    font-size: 0.82rem;
+    font-weight: 700;
+    cursor: pointer;
+    text-decoration: none;
+    text-align: center;
+    transition: opacity .15s, transform .1s;
+  }
+  .lineup-btn:active { transform: scale(0.97); }
+  .btn-confirm { background: linear-gradient(135deg, var(--accent), var(--accent2)); color: var(--navy); }
+  .btn-decline { background: rgba(220,38,38,0.1); color: var(--red); border: 1px solid rgba(220,38,38,0.3); }
+  .btn-set-lineup { background: var(--navy); color: var(--white); }
+
+  /* Bottom nav back-link spacer */
+  @media(max-width: 768px) {
+    .lineups-page { padding-bottom: 90px; }
+  }
+</style>
+
+<div class="lineups-page">
+  <div class="lineups-header">
+    <h1>Lineups</h1>
+    <p>All upcoming matches across your teams.</p>
+  </div>
+
+  <% if @upcoming.empty? %>
+    <div class="lineup-empty">
+      <span class="ball">🎾</span>
+      <p><strong>No upcoming matches.</strong></p>
+      <p style="margin-top:6px;font-size:0.82rem;">When your captain schedules a match and posts the lineup, it'll show up here.</p>
+    </div>
+  <% else %>
+    <% @upcoming.each do |item| %>
+      <% match = item[:match] %>
+      <% team = item[:team] %>
+      <% lineup = item[:lineup] %>
+      <% slot = item[:my_slot] %>
+      <div class="lineup-card" style="cursor: pointer;" onclick="if (!event.target.closest('a,button,form')) window.location='<%= team_match_path(team, match) %>'">
+        <div class="lineup-card-head">
+          <div class="lineup-date">
+            <div class="lineup-date-mon"><%= match.match_date.strftime("%b") %></div>
+            <div class="lineup-date-day"><%= match.match_date.strftime("%-d") %></div>
+          </div>
+          <div class="lineup-info">
+            <div class="lineup-team"><%= team.name %></div>
+            <div class="lineup-opponent">vs. <%= match.respond_to?(:opponent) ? match.opponent : match.try(:opponent_team) %></div>
+          </div>
+          <% if !item[:published] %>
+            <span class="lineup-status-pill pill-pending">Not Posted</span>
+          <% elsif slot && slot.respond_to?(:confirmation) && slot.confirmation == "confirmed" %>
+            <span class="lineup-status-pill pill-confirmed">You're In ✓</span>
+          <% elsif slot && slot.respond_to?(:confirmation) && slot.confirmation == "declined" %>
+            <span class="lineup-status-pill pill-declined">Declined</span>
+          <% elsif slot %>
+            <span class="lineup-status-pill pill-published">Needs Response</span>
+          <% else %>
+            <span class="lineup-status-pill pill-published">Posted</span>
+          <% end %>
+        </div>
+
+        <% if item[:published] && slot %>
+          <div class="my-slot-row">
+            <div>
+              <span class="my-slot-label">You're playing:</span>
+              <span class="my-slot-line"><%= slot.try(:line_label) || "Line" %></span>
+            </div>
+          </div>
+          <% if slot.respond_to?(:confirmation) && slot.confirmation == "pending" %>
+            <div class="lineup-actions">
+              <%= link_to "I'm In ✓", confirm_team_match_lineup_path(team, match, status: "confirmed"), class: "lineup-btn btn-confirm" %>
+              <%= link_to "Can't Play", confirm_team_match_lineup_path(team, match, status: "declined"), class: "lineup-btn btn-decline" %>
+            </div>
+          <% end %>
+        <% end %>
+
+        <% if item[:is_captain] && !item[:published] %>
+          <div class="lineup-actions">
+            <%= link_to "Set Lineup", edit_team_match_lineup_path(team, match), class: "lineup-btn btn-set-lineup" %>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+  <% end %>
+</div>

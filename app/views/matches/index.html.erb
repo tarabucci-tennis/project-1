@@ -1,0 +1,88 @@
+<% content_for :title, "#{@team.name} · Schedule" %>
+
+<div class="schedule-page">
+  <div class="schedule-header">
+    <div class="schedule-header-left">
+      <%= link_to "&larr; #{@team.name}".html_safe, team_path(@team), class: "back-link" %>
+      <h1>Schedule</h1>
+    </div>
+    <div class="schedule-header-right">
+      <% if @is_captain %>
+        <%= link_to "Captain View", team_captain_path(@team), class: "btn btn-secondary" %>
+        <%= link_to "+ Add Match", new_team_match_path(@team), class: "btn" %>
+      <% end %>
+    </div>
+  </div>
+
+  <% if @matches.any? %>
+    <div class="match-cards">
+      <% @matches.each do |match| %>
+        <% avail = match.availability_for(current_user) %>
+        <% current_status = avail&.status || "no_response" %>
+        <% current_message = avail&.message || "" %>
+        <% counts = match.availability_counts %>
+
+        <div class="match-card"
+             data-controller="availability"
+             data-availability-match-id-value="<%= match.id %>"
+             data-availability-status-value="<%= current_status %>"
+             data-availability-message-value="<%= current_message %>">
+
+          <div class="match-card-top">
+            <div class="match-card-date">
+              <div class="match-date-day"><%= match.match_date.strftime("%a") %></div>
+              <div class="match-date-num"><%= match.match_date.strftime("%-m/%-d") %></div>
+              <div class="match-date-time"><%= match.match_date.strftime("%-I:%M %p") %></div>
+            </div>
+            <div class="match-card-info">
+              <% if match.opponent.present? %>
+                <div class="match-opponent">vs. <%= match.opponent %></div>
+              <% end %>
+              <% if match.location.present? %>
+                <div class="match-location"><%= match.location %></div>
+              <% end %>
+              <% if match.notes.present? %>
+                <div class="match-notes"><%= match.notes %></div>
+              <% end %>
+            </div>
+            <div class="match-card-counts" data-availability-target="counts">
+              <span class="count-in"><%= counts[:in] %> ✅</span> ·
+              <span class="count-out"><%= counts[:out] %> ❌</span> ·
+              <span class="count-pending"><%= counts[:no_response] %> ?</span>
+            </div>
+          </div>
+
+          <div class="match-card-actions">
+            <button type="button"
+                    class="avail-btn avail-btn-in <%= 'avail-btn-active' if current_status == 'in' %>"
+                    data-availability-target="btnIn"
+                    data-action="click->availability#markIn">
+              ✅ I'm In
+            </button>
+            <button type="button"
+                    class="avail-btn avail-btn-out <%= 'avail-btn-active' if current_status == 'out' %>"
+                    data-availability-target="btnOut"
+                    data-action="click->availability#markOut">
+              ❌ I'm Out
+            </button>
+            <div class="avail-message-wrap">
+              <input type="text"
+                     class="avail-message-input"
+                     placeholder="Add a message..."
+                     value="<%= current_message %>"
+                     data-availability-target="messageField"
+                     data-action="keydown->availability#saveMessage blur->availability#saveMessage">
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  <% else %>
+    <div class="schedule-empty">
+      <p>No matches scheduled yet.</p>
+      <% if @is_captain %>
+        <p><%= link_to "Add the first match", new_team_match_path(@team), class: "btn" %></p>
+      <% end %>
+    </div>
+  <% end %>
+</div>

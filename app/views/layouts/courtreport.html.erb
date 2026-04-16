@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="theme-color" content="#060f1e"/>
+<title><%= content_for(:title) || "Court Report" %></title>
+<%= csrf_meta_tags %>
+<%= csp_meta_tag %>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<%= stylesheet_link_tag "courtreport", "data-turbo-track": "reload" %>
+<%= javascript_importmap_tags %>
+</head>
+<body>
+<div class="app-header">
+  <div class="header-inner">
+    <a href="<%= teams_path %>" class="logo" style="text-decoration:none;">
+      <div class="logo-mark">🎾</div>
+      <div class="logo-name">Court <span>Report</span></div>
+    </a>
+    <div style="display:flex;align-items:center;gap:12px;">
+      <% if current_user %>
+        <span class="season-pill"><%= current_user.name %></span>
+        <%= button_to "Sign Out", session_path, method: :delete, class: "cr-btn-ghost" %>
+      <% else %>
+        <a href="<%= login_path %>" class="cr-btn-ghost">Sign In</a>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<div class="app-body">
+  <% if notice %>
+    <div class="cr-flash cr-flash-notice"><%= notice %></div>
+  <% end %>
+  <% if alert %>
+    <div class="cr-flash cr-flash-alert"><%= alert %></div>
+  <% end %>
+
+  <%= yield %>
+</div>
+
+<div class="app-footer">
+  <strong>Court Report</strong> &nbsp;·&nbsp; Spring 2026
+</div>
+</body>
+</html>

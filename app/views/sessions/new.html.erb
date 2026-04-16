@@ -1,19 +1,91 @@
-<div class="auth-page">
-  <div class="auth-card">
-    <div class="auth-logo">🎾</div>
-    <h1>Sign In</h1>
-    <p class="auth-sub">Enter your email to continue</p>
+<% content_for :title, "Court Report — Your Racket Sports Life, One App" %>
 
-    <% if alert %>
-      <div class="flash flash-alert"><%= alert %></div>
-    <% end %>
+<div class="cr-landing">
 
-    <%= form_with url: session_path, method: :post do |f| %>
-      <div class="field">
-        <%= f.label :email, "Email address" %>
-        <%= f.email_field :email, placeholder: "you@example.com", autofocus: true %>
-      </div>
-      <%= f.submit "Sign In →" %>
-    <% end %>
+  <%# ── Hero section ── %>
+  <div class="cr-landing-hero">
+    <div class="cr-landing-hero-content">
+      <h1 class="cr-landing-headline">
+        All Your Teams.<br>
+        <span class="cr-landing-headline-gold">One App.</span>
+      </h1>
+      <p class="cr-landing-tagline">
+        Stop jumping between apps for different teams and leagues.
+        Court Report puts your schedules, availability, lineups, and stats in one place.
+      </p>
+    </div>
   </div>
+
+  <%# ── Features ── %>
+  <div class="cr-landing-features">
+    <div class="cr-landing-feature">
+      <div class="cr-landing-feature-icon">📅</div>
+      <div class="cr-landing-feature-title">See Your Week</div>
+      <div class="cr-landing-feature-text">All your matches across every team and league, at a glance</div>
+    </div>
+    <div class="cr-landing-feature">
+      <div class="cr-landing-feature-icon">✋</div>
+      <div class="cr-landing-feature-title">Set Availability</div>
+      <div class="cr-landing-feature-text">Tell your captain if you're in or out, instantly</div>
+    </div>
+    <div class="cr-landing-feature">
+      <div class="cr-landing-feature-icon">📊</div>
+      <div class="cr-landing-feature-title">Track Your Stats</div>
+      <div class="cr-landing-feature-text">Win %, doubles partners, line history — all automatic</div>
+    </div>
+    <div class="cr-landing-feature">
+      <div class="cr-landing-feature-icon">👑</div>
+      <div class="cr-landing-feature-title">Captain Tools</div>
+      <div class="cr-landing-feature-text">Set lineups, track who's available, enter results</div>
+    </div>
+  </div>
+
+  <%# ── Sign in card ── %>
+  <div class="cr-landing-signin">
+    <div class="cr-login-card">
+      <% if flash[:admin_reset_url].present? %>
+        <div class="cr-admin-reset-box">
+          <div class="cr-admin-reset-label">Admin reset link</div>
+          <p class="cr-admin-reset-note">
+            Click below to set a new password. Link expires in 2 hours.
+          </p>
+          <%= link_to "Reset my password →", flash[:admin_reset_url], class: "cr-btn cr-btn-gold cr-admin-reset-btn" %>
+        </div>
+      <% end %>
+
+      <h2 style="font-size: 1.3rem; margin-bottom: 4px;">Get on the court</h2>
+      <p class="cr-login-sub">Sign in with your email to see your teams</p>
+
+      <%= form_with url: session_path, method: :post do |f| %>
+        <div class="cr-field">
+          <%= f.label :email, "Email address" %>
+          <%= f.email_field :email, placeholder: "you@example.com", autofocus: true %>
+        </div>
+        <div class="cr-field">
+          <%= f.label :password, "Password" %>
+          <div class="cr-password-wrap">
+            <%= f.password_field :password, placeholder: "Your password" %>
+            <button type="button" class="cr-password-toggle" onclick="togglePassword(this)" aria-label="Show password">👁</button>
+          </div>
+        </div>
+        <%= f.submit "Sign In →" %>
+      <% end %>
+
+      <p style="text-align: center; margin-top: 10px; font-size: 0.82rem; color: var(--cr-text-muted);">
+        <%= link_to "Forgot password?", forgot_password_path, style: "color: var(--cr-gold); font-weight: 600;" %>
+      </p>
+
+      <p style="text-align: center; margin-top: 16px; font-size: 0.85rem; color: var(--cr-text-muted);">
+        New here?
+        <%= link_to "Create an account", signup_path, style: "color: var(--cr-gold); font-weight: 600;" %>
+      </p>
+    </div>
+  </div>
+
+  <%# ── Footer tagline ── %>
+  <div class="cr-landing-footer">
+    <p>Built for players, captains, and coaches across every racket sport.</p>
+    <p style="font-size: 0.75rem; margin-top: 4px;">USTA · Inter-Club · Del-Tri · and more</p>
+  </div>
+
 </div>

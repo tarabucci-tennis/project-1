@@ -1,0 +1,41 @@
+<% content_for :title, "#{@team.name} · Add Match" %>
+
+<div class="auth-page">
+  <div class="auth-card" style="max-width: 520px;">
+    <h1>Add Match</h1>
+    <p class="auth-sub"><%= @team.name %></p>
+
+    <%= form_with model: @match, url: team_matches_path(@team), method: :post do |f| %>
+      <% if @match.errors.any? %>
+        <div class="flash flash-alert" style="margin-bottom: 16px; border-radius: 8px;">
+          <%= @match.errors.full_messages.join(", ") %>
+        </div>
+      <% end %>
+
+      <div class="field">
+        <%= f.label :match_date, "Date & Time" %>
+        <%= f.datetime_local_field :match_date, class: "field-input", required: true %>
+      </div>
+
+      <div class="field">
+        <%= f.label :opponent %>
+        <%= f.text_field :opponent, class: "field-input", placeholder: "e.g. Merion Cricket Club" %>
+      </div>
+
+      <div class="field">
+        <%= f.label :location %>
+        <%= f.text_field :location, class: "field-input", placeholder: "e.g. Villanova Tennis Center" %>
+      </div>
+
+      <div class="field">
+        <%= f.label :notes %>
+        <%= f.text_field :notes, class: "field-input", placeholder: "Optional notes" %>
+      </div>
+
+      <div class="form-actions">
+        <%= link_to "Cancel", team_matches_path(@team), class: "btn btn-secondary", style: "text-align: center; flex: 1;" %>
+        <%= f.submit "Add Match", class: "btn" %>
+      </div>
+    <% end %>
+  </div>
+</div>

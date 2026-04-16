@@ -1,0 +1,36 @@
+<% content_for :title, "Set Password — Court Report" %>
+
+<div class="cr-landing">
+  <div class="cr-landing-signin" style="margin-top: 40px;">
+    <div class="cr-login-card">
+      <h2 style="font-size: 1.3rem; margin-bottom: 4px;">
+        <%= current_user.password_set? ? "Change your password" : "Set your password" %>
+      </h2>
+      <p class="cr-login-sub">
+        <% if current_user.password_set? %>
+          Pick a new password. At least 6 characters.
+        <% else %>
+          You've been signed in. Pick a password so you can sign in again securely next time. At least 6 characters.
+        <% end %>
+      </p>
+
+      <%= form_with url: set_password_path, method: :patch do |f| %>
+        <div class="cr-field">
+          <%= f.label :password, "New password" %>
+          <div class="cr-password-wrap">
+            <%= f.password_field :password, placeholder: "At least 6 characters", autofocus: true %>
+            <button type="button" class="cr-password-toggle" onclick="togglePassword(this)" aria-label="Show password">👁</button>
+          </div>
+        </div>
+        <div class="cr-field">
+          <%= f.label :password_confirmation, "Confirm password" %>
+          <div class="cr-password-wrap">
+            <%= f.password_field :password_confirmation, placeholder: "Type it again" %>
+            <button type="button" class="cr-password-toggle" onclick="togglePassword(this)" aria-label="Show password">👁</button>
+          </div>
+        </div>
+        <%= f.submit "Save Password →" %>
+      <% end %>
+    </div>
+  </div>
+</div>

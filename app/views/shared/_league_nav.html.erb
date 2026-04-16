@@ -1,0 +1,41 @@
+<% teams_by_league = current_user_teams_by_league %>
+<% has_teams = teams_by_league.values.any?(&:any?) %>
+
+<% if has_teams %>
+  <nav class="cr-league-nav" data-controller="league-dropdown">
+    <div class="cr-league-nav-inner">
+      <% [
+           [ "USTA",       "USTA" ],
+           [ "Inter-Club", "Inter-Club" ],
+           [ "Local",      "Local Leagues" ]
+         ].each do |key, label| %>
+        <% teams = teams_by_league[key] || [] %>
+        <% next if teams.empty? %>
+
+        <div class="cr-league-tab" data-league-dropdown-target="tab">
+          <button type="button"
+                  class="cr-league-tab-button"
+                  data-action="click->league-dropdown#toggle">
+            <%= label %>
+            <span class="cr-league-tab-caret">▾</span>
+          </button>
+
+          <div class="cr-league-dropdown" data-league-dropdown-target="dropdown">
+            <% teams.each do |team| %>
+              <%= link_to team_path(team), class: "cr-league-dropdown-item" do %>
+                <div class="cr-league-dropdown-name"><%= team.name %></div>
+                <div class="cr-league-dropdown-meta">
+                  <% parts = [] %>
+                  <% parts << team.team_type if team.team_type.present? %>
+                  <% parts << "#{team.rating}" if team.rating.present? %>
+                  <% parts << team.home_court.split(",").first if team.home_court.present? %>
+                  <%= parts.join(" · ") %>
+                </div>
+              <% end %>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </nav>
+<% end %>
