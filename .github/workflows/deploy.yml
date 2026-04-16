@@ -41,7 +41,7 @@ jobs:
               -e "RAILS_MASTER_KEY=$(cat /root/app/config/master.key)" \
               -e "TLS_DOMAIN=yourcourtreport.com,www.yourcourtreport.com" \
               -v /root/storage:/rails/storage \
-              -v /root/thruster-storage:/rails/thruster \
+              -v /root/thruster-storage:/rails/.thruster \
               --name project-1 \
               --restart unless-stopped \
               project-1
