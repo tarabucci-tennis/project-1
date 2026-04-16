@@ -15,7 +15,7 @@ class MatchLine < ApplicationRecord
   end
 
   def score_display
-    sets = [set1_score, set2_score, set3_score].compact.reject(&:blank?)
+    sets = [ set1_score, set2_score, set3_score ].compact.reject(&:blank?)
     sets.join(", ")
   end
 

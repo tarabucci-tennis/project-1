@@ -124,7 +124,7 @@ class ProfilesController < ApplicationController
 
     stats[:partners] = partner_data.map do |name, data|
       { name: name, won: data[:won], lost: data[:lost], total: data[:total], pct: pct(data[:won], data[:total]) }
-    end.sort_by { |p| [-p[:pct], -p[:total]] }
+    end.sort_by { |p| [ -p[:pct], -p[:total] ] }
 
     # Best doubles partner
     stats[:best_partner] = stats[:partners].first if stats[:partners].any?
