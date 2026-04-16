@@ -11,40 +11,18 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Decode SSH key from base64
-        run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.DEPLOY_SSH_KEY_BASE64 }}" | base64 -d > ~/.ssh/deploy_key
-          chmod 600 ~/.ssh/deploy_key
-
       - name: Deploy to droplet via SSH
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.DEPLOY_HOST }}
           username: root
-          key_path: ~/.ssh/deploy_key
+          key: ${{ secrets.DEPLOY_SSH_KEY }}
           script: |
             set -e
             if [ ! -d /root/app ]; then
               git clone https://github.com/tarabucci-tennis/project-1 /root/app
             fi
             cd /root/app
-            git fetch origin
-            git checkout ${{ github.ref_name }}
-            git reset --hard origin/${{ github.ref_name }}
-            docker build -t project-1 .
-            docker stop project-1 || true
-            docker rm project-1 || true
-            docker run -d \
-              -p 80:80 \
-              -p 443:443 \
-              -e "RAILS_MASTER_KEY=$(cat /root/app/config/master.key)" \
-              -e "TLS_DOMAIN=yourcourtreport.com,www.yourcourtreport.com" \
-              -v /root/storage:/rails/storage \
-              -v /root/thruster-storage:/rails/thruster \
-              --name project-1 \
-              --restart unless-stopped \
-              project-1
-            sleep 5
-            docker exec project-1 bin/rails db:migrate db:seed
-            echo "Deployed successfully"
+            git fetch origin main --quiet
+            git reset --hard origin/main
+            bash /root/app/bin/force-deploy.sh
