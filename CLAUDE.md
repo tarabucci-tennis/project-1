@@ -45,6 +45,23 @@
 - **Verify before declaring victory.** Don't say "done" if you haven't actually tested it works in a browser.
 - **Ask before building.** If the task doesn't match what's in the code, ask clarifying questions first — don't just start coding on assumptions.
 
+## Current Status (as of April 16, 2026 — end of Session 12)
+
+**Site is back up at https://yourcourtreport.com** after a deploy outage caused by PRs #72/#73 was recovered in Session 12. Full Session 12 write-up is at the very bottom of this file. Summary:
+
+- PRs #72/#73 broke `deploy.yml` (wrong thruster volume path + destructive `db:seed` in the pipeline)
+- Site recovered via manual `bash /root/app/bin/force-deploy.sh` on the droplet
+- **PR #74** — `deploy.yml` now delegates to `bin/force-deploy.sh` so the docker config can't drift from the script again
+- **PR #75** — auto-fixed 12 rubocop offenses (lint CI green for the first time since Session 9) and restored the `DEPLOY_SSH_KEY_BASE64` decode step
+
+**Still pending from Session 11 (carried forward):**
+- Home page layout still not quite right per Tara's end-of-Session-11 feedback (alignment between "Coming Up" cards and month calendar)
+- Paste Roster form diagnostic (PR #58 alert popup) never tested — Tara pivoted to direct-DB Rails runner scripts
+- Google Sheets integration proposed, not built
+- Coming Up 2-week cap / limit question (is it a time window or a count?)
+
+---
+
 ## Current Status (as of April 14, 2026 — Session 11, in progress)
 
 ### What's actually live at https://yourcourtreport.com
@@ -517,7 +534,7 @@ Reconstructed from git log. Tara has built this app over ~6 sessions.
 | 9 | SSL via Thruster, DNS fix, GitHub Actions auto-deploy, main consolidation, stats-test page | `6441e4b`, `3509a6b`, `68eb612` | **Site now on https://yourcourtreport.com; main = source of truth** |
 | 10 | Mobile nav fix (Lineups loop), contained ball bounce, logo unity, bottom tab bar, gold tile favicon, Set Lineup form fix (true/false buttons + missing doubles), captain override for confirmations, team show captain buttons, Apr 14 lineup seeded, auto-merge policy, mobile header hardening | PRs #20, #21, #22, #23, #24, #25 | **Set Lineup form works end-to-end; Apr 14 lineup posted; Render cancelled; auto-merge enabled** |
 | 11 | Kiss My Ace match-day morning: droplet auto-rebooted overnight → `MessageEncryptor::InvalidMessage` crash loop (same as Session 9 morning), fixed with `force-deploy.sh` one-liner. PR #57: Paste Roster nbsp fix (TennisLink copies use U+00A0 non-breaking spaces) + Find-a-Team clickable joined cards. Branch-off-main verification caught that session started on a branch ~180 commits behind main | PR #57 | **Site restored after reboot; nbsp fix + clickable joined cards shipped. Paste Roster STILL not adding players after PR #57 — diagnostic via `docker logs -f` pending at time of snapshot** |
-| 11 | Kiss My Ace match-day morning: droplet auto-rebooted overnight → `MessageEncryptor::InvalidMessage` crash loop (same as Session 9 morning), fixed with `force-deploy.sh` one-liner. PR #57: Paste Roster nbsp fix (TennisLink copies use U+00A0 non-breaking spaces) + Find-a-Team clickable joined cards. Branch-off-main verification caught that session started on a branch ~180 commits behind main | PR #57 | **Site restored after reboot; nbsp fix + clickable joined cards shipped. Paste Roster STILL not adding players after PR #57 — diagnostic via `docker logs -f` pending at time of snapshot** |
+| 12 | Deploy outage recovery. Site went down after PRs #72/#73 merged — `deploy.yml` had drifted from `bin/force-deploy.sh`, thruster volume mounted at wrong path (`/rails/thruster` vs `/rails/.thruster`), plus destructive `db:seed` was running on every deploy. Fixed via PR #74 (deploy.yml now delegates to force-deploy.sh — single source of truth) and PR #75 (auto-fixed 12 rubocop offenses, lint CI green for first time since Session 9, restored base64 SSH key secret) | PRs #74, #75 | **Site restored via manual `force-deploy.sh`; deploy.yml can no longer drift; lint CI finally green** |
 
 ## Lessons Learned (honest notes from past sessions)
 
@@ -583,6 +600,14 @@ Reconstructed from git log. Tara has built this app over ~6 sessions.
   ```
   If HEAD equals merge-base, you're behind main — `git reset --hard origin/main` before doing any work.
 - **`form_with local: true` is the Rails 8 default and doesn't protect against "form silently fails to submit."** If a form tap appears to do nothing, don't keep staring at the ERB template — `docker logs project-1 -f --tail 0` on the droplet and click the button in a Private tab. You'll see the `Started POST ...` line (or nothing, if the request never left the phone) in real time, and the problem space collapses to client-side vs. server-side immediately.
+
+### From Session 12 (April 16, 2026 — deploy outage recovery) — DON'T REPEAT THESE
+
+- **Never duplicate docker config between `deploy.yml` and `bin/force-deploy.sh`.** Session 12's outage was caused by exactly this: `deploy.yml` had its own copy of the `docker run` command that drifted from `force-deploy.sh`. Someone changed the thruster volume path in deploy.yml (`/rails/thruster` instead of `/rails/.thruster`) and it shipped to production. Fix: `deploy.yml` now just SSHes in, pulls latest main, and calls `bash /root/app/bin/force-deploy.sh`. One source of truth.
+- **PR squash-merges from the same branch can silently drop fixes.** PR #72 introduced the thruster typo. PR #73 came from the same branch (`claude/cleanup-github-issues-jwQbC`) and was supposed to revert the typo. Both got squash-merged. The revert didn't land in the final main state because GitHub diffed each PR against its own base, not the running head. Lesson: if you need to revert a bad change from an already-merged PR, **always make the revert a new commit on a DIFFERENT branch** off latest main, not a follow-up commit on the same branch that produced the bad PR.
+- **`db:seed` should never run in the auto-deploy pipeline.** `force-deploy.sh` intentionally skips seed because `db/seeds.rb` is destructive — it wipes team_memberships for all four teams and recreates them from scratch. `deploy.yml` was running `db:migrate db:seed` on every push to main, which would silently blow away real teammate joins. Only `db:migrate` belongs in auto-deploy; for reseeds use `bash /root/app/bin/seed.sh` manually.
+- **The deploy SSH key secret is `DEPLOY_SSH_KEY_BASE64`, not `DEPLOY_SSH_KEY`.** Per Session 9, Tara set up the key base64-encoded so it could be copied from her phone without newline corruption. Any deploy.yml change that uses `secrets.DEPLOY_SSH_KEY` directly will fail to authenticate. Always use the decode step first.
+- **`bin/rubocop -A` is safe for pure-whitespace lint offenses.** Session 12's lint CI had 12 offenses, all `Layout/SpaceInsideArrayLiteralBrackets` and `Layout/SpaceAfterComma`. Auto-corrected via `bin/rubocop -A`, no behavior changes, lint CI went green for the first time since Session 9.
 
 ### Rails / Docker operational lessons (Session 9 morning)
 - **If you see `ActiveSupport::MessageEncryptor::InvalidMessage` after a droplet reboot**, try a full clean rebuild first: `docker stop project-1 && docker rm project-1 && docker build -t project-1 . && docker run -d ...`. Don't immediately assume the master.key is corrupt — a stale container can get into a bad state that a clean rebuild resolves.
@@ -924,3 +949,60 @@ Tara's Kiss My Ace season opener is **Tuesday April 14** — tomorrow. Everythin
 4. **Captain auto-assignment** on new teams via `/create-team`. Not blocking Tara's use case (she's admin) but will bite future users.
 5. **Verify Session 6's availability feature** actually works end-to-end in production.
 6. **Consider an admin-style "bulk edit" for upcoming matches** if Tara ends up wanting to pre-populate lineups for all 8 matches at once.
+
+## Session 12 (April 16, 2026 — deploy outage recovery)
+
+Tara opened the session with "The site is down after the deploy.yml changes in PRs #72 and #73." It was.
+
+### Root cause
+
+PRs #72 and #73 both came from the same branch (`claude/cleanup-github-issues-jwQbC`) and were squash-merged in sequence. PR #72 introduced two changes to `deploy.yml`:
+1. `RAILS_MASTER_KEY=${{ secrets.RAILS_MASTER_KEY }}` → `RAILS_MASTER_KEY=$(cat /root/app/config/master.key)` (read master key from droplet file instead of GitHub secret — intended to fix the Session 9 `MessageEncryptor::InvalidMessage` crash)
+2. `-v /root/thruster-storage:/rails/.thruster` → `-v /root/thruster-storage:/rails/thruster` (removed the dot — **this was the bug**, Thruster stores TLS certs in the hidden `.thruster` directory by default)
+
+PR #73 was opened specifically to revert change #2 back to `.thruster`. It was merged. But **the revert didn't land in the final main state** because both PRs came from the same branch — GitHub diffs each PR against the base set when it was opened, and the squash-merge of PR #73 didn't overwrite the bad line in main. The result: `deploy.yml` on main still had `/rails/thruster` (no dot), the thruster TLS cert cache was mounted at the wrong path, and the Docker container started but TLS/HTTPS was broken.
+
+### Recovery
+
+The user ran the documented manual recovery command in her terminal:
+```
+cd /root/app && git fetch origin main && git reset --hard origin/main && bash bin/force-deploy.sh
+```
+
+`bin/force-deploy.sh` has the **correct** docker config (proper `.thruster` path, master key validation, health check, no `db:seed`) — so it rebuilt the container cleanly and the site came back up.
+
+### Fix (so this can't happen again)
+
+Two PRs, both merged and auto-deployed:
+
+**PR #74 — deploy.yml delegates to force-deploy.sh**
+- Replaced the duplicate `docker run` block in `deploy.yml` with a single line: `bash /root/app/bin/force-deploy.sh`
+- Single source of truth for deploy config — the script and the workflow can never drift again
+- Removed the destructive `db:seed` from the deploy pipeline (force-deploy.sh intentionally skips seed because `db/seeds.rb` wipes team_memberships)
+
+**PR #75 — lint CI fixed + SSH key secret name restored**
+- Ran `bin/rubocop -A` and auto-corrected 12 whitespace offenses (all `Layout/SpaceInsideArrayLiteralBrackets` or `Layout/SpaceAfterComma`) across 7 files: `profiles_controller.rb`, `teams_controller.rb`, `match_line.rb`, 3 migration files, and `db/seeds.rb`. **Lint CI green for the first time since Session 9.**
+- PR #74 had simplified the SSH step to use `secrets.DEPLOY_SSH_KEY` directly. Per Session 9 notes, the actual secret is `DEPLOY_SSH_KEY_BASE64` (base64-encoded so Tara could paste it from her phone without newline corruption). Restored the decode step so the SSH connection would authenticate.
+
+### Key lessons (added to "Lessons Learned" section above)
+
+1. Never duplicate docker config between `deploy.yml` and `bin/force-deploy.sh`
+2. PR squash-merges from the same branch can silently drop fixes — revert from a fresh branch, not a follow-up commit
+3. `db:seed` must NEVER run in auto-deploy; it's destructive
+4. Deploy SSH secret is `DEPLOY_SSH_KEY_BASE64`, not `DEPLOY_SSH_KEY`
+5. `bin/rubocop -A` is safe for pure-whitespace offenses
+
+### Manual recovery command (for future droplet crashes or bad deploys)
+
+```
+cd /root/app && git fetch origin main && git reset --hard origin/main && bash bin/force-deploy.sh
+```
+
+If the master key file is missing, `force-deploy.sh` aborts with a clear error before touching the running container — safe to run anytime.
+
+### Next session priorities (unchanged from end of Session 11)
+
+1. Home page layout alignment between "Coming Up" cards and month calendar
+2. Paste Roster form root cause (PR #58 diagnostic still deployed, untested)
+3. Google Sheets integration decision after Tara uses in-app forms for a few more matches
+4. Coming Up list: confirm whether Tara wants a count cap or a time window
