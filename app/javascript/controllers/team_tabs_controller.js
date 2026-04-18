@@ -21,6 +21,19 @@ export default class extends Controller {
       )
       if (idx >= 0) {
         this.showTab(idx)
+        // On mobile the sub-tab strip is hidden and all panels are
+        // stacked (see @media max-width: 720px in application.css),
+        // so "switching" a tab is a no-op visually. Scroll the
+        // requested panel into view so taps on Roster/Standings in
+        // the bottom nav actually land on the right section.
+        if (window.matchMedia("(max-width: 720px)").matches) {
+          const panel = this.panelTargets[idx]
+          if (panel) {
+            requestAnimationFrame(() => {
+              panel.scrollIntoView({ behavior: "smooth", block: "start" })
+            })
+          }
+        }
         return
       }
     }
