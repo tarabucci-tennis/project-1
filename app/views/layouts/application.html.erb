@@ -91,8 +91,10 @@
     </script>
 
     <% if current_user %>
+      <% in_team_context = request.path.match?(%r{\A/teams/\d+}) %>
       <nav class="cr-bottom-nav" aria-label="Primary">
         <div class="cr-bottom-nav-inner">
+      <% if in_team_context %>
           <%= link_to teams_path, class: "cr-bnav-btn #{'cr-bnav-active' if controller_name == 'teams' && action_name == 'index'}" do %>
             <span class="cr-bnav-icon">🏠</span>
             <span class="cr-bnav-label">Home</span>
@@ -113,6 +115,28 @@
             <span class="cr-bnav-icon">💬</span>
             <span class="cr-bnav-label">WhatsApp</span>
           </a>
+      <% else %>
+          <%= link_to teams_path, class: "cr-bnav-btn #{'cr-bnav-active' if controller_name == 'teams' && action_name == 'index'}" do %>
+            <span class="cr-bnav-icon">🏠</span>
+            <span class="cr-bnav-label">Home</span>
+          <% end %>
+          <%= link_to lineups_dashboard_path, class: "cr-bnav-btn #{'cr-bnav-active' if controller_name == 'lineups'}" do %>
+            <span class="cr-bnav-icon">📝</span>
+            <span class="cr-bnav-label">Lineups</span>
+          <% end %>
+          <%= link_to find_team_path, class: "cr-bnav-btn #{'cr-bnav-active' if controller_name == 'teams' && action_name == 'search'}" do %>
+            <span class="cr-bnav-icon">🔍</span>
+            <span class="cr-bnav-label">Find Team</span>
+          <% end %>
+          <%= link_to profile_path, class: "cr-bnav-btn #{'cr-bnav-active' if controller_name == 'profiles' && action_name == 'show'}" do %>
+            <span class="cr-bnav-icon">👤</span>
+            <span class="cr-bnav-label">Profile</span>
+          <% end %>
+          <a href="https://chat.whatsapp.com/" target="_blank" rel="noopener" class="cr-bnav-btn">
+            <span class="cr-bnav-icon">💬</span>
+            <span class="cr-bnav-label">WhatsApp</span>
+          </a>
+      <% end %>
         </div>
       </nav>
 
