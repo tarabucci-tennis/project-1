@@ -18,7 +18,7 @@ class CreateMatchLines < ActiveRecord::Migration[8.1]
       t.timestamps
     end
 
-    add_index :match_lines, [:match_id, :position], unique: true
-    add_index :match_line_players, [:match_line_id, :user_id], unique: true
+    add_index :match_lines, [ :match_id, :position ], unique: true
+    add_index :match_line_players, [ :match_line_id, :user_id ], unique: true
   end
 end

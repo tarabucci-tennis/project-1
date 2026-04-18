@@ -124,7 +124,7 @@ class TeamsController < ApplicationController
       @division_teams.each do |dt|
         @standings << { name: dt.name, points: dt.wins, is_self: false }
       end
-      @standings.sort_by! { |s| [-s[:points], s[:name]] }
+      @standings.sort_by! { |s| [ -s[:points], s[:name] ] }
     else
       # USTA-style standings (matches the TennisLink layout):
       #   Team · Matches Played · Points · Sets Won · Sets Lost · Games Won · Games Lost · Games Won %
@@ -153,7 +153,7 @@ class TeamsController < ApplicationController
 
       # Sort: most points first, then matches played, then team name
       @standings.sort_by! { |s|
-        [-s[:points].to_i, -s[:matches_played].to_i, s[:name]]
+        [ -s[:points].to_i, -s[:matches_played].to_i, s[:name] ]
       }
     end
 
@@ -624,6 +624,6 @@ class TeamsController < ApplicationController
         losses: data[:losses],
         win_pct: total > 0 ? (data[:wins].to_f / total * 100).round(0) : 0
       }
-    end.sort_by { |p| [-p[:played], -p[:win_pct]] }
+    end.sort_by { |p| [ -p[:played], -p[:win_pct] ] }
   end
 end

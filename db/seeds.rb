@@ -424,7 +424,7 @@ legacy_schedule = [
   [ "2026-01-16", "DVTA 3",             "away", "win",   "4-2" ],
   [ "2026-01-23", "Brandywine 4",       "home", "win",   "6-0" ],
   [ "2026-01-30", "Tennis Addiction 4",  "away", "win",   "4-2" ],
-  [ "2026-02-06", "Upper Main Line Y 2","away", "win",   "4-2" ],
+  [ "2026-02-06", "Upper Main Line Y 2", "away", "win",   "4-2" ],
   [ "2026-02-20", "Springfield YMCA 3", "away", "tie",   "3-3" ],
   [ "2026-02-27", "HPTA 6",             "home", "win",   "6-0" ],
   [ "2026-03-06", "Radnor Racquet 3",   "away", "win",   "5-1" ],
