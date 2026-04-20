@@ -119,9 +119,9 @@
                         <% end %>
                       </div>
                     </div>
-                    <% if match.notes&.include?("Home") || match.location&.include?(@team.home_court.to_s.split(",").first.to_s) %>
+                    <% if match.home? %>
                       <div class="cr-match-badge cr-match-home">Home</div>
-                    <% elsif match.notes&.include?("Away") %>
+                    <% elsif match.away? %>
                       <div class="cr-match-badge cr-match-away">Away</div>
                     <% end %>
                     <a href="<%= google_calendar_url(match) %>"
@@ -156,12 +156,16 @@
                     <div class="cr-match-card-body <%= 'cr-match-card-body-split' if @is_captain && show_preview %>">
                       <% if @is_captain %>
                         <div class="cr-match-captain-actions">
+                          <%= link_to edit_team_match_path(@team, match), class: "cr-match-action-btn" do %>
+                            <span class="cr-match-action-icon">✏️</span>
+                            <span>Edit Match</span>
+                          <% end %>
                           <%= link_to edit_team_match_lineup_path(@team, match), class: "cr-match-action-btn" do %>
                             <span class="cr-match-action-icon">📋</span>
                             <span>Set Lineup</span>
                           <% end %>
                           <%= link_to edit_results_team_match_path(@team, match), class: "cr-match-action-btn" do %>
-                            <span class="cr-match-action-icon"><%= match.played? ? "✏️" : "🎾" %></span>
+                            <span class="cr-match-action-icon"><%= match.played? ? "🏆" : "🎾" %></span>
                             <span><%= match.played? ? "Edit Results" : "Enter Results" %></span>
                           <% end %>
                         </div>

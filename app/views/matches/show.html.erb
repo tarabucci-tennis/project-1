@@ -13,9 +13,9 @@
           <span style="font-weight: 400; color: var(--cr-text-muted);"> - <%= @match.match_time.gsub(" ", "").downcase %></span>
         <% end %>
       </span>
-      <% if @match.notes&.include?("Home") %>
+      <% if @match.home? %>
         <span class="cr-my-week-badge-home">Home</span>
-      <% elsif @match.notes&.include?("Away") %>
+      <% elsif @match.away? %>
         <span class="cr-my-week-badge-away">Away</span>
       <% end %>
       <span style="color: var(--cr-text-muted);">vs</span>

@@ -39,6 +39,27 @@ class MatchesController < ApplicationController
     end
   end
 
+  def edit
+    @match = @team.matches.find(params[:id])
+    unless @team.captain?(current_user) || current_user.admin?
+      redirect_to team_path(@team), alert: "Only captains can edit match details."
+    end
+  end
+
+  def update
+    @match = @team.matches.find(params[:id])
+    unless @team.captain?(current_user) || current_user.admin?
+      return redirect_to team_path(@team), alert: "Only captains can edit match details."
+    end
+
+    if @match.update(match_params)
+      redirect_to team_path(@team), notice: "Match updated."
+    else
+      flash.now[:alert] = @match.errors.full_messages.join(", ")
+      render :edit, status: :unprocessable_entity
+    end
+  end
+
   def edit_results
     @match = @team.matches.find(params[:id])
     @members = @team.members.order(:name)
@@ -171,7 +192,7 @@ class MatchesController < ApplicationController
   end
 
   def match_params
-    params.require(:match).permit(:match_date, :location, :opponent, :notes)
+    params.require(:match).permit(:match_date, :match_time, :location, :opponent, :notes, :home_away)
   end
 
   def build_availability_map
