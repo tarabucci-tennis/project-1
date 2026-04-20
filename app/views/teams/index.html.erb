@@ -33,9 +33,9 @@
                 <% if match.location.present? %>
                   <span><%= match.location.split(",").first %></span>
                 <% end %>
-                <% if match.notes&.include?("Home") || match.location&.include?(team.home_court.to_s.split(",").first.to_s) %>
+                <% if match.home? %>
                   <span class="cr-my-week-badge-home">Home</span>
-                <% elsif match.notes&.include?("Away") %>
+                <% elsif match.away? %>
                   <span class="cr-my-week-badge-away">Away</span>
                 <% end %>
               </div>
@@ -261,9 +261,9 @@
                 <% if match.location.present? %>
                   <span><%= match.location.split(",").first %></span>
                 <% end %>
-                <% if match.notes&.include?("Home") || match.location&.include?(team.home_court.to_s.split(",").first.to_s) %>
+                <% if match.home? %>
                   <span class="cr-my-week-badge-home">Home</span>
-                <% elsif match.notes&.include?("Away") %>
+                <% elsif match.away? %>
                   <span class="cr-my-week-badge-away">Away</span>
                 <% end %>
               </div>
@@ -301,8 +301,8 @@
               </div>
               <h2 class="cr-team-card-name"><%= team.name %></h2>
               <div class="cr-team-card-meta">
-                <span><%= team.team_memberships.count %> players · <%= team.upcoming_matches.count %> upcoming</span>
-                <span class="cr-team-card-record">0-0</span>
+                <span><%= team.team_memberships.active.count %> players · <%= team.upcoming_matches.count %> upcoming</span>
+                <span class="cr-team-card-record"><%= team.record_label %></span>
               </div>
             <% end %>
           <% end %>

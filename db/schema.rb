@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_13_120000) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_20_120001) do
   create_table "availabilities", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.integer "match_id", null: false
@@ -72,6 +72,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_13_120000) do
     t.datetime "created_at", null: false
     t.string "line_type", null: false
     t.integer "match_id", null: false
+    t.string "opponents"
     t.integer "position", null: false
     t.string "result"
     t.string "set1_score"
@@ -130,14 +131,16 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_13_120000) do
   end
 
   create_table "team_memberships", force: :cascade do |t|
+    t.string "archived_season"
     t.datetime "created_at", null: false
     t.string "notification_preference", default: "every_update", null: false
     t.string "role", default: "player", null: false
     t.integer "tennis_team_id", null: false
     t.datetime "updated_at", null: false
     t.integer "user_id", null: false
+    t.index ["archived_season"], name: "index_team_memberships_on_archived_season"
     t.index ["tennis_team_id"], name: "index_team_memberships_on_tennis_team_id"
-    t.index ["user_id", "tennis_team_id"], name: "index_team_memberships_on_user_id_and_tennis_team_id", unique: true
+    t.index ["user_id", "tennis_team_id"], name: "index_team_memberships_unique_active", unique: true, where: "archived_season IS NULL"
     t.index ["user_id"], name: "index_team_memberships_on_user_id"
   end
 

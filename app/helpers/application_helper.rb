@@ -22,6 +22,15 @@ module ApplicationHelper
     "https://www.tennisrecord.com/adult/profile.aspx?playername=#{CGI.escape(name)}"
   end
 
+  # TennisRecord.com match history URL for a player. Shows line-by-line
+  # results (date, flight, line, partner, opponents, score) for the given
+  # calendar year. Defaults to the current year.
+  def tennis_record_match_history_url(name_or_user, year: Date.current.year)
+    name = name_or_user.respond_to?(:name) ? name_or_user.name : name_or_user.to_s
+    return "#" if name.blank?
+    "https://www.tennisrecord.com/adult/matchhistory.aspx?year=#{year}&playername=#{CGI.escape(name)}&mt=0&lt=0&yr=0"
+  end
+
   # Convenience wrapper: renders a player name as a link that opens
   # their TennisRecord profile in a new tab. Accepts either a User
   # record or a plain name string; forwards any html_options (class,

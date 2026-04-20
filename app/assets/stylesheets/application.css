@@ -1885,6 +1885,114 @@ button.cr-header-pill {
 .cr-enter-results-link:hover { text-decoration: underline; }
 
 /* ========================================================
+   Expandable result cards (<details> + <summary>)
+   ======================================================== */
+.cr-result-card {
+  margin-bottom: 10px;
+}
+
+.cr-result-card[open] .cr-result-caret {
+  transform: rotate(180deg);
+}
+
+.cr-result-summary {
+  list-style: none;
+  cursor: pointer;
+  padding: 12px 16px;
+}
+
+.cr-result-summary::-webkit-details-marker { display: none; }
+.cr-result-summary::marker { content: ""; }
+
+.cr-result-caret {
+  color: var(--cr-text-muted);
+  font-size: 0.9rem;
+  margin-left: 6px;
+  transition: transform 0.15s ease;
+}
+
+.cr-result-detail {
+  background: #fafbfc;
+  border: 1px solid var(--cr-border);
+  border-top: none;
+  border-radius: 0 0 10px 10px;
+  padding: 12px 16px;
+  margin-top: -6px;
+}
+
+.cr-result-lines {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+
+.cr-result-lines th {
+  text-align: left;
+  font-size: 0.72rem;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--cr-text-muted);
+  font-weight: 600;
+  padding: 6px 8px;
+  border-bottom: 1px solid var(--cr-border);
+}
+
+.cr-result-lines td {
+  padding: 8px;
+  border-bottom: 1px solid #eef1f5;
+  vertical-align: middle;
+}
+
+.cr-result-lines tr:last-child td { border-bottom: none; }
+
+.cr-result-line-label {
+  font-weight: 700;
+  color: var(--cr-gold);
+  width: 48px;
+}
+
+.cr-result-line-players {
+  color: var(--cr-text);
+}
+
+.cr-result-line-score {
+  font-variant-numeric: tabular-nums;
+  color: var(--cr-text-muted);
+  white-space: nowrap;
+}
+
+.cr-result-detail-empty {
+  font-size: 0.85rem;
+  color: var(--cr-text-muted);
+  margin: 4px 0;
+}
+
+.cr-roster-history-link {
+  font-size: 0.75rem;
+  color: var(--cr-gold);
+  text-decoration: none;
+  font-weight: 600;
+  padding: 4px 8px;
+  border: 1px solid var(--cr-border);
+  border-radius: 6px;
+  white-space: nowrap;
+}
+
+.cr-roster-history-link:hover {
+  background: rgba(201, 162, 74, 0.08);
+  border-color: var(--cr-gold);
+}
+
+@media (max-width: 720px) {
+  /* Hide the Score column on narrow viewports — it's the 4th column now
+     that we've added Opponents. Players + Opponents + Result still fit. */
+  .cr-result-lines th:nth-child(4),
+  .cr-result-lines td:nth-child(4) {
+    display: none;
+  }
+}
+
+/* ========================================================
    Standings
    ======================================================== */
 

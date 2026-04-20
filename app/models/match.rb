@@ -28,6 +28,23 @@ class Match < ApplicationRecord
     result.present?
   end
 
+  # Captains can now set home_away directly via the Edit Match form.
+  # For older rows where the column is blank, fall back to the legacy
+  # heuristic: "Home"/"Away" in notes, or a location that matches the
+  # team's home court.
+  def home?
+    return home_away == "home" if home_away.present?
+    return true if notes.to_s.include?("Home")
+    home_slug = tennis_team.home_court.to_s.split(",").first.to_s.strip
+    home_slug.present? && location.to_s.include?(home_slug)
+  end
+
+  def away?
+    return home_away == "away" if home_away.present?
+    return true if notes.to_s.include?("Away")
+    false
+  end
+
   def won?
     result == "win"
   end

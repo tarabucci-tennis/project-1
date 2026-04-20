@@ -119,9 +119,9 @@
                         <% end %>
                       </div>
                     </div>
-                    <% if match.notes&.include?("Home") || match.location&.include?(@team.home_court.to_s.split(",").first.to_s) %>
+                    <% if match.home? %>
                       <div class="cr-match-badge cr-match-home">Home</div>
-                    <% elsif match.notes&.include?("Away") %>
+                    <% elsif match.away? %>
                       <div class="cr-match-badge cr-match-away">Away</div>
                     <% end %>
                     <a href="<%= google_calendar_url(match) %>"
@@ -156,12 +156,16 @@
                     <div class="cr-match-card-body <%= 'cr-match-card-body-split' if @is_captain && show_preview %>">
                       <% if @is_captain %>
                         <div class="cr-match-captain-actions">
+                          <%= link_to edit_team_match_path(@team, match), class: "cr-match-action-btn" do %>
+                            <span class="cr-match-action-icon">✏️</span>
+                            <span>Edit Match</span>
+                          <% end %>
                           <%= link_to edit_team_match_lineup_path(@team, match), class: "cr-match-action-btn" do %>
                             <span class="cr-match-action-icon">📋</span>
                             <span>Set Lineup</span>
                           <% end %>
                           <%= link_to edit_results_team_match_path(@team, match), class: "cr-match-action-btn" do %>
-                            <span class="cr-match-action-icon"><%= match.played? ? "✏️" : "🎾" %></span>
+                            <span class="cr-match-action-icon"><%= match.played? ? "🏆" : "🎾" %></span>
                             <span><%= match.played? ? "Edit Results" : "Enter Results" %></span>
                           <% end %>
                         </div>
@@ -220,28 +224,77 @@
             <% completed_matches = @past_matches.select(&:played?) %>
             <% if completed_matches.any? %>
               <% completed_matches.each do |match| %>
-                <div class="cr-match-card" style="padding: 12px 16px;">
-                  <div class="cr-match-row">
-                    <div class="cr-match-date">
-                      <div class="cr-match-date-month"><%= match.match_date.strftime("%b").upcase %></div>
-                      <div class="cr-match-date-day"><%= match.match_date.strftime("%-d") %></div>
-                    </div>
-                    <div class="cr-match-info">
-                      <div class="cr-match-opponent">vs. <%= match.opponent %></div>
-                      <div class="cr-match-result-row">
-                        <span class="cr-result-badge <%= match.won? ? 'cr-result-badge-win' : 'cr-result-badge-loss' %>">
-                          <%= match.result_label %>
-                        </span>
-                        <% if match.score_summary.present? %>
-                          <span class="cr-result-score"><%= match.score_summary %></span>
-                        <% end %>
+                <details class="cr-result-card">
+                  <summary class="cr-match-card cr-result-summary">
+                    <div class="cr-match-row">
+                      <div class="cr-match-date">
+                        <div class="cr-match-date-month"><%= match.match_date.strftime("%b").upcase %></div>
+                        <div class="cr-match-date-day"><%= match.match_date.strftime("%-d") %></div>
                       </div>
+                      <div class="cr-match-info">
+                        <div class="cr-match-opponent">vs. <%= match.opponent %></div>
+                        <div class="cr-match-result-row">
+                          <span class="cr-result-badge <%= match.won? ? 'cr-result-badge-win' : 'cr-result-badge-loss' %>">
+                            <%= match.result_label %>
+                          </span>
+                          <% if match.score_summary.present? %>
+                            <span class="cr-result-score"><%= match.score_summary %></span>
+                          <% end %>
+                        </div>
+                      </div>
+                      <span class="cr-result-caret" aria-hidden="true">▾</span>
+                      <% if @is_captain %>
+                        <%= link_to "Edit", edit_results_team_match_path(@team, match), class: "cr-enter-results-link", onclick: "event.stopPropagation();" %>
+                      <% end %>
                     </div>
-                    <% if @is_captain %>
-                      <%= link_to "Edit", edit_results_team_match_path(@team, match), class: "cr-enter-results-link" %>
+                  </summary>
+
+                  <div class="cr-result-detail">
+                    <% lines = match.match_lines.sort_by(&:position) %>
+                    <% if lines.any? && lines.any? { |l| l.result.present? || l.score_display.present? } %>
+                      <table class="cr-result-lines">
+                        <thead>
+                          <tr>
+                            <th>Line</th>
+                            <th>Players</th>
+                            <th>Opponents</th>
+                            <th>Score</th>
+                            <th>Result</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <% lines.each do |line| %>
+                            <tr>
+                              <td class="cr-result-line-label"><%= line.short_label %></td>
+                              <td class="cr-result-line-players">
+                                <% names = line.match_line_players.map { |mlp| mlp.user.name }.reject(&:blank?) %>
+                                <%= names.any? ? names.join(" / ") : "—" %>
+                              </td>
+                              <td class="cr-result-line-players"><%= line.opponents.presence || "—" %></td>
+                              <td class="cr-result-line-score"><%= line.score_display.presence || "—" %></td>
+                              <td>
+                                <% if line.result.present? %>
+                                  <span class="cr-result-badge <%= line.won? ? 'cr-result-badge-win' : 'cr-result-badge-loss' %>">
+                                    <%= line.won? ? "W" : "L" %>
+                                  </span>
+                                <% else %>
+                                  —
+                                <% end %>
+                              </td>
+                            </tr>
+                          <% end %>
+                        </tbody>
+                      </table>
+                    <% else %>
+                      <p class="cr-result-detail-empty">
+                        Line-by-line results haven't been entered yet.
+                        <% if @is_captain %>
+                          <%= link_to "Enter them now →", edit_results_team_match_path(@team, match), class: "cr-enter-results-link" %>
+                        <% end %>
+                      </p>
                     <% end %>
                   </div>
-                </div>
+                </details>
               <% end %>
             <% else %>
               <div style="text-align: center; padding: 40px 20px; color: var(--cr-text-light);">
@@ -325,25 +378,84 @@
     <%# ── Tab 2: Roster ──────────────────────────────── %>
     <div data-team-tabs-target="panel" style="display: none;">
       <section class="cr-section">
-        <h2 class="cr-section-title">Roster (<%= @player_count %> Players)</h2>
-        <div class="cr-roster">
-          <% @roster.each do |membership| %>
-            <%= link_to tennis_record_url(membership.user), target: "_blank", rel: "noopener", class: "cr-roster-row", style: "text-decoration: none; color: inherit;", title: "View #{membership.user.name} on TennisRecord" do %>
-              <div class="cr-roster-name <%= 'cr-roster-self' if membership.user_id == current_user.id %>">
-                <%= membership.user.name %>
-                <% if membership.user_id == current_user.id %>
-                  (you)
-                <% end %>
-              </div>
-              <% if membership.user.ntrp_rating.present? %>
-                <div class="cr-roster-rating"><%= membership.user.ntrp_rating %></div>
-              <% end %>
-              <% if membership.captain? %>
-                <div class="cr-roster-role cr-roster-role-captain">Captain</div>
-              <% end %>
+        <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 12px;">
+          <h2 class="cr-section-title" style="margin-bottom: 0;">Roster (<%= @player_count %> Players)</h2>
+          <% if @is_captain && @roster.any? %>
+            <%= form_with url: archive_season_team_path(@team), method: :post, local: true, style: "display: flex; gap: 6px; align-items: center;", data: { turbo_confirm: "Archive all #{@roster.size} players on this roster under season \"#{@team.season_name.presence || 'the current season'}\"? You can add a fresh roster after." } do |f| %>
+              <%= hidden_field_tag :season, @team.season_name.presence %>
+              <%= f.submit "Archive Season", class: "cr-btn cr-btn-outline", style: "padding: 6px 14px; font-size: 0.78rem;" %>
             <% end %>
           <% end %>
         </div>
+
+        <% if @roster.any? %>
+          <div class="cr-roster">
+            <% @roster.each do |membership| %>
+              <div class="cr-roster-row">
+                <%= link_to membership.user.name + (membership.user_id == current_user.id ? " (you)" : ""),
+                            tennis_record_url(membership.user),
+                            target: "_blank", rel: "noopener",
+                            class: "cr-roster-name #{'cr-roster-self' if membership.user_id == current_user.id}",
+                            style: "text-decoration: none; color: inherit;",
+                            title: "View #{membership.user.name} on TennisRecord" %>
+                <% if membership.user.ntrp_rating.present? %>
+                  <div class="cr-roster-rating"><%= membership.user.ntrp_rating %></div>
+                <% end %>
+                <% if membership.captain? %>
+                  <div class="cr-roster-role cr-roster-role-captain">Captain</div>
+                <% end %>
+                <%= link_to "📊 Matches",
+                            tennis_record_match_history_url(membership.user),
+                            target: "_blank", rel: "noopener",
+                            class: "cr-roster-history-link",
+                            title: "#{membership.user.name}'s TennisRecord match history" %>
+              </div>
+            <% end %>
+          </div>
+        <% else %>
+          <div class="cr-empty" style="padding: 24px; text-align: center; color: var(--cr-text-muted); font-size: 0.9rem;">
+            No active roster yet.
+            <% if @is_captain %>
+              Add players from the Captain tab or paste a roster there.
+            <% end %>
+          </div>
+        <% end %>
+
+        <% if @archived_rosters.any? %>
+          <h3 class="cr-section-title" style="font-size: 0.95rem; margin-top: 28px; margin-bottom: 8px;">Past Seasons</h3>
+          <% @archived_rosters.each do |season, memberships| %>
+            <details class="cr-archived-season" style="margin-bottom: 10px;">
+              <summary style="cursor: pointer; padding: 10px 14px; background: #fafbfc; border: 1px solid var(--cr-border); border-radius: 10px; font-weight: 600; font-size: 0.9rem; display: flex; align-items: center; justify-content: space-between; gap: 8px;">
+                <span><%= season %></span>
+                <span style="color: var(--cr-text-muted); font-size: 0.8rem; font-weight: 500;"><%= memberships.size %> player<%= "s" unless memberships.size == 1 %> ▾</span>
+              </summary>
+              <div class="cr-roster" style="margin-top: 6px;">
+                <% memberships.each do |membership| %>
+                  <div class="cr-roster-row" style="opacity: 0.85;">
+                    <%= link_to membership.user.name,
+                                tennis_record_url(membership.user),
+                                target: "_blank", rel: "noopener",
+                                class: "cr-roster-name",
+                                style: "text-decoration: none; color: inherit;",
+                                title: "View #{membership.user.name} on TennisRecord" %>
+                    <% if membership.user.ntrp_rating.present? %>
+                      <div class="cr-roster-rating"><%= membership.user.ntrp_rating %></div>
+                    <% end %>
+                    <% if membership.captain? %>
+                      <div class="cr-roster-role cr-roster-role-captain">Captain</div>
+                    <% end %>
+                    <% season_year = season.to_s[/\d{4}/]&.to_i || Date.current.year %>
+                    <%= link_to "📊 Matches",
+                                tennis_record_match_history_url(membership.user, year: season_year),
+                                target: "_blank", rel: "noopener",
+                                class: "cr-roster-history-link",
+                                title: "#{membership.user.name}'s TennisRecord match history (#{season_year})" %>
+                  </div>
+                <% end %>
+              </div>
+            </details>
+          <% end %>
+        <% end %>
       </section>
     </div>
 

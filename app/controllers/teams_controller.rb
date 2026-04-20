@@ -101,10 +101,17 @@ class TeamsController < ApplicationController
     end
 
     @captain          = @team.captain
-    @roster           = @team.team_memberships.includes(:user).sort_by { |m| [ m.captain? ? 0 : 1, m.user.name.to_s.downcase ] }
+    active_memberships = @team.team_memberships.active.includes(:user)
+    @roster           = active_memberships.sort_by { |m| [ m.captain? ? 0 : 1, m.user.name.to_s.downcase ] }
+    @archived_rosters = @team.team_memberships.archived.includes(:user)
+                             .group_by(&:archived_season)
+                             .transform_values { |ms| ms.sort_by { |m| m.user.name.to_s.downcase } }
     @upcoming_matches = @team.matches.where("match_date >= ?", Time.current).order(match_date: :asc)
-    @past_matches     = @team.matches.where("match_date < ?", Time.current).order(match_date: :desc)
-    @player_count     = @team.team_memberships.count
+    @past_matches     = @team.matches
+                             .where("match_date < ?", Time.current)
+                             .includes(match_lines: { match_line_players: :user })
+                             .order(match_date: :desc)
+    @player_count     = active_memberships.count
     @is_captain       = @team.can_set_lineup?(current_user) || current_user.admin?
     @wins             = @team.matches.where(result: "win").count
     @losses           = @team.matches.where(result: "loss").count
@@ -330,6 +337,41 @@ class TeamsController < ApplicationController
 
     redirect_to team_path(@team, tab: "captain"),
                 notice: parts.join(" · ")
+  end
+
+  # POST /teams/:id/archive_season — captain archives the whole current
+  # roster under a season label. All active memberships get moved to
+  # archived_season=<season>; the roster view resets to empty and past
+  # seasons become browsable under the Roster tab. Players can rejoin
+  # (or be re-added) for the new season without duplicate-key conflicts
+  # thanks to the partial unique index on active memberships.
+  def archive_season
+    @team = TennisTeam.find(params[:id])
+    unless @team.can_set_lineup?(current_user) || current_user.admin?
+      return redirect_to team_path(@team),
+                         alert: "Only captains can archive a season."
+    end
+
+    season = params[:season].to_s.strip
+    season = @team.season_name.to_s.strip if season.blank?
+    if season.blank?
+      return redirect_to team_path(@team, tab: "roster"),
+                         alert: "Add a season label (e.g. 2025/2026) before archiving."
+    end
+
+    count = @team.team_memberships.active.count
+    if count.zero?
+      return redirect_to team_path(@team, tab: "roster"),
+                         alert: "No active players to archive."
+    end
+
+    @team.team_memberships.active.update_all(
+      archived_season: season,
+      updated_at: Time.current
+    )
+
+    redirect_to team_path(@team, tab: "roster"),
+                notice: "Archived #{count} player#{'s' unless count == 1} under #{season}."
   end
 
   private

@@ -1,0 +1,66 @@
+<% content_for :title, "Edit Match · #{@team.name}" %>
+
+<div class="cr-main">
+  <div class="cr-section" style="max-width: 640px; margin: 24px auto;">
+    <h1 class="cr-section-title" style="margin-bottom: 8px;">Edit Match</h1>
+    <p style="font-size: 0.9rem; color: var(--cr-text-muted); margin-bottom: 20px;">
+      <%= @team.name %> vs. <%= @match.opponent %>
+    </p>
+
+    <% if flash.now[:alert] || @match.errors.any? %>
+      <div class="cr-flash cr-flash-alert" style="margin-bottom: 16px;">
+        <%= flash.now[:alert] || @match.errors.full_messages.to_sentence %>
+      </div>
+    <% end %>
+
+    <%= form_with model: @match, url: team_match_path(@team, @match), method: :patch, local: true do |f| %>
+      <div class="cr-field">
+        <%= f.label :opponent, "Opponent" %>
+        <%= f.text_field :opponent, required: true %>
+      </div>
+
+      <div class="cr-field">
+        <%= f.label :match_date, "Date & time" %>
+        <%= f.datetime_local_field :match_date, value: @match.match_date&.strftime("%Y-%m-%dT%H:%M"), required: true %>
+      </div>
+
+      <div class="cr-field">
+        <%= f.label :match_time, "Match time (display)" %>
+        <%= f.text_field :match_time, placeholder: "e.g. 6:30 PM" %>
+        <p style="font-size: 0.75rem; color: var(--cr-text-muted); margin-top: 4px;">
+          Optional label shown next to the date — overrides the time part of the date above.
+        </p>
+      </div>
+
+      <div class="cr-field">
+        <%= f.label :location, "Location" %>
+        <%= f.text_field :location, placeholder: "e.g. Gulph Mills Golf Club" %>
+      </div>
+
+      <div class="cr-field">
+        <label>Home or Away?</label>
+        <div style="display: flex; gap: 16px; margin-top: 6px;">
+          <label style="display: flex; align-items: center; gap: 6px; font-weight: 500;">
+            <%= f.radio_button :home_away, "home" %> Home
+          </label>
+          <label style="display: flex; align-items: center; gap: 6px; font-weight: 500;">
+            <%= f.radio_button :home_away, "away" %> Away
+          </label>
+          <label style="display: flex; align-items: center; gap: 6px; font-weight: 500; color: var(--cr-text-muted);">
+            <%= f.radio_button :home_away, "" %> Not set
+          </label>
+        </div>
+      </div>
+
+      <div class="cr-field">
+        <%= f.label :notes, "Notes" %>
+        <%= f.text_area :notes, rows: 3, placeholder: "Any extra info about this match" %>
+      </div>
+
+      <div style="display: flex; gap: 12px; margin-top: 20px;">
+        <%= f.submit "Save Changes", class: "cr-btn cr-btn-gold" %>
+        <%= link_to "Cancel", team_path(@team), class: "cr-btn cr-btn-outline" %>
+      </div>
+    <% end %>
+  </div>
+</div>
