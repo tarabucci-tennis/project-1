@@ -1967,6 +1967,22 @@ button.cr-header-pill {
   margin: 4px 0;
 }
 
+.cr-roster-history-link {
+  font-size: 0.75rem;
+  color: var(--cr-gold);
+  text-decoration: none;
+  font-weight: 600;
+  padding: 4px 8px;
+  border: 1px solid var(--cr-border);
+  border-radius: 6px;
+  white-space: nowrap;
+}
+
+.cr-roster-history-link:hover {
+  background: rgba(201, 162, 74, 0.08);
+  border-color: var(--cr-gold);
+}
+
 @media (max-width: 720px) {
   /* Hide the Score column on narrow viewports — it's the 4th column now
      that we've added Opponents. Players + Opponents + Result still fit. */

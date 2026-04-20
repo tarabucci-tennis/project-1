@@ -391,20 +391,25 @@
         <% if @roster.any? %>
           <div class="cr-roster">
             <% @roster.each do |membership| %>
-              <%= link_to tennis_record_url(membership.user), target: "_blank", rel: "noopener", class: "cr-roster-row", style: "text-decoration: none; color: inherit;", title: "View #{membership.user.name} on TennisRecord" do %>
-                <div class="cr-roster-name <%= 'cr-roster-self' if membership.user_id == current_user.id %>">
-                  <%= membership.user.name %>
-                  <% if membership.user_id == current_user.id %>
-                    (you)
-                  <% end %>
-                </div>
+              <div class="cr-roster-row">
+                <%= link_to membership.user.name + (membership.user_id == current_user.id ? " (you)" : ""),
+                            tennis_record_url(membership.user),
+                            target: "_blank", rel: "noopener",
+                            class: "cr-roster-name #{'cr-roster-self' if membership.user_id == current_user.id}",
+                            style: "text-decoration: none; color: inherit;",
+                            title: "View #{membership.user.name} on TennisRecord" %>
                 <% if membership.user.ntrp_rating.present? %>
                   <div class="cr-roster-rating"><%= membership.user.ntrp_rating %></div>
                 <% end %>
                 <% if membership.captain? %>
                   <div class="cr-roster-role cr-roster-role-captain">Captain</div>
                 <% end %>
-              <% end %>
+                <%= link_to "📊 Matches",
+                            tennis_record_match_history_url(membership.user),
+                            target: "_blank", rel: "noopener",
+                            class: "cr-roster-history-link",
+                            title: "#{membership.user.name}'s TennisRecord match history" %>
+              </div>
             <% end %>
           </div>
         <% else %>
@@ -426,15 +431,26 @@
               </summary>
               <div class="cr-roster" style="margin-top: 6px;">
                 <% memberships.each do |membership| %>
-                  <%= link_to tennis_record_url(membership.user), target: "_blank", rel: "noopener", class: "cr-roster-row", style: "text-decoration: none; color: inherit; opacity: 0.85;", title: "View #{membership.user.name} on TennisRecord" do %>
-                    <div class="cr-roster-name"><%= membership.user.name %></div>
+                  <div class="cr-roster-row" style="opacity: 0.85;">
+                    <%= link_to membership.user.name,
+                                tennis_record_url(membership.user),
+                                target: "_blank", rel: "noopener",
+                                class: "cr-roster-name",
+                                style: "text-decoration: none; color: inherit;",
+                                title: "View #{membership.user.name} on TennisRecord" %>
                     <% if membership.user.ntrp_rating.present? %>
                       <div class="cr-roster-rating"><%= membership.user.ntrp_rating %></div>
                     <% end %>
                     <% if membership.captain? %>
                       <div class="cr-roster-role cr-roster-role-captain">Captain</div>
                     <% end %>
-                  <% end %>
+                    <% season_year = season.to_s[/\d{4}/]&.to_i || Date.current.year %>
+                    <%= link_to "📊 Matches",
+                                tennis_record_match_history_url(membership.user, year: season_year),
+                                target: "_blank", rel: "noopener",
+                                class: "cr-roster-history-link",
+                                title: "#{membership.user.name}'s TennisRecord match history (#{season_year})" %>
+                  </div>
                 <% end %>
               </div>
             </details>
