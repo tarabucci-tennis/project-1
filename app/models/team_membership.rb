@@ -10,6 +10,12 @@ class TeamMembership < ApplicationRecord
   scope :co_captains,  -> { where(role: "co_captain") }
   scope :leaders,      -> { where(role: %w[captain co_captain]) }
   scope :players,      -> { where(role: "player") }
+  scope :active,       -> { where(archived_season: nil) }
+  scope :archived,     -> { where.not(archived_season: nil) }
+
+  def archived?
+    archived_season.present?
+  end
 
   def captain?
     role == "captain"

@@ -378,25 +378,68 @@
     <%# ── Tab 2: Roster ──────────────────────────────── %>
     <div data-team-tabs-target="panel" style="display: none;">
       <section class="cr-section">
-        <h2 class="cr-section-title">Roster (<%= @player_count %> Players)</h2>
-        <div class="cr-roster">
-          <% @roster.each do |membership| %>
-            <%= link_to tennis_record_url(membership.user), target: "_blank", rel: "noopener", class: "cr-roster-row", style: "text-decoration: none; color: inherit;", title: "View #{membership.user.name} on TennisRecord" do %>
-              <div class="cr-roster-name <%= 'cr-roster-self' if membership.user_id == current_user.id %>">
-                <%= membership.user.name %>
-                <% if membership.user_id == current_user.id %>
-                  (you)
-                <% end %>
-              </div>
-              <% if membership.user.ntrp_rating.present? %>
-                <div class="cr-roster-rating"><%= membership.user.ntrp_rating %></div>
-              <% end %>
-              <% if membership.captain? %>
-                <div class="cr-roster-role cr-roster-role-captain">Captain</div>
-              <% end %>
+        <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 12px;">
+          <h2 class="cr-section-title" style="margin-bottom: 0;">Roster (<%= @player_count %> Players)</h2>
+          <% if @is_captain && @roster.any? %>
+            <%= form_with url: archive_season_team_path(@team), method: :post, local: true, style: "display: flex; gap: 6px; align-items: center;", data: { turbo_confirm: "Archive all #{@roster.size} players on this roster under season \"#{@team.season_name.presence || 'the current season'}\"? You can add a fresh roster after." } do |f| %>
+              <%= hidden_field_tag :season, @team.season_name.presence %>
+              <%= f.submit "Archive Season", class: "cr-btn cr-btn-outline", style: "padding: 6px 14px; font-size: 0.78rem;" %>
             <% end %>
           <% end %>
         </div>
+
+        <% if @roster.any? %>
+          <div class="cr-roster">
+            <% @roster.each do |membership| %>
+              <%= link_to tennis_record_url(membership.user), target: "_blank", rel: "noopener", class: "cr-roster-row", style: "text-decoration: none; color: inherit;", title: "View #{membership.user.name} on TennisRecord" do %>
+                <div class="cr-roster-name <%= 'cr-roster-self' if membership.user_id == current_user.id %>">
+                  <%= membership.user.name %>
+                  <% if membership.user_id == current_user.id %>
+                    (you)
+                  <% end %>
+                </div>
+                <% if membership.user.ntrp_rating.present? %>
+                  <div class="cr-roster-rating"><%= membership.user.ntrp_rating %></div>
+                <% end %>
+                <% if membership.captain? %>
+                  <div class="cr-roster-role cr-roster-role-captain">Captain</div>
+                <% end %>
+              <% end %>
+            <% end %>
+          </div>
+        <% else %>
+          <div class="cr-empty" style="padding: 24px; text-align: center; color: var(--cr-text-muted); font-size: 0.9rem;">
+            No active roster yet.
+            <% if @is_captain %>
+              Add players from the Captain tab or paste a roster there.
+            <% end %>
+          </div>
+        <% end %>
+
+        <% if @archived_rosters.any? %>
+          <h3 class="cr-section-title" style="font-size: 0.95rem; margin-top: 28px; margin-bottom: 8px;">Past Seasons</h3>
+          <% @archived_rosters.each do |season, memberships| %>
+            <details class="cr-archived-season" style="margin-bottom: 10px;">
+              <summary style="cursor: pointer; padding: 10px 14px; background: #fafbfc; border: 1px solid var(--cr-border); border-radius: 10px; font-weight: 600; font-size: 0.9rem; display: flex; align-items: center; justify-content: space-between; gap: 8px;">
+                <span><%= season %></span>
+                <span style="color: var(--cr-text-muted); font-size: 0.8rem; font-weight: 500;"><%= memberships.size %> player<%= "s" unless memberships.size == 1 %> ▾</span>
+              </summary>
+              <div class="cr-roster" style="margin-top: 6px;">
+                <% memberships.each do |membership| %>
+                  <%= link_to tennis_record_url(membership.user), target: "_blank", rel: "noopener", class: "cr-roster-row", style: "text-decoration: none; color: inherit; opacity: 0.85;", title: "View #{membership.user.name} on TennisRecord" do %>
+                    <div class="cr-roster-name"><%= membership.user.name %></div>
+                    <% if membership.user.ntrp_rating.present? %>
+                      <div class="cr-roster-rating"><%= membership.user.ntrp_rating %></div>
+                    <% end %>
+                    <% if membership.captain? %>
+                      <div class="cr-roster-role cr-roster-role-captain">Captain</div>
+                    <% end %>
+                  <% end %>
+                <% end %>
+              </div>
+            </details>
+          <% end %>
+        <% end %>
       </section>
     </div>
 

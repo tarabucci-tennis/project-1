@@ -301,7 +301,7 @@
               </div>
               <h2 class="cr-team-card-name"><%= team.name %></h2>
               <div class="cr-team-card-meta">
-                <span><%= team.team_memberships.count %> players · <%= team.upcoming_matches.count %> upcoming</span>
+                <span><%= team.team_memberships.active.count %> players · <%= team.upcoming_matches.count %> upcoming</span>
                 <span class="cr-team-card-record"><%= team.record_label %></span>
               </div>
             <% end %>

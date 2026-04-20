@@ -44,6 +44,7 @@ Rails.application.routes.draw do
     member do
       post "add_player", to: "teams#add_player"
       post "paste_roster", to: "teams#paste_roster"
+      post "archive_season", to: "teams#archive_season"
     end
   end
 
