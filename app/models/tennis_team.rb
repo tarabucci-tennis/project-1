@@ -49,6 +49,21 @@ class TennisTeam < ApplicationRecord
     matches.where("match_date >= ?", Time.current).order(match_date: :asc)
   end
 
+  # Iterates the `matches` association in Ruby so eager-loaded collections
+  # (see TeamsController#index `includes(:matches)`) don't trigger extra
+  # queries per team card.
+  def wins_count
+    matches.count { |m| m.result == "win" }
+  end
+
+  def losses_count
+    matches.count { |m| m.result == "loss" }
+  end
+
+  def record_label
+    "#{wins_count}-#{losses_count}"
+  end
+
   def next_match
     upcoming_matches.first
   end

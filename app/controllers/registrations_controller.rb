@@ -26,8 +26,8 @@ class RegistrationsController < ApplicationController
 
     existing = User.find_by(email: email)
     if existing
-      flash.now[:alert] = "That email is already registered. Try signing in instead."
-      return render :new, status: :unprocessable_entity
+      return redirect_to login_path(email: email),
+                         notice: "You already have an account — just sign in."
     end
 
     # If the visitor came in through a team join link, see if the

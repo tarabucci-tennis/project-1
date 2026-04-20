@@ -56,15 +56,16 @@
       <h2 style="font-size: 1.3rem; margin-bottom: 4px;">Get on the court</h2>
       <p class="cr-login-sub">Sign in with your email to see your teams</p>
 
+      <% email_prefilled = params[:email].present? %>
       <%= form_with url: session_path, method: :post do |f| %>
         <div class="cr-field">
           <%= f.label :email, "Email address" %>
-          <%= f.email_field :email, placeholder: "you@example.com", autofocus: true %>
+          <%= f.email_field :email, value: params[:email], placeholder: "you@example.com", autofocus: !email_prefilled %>
         </div>
         <div class="cr-field">
           <%= f.label :password, "Password" %>
           <div class="cr-password-wrap">
-            <%= f.password_field :password, placeholder: "Your password" %>
+            <%= f.password_field :password, placeholder: "Your password", autofocus: email_prefilled %>
             <button type="button" class="cr-password-toggle" onclick="togglePassword(this)" aria-label="Show password">👁</button>
           </div>
         </div>
