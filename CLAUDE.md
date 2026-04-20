@@ -45,6 +45,22 @@
 - **Verify before declaring victory.** Don't say "done" if you haven't actually tested it works in a browser.
 - **Ask before building.** If the task doesn't match what's in the code, ask clarifying questions first — don't just start coding on assumptions.
 
+## Current Status (as of April 20, 2026 — end of Session 13)
+
+**Site is up at https://yourcourtreport.com.** Session 13 was a short mobile-nav polish session plus another `MessageEncryptor::InvalidMessage` outage recovery. Full Session 13 write-up is at the very bottom of this file. Summary:
+
+- **PR #79** — Mobile Roster/Standings bnav now scrolls the selected panel into view. The `@media (max-width: 720px)` rule in `application.css` hides the sub-tab strip and forces all panels to `display: block !important` (stacked), so the existing `team_tabs_controller` tab-switch was visually a no-op on mobile. Fixed in `team_tabs_controller.js` — after `showTab(idx)`, on viewports <= 720px, `panel.scrollIntoView({ behavior: "smooth", block: "start" })`.
+- **PR #80** — Bottom nav now swaps based on page context. On `/teams/:id` and its nested routes, render the existing 5-tab bnav unchanged (Home / Lineups / Standings / Roster / WhatsApp). Everywhere else (My Teams, Lineups dashboard, Profile, etc.) render a site-level bnav (Home / Lineups / Find Team / Profile / WhatsApp). Rationale: Standings and Roster are team-scoped and were falling back to `/teams` from non-team pages, doing nothing.
+- Mid-session outage: site returned `ERR_CONNECTION_REFUSED` — fourth time now for the same `MessageEncryptor::InvalidMessage` pattern (Sessions 9, 11, 12, 13). Recovery is unchanged: `cd /root/app && git fetch origin main && git reset --hard origin/main && bash bin/force-deploy.sh`.
+
+**Still pending from Session 12 (carried forward, not touched in Session 13):**
+- Home page layout alignment between "Coming Up" cards and month calendar
+- Paste Roster form diagnostic (PR #58 alert popup) never tested
+- Google Sheets integration proposed, not built
+- Coming Up 2-week cap / limit question (time window vs count)
+
+---
+
 ## Current Status (as of April 16, 2026 — end of Session 12)
 
 **Site is back up at https://yourcourtreport.com** after a deploy outage caused by PRs #72/#73 was recovered in Session 12. Full Session 12 write-up is at the very bottom of this file. Summary:
@@ -535,6 +551,7 @@ Reconstructed from git log. Tara has built this app over ~6 sessions.
 | 10 | Mobile nav fix (Lineups loop), contained ball bounce, logo unity, bottom tab bar, gold tile favicon, Set Lineup form fix (true/false buttons + missing doubles), captain override for confirmations, team show captain buttons, Apr 14 lineup seeded, auto-merge policy, mobile header hardening | PRs #20, #21, #22, #23, #24, #25 | **Set Lineup form works end-to-end; Apr 14 lineup posted; Render cancelled; auto-merge enabled** |
 | 11 | Kiss My Ace match-day morning: droplet auto-rebooted overnight → `MessageEncryptor::InvalidMessage` crash loop (same as Session 9 morning), fixed with `force-deploy.sh` one-liner. PR #57: Paste Roster nbsp fix (TennisLink copies use U+00A0 non-breaking spaces) + Find-a-Team clickable joined cards. Branch-off-main verification caught that session started on a branch ~180 commits behind main | PR #57 | **Site restored after reboot; nbsp fix + clickable joined cards shipped. Paste Roster STILL not adding players after PR #57 — diagnostic via `docker logs -f` pending at time of snapshot** |
 | 12 | Deploy outage recovery. Site went down after PRs #72/#73 merged — `deploy.yml` had drifted from `bin/force-deploy.sh`, thruster volume mounted at wrong path (`/rails/thruster` vs `/rails/.thruster`), plus destructive `db:seed` was running on every deploy. Fixed via PR #74 (deploy.yml now delegates to force-deploy.sh — single source of truth) and PR #75 (auto-fixed 12 rubocop offenses, lint CI green for first time since Session 9, restored base64 SSH key secret) | PRs #74, #75 | **Site restored via manual `force-deploy.sh`; deploy.yml can no longer drift; lint CI finally green** |
+| 13 | Mobile nav polish + yet another `MessageEncryptor` outage recovery. Session initially opened on stale feature branch — caught, reset to `origin/main`. PR #79 made Roster/Standings bnav actually scroll to the target panel on mobile (the `@media 720px` rule hides sub-tabs and stacks all panels, so the existing tab-switch was invisible). PR #80 split bnav into site-level (Home/Lineups/Find Team/Profile/WhatsApp) vs team-context (unchanged: Home/Lineups/Standings/Roster/WhatsApp), swapped by a server-side `request.path.match?(%r{\A/teams/\d+})` check. Site went down again mid-session, recovered with the documented one-liner | PRs #79, #80 | **Mobile Roster bnav now works; site-level tabs ship outside team pages; fourth `MessageEncryptor` recovery in five sessions** |
 
 ## Lessons Learned (honest notes from past sessions)
 
@@ -600,6 +617,15 @@ Reconstructed from git log. Tara has built this app over ~6 sessions.
   ```
   If HEAD equals merge-base, you're behind main — `git reset --hard origin/main` before doing any work.
 - **`form_with local: true` is the Rails 8 default and doesn't protect against "form silently fails to submit."** If a form tap appears to do nothing, don't keep staring at the ERB template — `docker logs project-1 -f --tail 0` on the droplet and click the button in a Private tab. You'll see the `Started POST ...` line (or nothing, if the request never left the phone) in real time, and the problem space collapses to client-side vs. server-side immediately.
+
+### From Session 13 (April 20, 2026 — mobile nav polish + MessageEncryptor recovery #4) — DON'T REPEAT THESE
+
+- **On mobile the team sub-tab strip is hidden and all panels are stacked (`@media max-width: 720px` in `application.css`).** That means "switching tabs" has no visible effect on mobile — the active-tab class moves but the tabs are `display: none !important` anyway, and panels are already `display: block !important`. Any feature that relies on tab switching to reveal content (like the bottom-nav Roster/Standings deep link) MUST also scroll the target panel into view on mobile. Fixed in PR #79 with `panel.scrollIntoView({ behavior: "smooth", block: "start" })` inside the Stimulus controller's `connect()`, guarded by `window.matchMedia("(max-width: 720px)").matches`.
+- **Context-sensitive navigation needs server-side path detection, not JS rewriting.** Before PR #80, the bnav was rendered once with Standings/Roster as `<a href="/teams" data-bnav-tab="roster">` and a trailing inline script rewrote `href` at load time if the URL matched `/teams/\d+`. That works for the rewrite case but provides no way to render different BUTTONS on non-team pages — you end up with Standings/Roster links that fall back to `/teams` (no-op). Cleaner: compute `in_team_context = request.path.match?(%r{\A/teams/\d+})` in the layout and render two different `<% if %> ... <% else %>` branches. Keeps the rewrite script working for team-context pages (untouched), and lets non-team pages render Find Team / Profile instead.
+- **`ERR_CONNECTION_REFUSED` on yourcourtreport.com = container down = `MessageEncryptor::InvalidMessage` crash loop, 95% of the time.** Fourth time this has happened (Sessions 9, 11, 12, 13). Recovery is the same one-liner every time — no diagnosis needed, just run it: `cd /root/app && git fetch origin main && git reset --hard origin/main && bash bin/force-deploy.sh`. Tara can operate this without Claude now.
+- **Branch-off-main pre-flight check is still worth running at session start.** Session 13 opened on `claude/fix-double-signin-s4YPp`, a branch whose single commit (`2f3cd14 Fix double sign-in and mobile navbar tap target`) was made against the OLD "Tara's Sandbox" Rails app code, not Court Report — because the session started before PR #78 (Session 12 write-up) landed and the branch was never rebased. Early work in Session 13 was done against the wrong codebase until Tara mentioned PR #78 / Session 12 and the branch got `git reset --hard origin/main`'d onto the real Court Report code. Same lesson as Session 11: `git rev-parse HEAD && git rev-parse origin/main && git merge-base HEAD origin/main` at session start, and reset if HEAD is behind.
+- **When a user describes UI they can see that doesn't exist in the code you're reading, trust the screenshot over the code.** In Session 13 Tara described a Roster page with 17 players and a CAPTAIN badge, and Claude initially explored code that didn't match (the old Sandbox app — see previous bullet) and concluded "no roster feature exists in this codebase." That was wrong — Court Report has rosters, captains, lineups, etc. The right move is: if the user's screenshot shows real features that aren't in the code you're reading, you're on the wrong branch or the wrong repo. Stop and verify before declaring anything doesn't exist.
+- **Force-pushing a feature branch after `git reset --hard origin/main` is safe if the old commits on that branch are worthless.** Session 13's `claude/fix-double-signin-s4YPp` had one commit (`2f3cd14`) against stale code; after reset, that commit was no longer valid to keep, and `git push --force-with-lease` was the right call. This is NOT a generic license to force-push — it's specifically for "feature branch was based on an outdated tree and needs to start fresh from latest main."
 
 ### From Session 12 (April 16, 2026 — deploy outage recovery) — DON'T REPEAT THESE
 
@@ -1006,3 +1032,31 @@ If the master key file is missing, `force-deploy.sh` aborts with a clear error b
 2. Paste Roster form root cause (PR #58 diagnostic still deployed, untested)
 3. Google Sheets integration decision after Tara uses in-app forms for a few more matches
 4. Coming Up list: confirm whether Tara wants a count cap or a time window
+
+## Session 13 (April 20, 2026 — mobile nav polish + yet another MessageEncryptor recovery)
+
+Short session, mostly mobile bottom-nav cleanup. Ran into the same drift/outage patterns documented in earlier sessions.
+
+### What shipped — two PRs, both auto-merged and deployed
+
+- **PR #79 — Mobile Roster/Standings bnav scrolls to the target panel.** The bottom-nav Roster button was navigating to `/teams/:id?tab=roster` correctly, but on mobile it looked like nothing happened. Root cause: `@media (max-width: 720px)` in `application.css` hides the sub-tab strip (`.cr-subtabs { display: none !important }`) and forces every panel to `display: block !important` (stacked). The existing `team_tabs_controller#connect` read `?tab=...`, called `showTab(idx)`, and toggled the `.cr-subtab-active` class — but the tabs were hidden, and the panels were all visible anyway, so the only visible effect would have been inline `display: none` on non-matching panels, which loses to `!important`. Net effect on mobile: zero visible change. Fix: after `showTab(idx)`, if `window.matchMedia("(max-width: 720px)").matches`, call `this.panelTargets[idx].scrollIntoView({ behavior: "smooth", block: "start" })` inside a `requestAnimationFrame` (to let the panel render before scrolling). Desktop behavior untouched.
+- **PR #80 — Bottom nav swaps between team-context and site-level.** Tara pointed out the bnav buttons (Standings, Roster) only make sense when inside a team page — on `/teams` (My Teams) they were falling back to `/teams` itself, doing nothing. Restructured `app/views/layouts/application.html.erb` to compute `in_team_context = request.path.match?(%r{\A/teams/\d+})` and render two completely separate bnav blocks:
+  - **On a team page** (matches `/teams/97`, `/teams/97/matches/5`, etc.): unchanged — Home / Lineups / Standings / Roster / WhatsApp, with the existing JS rewrite script still deep-linking Standings/Roster to `?tab=...` on the current team.
+  - **Everywhere else** (My Teams list, `/lineups` dashboard, `/profile`, `/find-team`, etc.): Home / Lineups / Find Team / Profile / WhatsApp. Active-state highlighting wired for each (`controller_name == 'profiles' && action_name == 'show'`, etc.).
+
+### What happened procedurally
+
+- **Started on a stale feature branch.** Session opened on `claude/fix-double-signin-s4YPp`, which had been pushed earlier with one commit (`2f3cd14`) made against the OLD pre-Court-Report "Tara's Sandbox" Rails app — because the session spun up before PR #78 (Session 12 write-up) merged and the branch was never rebased. Early work in Session 13 was done against the wrong codebase until Tara said "PR #78 merged, CLAUDE.md now has Session 12" — at which point `git fetch origin main && git reset --hard origin/main` brought the feature branch onto real Court Report code. Previous commit on the branch was dropped via `git push --force-with-lease` (safe: based on superseded code). Both PRs in this session were opened against fresh code.
+- **Site went down mid-session with `MessageEncryptor::InvalidMessage`.** Same pattern as Sessions 9, 11, 12 — `ERR_CONNECTION_REFUSED` on yourcourtreport.com, container stuck in restart loop. Tara ran the documented one-liner: `cd /root/app && git fetch origin main && git reset --hard origin/main && bash bin/force-deploy.sh`. Site came back in ~3 minutes. Logs showed `DEPLOY COMPLETE` at 14:31:18. This is now the fourth recovery for this exact pattern. Tara handled it from her phone without Claude needing to SSH anywhere (Claude has no SSH in this environment anyway).
+- **Initial confusion about features that don't match the code.** Early in the session Tara asked about editing line-ups, deleting players from the roster, and a Roster screenshot with a CAPTAIN badge. Claude's exploration of the stale-branch code reported "no line-up feature exists" and "no captain role exists" — which was **wrong for the real Court Report codebase**. The disconnect was caught when Tara kept referring to yourcourtreport (which IS this project) as if it was a different app. Lesson recorded above.
+
+### Pending items carried forward (unchanged from end of Session 12)
+
+1. Home page alignment between "Coming Up" cards and the month calendar
+2. Paste Roster PR #58 diagnostic still deployed but untested
+3. Google Sheets integration proposed, not built
+4. Coming Up 2-week cap question: time window (already `14.days.from_now.end_of_day` in `teams_controller#index`) vs. count cap (e.g., `.limit(5)`) — still unresolved
+
+### Handoff line for next session
+
+> Session 13 shipped PR #79 (mobile Roster/Standings bnav scrolls the selected panel into view on viewports <= 720px) and PR #80 (bnav swaps between team-context and site-level tabs — Home/Lineups/Find Team/Profile/WhatsApp — based on `request.path.match?(%r{\A/teams/\d+})`). Site had its fourth `MessageEncryptor::InvalidMessage` outage mid-session; recovered with the documented `bash bin/force-deploy.sh` one-liner. Same four items still pending from Session 12: home page calendar alignment, Paste Roster PR #58 diagnostic, Google Sheets integration, Coming Up 2-week cap question.
