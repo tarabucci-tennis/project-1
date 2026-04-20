@@ -25,6 +25,14 @@
           Admin privileges
         </label>
       </div>
+      <div class="cr-field">
+        <%= f.label :tennislink_person_id, "TennisLink PersonID" %>
+        <%= f.text_field :tennislink_person_id, placeholder: "e.g. 12345678" %>
+        <div style="font-size: 12px; color: #666; margin-top: 4px;">
+          From the <code>PersonID=</code> query param on the user's TennisLink profile URL.
+          Used by <%= link_to "admin TennisLink test", admin_tennislink_test_path(person_id: @user.tennislink_person_id, year: Date.current.year) %>.
+        </div>
+      </div>
       <%= f.submit "Save Changes" %>
       <div style="margin-top: 12px;">
         <%= link_to "Cancel", users_path, class: "cr-btn cr-btn-secondary" %>
