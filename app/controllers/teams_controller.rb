@@ -103,7 +103,10 @@ class TeamsController < ApplicationController
     @captain          = @team.captain
     @roster           = @team.team_memberships.includes(:user).sort_by { |m| [ m.captain? ? 0 : 1, m.user.name.to_s.downcase ] }
     @upcoming_matches = @team.matches.where("match_date >= ?", Time.current).order(match_date: :asc)
-    @past_matches     = @team.matches.where("match_date < ?", Time.current).order(match_date: :desc)
+    @past_matches     = @team.matches
+                             .where("match_date < ?", Time.current)
+                             .includes(match_lines: { match_line_players: :user })
+                             .order(match_date: :desc)
     @player_count     = @team.team_memberships.count
     @is_captain       = @team.can_set_lineup?(current_user) || current_user.admin?
     @wins             = @team.matches.where(result: "win").count
