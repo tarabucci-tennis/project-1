@@ -28,4 +28,25 @@ class TeamMembership < ApplicationRecord
   def leader?
     captain? || co_captain?
   end
+
+  # Does this membership have the per-player W/L aggregates that
+  # points-based leagues (Del-Tri, Inter-Club) show on their public
+  # roster pages? Returns true when either number is set — a 0
+  # counts as a real value, only nil means "unknown".
+  def season_record?
+    !season_wins.nil? || !season_losses.nil?
+  end
+
+  def season_record_label
+    return nil unless season_record?
+    "#{season_wins.to_i}-#{season_losses.to_i}"
+  end
+
+  # Sort key for the Del-Tri-style roster. Captains float to the top,
+  # then players grouped by position (1 first), then alphabetical within
+  # a position. Nil positions sort last.
+  def deltri_sort_key
+    pos = season_position.to_s.match?(/\A\d+\z/) ? season_position.to_i : Float::INFINITY
+    [ captain? ? 0 : 1, pos, user.name.to_s.downcase ]
+  end
 end

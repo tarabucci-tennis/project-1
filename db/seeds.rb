@@ -385,24 +385,32 @@ legacy_2 = tara.tennis_teams.create!(
   season_name:     "Fall/Winter 2025-26 (Completed)"
 )
 
+# Legacy 2 roster with per-player season W/L from the Del-Tri website.
+# The 4th column is the player's position group on the Del-Tri site
+# (1/2/3/4/5 with two players per position). "Tara Buchakjian" is a
+# real separate player from Tara Bucci — see CLAUDE.md Session 7/8.
 legacy_roster = [
-  [ "JoAnne Steinberg",       3.0 ], # captain
-  [ "Anh Bixby",              4.0 ],
-  [ "Rachel Miller",          3.5 ],
-  [ "Khue Feigenberg",        3.5 ],
-  [ "Rebecca Bramen",         3.0 ],
-  [ "Sarah Dougherty",        3.0 ],
-  [ "Leilani Schlottfeldt",   3.0 ],
-  [ "Lindsey Schontz",        3.0 ],
-  [ "Jill Kirchner",          3.0 ],
-  [ "Laura Zalewski",         3.5 ]
+  [ "JoAnne Steinberg",     3.0, "3",  6,  6 ], # captain
+  [ "Anh Bixby",            4.0, "1",  7,  1 ],
+  [ "Rachel Miller",        3.5, "1",  7,  8 ],
+  [ "Tara Buchakjian",      3.0, "2",  5,  9 ],
+  [ "Khue Feigenberg",      3.5, "2",  6,  9 ],
+  [ "Rebecca Bramen",       3.0, "4", 12,  3 ],
+  [ "Sarah Dougherty",      3.0, "4", 13,  3 ],
+  [ "Leilani Schlottfeldt", 3.0, "5", 14,  0 ],
+  [ "Lindsey Schontz",      3.0, "5", 14,  2 ],
+  [ "Jill Kirchner",        3.0, nil, nil, nil ],
+  [ "Laura Zalewski",       3.5, nil, nil, nil ]
 ]
 
-legacy_roster.each do |name, ntrp|
+legacy_roster.each do |name, ntrp, pos, wins, losses|
   player = find_or_make_player(name, ntrp: ntrp)
-  TeamMembership.find_or_create_by!(user: player, tennis_team: legacy_2) do |m|
-    m.role = (name == "JoAnne Steinberg" ? "captain" : "player")
-  end
+  membership = TeamMembership.find_or_initialize_by(user: player, tennis_team: legacy_2)
+  membership.role = (name == "JoAnne Steinberg" ? "captain" : "player")
+  membership.season_position = pos
+  membership.season_wins     = wins
+  membership.season_losses   = losses
+  membership.save!
 end
 
 TeamMembership.find_or_create_by!(user: tara, tennis_team: legacy_2) do |m|

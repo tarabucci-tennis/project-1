@@ -474,6 +474,135 @@
           </a>
         </div>
 
+        <%# Del-Tri-style per-player W-L roster. Shown only on points-based
+            leagues (Legacy/Del-Tri, Inter-Club), which publish per-player
+            season W-L on their league websites. Tap a row to open a modal
+            with that player's match-by-match scores. %>
+        <% if @is_points_league && @deltri_roster.any? %>
+          <div class="cr-chart-section">
+            <h3 class="cr-chart-section-title">Team Roster · Season Record</h3>
+            <div class="cr-deltri-table">
+              <div class="cr-deltri-header">
+                <span class="cr-deltri-col-pos">Pos</span>
+                <span class="cr-deltri-col-name">Player</span>
+                <span class="cr-deltri-col-rating">Rating</span>
+                <span class="cr-deltri-col-wl">W</span>
+                <span class="cr-deltri-col-wl">L</span>
+              </div>
+              <% @deltri_roster.each do |m| %>
+                <button type="button"
+                        class="cr-deltri-row"
+                        onclick="document.getElementById('player-dialog-<%= m.id %>').showModal()">
+                  <span class="cr-deltri-col-pos"><%= m.season_position.presence || "—" %></span>
+                  <span class="cr-deltri-col-name">
+                    <%= m.user.name %><% if m.captain? %> <span class="cr-deltri-captain-tag">(C)</span><% end %>
+                    <% if m.user_id == current_user.id %>
+                      <span class="cr-deltri-you">you</span>
+                    <% end %>
+                  </span>
+                  <span class="cr-deltri-col-rating"><%= m.user.ntrp_rating.present? ? m.user.ntrp_rating : "—" %></span>
+                  <span class="cr-deltri-col-wl cr-deltri-w"><%= m.season_wins.nil? ? "—" : m.season_wins %></span>
+                  <span class="cr-deltri-col-wl cr-deltri-l"><%= m.season_losses.nil? ? "—" : m.season_losses %></span>
+                </button>
+              <% end %>
+            </div>
+            <p style="font-size: 0.78rem; color: var(--cr-text-muted); margin-top: 8px;">
+              Tap a player to see their match-by-match scores.
+            </p>
+          </div>
+
+          <%# One <dialog> per player, pre-rendered so the open-button
+              can simply call .showModal() with no AJAX. Closes on Esc,
+              clicking the backdrop, or the explicit Close button. %>
+          <% @deltri_roster.each do |m| %>
+            <dialog id="player-dialog-<%= m.id %>" class="cr-player-dialog">
+              <form method="dialog" class="cr-player-dialog-close-wrap">
+                <button class="cr-player-dialog-close" aria-label="Close">✕</button>
+              </form>
+              <div class="cr-player-dialog-header">
+                <div class="cr-player-dialog-name"><%= m.user.name %><% if m.captain? %> (Captain)<% end %></div>
+                <div class="cr-player-dialog-meta">
+                  <% if m.user.ntrp_rating.present? %>
+                    <span>Rating <strong><%= m.user.ntrp_rating %></strong></span>
+                  <% end %>
+                  <% if m.season_record? %>
+                    <span>Season <strong><%= m.season_record_label %></strong></span>
+                  <% end %>
+                </div>
+              </div>
+              <% rows = @player_match_history[m.user_id] || [] %>
+              <% if rows.any? %>
+                <div class="cr-player-dialog-body">
+                  <table class="cr-player-dialog-table">
+                    <thead>
+                      <tr>
+                        <th>Date</th>
+                        <th>Opponent</th>
+                        <th>Line</th>
+                        <th>Partner</th>
+                        <th>Opponents</th>
+                        <th>Score</th>
+                        <th>Result</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <% rows.each do |r| %>
+                        <tr>
+                          <td><%= r[:match_date].strftime("%b %-d, %Y") %></td>
+                          <td><%= r[:opponent] %></td>
+                          <td><strong><%= r[:line_label] %></strong></td>
+                          <td><%= r[:partner] || "—" %></td>
+                          <td><%= r[:opponents] || "—" %></td>
+                          <td><%= r[:score] || "—" %></td>
+                          <td>
+                            <% if r[:result].present? %>
+                              <span class="cr-result-badge <%= r[:result] == 'win' ? 'cr-result-badge-win' : 'cr-result-badge-loss' %>">
+                                <%= r[:result] == 'win' ? 'W' : 'L' %>
+                              </span>
+                            <% else %>
+                              —
+                            <% end %>
+                          </td>
+                        </tr>
+                      <% end %>
+                    </tbody>
+                  </table>
+                </div>
+              <% else %>
+                <div class="cr-player-dialog-body cr-player-dialog-empty">
+                  <p>No line-by-line scores entered yet for <%= m.user.name.split.first %>.</p>
+                  <p style="margin-top: 6px; font-size: 0.82rem; color: var(--cr-text-muted);">
+                    Captains can add them from the <strong>Enter Results</strong> form on each match card.
+                  </p>
+                  <% team_matches = @past_matches.select(&:played?) %>
+                  <% if team_matches.any? %>
+                    <p style="margin-top: 14px; font-size: 0.82rem; color: var(--cr-text-muted);">Team match results this season:</p>
+                    <table class="cr-player-dialog-table" style="margin-top: 4px;">
+                      <thead>
+                        <tr><th>Date</th><th>Opponent</th><th>Score</th><th>Result</th></tr>
+                      </thead>
+                      <tbody>
+                        <% team_matches.each do |tm| %>
+                          <tr>
+                            <td><%= tm.match_date.strftime("%b %-d, %Y") %></td>
+                            <td><%= tm.opponent %></td>
+                            <td><%= tm.score_summary.presence || "—" %></td>
+                            <td>
+                              <span class="cr-result-badge <%= tm.won? ? 'cr-result-badge-win' : 'cr-result-badge-loss' %>">
+                                <%= tm.won? ? "W" : "L" %>
+                              </span>
+                            </td>
+                          </tr>
+                        <% end %>
+                      </tbody>
+                    </table>
+                  <% end %>
+                </div>
+              <% end %>
+            </dialog>
+          <% end %>
+        <% end %>
+
         <%# Team stat charts — always rendered. Empty/zero bars when
             no matches have been played yet; bars fill in automatically
             as match results are entered via Enter Results. %>

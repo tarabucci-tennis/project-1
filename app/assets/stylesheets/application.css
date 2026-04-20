@@ -4118,3 +4118,185 @@ button.cr-header-pill {
   font-size: 0.85rem;
   padding: 8px 16px;
 }
+
+/* ========================================================
+   Del-Tri-style per-player roster table + player dialog
+   ======================================================== */
+.cr-deltri-table {
+  border: 1px solid var(--cr-border);
+  border-radius: 10px;
+  overflow: hidden;
+  background: #fff;
+}
+
+.cr-deltri-header,
+.cr-deltri-row {
+  display: grid;
+  grid-template-columns: 50px 1fr 70px 50px 50px;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border-bottom: 1px solid #eef1f5;
+  font-size: 0.88rem;
+  text-align: left;
+}
+
+.cr-deltri-header {
+  background: #fafbfc;
+  font-size: 0.72rem;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--cr-text-muted);
+  font-weight: 700;
+}
+
+.cr-deltri-row {
+  width: 100%;
+  border: none;
+  border-bottom: 1px solid #eef1f5;
+  background: #fff;
+  cursor: pointer;
+  font: inherit;
+  color: inherit;
+  transition: background 0.12s ease;
+}
+
+.cr-deltri-row:last-child { border-bottom: none; }
+.cr-deltri-row:hover  { background: #fafbfc; }
+.cr-deltri-row:focus  { outline: 2px solid var(--cr-gold); outline-offset: -2px; }
+
+.cr-deltri-col-pos    { font-weight: 700; color: var(--cr-text-muted); }
+.cr-deltri-col-name   { font-weight: 600; color: var(--cr-text); }
+.cr-deltri-col-rating { color: var(--cr-text-muted); text-align: center; font-variant-numeric: tabular-nums; }
+.cr-deltri-col-wl     { text-align: center; font-weight: 700; font-variant-numeric: tabular-nums; }
+.cr-deltri-w          { color: var(--cr-green); }
+.cr-deltri-l          { color: var(--cr-red); }
+
+.cr-deltri-captain-tag {
+  color: var(--cr-gold);
+  font-size: 0.78rem;
+  font-weight: 700;
+  margin-left: 2px;
+}
+
+.cr-deltri-you {
+  display: inline-block;
+  color: var(--cr-gold);
+  font-size: 0.72rem;
+  font-weight: 600;
+  margin-left: 4px;
+}
+
+.cr-player-dialog {
+  width: min(640px, calc(100vw - 32px));
+  max-height: 85vh;
+  border: 1px solid var(--cr-border);
+  border-radius: 14px;
+  padding: 0;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+}
+
+.cr-player-dialog::backdrop {
+  background: rgba(6, 15, 30, 0.45);
+}
+
+.cr-player-dialog-close-wrap {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  margin: 0;
+}
+
+.cr-player-dialog-close {
+  background: transparent;
+  border: none;
+  font-size: 1.1rem;
+  cursor: pointer;
+  color: var(--cr-text-muted);
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+}
+
+.cr-player-dialog-close:hover { background: #f1f5f9; color: var(--cr-text); }
+
+.cr-player-dialog-header {
+  padding: 18px 22px 12px;
+  border-bottom: 1px solid var(--cr-border);
+  background: #fafbfc;
+}
+
+.cr-player-dialog-name {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.4rem;
+  letter-spacing: 1.5px;
+  color: var(--cr-text);
+}
+
+.cr-player-dialog-meta {
+  display: flex;
+  gap: 16px;
+  margin-top: 4px;
+  font-size: 0.85rem;
+  color: var(--cr-text-muted);
+}
+
+.cr-player-dialog-body {
+  padding: 14px 20px 20px;
+  overflow-y: auto;
+  max-height: calc(85vh - 110px);
+}
+
+.cr-player-dialog-empty {
+  text-align: left;
+  font-size: 0.9rem;
+  color: var(--cr-text);
+}
+
+.cr-player-dialog-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+
+.cr-player-dialog-table th {
+  text-align: left;
+  font-size: 0.72rem;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--cr-text-muted);
+  font-weight: 600;
+  padding: 6px 8px;
+  border-bottom: 1px solid var(--cr-border);
+}
+
+.cr-player-dialog-table td {
+  padding: 8px;
+  border-bottom: 1px solid #eef1f5;
+  vertical-align: middle;
+}
+
+.cr-player-dialog-table tr:last-child td { border-bottom: none; }
+
+@media (max-width: 720px) {
+  .cr-deltri-header,
+  .cr-deltri-row {
+    grid-template-columns: 40px 1fr 50px 40px 40px;
+    padding: 10px 10px;
+    font-size: 0.82rem;
+  }
+  .cr-player-dialog {
+    width: calc(100vw - 16px);
+    max-height: 90vh;
+    border-radius: 10px;
+  }
+  /* Hide Partner + Opponents columns on the dialog table on narrow
+     viewports — date/line/score/result are the must-haves. */
+  .cr-player-dialog-table th:nth-child(4),
+  .cr-player-dialog-table td:nth-child(4),
+  .cr-player-dialog-table th:nth-child(5),
+  .cr-player-dialog-table td:nth-child(5) {
+    display: none;
+  }
+}
