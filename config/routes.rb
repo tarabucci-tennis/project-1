@@ -19,6 +19,9 @@ Rails.application.routes.draw do
   # Admin: user management
   resources :users, only: [ :index, :new, :create, :edit, :update, :destroy ]
 
+  # Admin: TennisLink fetch POC (Session 15)
+  get "admin/tennislink_test", to: "admin#tennislink_test", as: :admin_tennislink_test
+
   # Join link
   get "join/:code", to: "joins#show", as: :join_team
 

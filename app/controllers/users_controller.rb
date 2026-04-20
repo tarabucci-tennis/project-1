@@ -40,6 +40,6 @@ class UsersController < ApplicationController
   private
 
   def user_params
-    params.expect(user: [ :name, :email, :admin ])
+    params.expect(user: [ :name, :email, :admin, :tennislink_person_id ])
   end
 end
