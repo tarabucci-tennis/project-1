@@ -87,6 +87,13 @@
                 </select>
               <% end %>
             </div>
+
+            <div class="cr-line-opponents">
+              <label class="cr-line-players-label">Opponents</label>
+              <%= text_field_tag "lines[#{line.id}][opponents]", line.opponents,
+                                 placeholder: line.line_type == "singles" ? "e.g. Jane Smith" : "e.g. Jane Smith / Mary Jones",
+                                 class: "cr-input" %>
+            </div>
           </div>
         <% end %>
       </div>

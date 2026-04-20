@@ -97,7 +97,8 @@ class MatchesController < ApplicationController
             result: line_data[:result].presence,
             set1_score: line_data[:set1_score].presence,
             set2_score: line_data[:set2_score].presence,
-            set3_score: line_data[:set3_score].presence
+            set3_score: line_data[:set3_score].presence,
+            opponents: line_data[:opponents].to_s.strip.presence
           )
 
           # Update players on this line

@@ -257,6 +257,7 @@
                           <tr>
                             <th>Line</th>
                             <th>Players</th>
+                            <th>Opponents</th>
                             <th>Score</th>
                             <th>Result</th>
                           </tr>
@@ -269,6 +270,7 @@
                                 <% names = line.match_line_players.map { |mlp| mlp.user.name }.reject(&:blank?) %>
                                 <%= names.any? ? names.join(" / ") : "—" %>
                               </td>
+                              <td class="cr-result-line-players"><%= line.opponents.presence || "—" %></td>
                               <td class="cr-result-line-score"><%= line.score_display.presence || "—" %></td>
                               <td>
                                 <% if line.result.present? %>

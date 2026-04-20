@@ -1968,8 +1968,10 @@ button.cr-header-pill {
 }
 
 @media (max-width: 720px) {
-  .cr-result-lines th:nth-child(3),
-  .cr-result-lines td:nth-child(3) {
+  /* Hide the Score column on narrow viewports — it's the 4th column now
+     that we've added Opponents. Players + Opponents + Result still fit. */
+  .cr-result-lines th:nth-child(4),
+  .cr-result-lines td:nth-child(4) {
     display: none;
   }
 }
