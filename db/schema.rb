@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_20_120001) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_20_180000) do
   create_table "availabilities", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.integer "match_id", null: false
@@ -135,6 +135,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_20_120001) do
     t.datetime "created_at", null: false
     t.string "notification_preference", default: "every_update", null: false
     t.string "role", default: "player", null: false
+    t.integer "season_losses"
+    t.string "season_position"
+    t.integer "season_wins"
     t.integer "tennis_team_id", null: false
     t.datetime "updated_at", null: false
     t.integer "user_id", null: false

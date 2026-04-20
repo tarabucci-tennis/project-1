@@ -103,6 +103,7 @@ class TeamsController < ApplicationController
     @captain          = @team.captain
     active_memberships = @team.team_memberships.active.includes(:user)
     @roster           = active_memberships.sort_by { |m| [ m.captain? ? 0 : 1, m.user.name.to_s.downcase ] }
+    @deltri_roster    = active_memberships.sort_by(&:deltri_sort_key)
     @archived_rosters = @team.team_memberships.archived.includes(:user)
                              .group_by(&:archived_season)
                              .transform_values { |ms| ms.sort_by { |m| m.user.name.to_s.downcase } }
@@ -166,6 +167,14 @@ class TeamsController < ApplicationController
 
     # Player stats (visible to everyone on the Player Stats tab)
     @player_stats_data = build_player_analytics
+
+    # Per-player match history used by the clickable player dialog on
+    # the Del-Tri-style roster table. Keyed by user_id; each entry is
+    # an array of match_line rows with the user's line, partner names,
+    # opponents, set scores, and result. When no line-level data exists
+    # for a player (common on Legacy 2, where we seeded team-level
+    # results only), the view falls back to a team-level match summary.
+    @player_match_history = build_player_match_history
 
     # Team chart data — always present (empty bars when no matches
     # have been played). Feeds the CSS bar charts on the Player
@@ -638,6 +647,41 @@ class TeamsController < ApplicationController
         win_pct: total_results > 0 ? (pd[:wins].to_f / total_results * 100).round(0) : 0
       }
     end.sort_by { |p| -p[:matches_played] }
+  end
+
+  # Builds a hash of { user_id => [ { match_date, opponent, line_label,
+  # partner, opponents, score, result }, ... ] } for every active roster
+  # member, so the Del-Tri-style clickable player dialog can render a
+  # match-by-match list. Uses eager-loaded @past_matches where possible.
+  #
+  # A player appears in each row where they were on a match_line. Rows
+  # are ordered by match date descending (most recent first).
+  def build_player_match_history
+    history = Hash.new { |h, k| h[k] = [] }
+
+    @past_matches.each do |match|
+      match.match_lines.each do |line|
+        next if line.match_line_players.empty?
+
+        mlp_users = line.match_line_players.map(&:user)
+        mlp_users.each do |user|
+          partner_names = mlp_users.reject { |u| u.id == user.id }.map { |u| u.name.to_s.split.first }
+          history[user.id] << {
+            match_date: match.match_date,
+            match_id:   match.id,
+            opponent:   match.opponent,
+            line_label: line.short_label,
+            partner:    partner_names.join(" / ").presence,
+            opponents:  line.opponents.to_s.strip.presence,
+            score:      line.score_display.presence,
+            result:     line.result
+          }
+        end
+      end
+    end
+
+    history.each_value { |rows| rows.sort_by! { |r| r[:match_date] }.reverse! }
+    history
   end
 
   def build_doubles_pairings
