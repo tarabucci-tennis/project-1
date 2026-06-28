@@ -1,0 +1,42 @@
+<div class="cr-page cr-dt-page">
+  <div class="cr-back-link" style="margin-bottom: 14px;">
+    <%= link_to "← Back to #{@team.name} standings", team_path(@team, anchor: "standings"), style: "text-decoration: none;" %>
+  </div>
+
+  <header class="cr-dt-header">
+    <h1 class="cr-dt-name"><%= @division_team.name %></h1>
+    <p class="cr-dt-sub">
+      <% if @division_team.position.present? %>#<%= @division_team.position %> in <%= @team.league_display_name %> · <% end %>
+      <strong><%= @division_team.wins %></strong> pts
+    </p>
+  </header>
+
+  <% if @error.present? %>
+    <div class="cr-dt-empty">
+      <%= @error %>
+      <% if @division_team.source_url.present? %>
+        <div style="margin-top: 10px;">
+          <%= link_to "View on Del-Tri →", @division_team.source_url, target: "_blank", rel: "noopener", class: "cr-dt-extlink" %>
+        </div>
+      <% end %>
+    </div>
+  <% else %>
+    <div class="cr-dt-results">
+      <% @results.each do |m| %>
+        <div class="cr-dt-row">
+          <span class="cr-dt-date"><%= m.date_label %></span>
+          <span class="cr-dt-ha cr-dt-ha-<%= m.home ? 'home' : 'away' %>"><%= m.home ? "H" : "A" %></span>
+          <span class="cr-dt-opp">vs <%= m.opponent.presence || "—" %></span>
+          <span class="cr-dt-score"><%= m.score %></span>
+          <span class="cr-result-badge <%= m.result == 'W' ? 'cr-result-badge-win' : (m.result == 'T' ? 'cr-result-badge-tie' : 'cr-result-badge-loss') %>"><%= m.result %></span>
+        </div>
+      <% end %>
+    </div>
+    <p class="cr-dt-foot">
+      Pulled live from Del-Tri.
+      <% if @division_team.source_url.present? %>
+        <%= link_to "View source →", @division_team.source_url, target: "_blank", rel: "noopener", class: "cr-dt-extlink" %>
+      <% end %>
+    </p>
+  <% end %>
+</div>

@@ -128,7 +128,9 @@ class TeamsController < ApplicationController
         # straight from the source, so every team — including ours — is accurate.
         self_key = @team.name.to_s.strip.downcase
         @standings = @division_teams.map do |dt|
-          { name: dt.name, points: dt.wins, is_self: dt.name.to_s.strip.downcase == self_key }
+          { id: dt.id, name: dt.name, points: dt.wins,
+            is_self: dt.name.to_s.strip.downcase == self_key,
+            drilldown: dt.source_url.present? }
         end
       else
         # Fallback before the first standings sync: estimate our points from
