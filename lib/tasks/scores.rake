@@ -1,0 +1,22 @@
+# Refreshes everything Court Report pulls from public sources:
+#   * match results + posted lineups, from Tara's Google Sheet
+#   * opponent league standings, from the public Del-Tri site
+#
+# Designed to be run on a schedule (hourly cron) so the site stays current
+# with no button-clicking:
+#
+#   0 * * * * docker exec project-1 bin/rails scores:sync >> /var/log/cr-sync.log 2>&1
+#
+# Both steps are idempotent and safe to re-run.
+namespace :scores do
+  desc "Pull latest scores (Google Sheet) and standings (Del-Tri) from public sources"
+  task sync: :environment do
+    stamp = Time.current.strftime("%Y-%m-%d %H:%M:%S")
+
+    sheet = SheetScoreSync.new.call
+    puts "[#{stamp}] Scores — #{sheet}"
+
+    standings = DeltriStandings.new.call
+    puts "[#{stamp}] Standings — #{standings}"
+  end
+end
