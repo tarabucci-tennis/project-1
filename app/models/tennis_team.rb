@@ -64,6 +64,22 @@ class TennisTeam < ApplicationRecord
     "#{wins_count}-#{losses_count}"
   end
 
+  # Win percentage over decided matches (for the standings table). nil when
+  # nothing has been played yet so the view can show a dash.
+  def win_pct
+    decided = wins_count + losses_count
+    decided.zero? ? nil : (wins_count.to_f / decided * 100).round
+  end
+
+  # Recent results, oldest→newest: e.g. ["W", "L", "W"]. Iterates the
+  # (eager-loaded) matches association in Ruby to avoid extra queries.
+  def recent_form(limit = 5)
+    matches.select { |m| m.result.present? }
+           .sort_by(&:match_date)
+           .last(limit)
+           .map { |m| m.result == "win" ? "W" : "L" }
+  end
+
   def next_match
     upcoming_matches.first
   end

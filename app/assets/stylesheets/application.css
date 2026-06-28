@@ -4118,3 +4118,458 @@ button.cr-header-pill {
   font-size: 0.85rem;
   padding: 8px 16px;
 }
+
+/* ============================================================
+   Team page refresh — inviting, readable, mobile-first
+   (Appended last so it refines the rules above via the cascade.
+    Self-contained; remove this block to revert.)
+   ============================================================ */
+
+.cr-team-page { padding-bottom: 48px; }
+
+/* — Hero: confident, not shouting — */
+.cr-team-hero {
+  border-radius: 20px;
+  padding: 30px 32px;
+  background: linear-gradient(135deg, #0c1c34 0%, #15294a 100%);
+  box-shadow: 0 14px 34px rgba(10, 22, 40, 0.20);
+}
+.cr-team-hero-label { letter-spacing: 1.4px; color: var(--cr-gold-soft); }
+.cr-team-hero-name {
+  font-size: 2.1rem;
+  font-weight: 800;
+  letter-spacing: 0.2px;
+  text-transform: none;
+  line-height: 1.12;
+}
+.cr-team-hero-sub { font-size: 0.9rem; line-height: 1.55; }
+.cr-team-hero-stats { gap: 28px; margin-top: 22px; }
+.cr-hero-stat-value { font-size: 1.7rem; font-weight: 800; letter-spacing: 0.3px; }
+.cr-hero-stat-label { font-size: 0.62rem; letter-spacing: 1.2px; color: rgba(255,255,255,0.55); }
+
+/* — Stat cards: soft, consistent, subtle gold accent — */
+.cr-stat-cards { gap: 12px; margin-bottom: 28px; }
+.cr-stat-card {
+  border: 1px solid var(--cr-border);
+  border-top: 2px solid rgba(201, 162, 74, 0.55);
+  border-radius: 14px;
+  padding: 18px 16px;
+  box-shadow: 0 1px 2px rgba(10, 22, 40, 0.04);
+}
+.cr-stat-card-value { font-size: 1.7rem; font-weight: 800; }
+.cr-stat-card-label { font-size: 0.64rem; letter-spacing: 1.1px; color: var(--cr-text-light); margin-top: 5px; }
+
+/* — Sub-tabs: scrollable + comfortable on mobile — */
+.cr-subtabs {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  flex-wrap: nowrap;
+  gap: 2px;
+}
+.cr-subtabs::-webkit-scrollbar { display: none; }
+.cr-subtab { padding: 12px 16px; font-size: 0.85rem; white-space: nowrap; flex-shrink: 0; }
+
+.cr-section-title { font-size: 0.74rem; letter-spacing: 1.4px; color: var(--cr-text-muted); }
+
+/* — Match cards: airy, soft, readable — */
+.cr-match-card { border-radius: 16px; margin-bottom: 12px; box-shadow: 0 1px 2px rgba(10,22,40,0.04); }
+.cr-match-card:hover { box-shadow: 0 8px 22px rgba(10,22,40,0.08); }
+.cr-match-card .cr-match-row { padding: 16px 18px; gap: 14px; }
+.cr-match-card .cr-match-date { border-radius: 12px; min-width: 58px; }
+.cr-match-card .cr-match-opponent { font-size: 1.02rem; line-height: 1.3; }
+.cr-match-card .cr-match-location { font-size: 0.8rem; margin-top: 3px; }
+.cr-match-result-row { display: inline-flex; align-items: center; gap: 8px; }
+
+/* — Badges: soft pills — */
+.cr-match-badge { border-radius: 999px; padding: 4px 11px; font-size: 0.64rem; }
+.cr-match-home { background: rgba(22,163,74,0.10); color: #15803d; }
+.cr-match-away { background: var(--cr-bg); color: var(--cr-text-muted); }
+.cr-result-badge { border-radius: 999px; padding: 3px 11px; font-weight: 700; }
+.cr-result-badge-win  { background: rgba(22,163,74,0.12); color: #15803d; }
+.cr-result-badge-loss { background: rgba(220,38,38,0.10); color: #b91c1c; }
+.cr-result-score { color: var(--cr-text-muted); font-weight: 700; }
+
+/* — Captain actions: clean full-width pill row (stack the split) — */
+.cr-match-card-body-split { flex-direction: column; }
+.cr-match-card-body-split > .cr-match-captain-actions { border-right: none; flex: 0 0 auto; }
+.cr-match-captain-actions {
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 8px;
+  background: var(--cr-bg);
+  padding: 12px 16px;
+}
+.cr-match-action-btn {
+  width: auto;
+  flex: 1 1 auto;
+  min-width: 118px;
+  border-radius: 999px;
+  border-color: var(--cr-border);
+  font-size: 0.78rem;
+  padding: 9px 14px;
+}
+
+/* — Lineup preview: clean chips — */
+.cr-lineup-preview { background: var(--cr-bg); }
+.cr-lineup-preview-title { color: var(--cr-text-muted); letter-spacing: 1.2px; }
+.cr-lineup-preview-line {
+  background: var(--cr-white);
+  border: 1px solid var(--cr-border);
+  border-radius: 10px;
+  padding: 9px 12px;
+}
+.cr-lineup-preview-line-label {
+  background: var(--cr-black);
+  color: var(--cr-gold-soft);
+  border-radius: 6px;
+  padding: 3px 8px;
+  min-width: 30px;
+  text-align: center;
+}
+
+/* — Mobile: inviting, easy to tap & read — */
+@media (max-width: 720px) {
+  .cr-team-hero { padding: 22px 20px; border-radius: 16px; }
+  .cr-team-hero-name { font-size: 1.6rem; }
+  .cr-team-hero-sub { font-size: 0.85rem; }
+  .cr-team-hero-stats { gap: 22px; margin-top: 18px; }
+  .cr-hero-stat-value { font-size: 1.45rem; }
+
+  .cr-stat-cards { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  .cr-stat-card { padding: 14px 12px; }
+  .cr-stat-card-value { font-size: 1.55rem; }
+
+  .cr-match-card .cr-match-row { padding: 14px; gap: 12px; }
+  .cr-match-captain-actions { padding: 12px; }
+  .cr-match-action-btn { min-width: 0; flex: 1 1 31%; padding: 11px 8px; font-size: 0.74rem; }
+  .cr-cal-btn { width: 34px; height: 34px; }
+}
+
+/* ============================================================
+   Home dashboard — tabbed Standings / Calendar / Coming Up
+   (Court Report colors. Works as real tabs on mobile too.)
+   ============================================================ */
+
+.cr-home-subtitle { color: var(--cr-text-muted); font-size: 0.9rem; margin-top: 4px; }
+
+.cr-home-tabs {
+  display: flex;
+  gap: 2px;
+  border-bottom: 1px solid var(--cr-border);
+  margin-bottom: 22px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.cr-home-tabs::-webkit-scrollbar { display: none; }
+
+.cr-home-tab {
+  padding: 12px 18px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--cr-text-muted);
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  font-family: inherit;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: color 0.15s, border-color 0.15s;
+}
+.cr-home-tab:hover { color: var(--cr-text); }
+.cr-home-tab-active { color: var(--cr-text); border-bottom-color: var(--cr-gold); }
+
+/* — Standings table — */
+.cr-standings-wrap {
+  background: var(--cr-white);
+  border: 1px solid var(--cr-border);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 1px 2px rgba(10, 22, 40, 0.04);
+}
+.cr-standings { width: 100%; border-collapse: collapse; }
+.cr-standings thead th {
+  text-align: left;
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--cr-text-light);
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--cr-border);
+  white-space: nowrap;
+}
+.cr-standings tbody td {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--cr-border);
+  vertical-align: middle;
+  font-size: 0.92rem;
+  color: var(--cr-text);
+}
+.cr-standings tbody tr:last-child td { border-bottom: none; }
+.cr-st-row { cursor: pointer; transition: background 0.12s; }
+.cr-st-row:hover td { background: rgba(201, 162, 74, 0.06); }
+
+.cr-st-n { text-align: center; white-space: nowrap; }
+.cr-st-rank { color: var(--cr-text-light); font-weight: 800; width: 40px; }
+.cr-st-team { color: var(--cr-text); font-weight: 700; font-size: 0.98rem; text-decoration: none; }
+.cr-st-team:hover { color: var(--cr-gold); }
+.cr-st-sub { color: var(--cr-text-muted); font-size: 0.76rem; margin-top: 2px; }
+.cr-st-w { color: var(--cr-green); font-weight: 700; }
+.cr-st-l { color: var(--cr-red); font-weight: 700; }
+.cr-st-muted { color: var(--cr-text-light); }
+.cr-st-next { color: var(--cr-text-muted); font-size: 0.86rem; white-space: nowrap; }
+.cr-st-next-date { color: var(--cr-text); font-weight: 600; }
+
+.cr-st-form { display: flex; gap: 5px; }
+.cr-st-dot {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 22px; height: 22px; border-radius: 50%;
+  font-size: 0.66rem; font-weight: 800; color: #fff;
+}
+.cr-st-dot-w { background: var(--cr-green); }
+.cr-st-dot-l { background: var(--cr-red); }
+
+.cr-st-hint { color: var(--cr-text-light); font-size: 0.78rem; margin-top: 12px; text-align: center; }
+
+/* Center the calendar within its tab (it used to share a 2-col row) */
+.cr-dash-cal-full { max-width: 520px; margin: 0 auto; }
+
+/* Mobile: trim lower-priority columns so the table stays clean & readable */
+@media (max-width: 640px) {
+  .cr-standings thead th:nth-child(5), .cr-standings tbody td:nth-child(5),  /* Win% */
+  .cr-standings thead th:nth-child(7), .cr-standings tbody td:nth-child(7) { /* Next */
+    display: none;
+  }
+  .cr-standings thead th, .cr-standings tbody td { padding: 13px 10px; }
+  .cr-st-dot { width: 20px; height: 20px; font-size: 0.6rem; }
+  .cr-home-tab { padding: 11px 14px; font-size: 0.85rem; }
+}
+
+/* ============================================================
+   Home dashboard — high-end color polish (navy + gold palette)
+   ============================================================ */
+
+/* Active tab → warm gold pill */
+.cr-home-tab-active {
+  color: var(--cr-black);
+  background: rgba(201, 162, 74, 0.14);
+  border-radius: 10px 10px 0 0;
+}
+
+/* Premium framing on the standings card */
+.cr-standings-wrap {
+  border-color: rgba(201, 162, 74, 0.22);
+  box-shadow: 0 10px 30px rgba(10, 22, 40, 0.07);
+}
+
+/* Navy header bar with gold underline */
+.cr-standings-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 15px 18px;
+  background: linear-gradient(135deg, #0c1c34 0%, #16294a 100%);
+  border-bottom: 2px solid var(--cr-gold);
+}
+.cr-standings-head-title { color: var(--cr-white); font-weight: 800; font-size: 0.98rem; letter-spacing: 0.3px; }
+.cr-standings-head-season { color: var(--cr-gold-soft); font-weight: 700; font-size: 0.68rem; letter-spacing: 1.4px; text-transform: uppercase; }
+
+/* Subtle gold tint on the column header row */
+.cr-standings thead th { background: rgba(201, 162, 74, 0.06); }
+
+/* Rank medallions — gold for the leader */
+.cr-st-rank-badge {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 26px; height: 26px; border-radius: 50%;
+  background: var(--cr-bg); border: 1px solid var(--cr-border);
+  color: var(--cr-text-muted); font-weight: 800; font-size: 0.78rem;
+}
+.cr-standings tbody tr.cr-st-row:first-child .cr-st-rank-badge {
+  background: linear-gradient(135deg, var(--cr-gold-bright), var(--cr-gold));
+  border-color: var(--cr-gold);
+  color: var(--cr-black);
+  box-shadow: 0 2px 8px rgba(201, 162, 74, 0.45);
+}
+
+/* Leader row: soft gold tint + gold left accent */
+.cr-standings tbody tr.cr-st-row:first-child td { background: rgba(201, 162, 74, 0.07); }
+.cr-standings tbody tr.cr-st-row:first-child td:first-child { box-shadow: inset 3px 0 0 var(--cr-gold); }
+
+/* Win% color-coded */
+.cr-st-pct-good { color: var(--cr-green); font-weight: 800; }
+.cr-st-pct-bad  { color: var(--cr-red);   font-weight: 800; }
+
+/* Form dots — a touch of depth */
+.cr-st-dot { box-shadow: 0 1px 2px rgba(10, 22, 40, 0.18); }
+
+/* ============================================================
+   Home standings — warm-white listings + soft pastel W/L circles
+   (Final tone pass per Tara: ivory rows, warmer form dots)
+   ============================================================ */
+
+/* Warm white (ivory) team listings instead of stark white */
+.cr-standings-wrap { background: #faf8f2; }
+.cr-standings thead th { background: rgba(201, 162, 74, 0.10); }
+.cr-standings tbody td { border-bottom-color: rgba(10, 22, 40, 0.06); }
+.cr-st-row:hover td { background: rgba(201, 162, 74, 0.12); }
+.cr-standings tbody tr.cr-st-row:first-child td { background: rgba(201, 162, 74, 0.13); }
+
+/* Lighter, warmer W/L circles (soft mint / soft rose, dark text) */
+.cr-st-dot { box-shadow: none; font-weight: 800; }
+.cr-st-dot-w { background: #aee5bd; color: #14532d; }
+.cr-st-dot-l { background: #f4b4b4; color: #8a2222; }
+
+/* Rank medallion on ivory — keep it crisp */
+.cr-st-rank-badge { background: #ffffff; }
+
+/* One solid, warm page background (ivory listings sit on top as a panel) */
+body { background: #f3f0e9; }
+
+/* ============================================================
+   Dark home page (My Teams) — dark navy canvas, light data panels.
+   Scoped to the home page via the body context class so other
+   pages stay on the light theme until we extend it deliberately.
+   ============================================================ */
+body.cr-ctx-teams-index { background: var(--cr-black); }
+body.cr-ctx-teams-index .cr-page-title { color: var(--cr-white); }
+body.cr-ctx-teams-index .cr-home-subtitle { color: rgba(255, 255, 255, 0.6); }
+body.cr-ctx-teams-index .cr-home-tabs { border-bottom-color: rgba(255, 255, 255, 0.12); }
+body.cr-ctx-teams-index .cr-home-tab { color: rgba(255, 255, 255, 0.55); }
+body.cr-ctx-teams-index .cr-home-tab:hover { color: var(--cr-white); }
+body.cr-ctx-teams-index .cr-home-tab-active { color: var(--cr-white); background: rgba(201, 162, 74, 0.20); }
+body.cr-ctx-teams-index .cr-st-hint { color: rgba(255, 255, 255, 0.5); }
+body.cr-ctx-teams-index .cr-coming-up-empty { color: rgba(255, 255, 255, 0.6); }
+
+/* ============================================================
+   Dark team page (scoped). Dark canvas; hero + light cards on top.
+   ============================================================ */
+body.cr-ctx-teams-show { background: var(--cr-black); }
+body.cr-ctx-teams-show .cr-back-link a { color: rgba(255, 255, 255, 0.55); }
+body.cr-ctx-teams-show .cr-back-link a:hover { color: var(--cr-gold); }
+body.cr-ctx-teams-show .cr-section-title { color: rgba(255, 255, 255, 0.82); border-bottom-color: rgba(255, 255, 255, 0.12); }
+body.cr-ctx-teams-show .cr-subtabs { border-bottom-color: rgba(255, 255, 255, 0.12); }
+body.cr-ctx-teams-show .cr-subtab { color: rgba(255, 255, 255, 0.55); }
+body.cr-ctx-teams-show .cr-subtab:hover { color: var(--cr-white); }
+body.cr-ctx-teams-show .cr-subtab-active { color: var(--cr-white); }
+body.cr-ctx-teams-show .cr-empty { color: rgba(255, 255, 255, 0.6); }
+body.cr-ctx-teams-show .cr-team-hero { border: 1px solid rgba(201, 162, 74, 0.18); }
+
+/* ============================================================
+   Dark theme: Profile / Lineups / Find-a-Team (scoped, previewed)
+   ============================================================ */
+body.cr-ctx-profiles-show,
+body.cr-ctx-lineups-dashboard,
+body.cr-ctx-teams-search { background: var(--cr-black); }
+
+/* Find a Team */
+body.cr-ctx-teams-search .cr-page-title { color: var(--cr-white); }
+body.cr-ctx-teams-search .cr-page > p { color: rgba(255, 255, 255, 0.7); }
+
+/* Lineups dashboard */
+body.cr-ctx-lineups-dashboard .lineups-header h1 { color: var(--cr-white); }
+body.cr-ctx-lineups-dashboard .lineups-header p { color: rgba(255, 255, 255, 0.6); }
+body.cr-ctx-lineups-dashboard .lineup-empty { color: rgba(255, 255, 255, 0.75); }
+body.cr-ctx-lineups-dashboard .lineup-empty strong { color: var(--cr-white); }
+
+/* Profile (player page) */
+body.cr-ctx-profiles-show .cr-player-name { color: var(--cr-white); }
+body.cr-ctx-profiles-show .cr-player-meta { color: rgba(255, 255, 255, 0.65); }
+body.cr-ctx-profiles-show .cr-section-title { color: rgba(255, 255, 255, 0.82); border-bottom-color: rgba(255, 255, 255, 0.12); }
+body.cr-ctx-profiles-show .cr-section-subtitle { color: rgba(255, 255, 255, 0.6); }
+
+/* ============================================================
+   Team page — segmented Schedule/Results + unified match list
+   ============================================================ */
+.cr-seg { display: inline-flex; background: var(--cr-bg); border: 1px solid var(--cr-border); border-radius: 999px; padding: 4px; margin-bottom: 16px; gap: 4px; }
+.cr-seg-btn { border: none; background: none; cursor: pointer; font-family: inherit; padding: 8px 20px; border-radius: 999px; font-size: 0.84rem; font-weight: 700; color: var(--cr-text-muted); transition: all 0.15s; }
+.cr-seg-btn-active { background: var(--cr-white); color: var(--cr-text); box-shadow: 0 1px 3px rgba(10,22,40,0.12); }
+
+.cr-sched-list { background: var(--cr-white); border: 1px solid var(--cr-border); border-radius: 16px; overflow: hidden; box-shadow: 0 1px 2px rgba(10,22,40,0.04); }
+.cr-sched-item { border-bottom: 1px solid var(--cr-border); }
+.cr-sched-item:last-child { border-bottom: none; }
+.cr-sched-item[open] { background: var(--cr-bg); }
+.cr-sched-row { display: flex; align-items: center; gap: 14px; padding: 14px 16px; cursor: pointer; list-style: none; }
+.cr-sched-row::-webkit-details-marker { display: none; }
+.cr-sched-date { background: var(--cr-black); color: var(--cr-white); border-radius: 10px; padding: 7px 10px; text-align: center; min-width: 50px; flex-shrink: 0; }
+.cr-sched-date-mon { font-size: 0.6rem; font-weight: 700; color: var(--cr-gold); letter-spacing: 1px; }
+.cr-sched-date-day { font-size: 1.3rem; font-weight: 900; line-height: 1; margin-top: 2px; }
+.cr-sched-main { flex: 1; min-width: 0; }
+.cr-sched-opp { font-weight: 700; color: var(--cr-text); font-size: 1rem; line-height: 1.25; }
+.cr-sched-sub { font-size: 0.8rem; color: var(--cr-text-muted); margin-top: 4px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.cr-sched-right { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+.cr-sched-score { font-weight: 700; color: var(--cr-text-muted); font-size: 0.9rem; }
+.cr-sched-upcoming { font-size: 0.72rem; color: var(--cr-text-light); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+.cr-sched-pill { font-size: 0.66rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #15803d; background: rgba(22,163,74,0.10); padding: 3px 9px; border-radius: 999px; }
+.cr-sched-caret { color: var(--cr-text-light); font-size: 0.8rem; transition: transform 0.15s; }
+.cr-sched-item[open] .cr-sched-caret { transform: rotate(180deg); }
+.cr-tag { font-size: 0.62rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px; padding: 3px 9px; border-radius: 999px; }
+.cr-tag-home { background: rgba(22,163,74,0.10); color: #15803d; }
+.cr-tag-away { background: #eceef1; color: var(--cr-text-muted); }
+.cr-sched-detail { padding: 0 16px 18px; }
+.cr-sched-detail-title { font-size: 0.64rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--cr-text-light); margin: 14px 0 8px; }
+.cr-sched-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
+.cr-chip-btn { display: inline-flex; align-items: center; gap: 5px; padding: 8px 14px; border-radius: 999px; border: 1px solid var(--cr-border); background: var(--cr-white); color: var(--cr-text); font-size: 0.78rem; font-weight: 600; text-decoration: none; white-space: nowrap; }
+.cr-chip-btn:hover { border-color: var(--cr-gold); background: rgba(201,162,74,0.06); }
+
+/* Dark team page: segmented control reads on the dark canvas */
+body.cr-ctx-teams-show .cr-seg { background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.12); }
+body.cr-ctx-teams-show .cr-seg-btn { color: rgba(255,255,255,0.6); }
+body.cr-ctx-teams-show .cr-seg-btn-active { background: var(--cr-gold); color: var(--cr-black); box-shadow: none; }
+
+@media (max-width: 640px) {
+  .cr-sched-row { padding: 12px; gap: 10px; }
+  .cr-sched-opp { font-size: 0.95rem; }
+  .cr-chip-btn { flex: 1 1 auto; justify-content: center; }
+  .cr-seg { width: 100%; }
+  .cr-seg-btn { flex: 1; padding: 9px 0; }
+}
+
+/* ============================================================
+   Dark theme: remaining pages (auth, admin, captain forms)
+   ============================================================ */
+body.cr-ctx-sessions-new,
+body.cr-ctx-registrations-new,
+body.cr-ctx-users-index,
+body.cr-ctx-matches-edit_results,
+body.cr-ctx-matches-edit,
+body.cr-ctx-matches-new,
+body.cr-ctx-matches-show,
+body.cr-ctx-lineups-edit { background: var(--cr-black); }
+
+/* Sign-in landing */
+body.cr-ctx-sessions-new .cr-landing-headline { color: var(--cr-white); }
+body.cr-ctx-sessions-new .cr-landing-tagline,
+body.cr-ctx-sessions-new .cr-landing-feature-text,
+body.cr-ctx-sessions-new .cr-login-sub { color: rgba(255, 255, 255, 0.65); }
+body.cr-ctx-sessions-new .cr-landing-feature-title { color: var(--cr-white); }
+body.cr-ctx-sessions-new .cr-landing-footer,
+body.cr-ctx-sessions-new .cr-admin-reset-label,
+body.cr-ctx-sessions-new .cr-admin-reset-note { color: rgba(255, 255, 255, 0.5); }
+
+/* Sign-up: just the on-canvas switch link (card stays light) */
+body.cr-ctx-registrations-new .cr-auth-switch { color: rgba(255, 255, 255, 0.7); }
+
+/* Players admin */
+body.cr-ctx-users-index .cr-page-title { color: var(--cr-white); }
+
+/* Captain forms — lighten on-canvas headings & labels (inputs stay light) */
+body.cr-ctx-matches-edit_results .cr-page-title,
+body.cr-ctx-matches-edit .cr-page-title,
+body.cr-ctx-matches-new .cr-page-title,
+body.cr-ctx-matches-show .cr-page-title,
+body.cr-ctx-lineups-edit .cr-page-title { color: var(--cr-white); }
+body.cr-ctx-matches-edit_results .cr-form-section-title,
+body.cr-ctx-matches-edit_results .cr-line-label,
+body.cr-ctx-matches-edit_results .cr-line-players-label,
+body.cr-ctx-matches-edit_results .cr-result-label,
+body.cr-ctx-matches-edit .cr-section-title { color: rgba(255, 255, 255, 0.85); }
+body.cr-ctx-matches-edit_results .cr-form-help { color: rgba(255, 255, 255, 0.55); }
+body.cr-ctx-matches-edit_results .cr-field > label,
+body.cr-ctx-matches-edit_results .cr-field > span,
+body.cr-ctx-matches-edit .cr-field > label,
+body.cr-ctx-matches-edit .cr-field > span,
+body.cr-ctx-lineups-edit .cr-field > label,
+body.cr-ctx-lineups-edit .cr-field > span { color: rgba(255, 255, 255, 0.8); }
