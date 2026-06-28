@@ -4456,3 +4456,26 @@ body.cr-ctx-teams-show .cr-subtab:hover { color: var(--cr-white); }
 body.cr-ctx-teams-show .cr-subtab-active { color: var(--cr-white); }
 body.cr-ctx-teams-show .cr-empty { color: rgba(255, 255, 255, 0.6); }
 body.cr-ctx-teams-show .cr-team-hero { border: 1px solid rgba(201, 162, 74, 0.18); }
+
+/* ============================================================
+   Dark theme: Profile / Lineups / Find-a-Team (scoped, previewed)
+   ============================================================ */
+body.cr-ctx-profiles-show,
+body.cr-ctx-lineups-dashboard,
+body.cr-ctx-teams-search { background: var(--cr-black); }
+
+/* Find a Team */
+body.cr-ctx-teams-search .cr-page-title { color: var(--cr-white); }
+body.cr-ctx-teams-search .cr-page > p { color: rgba(255, 255, 255, 0.7); }
+
+/* Lineups dashboard */
+body.cr-ctx-lineups-dashboard .lineups-header h1 { color: var(--cr-white); }
+body.cr-ctx-lineups-dashboard .lineups-header p { color: rgba(255, 255, 255, 0.6); }
+body.cr-ctx-lineups-dashboard .lineup-empty { color: rgba(255, 255, 255, 0.75); }
+body.cr-ctx-lineups-dashboard .lineup-empty strong { color: var(--cr-white); }
+
+/* Profile (player page) */
+body.cr-ctx-profiles-show .cr-player-name { color: var(--cr-white); }
+body.cr-ctx-profiles-show .cr-player-meta { color: rgba(255, 255, 255, 0.65); }
+body.cr-ctx-profiles-show .cr-section-title { color: rgba(255, 255, 255, 0.82); border-bottom-color: rgba(255, 255, 255, 0.12); }
+body.cr-ctx-profiles-show .cr-section-subtitle { color: rgba(255, 255, 255, 0.6); }
