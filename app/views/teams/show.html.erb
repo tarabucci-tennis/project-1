@@ -214,15 +214,17 @@
                     <div class="cr-sched-detail-title">Line Scores</div>
                     <% if has_lines %>
                       <table class="cr-result-lines">
-                        <thead><tr><th>Line</th><th>Players</th><th>Opponents</th><th>Score</th><th>Result</th></tr></thead>
+                        <thead><tr><th>Line</th><th>Players</th><th>Opponents</th><th>Score &amp; Result</th></tr></thead>
                         <tbody>
                           <% lines.each do |line| %>
                             <tr>
                               <td class="cr-result-line-label"><%= line.short_label %></td>
                               <td class="cr-result-line-players"><% names = line.match_line_players.map { |mlp| mlp.user.name }.reject(&:blank?) %><%= names.any? ? names.join(" / ") : "—" %></td>
                               <td class="cr-result-line-players"><%= line.opponents.presence || "—" %></td>
-                              <td class="cr-result-line-score"><%= line.score_display.presence || "—" %></td>
-                              <td><% if line.result.present? %><span class="cr-result-badge <%= line.won? ? 'cr-result-badge-win' : 'cr-result-badge-loss' %>"><%= line.won? ? "W" : "L" %></span><% else %>—<% end %></td>
+                              <td class="cr-result-line-outcome">
+                                <% if line.result.present? %><span class="cr-result-badge <%= line.won? ? 'cr-result-badge-win' : 'cr-result-badge-loss' %>"><%= line.won? ? "W" : "L" %></span><% else %>—<% end %>
+                                <% if line.score_display.present? %><span class="cr-result-line-score"><%= line.score_display %></span><% end %>
+                              </td>
                             </tr>
                           <% end %>
                         </tbody>
