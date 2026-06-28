@@ -208,7 +208,11 @@ class DeltriResults
   # Strips leading seeding digits and trailing "(S)" sub markers.
   def names(cell)
     cell.to_s.split("/").map do |part|
-      part.gsub(/\(S\)/i, "").gsub(/\A\s*\d+\s*/, "").gsub(/\s+/, " ").strip
+      part.gsub(/&#?\w+;?/, " ")          # strip HTML entities (e.g. the ↑ "subbing" arrow)
+          .gsub(/[↑↓]/, " ")              # and the literal arrow form
+          .gsub(/\(\s*s\b[^)]*\)?/i, " ") # strip "(S)" / "(S ..." sub markers (keeps "(Default)")
+          .gsub(/\A\s*\d+\s*/, "")        # strip the leading seeding number
+          .gsub(/\s+/, " ").strip
     end.reject(&:blank?)
   end
 
