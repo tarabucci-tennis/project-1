@@ -1,11 +1,11 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  name: MyString
-  email: MyString
+  name: Player One
+  email: one@example.com
   admin: false
 
 two:
-  name: MyString
-  email: MyString
+  name: Player Two
+  email: two@example.com
   admin: false
