@@ -19,7 +19,7 @@
     <%= javascript_importmap_tags %>
   </head>
 
-  <body>
+  <body class="cr-ctx-<%= controller_name %>-<%= action_name %>">
     <nav class="cr-header">
       <div class="cr-header-inner">
         <%= link_to (current_user ? teams_path : root_path), class: "cr-brand" do %>

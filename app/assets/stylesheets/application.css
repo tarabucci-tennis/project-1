@@ -4427,3 +4427,18 @@ button.cr-header-pill {
 
 /* One solid, warm page background (ivory listings sit on top as a panel) */
 body { background: #f3f0e9; }
+
+/* ============================================================
+   Dark home page (My Teams) — dark navy canvas, light data panels.
+   Scoped to the home page via the body context class so other
+   pages stay on the light theme until we extend it deliberately.
+   ============================================================ */
+body.cr-ctx-teams-index { background: var(--cr-black); }
+body.cr-ctx-teams-index .cr-page-title { color: var(--cr-white); }
+body.cr-ctx-teams-index .cr-home-subtitle { color: rgba(255, 255, 255, 0.6); }
+body.cr-ctx-teams-index .cr-home-tabs { border-bottom-color: rgba(255, 255, 255, 0.12); }
+body.cr-ctx-teams-index .cr-home-tab { color: rgba(255, 255, 255, 0.55); }
+body.cr-ctx-teams-index .cr-home-tab:hover { color: var(--cr-white); }
+body.cr-ctx-teams-index .cr-home-tab-active { color: var(--cr-white); background: rgba(201, 162, 74, 0.20); }
+body.cr-ctx-teams-index .cr-st-hint { color: rgba(255, 255, 255, 0.5); }
+body.cr-ctx-teams-index .cr-coming-up-empty { color: rgba(255, 255, 255, 0.6); }
