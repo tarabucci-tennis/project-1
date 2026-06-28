@@ -18,5 +18,8 @@ namespace :scores do
 
     standings = DeltriStandings.new.call
     puts "[#{stamp}] Standings — #{standings}"
+
+    deltri = DeltriResults.new.call
+    puts "[#{stamp}] Del-Tri results — #{deltri}"
   end
 end

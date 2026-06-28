@@ -199,7 +199,7 @@
                       </div>
                     </div>
                     <div class="cr-sched-right">
-                      <span class="cr-result-badge <%= match.won? ? 'cr-result-badge-win' : 'cr-result-badge-loss' %>"><%= match.result_label %></span>
+                      <span class="cr-result-badge <%= match.won? ? 'cr-result-badge-win' : (match.tied? ? 'cr-result-badge-tie' : 'cr-result-badge-loss') %>"><%= match.result_label %></span>
                       <% if match.score_summary.present? %><span class="cr-sched-score"><%= match.score_summary %></span><% end %>
                       <span class="cr-sched-caret" aria-hidden="true">▾</span>
                     </div>

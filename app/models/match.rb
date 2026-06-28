@@ -53,8 +53,13 @@ class Match < ApplicationRecord
     result == "loss"
   end
 
+  def tied?
+    result == "tie"
+  end
+
   def result_label
     return nil unless played?
+    return "T" if tied?
     won? ? "W" : "L"
   end
 
