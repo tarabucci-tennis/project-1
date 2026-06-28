@@ -4442,3 +4442,17 @@ body.cr-ctx-teams-index .cr-home-tab:hover { color: var(--cr-white); }
 body.cr-ctx-teams-index .cr-home-tab-active { color: var(--cr-white); background: rgba(201, 162, 74, 0.20); }
 body.cr-ctx-teams-index .cr-st-hint { color: rgba(255, 255, 255, 0.5); }
 body.cr-ctx-teams-index .cr-coming-up-empty { color: rgba(255, 255, 255, 0.6); }
+
+/* ============================================================
+   Dark team page (scoped). Dark canvas; hero + light cards on top.
+   ============================================================ */
+body.cr-ctx-teams-show { background: var(--cr-black); }
+body.cr-ctx-teams-show .cr-back-link a { color: rgba(255, 255, 255, 0.55); }
+body.cr-ctx-teams-show .cr-back-link a:hover { color: var(--cr-gold); }
+body.cr-ctx-teams-show .cr-section-title { color: rgba(255, 255, 255, 0.82); border-bottom-color: rgba(255, 255, 255, 0.12); }
+body.cr-ctx-teams-show .cr-subtabs { border-bottom-color: rgba(255, 255, 255, 0.12); }
+body.cr-ctx-teams-show .cr-subtab { color: rgba(255, 255, 255, 0.55); }
+body.cr-ctx-teams-show .cr-subtab:hover { color: var(--cr-white); }
+body.cr-ctx-teams-show .cr-subtab-active { color: var(--cr-white); }
+body.cr-ctx-teams-show .cr-empty { color: rgba(255, 255, 255, 0.6); }
+body.cr-ctx-teams-show .cr-team-hero { border: 1px solid rgba(201, 162, 74, 0.18); }
