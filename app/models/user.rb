@@ -44,6 +44,7 @@ class User < ApplicationRecord
 
   has_many :match_line_players, dependent: :destroy
   has_many :match_lines_played, through: :match_line_players, source: :match_line
+  has_many :player_matches, dependent: :destroy
 
   # Get all matches where this player was assigned to a line
   def matches_played

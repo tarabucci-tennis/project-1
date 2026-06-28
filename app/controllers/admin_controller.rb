@@ -53,16 +53,18 @@ class AdminController < ApplicationController
     result = SheetScoreSync.new.call
     standings = DeltriStandings.new.call
     deltri = DeltriResults.new.call
+    players = DeltriPlayerImport.sync_all
 
     pieces = []
     pieces << result.to_s if result.summaries.any?
     pieces << "Standings — #{standings}" if standings.updated.any?
     pieces << "Del-Tri results — #{deltri}" if deltri.updated.any?
+    pieces << "Player history — #{players}" if players.imported.any?
 
     if pieces.any?
       redirect_to teams_path, notice: "Synced — #{pieces.join(' | ')}"
     else
-      messages = (result.notes + standings.notes + deltri.notes).reject(&:blank?)
+      messages = (result.notes + standings.notes + deltri.notes + players.notes).reject(&:blank?)
       redirect_to teams_path, alert: "Sync ran but found nothing to update. #{messages.join('; ')}"
     end
   rescue StandardError => e
