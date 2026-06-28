@@ -622,12 +622,16 @@
               </thead>
               <tbody>
                 <% @standings.each_with_index do |entry, idx| %>
-                  <tr class="<%= 'cr-standings-tbl-self' if entry[:is_self] %>">
+                  <% clickable = entry[:id].present? && entry[:drilldown] && !entry[:is_self] %>
+                  <tr class="<%= 'cr-standings-tbl-self' if entry[:is_self] %><%= ' cr-standings-tbl-link' if clickable %>"
+                      <% if clickable %>onclick="window.location='<%= team_division_team_path(@team, entry[:id]) %>'"<% end %>>
                     <td class="cr-standings-tbl-rank"><%= idx + 1 %></td>
                     <td class="cr-standings-tbl-team">
                       <%= entry[:name] %>
                       <% if entry[:is_self] %>
                         <span class="cr-standings-you-badge">You</span>
+                      <% elsif clickable %>
+                        <span class="cr-standings-drill" aria-hidden="true">›</span>
                       <% end %>
                     </td>
                     <td class="cr-standings-tbl-highlight"><%= entry[:points] %></td>

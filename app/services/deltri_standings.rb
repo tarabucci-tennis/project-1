@@ -75,11 +75,19 @@ class DeltriStandings
   def parse(html)
     table = html[/<table[^>]*class="[^"]*standings-table2[^"]*"[^>]*>(.*?)<\/table>/im, 1] || ""
     table.scan(/<tr[^>]*>(.*?)<\/tr>/im).filter_map do |(row)|
-      name   = clean(row[/<td[^>]*class="[^"]*\bteam2\b[^"]*"[^>]*>(.*?)<\/td>/im, 1].to_s)
+      team_cell = row[/<td[^>]*class="[^"]*\bteam2\b[^"]*"[^>]*>(.*?)<\/td>/im, 1].to_s
+      name   = clean(team_cell)
       points = clean(row[/<td[^>]*class="[^"]*\bpts2\b[^"]*"[^>]*>(.*?)<\/td>/im, 1].to_s)
       next if name.blank? || !points.match?(/\A\d+\z/)
-      { name: name, points: points.to_i }
+      href = team_cell[/href="([^"]+)"/i, 1]
+      { name: name, points: points.to_i, source_url: absolutize(href) }
     end
+  end
+
+  def absolutize(href)
+    return nil if href.blank?
+    href = href.gsub("&amp;", "&")
+    href.start_with?("http") ? href : "https://deltri.tenniscores.com#{href}"
   end
 
   # Stores every team in the division (including the team itself) so the
@@ -94,6 +102,7 @@ class DeltriStandings
       dt.wins = row[:points] # Local/Del-Tri standings render dt.wins as points
       dt.losses = 0
       dt.position = i + 1
+      dt.source_url = row[:source_url] if row[:source_url].present?
       dt.save!
       seen << dt.id
     end
