@@ -117,8 +117,9 @@ class TeamsController < ApplicationController
     @losses           = @team.matches.where(result: "loss").count
     @division_teams   = @team.division_teams.ranked
 
-    # Build combined standings
-    @is_points_league = @team.league_category == "Local"
+    # Build combined standings. Del-Tri (Local) and Inter-Club (Cup) are both
+    # scored by points (games/lines won), pulled from their tenniscores pages.
+    @is_points_league = %w[Local Inter-Club].include?(@team.league_category)
     @standings = []
 
     if @is_points_league

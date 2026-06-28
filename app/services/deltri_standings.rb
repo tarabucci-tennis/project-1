@@ -1,20 +1,16 @@
 require "net/http"
 
-# Pulls a team's division standings from the public Del-Tri site
-# (deltri.tenniscores.com) and stores the other teams in the league as
-# DivisionTeam rows, so the Standings tab shows the real league table
+# Pulls division standings from a team's public tenniscores page (Del-Tri,
+# WITAP/Inter-Club, or any tenniscores site) and stores the other teams in the
+# league as DivisionTeam rows, so the Standings tab shows the real league table
 # instead of zeros. Idempotent.
 #
-# The site blocks non-browser requests, so we send browser-like headers.
-# Standings come as a simple table: Team | Pts | Weeks | (weekly scores...).
+# Driven by each team's `tenniscores_url` (set in the DB), so adding a new
+# league is just a matter of saving a link — no code change. The site blocks
+# non-browser requests, so we send browser-like headers.
 class DeltriStandings
   UA = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 " \
        "(KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36".freeze
-
-  # Court Report team name => its Del-Tri division-standings URL.
-  SOURCES = {
-    "Legacy 2" => "https://deltri.tenniscores.com/?mod=nndz-TjJiOWtOR3QzTU4yakRrY1NjN1FMcGpx&did=nndz-WXllNndRPT0%3D"
-  }.freeze
 
   FETCH_TIMEOUT = 20
 
@@ -29,20 +25,16 @@ class DeltriStandings
     updated = {}
     notes = []
 
-    SOURCES.each do |team_name, url|
-      team = TennisTeam.where("LOWER(name) = ?", team_name.downcase).first
-      unless team
-        notes << "No Court Report team “#{team_name}”"
-        next
-      end
-      rows = fetch_standings(url)
+    TennisTeam.where.not(tenniscores_url: [ nil, "" ]).find_each do |team|
+      @base = base_of(team.tenniscores_url)
+      rows = fetch_standings(team.tenniscores_url)
       if rows.empty?
-        notes << "No standings rows read for #{team_name}"
+        notes << "No standings rows read for #{team.name}"
         next
       end
       updated[team.name] = upsert(team, rows)
     rescue StandardError => e
-      notes << "#{team_name}: #{e.class} — #{e.message}"
+      notes << "#{team.name}: #{e.class} — #{e.message}"
     end
 
     Result.new(updated: updated, notes: notes)
@@ -65,13 +57,9 @@ class DeltriStandings
     parse(res.body.to_s)
   end
 
-  # Returns [{ name:, points: }] in standings order.
-  #
-  # The standings table (class "standings-table2 division_standings") has one
-  # <tr> per team. The team name lives in <td class="team2"><a>NAME</a></td>
-  # and its points in <td class="pts2">NN</td>. Targeting those classes is more
-  # robust than counting cells, because each row also has a long tail of weekly
-  # per-match score cells that also contain digits.
+  # Returns [{ name:, points:, source_url: }] in standings order.
+  # Team name from <td class="team2">, points from <td class="pts2">, and the
+  # team's own page link (for the opponent drill-down) from the team2 cell.
   def parse(html)
     table = html[/<table[^>]*class="[^"]*standings-table2[^"]*"[^>]*>(.*?)<\/table>/im, 1] || ""
     table.scan(/<tr[^>]*>(.*?)<\/tr>/im).filter_map do |(row)|
@@ -79,27 +67,17 @@ class DeltriStandings
       name   = clean(team_cell)
       points = clean(row[/<td[^>]*class="[^"]*\bpts2\b[^"]*"[^>]*>(.*?)<\/td>/im, 1].to_s)
       next if name.blank? || !points.match?(/\A\d+\z/)
-      href = team_cell[/href="([^"]+)"/i, 1]
-      { name: name, points: points.to_i, source_url: absolutize(href) }
+      { name: name, points: points.to_i, source_url: absolutize(team_cell[/href="([^"]+)"/i, 1]) }
     end
   end
 
-  def absolutize(href)
-    return nil if href.blank?
-    href = href.gsub("&amp;", "&")
-    href.start_with?("http") ? href : "https://deltri.tenniscores.com#{href}"
-  end
-
   # Stores every team in the division (including the team itself) so the
-  # Standings tab can render the real league table — points come straight
-  # from Del-Tri rather than being re-derived from entered match data.
-  # Any previously-stored division team that's no longer in the table is
-  # removed, so a re-run reflects the live standings exactly.
+  # Standings tab can render the real league table. Prunes teams that dropped.
   def upsert(team, rows)
     seen = []
     rows.each_with_index do |row, i|
       dt = team.division_teams.find_or_initialize_by(name: row[:name])
-      dt.wins = row[:points] # Local/Del-Tri standings render dt.wins as points
+      dt.wins = row[:points] # points league standings render dt.wins as points
       dt.losses = 0
       dt.position = i + 1
       dt.source_url = row[:source_url] if row[:source_url].present?
@@ -108,6 +86,19 @@ class DeltriStandings
     end
     team.division_teams.where.not(id: seen).delete_all if seen.any?
     rows.size
+  end
+
+  def base_of(url)
+    uri = URI(url)
+    "#{uri.scheme}://#{uri.host}"
+  rescue StandardError
+    "https://deltri.tenniscores.com"
+  end
+
+  def absolutize(href)
+    return nil if href.blank?
+    href = href.gsub("&amp;", "&")
+    href.start_with?("http") ? href : "#{@base}#{href}"
   end
 
   def clean(str)

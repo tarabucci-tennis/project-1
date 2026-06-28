@@ -1,35 +1,26 @@
 require "net/http"
+require "cgi"
 
-# Pulls Legacy 2's line-by-line match results from the public Del-Tri site
-# (deltri.tenniscores.com) so players can tap a match in Court Report and see
-# who played, the set scores, and who won — the same expandable Results card
-# that USTA teams get from the Google Sheet.
+# Pulls a team's line-by-line match results from its public tenniscores page
+# (Del-Tri, WITAP/Inter-Club, etc.) so players can tap a match in Court Report
+# and see who played, the set scores, and who won — the same expandable Results
+# card USTA teams get from the Google Sheet.
 #
-# How it works:
-#   1. Read the division standings page; the team's own row links to one
-#      printable scorecard per match, and the cell id encodes home (h*) / away (a*).
-#   2. For each scorecard, parse the date and the 6 doubles lines. Each line is
-#      two rows — visiting team on top, home team on the bottom — so "our" row is
-#      the bottom one when we're home, the top one when we're away.
-#   3. A set is marked won with a "bold-text" class. Line winner = more sets won,
-#      ties broken by total games (Del-Tri is a games/points league). This
-#      reconciles exactly with the match's printed line total.
+# Driven by each team's `tenniscores_url`:
+#   1. Read the page's standings table; the team's own row links to one
+#      printable scorecard per match (cell id encodes home h* / away a*). The
+#      team's row is found by the team= id in its URL, or by name as a fallback.
+#   2. For each scorecard, parse the date and the doubles lines. Each line is
+#      two rows — visiting on top, home on the bottom — so "our" row is the
+#      bottom one when we're home, top when away.
+#   3. A set is marked won with a "bold-text" class. Line winner = more sets
+#      won, ties broken by total games. This reconciles with the printed total.
 #   4. Each parsed line becomes a row in the shape SheetResultsImporter already
 #      consumes, so all the match-matching, lineup-publishing and idempotency
-#      logic is reused. Matches are created from the scorecard if they don't
-#      already exist on the team's schedule.
-#
-# The site blocks non-browser requests, so we send browser-like headers.
+#      logic is reused. Matches are created from the scorecard if missing.
 class DeltriResults
   UA = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 " \
        "(KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36".freeze
-
-  # Court Report team name => its Del-Tri division-standings URL.
-  SOURCES = {
-    "Legacy 2" => "https://deltri.tenniscores.com/?mod=nndz-TjJiOWtOR3QzTU4yakRrY1NjN1FMcGpx&did=nndz-WXllNndRPT0%3D"
-  }.freeze
-
-  BASE = "https://deltri.tenniscores.com/".freeze
   FETCH_TIMEOUT = 20
 
   Result = Struct.new(:updated, :notes, keyword_init: true) do
@@ -43,28 +34,23 @@ class DeltriResults
     updated = {}
     notes = []
 
-    SOURCES.each do |team_name, url|
-      team = TennisTeam.where("LOWER(name) = ?", team_name.downcase).first
-      unless team
-        notes << "No Court Report team “#{team_name}”"
-        next
-      end
-
-      standings = fetch(url)
-      links = team_match_links(standings, team_name)
+    TennisTeam.where.not(tenniscores_url: [ nil, "" ]).find_each do |team|
+      base = base_of(team.tenniscores_url)
+      page = fetch(team.tenniscores_url)
+      links = team_match_links(page, team)
       if links.empty?
-        notes << "No match links found for #{team_name}"
+        notes << "No match links found for #{team.name}"
         next
       end
-      division = division_names(standings)
+      division = division_names(page)
 
       rows = []
       links.each do |link|
-        card = fetch(BASE + link[:path])
+        card = fetch("#{base}/#{link[:path]}")
         parsed = parse_scorecard(card, home: link[:home])
         next unless parsed[:date] && parsed[:lines].any?
 
-        opponent = resolve_opponent(card, division, team_name)
+        opponent = resolve_opponent(card, division, team.name)
         match = ensure_match(team, parsed[:date], opponent, link[:home])
         parsed[:lines].each do |ln|
           rows << {
@@ -77,13 +63,13 @@ class DeltriResults
           }
         end
       rescue StandardError => e
-        notes << "#{team_name} scorecard: #{e.class} — #{e.message}"
+        notes << "#{team.name} scorecard: #{e.class} — #{e.message}"
       end
 
       outcome = SheetResultsImporter.new(team.reload).import(rows)
       updated[team.name] = outcome.to_s
     rescue StandardError => e
-      notes << "#{team_name}: #{e.class} — #{e.message}"
+      notes << "#{team.name}: #{e.class} — #{e.message}"
     end
 
     Result.new(updated: updated, notes: notes)
@@ -106,13 +92,23 @@ class DeltriResults
     res.body.to_s
   end
 
-  # From the standings page, the team's own row. Each weekly cell links to a
+  # The team's own row in the standings table. Each weekly cell links to a
   # printable scorecard and its id starts with "h" (home) or "a" (away).
-  def team_match_links(html, team_name)
+  # We pick the row by the team= id in the team's URL (exact, name-independent);
+  # if the URL has no team= id (e.g. a division-standings link), fall back to
+  # matching the team name.
+  def team_match_links(html, team)
     table = html[/<table[^>]*class="[^"]*standings-table2[^"]*"[^>]*>(.*?)<\/table>/im, 1] || ""
+    want_id = team_param(team.tenniscores_url)
+
     row = table.scan(/<tr[^>]*>(.*?)<\/tr>/im).map { |(r)| r }.detect do |r|
-      name = clean(r[/<td[^>]*class="[^"]*\bteam2\b[^"]*"[^>]*>(.*?)<\/td>/im, 1].to_s)
-      normalize(name) == normalize(team_name)
+      cell = r[/<td[^>]*class="[^"]*\bteam2\b[^"]*"[^>]*>(.*?)<\/td>/im, 1].to_s
+      next false if cell.blank?
+      if want_id
+        team_param_from_href(cell[/href="([^"]+)"/i, 1]) == want_id
+      else
+        normalize(clean(cell)) == normalize(team.name)
+      end
     end
     return [] unless row
 
@@ -121,15 +117,14 @@ class DeltriResults
     end
   end
 
-  # The list of teams in this division, from the standings table (used to read
-  # the opponent name out of a scorecard's mashed-together header).
   def division_names(html)
     table = html[/<table[^>]*class="[^"]*standings-table2[^"]*"[^>]*>(.*?)<\/table>/im, 1] || ""
     table.scan(/<td[^>]*class="[^"]*\bteam2\b[^"]*"[^>]*>(.*?)<\/td>/im).map { |(c)| clean(c) }.reject(&:blank?).uniq
   end
 
   def resolve_opponent(card, division, team_name)
-    header = clean(card[/Division \d+(.*?)Line 1/im, 1].to_s)
+    header = clean(card[/(?:Division \d+|Cup \w+|Match)(.*?)(?:Line 1|1 Doubles)/im, 1].to_s)
+    header = clean(card)[0, 200] if header.blank?
     candidates = division.reject { |n| normalize(n) == normalize(team_name) }
     candidates.sort_by { |n| -n.length }.detect { |n| header.include?(n) }
   end
@@ -141,14 +136,14 @@ class DeltriResults
     date = date_str ? (Date.parse(date_str) rescue nil) : nil
 
     lines = body.scan(/<table[^>]*class="[^"]*standings-table2[^"]*"[^>]*>(.*?)<\/table>/im).filter_map do |(t)|
-      number = t[/Line\s+(\d)/i, 1]
+      number = line_number(t)
       next unless number
       trs = t.scan(/<tr[^>]*>(.*?)<\/tr>/im).map { |(r)| parse_line_row(r) }
       next if trs.size < 2
 
       top, bot = trs[0], trs[1]
       our, opp = home ? [ bot, top ] : [ top, bot ]
-      { number: number.to_i,
+      { number: number,
         our: names(our[:players]), opp: names(opp[:players]),
         score: zip_score(our[:sets], opp[:sets]),
         result: line_result(our[:sets], opp[:sets]) }
@@ -157,8 +152,12 @@ class DeltriResults
     { date: date, lines: lines }
   end
 
-  # One <tr> of a line: pull the players cell and the numeric set cells (each
-  # tagged with whether it's the won set, via the "bold-text" class).
+  # Line label is "Line N" (Del-Tri) or "N Doubles" / "N Singles" (WITAP).
+  def line_number(table_html)
+    head = clean(table_html[/<t[dh][^>]*>(.*?)<\/t[dh]>/im, 1].to_s)
+    (head[/\bLine\s+(\d)/i, 1] || head[/\A\s*(\d)\s*(?:Doubles|Singles)/i, 1])&.to_i
+  end
+
   def parse_line_row(row)
     players = nil
     sets = []
@@ -166,7 +165,7 @@ class DeltriResults
       cls = attrs[/class="([^"]*)"/i, 1].to_s
       txt = clean(inner)
       if cls.include?("card_names")
-        players = txt
+        players = inner
       elsif cls.include?("pts2") && txt.match?(/\A\d+\z/)
         sets << { v: txt.to_i, won: cls.include?("bold-text") }
       end
@@ -188,7 +187,6 @@ class DeltriResults
     opp_won = opp_sets.count { |s| s[:won] }
     return (our_won > opp_won ? "W" : "L") if our_won != opp_won
 
-    # Tie on sets (or no winner markers): Del-Tri is games-based, so total games decide.
     our_sets.sum { |s| s[:v] } >= opp_sets.sum { |s| s[:v] } ? "W" : "L"
   end
 
@@ -204,16 +202,34 @@ class DeltriResults
     )
   end
 
-  # "1 Anh Bixby / 1 Rachel Miller" => ["Anh Bixby", "Rachel Miller"]
-  # Strips leading seeding digits and trailing "(S)" sub markers.
+  # "1 Anh Bixby / 1 Rachel Miller" (Del-Tri) or
+  # "Joanne Steinberg 1 Cup 6 / Christi Neilly (S) Cup 6" (WITAP)
+  # => ["Anh Bixby", "Rachel Miller"] / ["Joanne Steinberg", "Christi Neilly"].
+  # Strips leading seed numbers, "(S)" sub markers, and the "Cup N" league tag.
   def names(cell)
-    cell.to_s.split("/").map do |part|
-      part.gsub(/&#?\w+;?/, " ")          # strip HTML entities (e.g. the ↑ "subbing" arrow)
-          .gsub(/[↑↓]/, " ")              # and the literal arrow form
-          .gsub(/\(\s*s\b[^)]*\)?/i, " ") # strip "(S)" / "(S ..." sub markers (keeps "(Default)")
-          .gsub(/\A\s*\d+\s*/, "")        # strip the leading seeding number
-          .gsub(/\s+/, " ").strip
+    clean(cell).split("/").map do |part|
+      p = part.gsub(/&#?\w+;?/, " ").gsub(/[↑↓]/, " ").gsub(/\A\s*\d+\s*/, "")
+      lead = p[/\A[^\d(]+/] || p              # name = leading text before a digit/paren/Cup tag
+      lead.gsub(/\(\s*s\b[^)]*\)?/i, "").gsub(/\bCup\b.*\z/i, "").gsub(/\s+/, " ").strip
     end.reject(&:blank?)
+  end
+
+  def team_param(url)
+    team_param_from_href(url)
+  end
+
+  def team_param_from_href(href)
+    return nil if href.blank?
+    val = href.to_s[/team=([^"&]+)/i, 1]
+    return nil unless val
+    CGI.unescape(val)
+  end
+
+  def base_of(url)
+    uri = URI(url)
+    "#{uri.scheme}://#{uri.host}"
+  rescue StandardError
+    "https://deltri.tenniscores.com"
   end
 
   def clean(str)
