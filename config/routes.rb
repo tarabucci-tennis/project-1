@@ -59,6 +59,7 @@ Rails.application.routes.draw do
   post "matches/:match_id/availability", to: "availabilities#update", as: :match_availability
 
   get "profile",      to: "profiles#show", as: :profile
+  post "profile/deltri", to: "profiles#connect_deltri", as: :connect_deltri
   get "players/:id",  to: "profiles#player", as: :player
 
   # Stats test page (pulls from Google Sheets)

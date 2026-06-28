@@ -10,7 +10,26 @@ class ProfilesController < ApplicationController
     @is_self = true
     @shared_teams = []
     @playing_stats = build_playing_stats(@user)
+    @deltri_matches = @user.player_matches.chronological.group_by(&:division)
     render :player
+  end
+
+  # POST /profile/deltri — save your Del-Tri player link and pull your history.
+  def connect_deltri
+    url = params[:deltri_player_url].to_s.strip
+    current_user.update(deltri_player_url: url.presence)
+
+    if url.blank?
+      redirect_to profile_path, notice: "Removed your Del-Tri link."
+      return
+    end
+
+    result = DeltriPlayerImport.new(current_user).call
+    if result.imported.any?
+      redirect_to profile_path, notice: "Pulled your Del-Tri matches — #{result}"
+    else
+      redirect_to profile_path, alert: "Couldn't read that Del-Tri link. #{result.notes.join('; ')}"
+    end
   end
 
   # GET /players/:id — teammate's profile
@@ -24,6 +43,7 @@ class ProfilesController < ApplicationController
     @teams = @user.member_teams.includes(:team_memberships).order(start_date: :desc)
     @stats = @user.tennis_stats.chronological
     @is_self = (@user.id == current_user.id)
+    @deltri_matches = @user.player_matches.chronological.group_by(&:division)
 
     # Find teams you share with this player
     my_team_ids = current_user.member_teams.pluck(:id)

@@ -21,5 +21,8 @@ namespace :scores do
 
     deltri = DeltriResults.new.call
     puts "[#{stamp}] Del-Tri results — #{deltri}"
+
+    players = DeltriPlayerImport.sync_all
+    puts "[#{stamp}] Del-Tri player history — #{players}"
   end
 end

@@ -4501,6 +4501,31 @@ body.cr-ctx-profiles-show .cr-section-title { color: rgba(255, 255, 255, 0.82); 
 body.cr-ctx-profiles-show .cr-section-subtitle { color: rgba(255, 255, 255, 0.6); }
 
 /* ============================================================
+   Del-Tri personal match history (profile page)
+   ============================================================ */
+.cr-deltri-connect { margin-bottom: 8px; }
+.cr-deltri-hint { font-size: 0.82rem; color: var(--cr-text-muted); margin: 0 0 10px; }
+.cr-deltri-row { display: flex; gap: 8px; flex-wrap: wrap; }
+.cr-deltri-input {
+  flex: 1 1 240px; min-width: 0; padding: 9px 12px; font-size: 0.85rem;
+  border: 1px solid var(--cr-border); border-radius: 8px; background: var(--cr-white); color: var(--cr-text);
+}
+.cr-deltri-btn { white-space: nowrap; flex-shrink: 0; }
+.cr-deltri-record {
+  font-size: 0.75rem; font-weight: 800; color: var(--cr-gold);
+  background: rgba(201,162,74,0.14); border-radius: 999px; padding: 2px 9px; margin-left: 8px;
+}
+.cr-deltri-outcome { text-align: right; white-space: nowrap; display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
+.cr-deltri-score { font-size: 0.78rem; font-weight: 700; color: var(--cr-text-muted); font-variant-numeric: tabular-nums; }
+.cr-deltri-empty { font-size: 0.85rem; color: var(--cr-text-muted); }
+
+/* Dark-profile theming for the hint + inputs */
+body.cr-ctx-profiles-show .cr-deltri-hint,
+body.cr-ctx-profiles-player .cr-deltri-hint { color: rgba(255,255,255,0.6); }
+body.cr-ctx-profiles-show .cr-deltri-empty,
+body.cr-ctx-profiles-player .cr-deltri-empty { color: rgba(255,255,255,0.6); }
+
+/* ============================================================
    Division-team drill-down (opponent results from the Standings tab)
    ============================================================ */
 body.cr-ctx-division_teams-show { background: var(--cr-black); }

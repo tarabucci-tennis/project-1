@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_06_28_000000) do
+ActiveRecord::Schema[8.1].define(version: 2026_06_28_010000) do
   create_table "availabilities", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.integer "match_id", null: false
@@ -117,6 +117,26 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_28_000000) do
     t.index ["user_id"], name: "index_notifications_on_user_id"
   end
 
+  create_table "player_matches", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "date_label"
+    t.string "division"
+    t.string "league"
+    t.string "line_label"
+    t.string "match_label"
+    t.string "opponents"
+    t.string "partner"
+    t.date "played_on"
+    t.string "result"
+    t.string "score"
+    t.string "source"
+    t.string "source_key"
+    t.datetime "updated_at", null: false
+    t.integer "user_id", null: false
+    t.index ["user_id", "source", "source_key"], name: "index_player_matches_on_user_and_source_key", unique: true
+    t.index ["user_id"], name: "index_player_matches_on_user_id"
+  end
+
   create_table "team_events", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.date "event_date", null: false
@@ -185,6 +205,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_28_000000) do
   create_table "users", force: :cascade do |t|
     t.boolean "admin", default: false, null: false
     t.datetime "created_at", null: false
+    t.string "deltri_player_url"
     t.decimal "dynamic_rating"
     t.date "dynamic_rating_date"
     t.string "email"
@@ -211,6 +232,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_28_000000) do
   add_foreign_key "match_line_players", "users"
   add_foreign_key "match_lines", "matches"
   add_foreign_key "matches", "tennis_teams"
+  add_foreign_key "player_matches", "users"
   add_foreign_key "notifications", "matches"
   add_foreign_key "notifications", "tennis_teams"
   add_foreign_key "notifications", "users"
