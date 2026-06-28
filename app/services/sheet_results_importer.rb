@@ -31,7 +31,8 @@ class SheetResultsImporter
   def import(rows)
     outcome = Outcome.new(matches_updated: 0, lines_updated: 0, lineups_posted: 0, unmatched: [])
 
-    rows.group_by { |r| [ to_date(r[:match_date]), normalize(r[:opponent]) ] }.each do |(date, opp_key), group|
+    rows.select { |r| to_date(r[:match_date]) }
+        .group_by { |r| [ to_date(r[:match_date]), normalize(r[:opponent]) ] }.each do |(date, opp_key), group|
       scored = group.select { |r| scored?(r) }
       next if scored.empty?
 
@@ -142,6 +143,17 @@ class SheetResultsImporter
   end
 
   def to_date(value)
-    value.is_a?(Date) ? value : Date.parse(value.to_s)
+    return value if value.is_a?(Date)
+    s = value.to_s.strip
+    return nil if s.empty?
+    # Sheet dates are US-format MM/DD/YYYY. Date.parse mis-reads ambiguous
+    # ones (e.g. 05/12 → Dec 5), so parse the slash format explicitly.
+    if (m = s.match(%r{\A(\d{1,2})/(\d{1,2})/(\d{4})\z}))
+      Date.new(m[3].to_i, m[1].to_i, m[2].to_i)
+    else
+      Date.parse(s)
+    end
+  rescue ArgumentError
+    nil
   end
 end

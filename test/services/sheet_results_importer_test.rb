@@ -68,6 +68,18 @@ class SheetResultsImporterTest < ActiveSupport::TestCase
     assert_equal "2-3", @match.score_summary
   end
 
+  test "parses US MM/DD/YYYY dates correctly and ignores blank-date rows" do
+    may = @team.matches.create!(match_date: Time.zone.local(2026, 5, 12, 10, 30), opponent: "Love Hurts")
+    rows = [
+      { match_date: "05/12/2026", opponent: "Love Hurts", line: "Singles", player_1: "Tara Bucci", score: "6-0 6-0", result: "W" },
+      { match_date: "", opponent: "", line: "Singles", player_1: "", score: "", result: "" } # blank row must not crash
+    ]
+    outcome = SheetResultsImporter.new(@team).import(rows)
+    may.reload
+    assert_equal 1, outcome.matches_updated
+    assert_equal "win", may.result, "05/12/2026 must be May 12, not Dec 5"
+  end
+
   test "skips matches with no scores and reports unmatched opponents" do
     blank = @rows.map { |r| r.merge(score: "", result: "") }
     outcome = SheetResultsImporter.new(@team).import(blank)
