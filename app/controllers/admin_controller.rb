@@ -45,4 +45,17 @@ class AdminController < ApplicationController
       @elapsed_ms = ((Process.clock_gettime(Process::CLOCK_MONOTONIC) - started) * 1000).round
     end
   end
+
+  # Pull the latest results from the public Google Sheet and import them
+  # (match results + posted lineups + standings). Idempotent.
+  def sync_scores
+    result = SheetScoreSync.new.call
+    if result.summaries.any?
+      redirect_to teams_path, notice: "Synced from Google Sheet — #{result}"
+    else
+      redirect_to teams_path, alert: "Sync ran but found nothing to update. #{result.notes.join('; ')}"
+    end
+  rescue StandardError => e
+    redirect_to teams_path, alert: "Sync failed: #{e.message}"
+  end
 end

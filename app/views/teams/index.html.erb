@@ -8,7 +8,13 @@
       <p class="cr-home-subtitle">2026 Season · standings, calendar &amp; upcoming</p>
     </div>
     <div class="cr-page-header-actions">
-      <%= link_to "+ Join a Team", find_team_path, class: "cr-btn cr-btn-gold cr-btn-compact" %>
+      <% if current_user.admin? %>
+        <%= button_to "🔄 Sync Scores", admin_sync_scores_path, method: :post,
+              class: "cr-btn cr-btn-gold cr-btn-compact",
+              form: { style: "display:inline;" },
+              data: { turbo_confirm: "Pull the latest results from your Google Sheet?" } %>
+      <% end %>
+      <%= link_to "+ Join a Team", find_team_path, class: "cr-btn cr-btn-outline cr-btn-compact" %>
       <%= link_to "Create a Team", new_team_path, class: "cr-btn cr-btn-outline cr-btn-compact" %>
     </div>
   </div>
