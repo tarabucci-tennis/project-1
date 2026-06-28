@@ -4424,3 +4424,6 @@ button.cr-header-pill {
 
 /* Rank medallion on ivory — keep it crisp */
 .cr-st-rank-badge { background: #ffffff; }
+
+/* One solid, warm page background (ivory listings sit on top as a panel) */
+body { background: #f3f0e9; }
