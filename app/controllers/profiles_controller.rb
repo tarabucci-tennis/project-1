@@ -10,7 +10,7 @@ class ProfilesController < ApplicationController
     @is_self = true
     @shared_teams = []
     @playing_stats = build_playing_stats(@user)
-    @deltri_matches = @user.player_matches.chronological.group_by(&:division)
+    @deltri_matches = @user.player_matches.chronological.group_by { |pm| [ pm.league, pm.division ] }
     render :player
   end
 
@@ -43,7 +43,7 @@ class ProfilesController < ApplicationController
     @teams = @user.member_teams.includes(:team_memberships).order(start_date: :desc)
     @stats = @user.tennis_stats.chronological
     @is_self = (@user.id == current_user.id)
-    @deltri_matches = @user.player_matches.chronological.group_by(&:division)
+    @deltri_matches = @user.player_matches.chronological.group_by { |pm| [ pm.league, pm.division ] }
 
     # Find teams you share with this player
     my_team_ids = current_user.member_teams.pluck(:id)

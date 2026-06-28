@@ -236,27 +236,27 @@
     </section>
   <% end %>
 
-  <%# ── Del-Tri personal match history (pulled from your player page) ── %>
+  <%# ── Personal league match history (auto-pulled from team rosters) ── %>
   <% if @is_self || @deltri_matches.present? %>
     <section class="cr-section">
-      <h2 class="cr-section-title">Del-Tri Match History</h2>
+      <h2 class="cr-section-title">League Match History</h2>
 
       <% if @is_self %>
+        <p class="cr-deltri-hint">Your matches are pulled automatically from your teams' league pages — every cup or division you've played in, including teams you only subbed on. To add a league we don't have yet, paste your player-page link below.</p>
         <%= form_with url: connect_deltri_path, method: :post, local: true, class: "cr-deltri-connect" do %>
-          <p class="cr-deltri-hint">Open your player page on Del-Tri (tap your name on any match), copy the link, and paste it below. We'll pull every division you've played in — including ones you only subbed in a few times.</p>
           <div class="cr-deltri-row">
             <input type="url" name="deltri_player_url" value="<%= @user.deltri_player_url %>"
-                   placeholder="https://deltri.tenniscores.com/player.php?p=..." class="cr-deltri-input">
-            <button type="submit" class="cr-btn cr-btn-gold cr-deltri-btn"><%= @user.deltri_player_url.present? ? "Refresh" : "Pull My Matches" %></button>
+                   placeholder="https://...tenniscores.com/player.php?p=..." class="cr-deltri-input">
+            <button type="submit" class="cr-btn cr-btn-gold cr-deltri-btn"><%= @user.deltri_player_url.present? ? "Refresh" : "Add a link" %></button>
           </div>
         <% end %>
       <% end %>
 
       <% if @deltri_matches.present? %>
-        <% @deltri_matches.each do |division, matches| %>
+        <% @deltri_matches.each do |(league, division), matches| %>
           <% wins = matches.count(&:won?); losses = matches.size - wins %>
           <h3 class="cr-section-subtitle" style="margin-top: 18px;">
-            <%= division.presence || "Matches" %>
+            <%= [ league, division ].reject(&:blank?).join(" · ").presence || "Matches" %>
             <span class="cr-deltri-record"><%= wins %>–<%= losses %></span>
           </h3>
           <div class="cr-match-list">
