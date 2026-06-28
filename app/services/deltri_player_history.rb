@@ -23,7 +23,9 @@ class DeltriPlayerHistory
 
   private
 
-  def fetch(url)
+  # Follows redirects — some sites route player.php through a ?mod=... URL.
+  def fetch(url, limit = 4)
+    raise "Too many redirects" if limit <= 0
     uri = URI(url)
     res = Net::HTTP.start(uri.host, uri.port, use_ssl: true,
                           open_timeout: FETCH_TIMEOUT, read_timeout: FETCH_TIMEOUT) do |http|
@@ -33,17 +35,27 @@ class DeltriPlayerHistory
       req["Accept-Language"] = "en-US,en;q=0.9"
       http.request(req)
     end
-    raise "HTTP #{res.code}" unless res.code.to_i == 200
-
-    res.body.to_s
+    case res
+    when Net::HTTPRedirection
+      location = res["location"]
+      location = "#{uri.scheme}://#{uri.host}#{location}" unless location.start_with?("http")
+      fetch(location, limit - 1)
+    when Net::HTTPSuccess
+      res.body.to_s
+    else
+      raise "HTTP #{res.code}"
+    end
   end
 
   def parse(html)
     body = html.gsub(/<(script|style)[^>]*>.*?<\/\1>/mi, "")
 
+    # Section headers vary by site: "Division 4" (Del-Tri), "Cup 6" (WITAP),
+    # and similar. Capture the label and its position.
     divisions = []
-    body.to_enum(:scan, /Division\s+(\d+)\s*<span[^>]*>\(\s*(\d+)\s*Wins?,\s*(\d+)\s*Loss/i).each do
-      divisions << { pos: Regexp.last_match.begin(0), label: "Division #{Regexp.last_match[1]}" }
+    body.to_enum(:scan, /\b(Division|Cup|Series|Flight|Group)\s+(\w+)\s*<span[^>]*>\(\s*(\d+)\s*Wins?,\s*(\d+)\s*Loss/i).each do
+      m = Regexp.last_match
+      divisions << { pos: m.begin(0), label: "#{m[1]} #{m[2]}" }
     end
 
     blocks = []
