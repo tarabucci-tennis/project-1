@@ -85,7 +85,8 @@ class SheetResultsImporter
 
     won  = match.match_lines.where(result: "win").count
     lost = match.match_lines.where(result: "loss").count
-    match.update!(result: (won > lost ? "win" : "loss"), score_summary: "#{won}-#{lost}")
+    team_result = won > lost ? "win" : (won < lost ? "loss" : "tie")
+    match.update!(result: team_result, score_summary: "#{won}-#{lost}")
 
     lineup.update!(published: true, published_at: Time.current)
     outcome.lineups_posted += 1

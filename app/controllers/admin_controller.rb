@@ -52,15 +52,17 @@ class AdminController < ApplicationController
   def sync_scores
     result = SheetScoreSync.new.call
     standings = DeltriStandings.new.call
+    deltri = DeltriResults.new.call
 
     pieces = []
     pieces << result.to_s if result.summaries.any?
     pieces << "Standings — #{standings}" if standings.updated.any?
+    pieces << "Del-Tri results — #{deltri}" if deltri.updated.any?
 
     if pieces.any?
       redirect_to teams_path, notice: "Synced — #{pieces.join(' | ')}"
     else
-      messages = (result.notes + standings.notes).reject(&:blank?)
+      messages = (result.notes + standings.notes + deltri.notes).reject(&:blank?)
       redirect_to teams_path, alert: "Sync ran but found nothing to update. #{messages.join('; ')}"
     end
   rescue StandardError => e

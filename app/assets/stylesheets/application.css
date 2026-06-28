@@ -1863,6 +1863,12 @@ button.cr-header-pill {
   border: 1px solid #fecaca;
 }
 
+.cr-result-badge-tie {
+  background: #fdf7e8;
+  color: #9a7b1f;
+  border: 1px solid #ecd9a6;
+}
+
 .cr-result-score {
   font-size: 0.85rem;
   color: var(--cr-text-muted);
@@ -4188,6 +4194,7 @@ button.cr-header-pill {
 .cr-result-badge { border-radius: 999px; padding: 3px 11px; font-weight: 700; }
 .cr-result-badge-win  { background: rgba(22,163,74,0.12); color: #15803d; }
 .cr-result-badge-loss { background: rgba(220,38,38,0.10); color: #b91c1c; }
+.cr-result-badge-tie  { background: rgba(201,162,74,0.14); color: #9a7b1f; }
 .cr-result-score { color: var(--cr-text-muted); font-weight: 700; }
 
 /* — Captain actions: clean full-width pill row (stack the split) — */

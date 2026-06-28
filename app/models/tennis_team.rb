@@ -77,7 +77,7 @@ class TennisTeam < ApplicationRecord
     matches.select { |m| m.result.present? }
            .sort_by(&:match_date)
            .last(limit)
-           .map { |m| m.result == "win" ? "W" : "L" }
+           .map { |m| m.result == "win" ? "W" : (m.result == "tie" ? "T" : "L") }
   end
 
   def next_match
