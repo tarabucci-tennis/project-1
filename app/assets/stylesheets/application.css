@@ -4404,3 +4404,23 @@ button.cr-header-pill {
 
 /* Form dots — a touch of depth */
 .cr-st-dot { box-shadow: 0 1px 2px rgba(10, 22, 40, 0.18); }
+
+/* ============================================================
+   Home standings — warm-white listings + soft pastel W/L circles
+   (Final tone pass per Tara: ivory rows, warmer form dots)
+   ============================================================ */
+
+/* Warm white (ivory) team listings instead of stark white */
+.cr-standings-wrap { background: #faf8f2; }
+.cr-standings thead th { background: rgba(201, 162, 74, 0.10); }
+.cr-standings tbody td { border-bottom-color: rgba(10, 22, 40, 0.06); }
+.cr-st-row:hover td { background: rgba(201, 162, 74, 0.12); }
+.cr-standings tbody tr.cr-st-row:first-child td { background: rgba(201, 162, 74, 0.13); }
+
+/* Lighter, warmer W/L circles (soft mint / soft rose, dark text) */
+.cr-st-dot { box-shadow: none; font-weight: 800; }
+.cr-st-dot-w { background: #aee5bd; color: #14532d; }
+.cr-st-dot-l { background: #f4b4b4; color: #8a2222; }
+
+/* Rank medallion on ivory — keep it crisp */
+.cr-st-rank-badge { background: #ffffff; }
