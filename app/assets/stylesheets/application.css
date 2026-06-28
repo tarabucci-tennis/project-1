@@ -4356,6 +4356,7 @@ button.cr-header-pill {
 }
 .cr-st-dot-w { background: var(--cr-green); }
 .cr-st-dot-l { background: var(--cr-red); }
+.cr-st-dot-t { background: var(--cr-gold); color: var(--cr-black); }
 
 .cr-st-hint { color: var(--cr-text-light); font-size: 0.78rem; margin-top: 12px; text-align: center; }
 
@@ -4446,6 +4447,7 @@ button.cr-header-pill {
 .cr-st-dot { box-shadow: none; font-weight: 800; }
 .cr-st-dot-w { background: #aee5bd; color: #14532d; }
 .cr-st-dot-l { background: #f4b4b4; color: #8a2222; }
+.cr-st-dot-t { background: #e9c66a; color: #5c4708; }
 
 /* Rank medallion on ivory — keep it crisp */
 .cr-st-rank-badge { background: #ffffff; }
