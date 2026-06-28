@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_06_28_010000) do
+ActiveRecord::Schema[8.1].define(version: 2026_06_28_020000) do
   create_table "availabilities", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.integer "match_id", null: false
@@ -195,6 +195,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_28_010000) do
     t.string "section"
     t.date "start_date"
     t.string "team_type"
+    t.string "tenniscores_url"
     t.datetime "updated_at", null: false
     t.integer "user_id", null: false
     t.index ["join_code"], name: "index_tennis_teams_on_join_code", unique: true
