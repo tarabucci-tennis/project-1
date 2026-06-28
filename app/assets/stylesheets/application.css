@@ -4347,3 +4347,60 @@ button.cr-header-pill {
   .cr-st-dot { width: 20px; height: 20px; font-size: 0.6rem; }
   .cr-home-tab { padding: 11px 14px; font-size: 0.85rem; }
 }
+
+/* ============================================================
+   Home dashboard — high-end color polish (navy + gold palette)
+   ============================================================ */
+
+/* Active tab → warm gold pill */
+.cr-home-tab-active {
+  color: var(--cr-black);
+  background: rgba(201, 162, 74, 0.14);
+  border-radius: 10px 10px 0 0;
+}
+
+/* Premium framing on the standings card */
+.cr-standings-wrap {
+  border-color: rgba(201, 162, 74, 0.22);
+  box-shadow: 0 10px 30px rgba(10, 22, 40, 0.07);
+}
+
+/* Navy header bar with gold underline */
+.cr-standings-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 15px 18px;
+  background: linear-gradient(135deg, #0c1c34 0%, #16294a 100%);
+  border-bottom: 2px solid var(--cr-gold);
+}
+.cr-standings-head-title { color: var(--cr-white); font-weight: 800; font-size: 0.98rem; letter-spacing: 0.3px; }
+.cr-standings-head-season { color: var(--cr-gold-soft); font-weight: 700; font-size: 0.68rem; letter-spacing: 1.4px; text-transform: uppercase; }
+
+/* Subtle gold tint on the column header row */
+.cr-standings thead th { background: rgba(201, 162, 74, 0.06); }
+
+/* Rank medallions — gold for the leader */
+.cr-st-rank-badge {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 26px; height: 26px; border-radius: 50%;
+  background: var(--cr-bg); border: 1px solid var(--cr-border);
+  color: var(--cr-text-muted); font-weight: 800; font-size: 0.78rem;
+}
+.cr-standings tbody tr.cr-st-row:first-child .cr-st-rank-badge {
+  background: linear-gradient(135deg, var(--cr-gold-bright), var(--cr-gold));
+  border-color: var(--cr-gold);
+  color: var(--cr-black);
+  box-shadow: 0 2px 8px rgba(201, 162, 74, 0.45);
+}
+
+/* Leader row: soft gold tint + gold left accent */
+.cr-standings tbody tr.cr-st-row:first-child td { background: rgba(201, 162, 74, 0.07); }
+.cr-standings tbody tr.cr-st-row:first-child td:first-child { box-shadow: inset 3px 0 0 var(--cr-gold); }
+
+/* Win% color-coded */
+.cr-st-pct-good { color: var(--cr-green); font-weight: 800; }
+.cr-st-pct-bad  { color: var(--cr-red);   font-weight: 800; }
+
+/* Form dots — a touch of depth */
+.cr-st-dot { box-shadow: 0 1px 2px rgba(10, 22, 40, 0.18); }

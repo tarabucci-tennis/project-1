@@ -27,6 +27,10 @@
       <div data-home-tabs-target="panel">
         <% standings = @my_teams.sort_by { |t| [ (t.wins_count + t.losses_count).positive? ? 0 : 1, -(t.win_pct || 0), -t.wins_count, t.name.to_s.downcase ] } %>
         <div class="cr-standings-wrap">
+          <div class="cr-standings-head">
+            <span class="cr-standings-head-title">Team Standings</span>
+            <span class="cr-standings-head-season">2026 Season</span>
+          </div>
           <table class="cr-standings">
             <thead>
               <tr>
@@ -42,7 +46,7 @@
             <tbody>
               <% standings.each_with_index do |team, i| %>
                 <tr class="cr-st-row" onclick="if (!event.target.closest('a')) window.location='<%= team_path(team) %>'">
-                  <td class="cr-st-n cr-st-rank"><%= i + 1 %></td>
+                  <td class="cr-st-n cr-st-rank"><span class="cr-st-rank-badge"><%= i + 1 %></span></td>
                   <td>
                     <%= link_to team.name, team_path(team), class: "cr-st-team" %>
                     <div class="cr-st-sub">
@@ -51,7 +55,11 @@
                   </td>
                   <td class="cr-st-n cr-st-w"><%= team.wins_count %></td>
                   <td class="cr-st-n cr-st-l"><%= team.losses_count %></td>
-                  <td class="cr-st-n"><%= team.win_pct ? "#{team.win_pct}%" : "—" %></td>
+                  <td class="cr-st-n">
+                    <% if team.win_pct %>
+                      <span class="<%= team.win_pct >= 50 ? "cr-st-pct-good" : "cr-st-pct-bad" %>"><%= team.win_pct %>%</span>
+                    <% else %>—<% end %>
+                  </td>
                   <td>
                     <% form = team.recent_form %>
                     <% if form.any? %>
