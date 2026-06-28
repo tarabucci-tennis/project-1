@@ -4526,3 +4526,50 @@ body.cr-ctx-teams-show .cr-seg-btn-active { background: var(--cr-gold); color: v
   .cr-seg { width: 100%; }
   .cr-seg-btn { flex: 1; padding: 9px 0; }
 }
+
+/* ============================================================
+   Dark theme: remaining pages (auth, admin, captain forms)
+   ============================================================ */
+body.cr-ctx-sessions-new,
+body.cr-ctx-registrations-new,
+body.cr-ctx-users-index,
+body.cr-ctx-matches-edit_results,
+body.cr-ctx-matches-edit,
+body.cr-ctx-matches-new,
+body.cr-ctx-matches-show,
+body.cr-ctx-lineups-edit { background: var(--cr-black); }
+
+/* Sign-in landing */
+body.cr-ctx-sessions-new .cr-landing-headline { color: var(--cr-white); }
+body.cr-ctx-sessions-new .cr-landing-tagline,
+body.cr-ctx-sessions-new .cr-landing-feature-text,
+body.cr-ctx-sessions-new .cr-login-sub { color: rgba(255, 255, 255, 0.65); }
+body.cr-ctx-sessions-new .cr-landing-feature-title { color: var(--cr-white); }
+body.cr-ctx-sessions-new .cr-landing-footer,
+body.cr-ctx-sessions-new .cr-admin-reset-label,
+body.cr-ctx-sessions-new .cr-admin-reset-note { color: rgba(255, 255, 255, 0.5); }
+
+/* Sign-up: just the on-canvas switch link (card stays light) */
+body.cr-ctx-registrations-new .cr-auth-switch { color: rgba(255, 255, 255, 0.7); }
+
+/* Players admin */
+body.cr-ctx-users-index .cr-page-title { color: var(--cr-white); }
+
+/* Captain forms — lighten on-canvas headings & labels (inputs stay light) */
+body.cr-ctx-matches-edit_results .cr-page-title,
+body.cr-ctx-matches-edit .cr-page-title,
+body.cr-ctx-matches-new .cr-page-title,
+body.cr-ctx-matches-show .cr-page-title,
+body.cr-ctx-lineups-edit .cr-page-title { color: var(--cr-white); }
+body.cr-ctx-matches-edit_results .cr-form-section-title,
+body.cr-ctx-matches-edit_results .cr-line-label,
+body.cr-ctx-matches-edit_results .cr-line-players-label,
+body.cr-ctx-matches-edit_results .cr-result-label,
+body.cr-ctx-matches-edit .cr-section-title { color: rgba(255, 255, 255, 0.85); }
+body.cr-ctx-matches-edit_results .cr-form-help { color: rgba(255, 255, 255, 0.55); }
+body.cr-ctx-matches-edit_results .cr-field > label,
+body.cr-ctx-matches-edit_results .cr-field > span,
+body.cr-ctx-matches-edit .cr-field > label,
+body.cr-ctx-matches-edit .cr-field > span,
+body.cr-ctx-lineups-edit .cr-field > label,
+body.cr-ctx-lineups-edit .cr-field > span { color: rgba(255, 255, 255, 0.8); }
