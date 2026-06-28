@@ -122,14 +122,21 @@ class TeamsController < ApplicationController
     @standings = []
 
     if @is_points_league
-      # Del-Tri uses points (total games won across the season)
-      # Calculate Legacy 2's points from match scores
-      my_points = @team.matches.where.not(score_summary: nil).sum { |m|
-        m.score_summary.to_s.split("-").first.to_i
-      }
-      @standings << { name: @team.name, points: my_points, is_self: true }
-      @division_teams.each do |dt|
-        @standings << { name: dt.name, points: dt.wins, is_self: false }
+      # Del-Tri uses points (total games won across the season).
+      if @division_teams.any?
+        # Real league table, scraped from the public Del-Tri site. Points come
+        # straight from the source, so every team — including ours — is accurate.
+        self_key = @team.name.to_s.strip.downcase
+        @standings = @division_teams.map do |dt|
+          { name: dt.name, points: dt.wins, is_self: dt.name.to_s.strip.downcase == self_key }
+        end
+      else
+        # Fallback before the first standings sync: estimate our points from
+        # entered match scores so the tab isn't empty.
+        my_points = @team.matches.where.not(score_summary: nil).sum { |m|
+          m.score_summary.to_s.split("-").first.to_i
+        }
+        @standings << { name: @team.name, points: my_points, is_self: true }
       end
       @standings.sort_by! { |s| [ -s[:points], s[:name] ] }
     else

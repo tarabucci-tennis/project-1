@@ -46,14 +46,22 @@ class AdminController < ApplicationController
     end
   end
 
-  # Pull the latest results from the public Google Sheet and import them
-  # (match results + posted lineups + standings). Idempotent.
+  # Pull the latest results from the public Google Sheet (match results +
+  # posted lineups) AND the public Del-Tri site (opponent league standings),
+  # then import both. Idempotent.
   def sync_scores
     result = SheetScoreSync.new.call
-    if result.summaries.any?
-      redirect_to teams_path, notice: "Synced from Google Sheet — #{result}"
+    standings = DeltriStandings.new.call
+
+    pieces = []
+    pieces << result.to_s if result.summaries.any?
+    pieces << "Standings — #{standings}" if standings.updated.any?
+
+    if pieces.any?
+      redirect_to teams_path, notice: "Synced — #{pieces.join(' | ')}"
     else
-      redirect_to teams_path, alert: "Sync ran but found nothing to update. #{result.notes.join('; ')}"
+      messages = (result.notes + standings.notes).reject(&:blank?)
+      redirect_to teams_path, alert: "Sync ran but found nothing to update. #{messages.join('; ')}"
     end
   rescue StandardError => e
     redirect_to teams_path, alert: "Sync failed: #{e.message}"
