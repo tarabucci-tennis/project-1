@@ -11,12 +11,24 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # The deploy key is stored base64-encoded in the DEPLOY_SSH_KEY_BASE64
+      # secret (so it could be pasted from a phone without newline corruption).
+      # appleboy/ssh-action needs the raw PEM, so decode it into a multiline
+      # env var first. Using secrets.DEPLOY_SSH_KEY directly fails auth.
+      - name: Decode deploy SSH key
+        run: |
+          {
+            echo "DEPLOY_KEY<<__CR_EOF__"
+            echo "${{ secrets.DEPLOY_SSH_KEY_BASE64 }}" | base64 -d
+            echo "__CR_EOF__"
+          } >> "$GITHUB_ENV"
+
       - name: Deploy to droplet via SSH
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.DEPLOY_HOST }}
           username: root
-          key: ${{ secrets.DEPLOY_SSH_KEY }}
+          key: ${{ env.DEPLOY_KEY }}
           script: |
             set -e
             if [ ! -d /root/app ]; then
