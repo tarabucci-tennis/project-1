@@ -2295,7 +2295,12 @@ button.cr-header-pill {
   border-radius: 10px;
   overflow: hidden;
   margin-bottom: 16px;
+  background: var(--cr-white);
 }
+
+/* Keep the row text dark on the white card, even on dark-themed pages
+   (the team page background is navy, which was hiding the player names). */
+.cr-captain-analytics-row { color: var(--cr-text); }
 
 .cr-captain-analytics-header {
   display: flex;
