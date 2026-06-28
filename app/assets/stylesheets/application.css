@@ -4245,3 +4245,105 @@ button.cr-header-pill {
   .cr-match-action-btn { min-width: 0; flex: 1 1 31%; padding: 11px 8px; font-size: 0.74rem; }
   .cr-cal-btn { width: 34px; height: 34px; }
 }
+
+/* ============================================================
+   Home dashboard — tabbed Standings / Calendar / Coming Up
+   (Court Report colors. Works as real tabs on mobile too.)
+   ============================================================ */
+
+.cr-home-subtitle { color: var(--cr-text-muted); font-size: 0.9rem; margin-top: 4px; }
+
+.cr-home-tabs {
+  display: flex;
+  gap: 2px;
+  border-bottom: 1px solid var(--cr-border);
+  margin-bottom: 22px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.cr-home-tabs::-webkit-scrollbar { display: none; }
+
+.cr-home-tab {
+  padding: 12px 18px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--cr-text-muted);
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  font-family: inherit;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: color 0.15s, border-color 0.15s;
+}
+.cr-home-tab:hover { color: var(--cr-text); }
+.cr-home-tab-active { color: var(--cr-text); border-bottom-color: var(--cr-gold); }
+
+/* — Standings table — */
+.cr-standings-wrap {
+  background: var(--cr-white);
+  border: 1px solid var(--cr-border);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 1px 2px rgba(10, 22, 40, 0.04);
+}
+.cr-standings { width: 100%; border-collapse: collapse; }
+.cr-standings thead th {
+  text-align: left;
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--cr-text-light);
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--cr-border);
+  white-space: nowrap;
+}
+.cr-standings tbody td {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--cr-border);
+  vertical-align: middle;
+  font-size: 0.92rem;
+  color: var(--cr-text);
+}
+.cr-standings tbody tr:last-child td { border-bottom: none; }
+.cr-st-row { cursor: pointer; transition: background 0.12s; }
+.cr-st-row:hover td { background: rgba(201, 162, 74, 0.06); }
+
+.cr-st-n { text-align: center; white-space: nowrap; }
+.cr-st-rank { color: var(--cr-text-light); font-weight: 800; width: 40px; }
+.cr-st-team { color: var(--cr-text); font-weight: 700; font-size: 0.98rem; text-decoration: none; }
+.cr-st-team:hover { color: var(--cr-gold); }
+.cr-st-sub { color: var(--cr-text-muted); font-size: 0.76rem; margin-top: 2px; }
+.cr-st-w { color: var(--cr-green); font-weight: 700; }
+.cr-st-l { color: var(--cr-red); font-weight: 700; }
+.cr-st-muted { color: var(--cr-text-light); }
+.cr-st-next { color: var(--cr-text-muted); font-size: 0.86rem; white-space: nowrap; }
+.cr-st-next-date { color: var(--cr-text); font-weight: 600; }
+
+.cr-st-form { display: flex; gap: 5px; }
+.cr-st-dot {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 22px; height: 22px; border-radius: 50%;
+  font-size: 0.66rem; font-weight: 800; color: #fff;
+}
+.cr-st-dot-w { background: var(--cr-green); }
+.cr-st-dot-l { background: var(--cr-red); }
+
+.cr-st-hint { color: var(--cr-text-light); font-size: 0.78rem; margin-top: 12px; text-align: center; }
+
+/* Center the calendar within its tab (it used to share a 2-col row) */
+.cr-dash-cal-full { max-width: 520px; margin: 0 auto; }
+
+/* Mobile: trim lower-priority columns so the table stays clean & readable */
+@media (max-width: 640px) {
+  .cr-standings thead th:nth-child(5), .cr-standings tbody td:nth-child(5),  /* Win% */
+  .cr-standings thead th:nth-child(7), .cr-standings tbody td:nth-child(7) { /* Next */
+    display: none;
+  }
+  .cr-standings thead th, .cr-standings tbody td { padding: 13px 10px; }
+  .cr-st-dot { width: 20px; height: 20px; font-size: 0.6rem; }
+  .cr-home-tab { padding: 11px 14px; font-size: 0.85rem; }
+}
