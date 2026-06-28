@@ -4479,3 +4479,50 @@ body.cr-ctx-profiles-show .cr-player-name { color: var(--cr-white); }
 body.cr-ctx-profiles-show .cr-player-meta { color: rgba(255, 255, 255, 0.65); }
 body.cr-ctx-profiles-show .cr-section-title { color: rgba(255, 255, 255, 0.82); border-bottom-color: rgba(255, 255, 255, 0.12); }
 body.cr-ctx-profiles-show .cr-section-subtitle { color: rgba(255, 255, 255, 0.6); }
+
+/* ============================================================
+   Team page — segmented Schedule/Results + unified match list
+   ============================================================ */
+.cr-seg { display: inline-flex; background: var(--cr-bg); border: 1px solid var(--cr-border); border-radius: 999px; padding: 4px; margin-bottom: 16px; gap: 4px; }
+.cr-seg-btn { border: none; background: none; cursor: pointer; font-family: inherit; padding: 8px 20px; border-radius: 999px; font-size: 0.84rem; font-weight: 700; color: var(--cr-text-muted); transition: all 0.15s; }
+.cr-seg-btn-active { background: var(--cr-white); color: var(--cr-text); box-shadow: 0 1px 3px rgba(10,22,40,0.12); }
+
+.cr-sched-list { background: var(--cr-white); border: 1px solid var(--cr-border); border-radius: 16px; overflow: hidden; box-shadow: 0 1px 2px rgba(10,22,40,0.04); }
+.cr-sched-item { border-bottom: 1px solid var(--cr-border); }
+.cr-sched-item:last-child { border-bottom: none; }
+.cr-sched-item[open] { background: var(--cr-bg); }
+.cr-sched-row { display: flex; align-items: center; gap: 14px; padding: 14px 16px; cursor: pointer; list-style: none; }
+.cr-sched-row::-webkit-details-marker { display: none; }
+.cr-sched-date { background: var(--cr-black); color: var(--cr-white); border-radius: 10px; padding: 7px 10px; text-align: center; min-width: 50px; flex-shrink: 0; }
+.cr-sched-date-mon { font-size: 0.6rem; font-weight: 700; color: var(--cr-gold); letter-spacing: 1px; }
+.cr-sched-date-day { font-size: 1.3rem; font-weight: 900; line-height: 1; margin-top: 2px; }
+.cr-sched-main { flex: 1; min-width: 0; }
+.cr-sched-opp { font-weight: 700; color: var(--cr-text); font-size: 1rem; line-height: 1.25; }
+.cr-sched-sub { font-size: 0.8rem; color: var(--cr-text-muted); margin-top: 4px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.cr-sched-right { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+.cr-sched-score { font-weight: 700; color: var(--cr-text-muted); font-size: 0.9rem; }
+.cr-sched-upcoming { font-size: 0.72rem; color: var(--cr-text-light); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+.cr-sched-pill { font-size: 0.66rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #15803d; background: rgba(22,163,74,0.10); padding: 3px 9px; border-radius: 999px; }
+.cr-sched-caret { color: var(--cr-text-light); font-size: 0.8rem; transition: transform 0.15s; }
+.cr-sched-item[open] .cr-sched-caret { transform: rotate(180deg); }
+.cr-tag { font-size: 0.62rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px; padding: 3px 9px; border-radius: 999px; }
+.cr-tag-home { background: rgba(22,163,74,0.10); color: #15803d; }
+.cr-tag-away { background: #eceef1; color: var(--cr-text-muted); }
+.cr-sched-detail { padding: 0 16px 18px; }
+.cr-sched-detail-title { font-size: 0.64rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--cr-text-light); margin: 14px 0 8px; }
+.cr-sched-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
+.cr-chip-btn { display: inline-flex; align-items: center; gap: 5px; padding: 8px 14px; border-radius: 999px; border: 1px solid var(--cr-border); background: var(--cr-white); color: var(--cr-text); font-size: 0.78rem; font-weight: 600; text-decoration: none; white-space: nowrap; }
+.cr-chip-btn:hover { border-color: var(--cr-gold); background: rgba(201,162,74,0.06); }
+
+/* Dark team page: segmented control reads on the dark canvas */
+body.cr-ctx-teams-show .cr-seg { background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.12); }
+body.cr-ctx-teams-show .cr-seg-btn { color: rgba(255,255,255,0.6); }
+body.cr-ctx-teams-show .cr-seg-btn-active { background: var(--cr-gold); color: var(--cr-black); box-shadow: none; }
+
+@media (max-width: 640px) {
+  .cr-sched-row { padding: 12px; gap: 10px; }
+  .cr-sched-opp { font-size: 0.95rem; }
+  .cr-chip-btn { flex: 1 1 auto; justify-content: center; }
+  .cr-seg { width: 100%; }
+  .cr-seg-btn { flex: 1; padding: 9px 0; }
+}
