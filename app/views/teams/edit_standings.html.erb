@@ -1,0 +1,47 @@
+<% content_for :title, "Edit Standings · #{@team.name}" %>
+
+<div class="cr-main">
+  <div class="cr-section" style="max-width: 720px; margin: 24px auto;">
+    <%= link_to "← Back to #{@team.name}", team_path(@team, anchor: "standings"), class: "cr-back-link", style: "display:inline-block; margin-bottom: 12px;" %>
+    <h1 class="cr-section-title" style="margin-bottom: 6px;">Edit Opponent Standings</h1>
+    <p style="font-size: 0.85rem; color: var(--cr-text-muted); margin-bottom: 18px;">
+      USTA doesn't publish other teams' standings publicly, so enter them here from what you see when you're logged into TennisLink. Your own team's row is calculated automatically — you don't edit it.
+    </p>
+
+    <%= form_with url: update_standings_team_path(@team), method: :patch, local: true do %>
+      <% @division_teams.each do |dt| %>
+        <div class="cr-stand-edit-card">
+          <div class="cr-stand-edit-name"><%= dt.name %></div>
+          <div class="cr-stand-edit-grid">
+            <label>Matches<input type="number" min="0" name="division_teams[<%= dt.id %>][matches_played]" value="<%= dt.matches_played %>"></label>
+            <label>Points<input type="number" min="0" name="division_teams[<%= dt.id %>][points]" value="<%= dt.points %>"></label>
+            <label>Sets Won<input type="number" min="0" name="division_teams[<%= dt.id %>][sets_won]" value="<%= dt.sets_won %>"></label>
+            <label>Sets Lost<input type="number" min="0" name="division_teams[<%= dt.id %>][sets_lost]" value="<%= dt.sets_lost %>"></label>
+            <label>Games Won<input type="number" min="0" name="division_teams[<%= dt.id %>][games_won]" value="<%= dt.games_won %>"></label>
+            <label>Games Lost<input type="number" min="0" name="division_teams[<%= dt.id %>][games_lost]" value="<%= dt.games_lost %>"></label>
+          </div>
+        </div>
+      <% end %>
+
+      <div class="cr-stand-edit-card" style="border-style: dashed;">
+        <div class="cr-stand-edit-name">➕ Add an opponent (optional)</div>
+        <label style="display:block; margin-bottom: 8px;">Team name
+          <input type="text" name="new_opponent[name]" placeholder="e.g. Kinetix Deuces Wild" style="width:100%; padding:8px 10px; border:1px solid var(--cr-border); border-radius:6px;">
+        </label>
+        <div class="cr-stand-edit-grid">
+          <label>Matches<input type="number" min="0" name="new_opponent[matches_played]" value="0"></label>
+          <label>Points<input type="number" min="0" name="new_opponent[points]" value="0"></label>
+          <label>Sets Won<input type="number" min="0" name="new_opponent[sets_won]" value="0"></label>
+          <label>Sets Lost<input type="number" min="0" name="new_opponent[sets_lost]" value="0"></label>
+          <label>Games Won<input type="number" min="0" name="new_opponent[games_won]" value="0"></label>
+          <label>Games Lost<input type="number" min="0" name="new_opponent[games_lost]" value="0"></label>
+        </div>
+      </div>
+
+      <div style="display:flex; gap:12px; margin-top: 20px;">
+        <%= submit_tag "Save Standings", class: "cr-btn cr-btn-gold" %>
+        <%= link_to "Cancel", team_path(@team, anchor: "standings"), class: "cr-btn cr-btn-outline" %>
+      </div>
+    <% end %>
+  </div>
+</div>

@@ -155,16 +155,19 @@ class TeamsController < ApplicationController
       @standings << my_stats.merge(name: @team.name, is_self: true)
 
       @division_teams.each do |dt|
+        gw = dt.games_won.to_i
+        gl = dt.games_lost.to_i
+        pct = (gw + gl).positive? ? (gw.to_f / (gw + gl) * 100).round(2) : 0.0
         @standings << {
           name: dt.name,
           is_self: false,
-          matches_played: (dt.wins + dt.losses),
-          points: dt.wins * 2,  # USTA format: 2 pts per match win (rough)
-          sets_won: 0,
-          sets_lost: 0,
-          games_won: 0,
-          games_lost: 0,
-          games_won_pct: 0.0
+          matches_played: dt.matches_played.to_i,
+          points: dt.points.to_i,
+          sets_won: dt.sets_won.to_i,
+          sets_lost: dt.sets_lost.to_i,
+          games_won: gw,
+          games_lost: gl,
+          games_won_pct: pct
         }
       end
 
@@ -401,7 +404,48 @@ class TeamsController < ApplicationController
     redirect_to team_path(@team), notice: message
   end
 
+  # Captain manually enters opponent standings (USTA doesn't publish these
+  # publicly). Edits the DivisionTeam rows shown on the Standings tab.
+  def edit_standings
+    @team = TennisTeam.find(params[:id])
+    unless @team.can_set_lineup?(current_user) || current_user.admin?
+      return redirect_to team_path(@team), alert: "Only captains can edit standings."
+    end
+    @division_teams = @team.division_teams.order(:name)
+  end
+
+  def update_standings
+    @team = TennisTeam.find(params[:id])
+    unless @team.can_set_lineup?(current_user) || current_user.admin?
+      return redirect_to team_path(@team), alert: "Only captains can edit standings."
+    end
+
+    (params[:division_teams] || {}).each do |id, attrs|
+      dt = @team.division_teams.find_by(id: id)
+      next unless dt
+      dt.update(standings_attrs(attrs))
+    end
+
+    new_opp = params[:new_opponent]
+    if new_opp.present? && new_opp[:name].to_s.strip.present?
+      @team.division_teams.create(standings_attrs(new_opp).merge(name: new_opp[:name].strip))
+    end
+
+    redirect_to team_path(@team, anchor: "standings"), notice: "Opponent standings updated."
+  end
+
   private
+
+  def standings_attrs(attrs)
+    {
+      matches_played: attrs[:matches_played].to_i,
+      points: attrs[:points].to_i,
+      sets_won: attrs[:sets_won].to_i,
+      sets_lost: attrs[:sets_lost].to_i,
+      games_won: attrs[:games_won].to_i,
+      games_lost: attrs[:games_lost].to_i
+    }
+  end
 
   # Pull "First Last" / "First Middle Last" patterns out of pasted
   # roster text. Works on multi-column grids as well as single-column
