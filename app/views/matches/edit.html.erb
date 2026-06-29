@@ -53,6 +53,16 @@
       </div>
 
       <div class="cr-field">
+        <%= f.label :playoff_level, "Stage" %>
+        <%= f.select :playoff_level,
+              [ [ "Regular Season", "" ] ] + TennisTeam::PLAYOFF_LEVELS.map { |l| [ l, l ] },
+              {}, class: "field-input" %>
+        <p style="font-size: 0.75rem; color: var(--cr-text-muted); margin-top: 4px;">
+          Tag playoff matches (Districts / Sectionals / Nationals) so they're grouped and badged.
+        </p>
+      </div>
+
+      <div class="cr-field">
         <%= f.label :notes, "Notes" %>
         <%= f.text_area :notes, rows: 3, placeholder: "Any extra info about this match" %>
       </div>

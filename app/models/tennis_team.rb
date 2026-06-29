@@ -8,7 +8,22 @@ class TennisTeam < ApplicationRecord
 
   LEAGUE_CATEGORIES = %w[USTA Inter-Club Local].freeze
 
+  # The USTA playoff path a team can advance through after winning its flight.
+  PLAYOFF_LEVELS = %w[Districts Sectionals Nationals].freeze
+
   validates :league_category, inclusion: { in: LEAGUE_CATEGORIES }
+
+  # Has this team advanced to a playoff level (Districts / Sectionals / Nationals)?
+  def in_playoffs?
+    playoff_level.present?
+  end
+
+  # The next level up from where the team is now (nil if at Nationals or unset).
+  def next_playoff_level
+    return PLAYOFF_LEVELS.first unless in_playoffs?
+    idx = PLAYOFF_LEVELS.index(playoff_level)
+    idx ? PLAYOFF_LEVELS[idx + 1] : nil
+  end
 
   before_create :generate_join_code
 
