@@ -4588,6 +4588,14 @@ body.cr-ctx-division_teams-show { background: var(--cr-black); }
 .cr-tag-away { background: #eceef1; color: var(--cr-text-muted); }
 .cr-tag-playoff { background: rgba(201,162,74,0.18); color: #8a6d1f; }
 
+/* Edit opponent standings */
+.cr-stand-edit-card { background: var(--cr-white); border: 1px solid var(--cr-border); border-radius: 10px; padding: 14px 16px; margin-bottom: 12px; }
+.cr-stand-edit-name { font-weight: 800; color: var(--cr-text); margin-bottom: 10px; }
+.cr-stand-edit-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.cr-stand-edit-grid label { display: flex; flex-direction: column; font-size: 0.7rem; font-weight: 700; color: var(--cr-text-muted); text-transform: uppercase; letter-spacing: 0.3px; gap: 4px; }
+.cr-stand-edit-grid input { padding: 8px 10px; font-size: 0.95rem; border: 1px solid var(--cr-border); border-radius: 6px; color: var(--cr-text); }
+@media (max-width: 520px) { .cr-stand-edit-grid { grid-template-columns: repeat(2, 1fr); } }
+
 /* Playoff celebration banner */
 .cr-playoff-banner {
   display: flex; align-items: center; gap: 14px;

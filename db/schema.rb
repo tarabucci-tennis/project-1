@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_06_28_030000) do
+ActiveRecord::Schema[8.1].define(version: 2026_06_28_040000) do
   create_table "availabilities", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.integer "match_id", null: false
@@ -25,9 +25,15 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_28_030000) do
 
   create_table "division_teams", force: :cascade do |t|
     t.datetime "created_at", null: false
+    t.integer "games_lost", default: 0, null: false
+    t.integer "games_won", default: 0, null: false
     t.integer "losses", default: 0, null: false
+    t.integer "matches_played", default: 0, null: false
     t.string "name", null: false
+    t.integer "points", default: 0, null: false
     t.integer "position"
+    t.integer "sets_lost", default: 0, null: false
+    t.integer "sets_won", default: 0, null: false
     t.string "source_url"
     t.integer "tennis_team_id", null: false
     t.datetime "updated_at", null: false

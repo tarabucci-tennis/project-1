@@ -621,6 +621,12 @@
           <p class="cr-standings-note">
             * Calculation of game-winning percentage does not include defaulted matches.
           </p>
+          <% if @is_captain %>
+            <p style="margin: 4px 0 14px;">
+              <%= link_to "✏️ Edit opponent standings", edit_standings_team_path(@team), class: "cr-chip-btn" %>
+              <span style="font-size: 0.75rem; color: var(--cr-text-light); margin-left: 6px;">USTA hides rival records — type them in from TennisLink.</span>
+            </p>
+          <% end %>
         <% end %>
 
         <%# Horizontal scroll wrapper so the wide table is readable
