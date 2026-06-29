@@ -11,15 +11,22 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # The deploy key is stored base64-encoded in the DEPLOY_SSH_KEY_BASE64
-      # secret (so it could be pasted from a phone without newline corruption).
-      # appleboy/ssh-action needs the raw PEM, so decode it into a multiline
-      # env var first. Using secrets.DEPLOY_SSH_KEY directly fails auth.
-      - name: Decode deploy SSH key
+      # The deploy key lives in the DEPLOY_SSH_KEY secret. It may be stored
+      # either as a raw PEM ("-----BEGIN ...") or base64-encoded (it was encoded
+      # once so it could be pasted from a phone without newline corruption).
+      # Accept either: if it already looks like a PEM, use it as-is; otherwise
+      # base64-decode it. appleboy/ssh-action needs the raw PEM.
+      - name: Prepare deploy SSH key
+        env:
+          RAW_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
         run: |
           {
             echo "DEPLOY_KEY<<__CR_EOF__"
-            echo "${{ secrets.DEPLOY_SSH_KEY_BASE64 }}" | base64 -d
+            if printf '%s' "$RAW_KEY" | grep -q 'BEGIN'; then
+              printf '%s\n' "$RAW_KEY"
+            else
+              printf '%s' "$RAW_KEY" | base64 -d
+            fi
             echo "__CR_EOF__"
           } >> "$GITHUB_ENV"
 
