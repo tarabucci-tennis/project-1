@@ -70,20 +70,32 @@ class SheetScoreSync
     end
     raise "HTTP #{res.code}" unless res.code.to_i == 200
 
-    CSV.parse(res.body.to_s, headers: true).map do |row|
+    table = CSV.parse(res.body.to_s, headers: true)
+    headers = table.headers
+    table.map do |row|
       {
-        match_date: row["match_date"],
-        opponent:   row["opponent"],
-        line:       row["line"],
-        player_1:   row["player_1"],
-        player_2:   row["player_2"],
-        opponent_1: row["opponent_1"],
-        opponent_2: row["opponent_2"],
-        score:      row["score"],
-        result:     row["result"],
-        team:       row["team"]
+        match_date: cell(row, headers, "match_date"),
+        opponent:   cell(row, headers, "opponent"),
+        line:       cell(row, headers, "line"),
+        player_1:   cell(row, headers, "player_1"),
+        player_2:   cell(row, headers, "player_2"),
+        opponent_1: cell(row, headers, "opponent_1"),
+        opponent_2: cell(row, headers, "opponent_2"),
+        score:      cell(row, headers, "score"),
+        result:     cell(row, headers, "result"),
+        team:       cell(row, headers, "team")
       }
     end
+  end
+
+  # Read a column by name, tolerant of malformed headers. A stray tab/space in
+  # a header cell (e.g. "opponent_1\topponent_2") otherwise hides the column and
+  # silently drops that data, so we also match a header whose first token equals
+  # the wanted name.
+  def cell(row, headers, key)
+    header = headers.find { |h| h == key } ||
+             headers.find { |h| h.to_s.split(/[\t\r\n ]+/).first == key }
+    header ? row[header] : nil
   end
 
   def find_team(name)
