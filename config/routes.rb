@@ -52,6 +52,7 @@ Rails.application.routes.draw do
       post "add_player", to: "teams#add_player"
       post "paste_roster", to: "teams#paste_roster"
       post "archive_season", to: "teams#archive_season"
+      post "advance", to: "teams#advance"
     end
   end
 

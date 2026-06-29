@@ -384,6 +384,23 @@ class TeamsController < ApplicationController
                 notice: "Archived #{count} player#{'s' unless count == 1} under #{season}."
   end
 
+  # Captain advances the team along the playoff path (or clears it). Sets which
+  # level the team is competing at, which drives the celebration banner and the
+  # default stage for new matches.
+  def advance
+    @team = TennisTeam.find(params[:id])
+    unless @team.can_set_lineup?(current_user) || current_user.admin?
+      return redirect_to team_path(@team), alert: "Only captains can update the playoff status."
+    end
+
+    level = params[:playoff_level].to_s.strip
+    level = nil unless TennisTeam::PLAYOFF_LEVELS.include?(level)
+    @team.update(playoff_level: level)
+
+    message = level ? "🏆 #{@team.name} is now competing in the #{level}!" : "Back to the regular season."
+    redirect_to team_path(@team), notice: message
+  end
+
   private
 
   # Pull "First Last" / "First Middle Last" patterns out of pasted

@@ -57,6 +57,11 @@ class Match < ApplicationRecord
     result == "tie"
   end
 
+  # Does this match belong to a playoff stage (Districts / Sectionals / Nationals)?
+  def playoff?
+    playoff_level.present?
+  end
+
   def result_label
     return nil unless played?
     return "T" if tied?

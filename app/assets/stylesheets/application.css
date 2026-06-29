@@ -4586,6 +4586,18 @@ body.cr-ctx-division_teams-show { background: var(--cr-black); }
 .cr-tag { font-size: 0.62rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px; padding: 3px 9px; border-radius: 999px; }
 .cr-tag-home { background: rgba(22,163,74,0.10); color: #15803d; }
 .cr-tag-away { background: #eceef1; color: var(--cr-text-muted); }
+.cr-tag-playoff { background: rgba(201,162,74,0.18); color: #8a6d1f; }
+
+/* Playoff celebration banner */
+.cr-playoff-banner {
+  display: flex; align-items: center; gap: 14px;
+  background: linear-gradient(135deg, #1a1205 0%, #3a2c08 100%);
+  border: 1px solid var(--cr-gold);
+  border-radius: 12px; padding: 16px 20px; margin: 0 0 20px;
+}
+.cr-playoff-trophy { font-size: 2rem; line-height: 1; flex-shrink: 0; }
+.cr-playoff-banner-title { color: var(--cr-gold); font-size: 1.1rem; font-weight: 800; letter-spacing: 0.3px; }
+.cr-playoff-banner-sub { color: rgba(255,255,255,0.75); font-size: 0.85rem; margin-top: 2px; }
 .cr-sched-detail { padding: 0 16px 18px; }
 .cr-sched-detail-title { font-size: 0.64rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--cr-text-light); margin: 14px 0 8px; }
 .cr-sched-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }

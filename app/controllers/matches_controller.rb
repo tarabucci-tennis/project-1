@@ -23,7 +23,7 @@ class MatchesController < ApplicationController
     unless @team.captain?(current_user)
       return redirect_to team_matches_path(@team), alert: "Only captains can add matches."
     end
-    @match = @team.matches.new
+    @match = @team.matches.new(playoff_level: @team.playoff_level)
   end
 
   def create
@@ -193,7 +193,7 @@ class MatchesController < ApplicationController
   end
 
   def match_params
-    params.require(:match).permit(:match_date, :match_time, :location, :opponent, :notes, :home_away)
+    params.require(:match).permit(:match_date, :match_time, :location, :opponent, :notes, :home_away, :playoff_level)
   end
 
   def build_availability_map

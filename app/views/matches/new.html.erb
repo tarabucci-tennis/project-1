@@ -28,6 +28,13 @@
       </div>
 
       <div class="field">
+        <%= f.label :playoff_level, "Stage" %>
+        <%= f.select :playoff_level,
+              [ [ "Regular Season", "" ] ] + TennisTeam::PLAYOFF_LEVELS.map { |l| [ l, l ] },
+              {}, class: "field-input" %>
+      </div>
+
+      <div class="field">
         <%= f.label :notes %>
         <%= f.text_field :notes, class: "field-input", placeholder: "Optional notes" %>
       </div>
