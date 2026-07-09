@@ -28,8 +28,17 @@
   </div>
 
   <%# ── Rating cards ── %>
-  <% if @user.ntrp_rating.present? || @user.dynamic_rating.present? %>
+  <% if @user.court_report_rating.present? || @user.ntrp_rating.present? || @user.dynamic_rating.present? %>
     <div class="cr-stat-cards" style="margin-bottom: 32px;">
+      <% if @user.court_report_rating.present? %>
+        <div class="cr-stat-card" style="border: 1px solid var(--cr-gold);">
+          <div class="cr-stat-card-value" style="color: var(--cr-gold);"><%= sprintf("%.2f", @user.court_report_rating) %></div>
+          <div class="cr-stat-card-label">Court Report Rating</div>
+          <div style="font-size: 0.7rem; color: var(--cr-text-light); margin-top: 4px;">
+            live · from <%= @user.court_report_rating_lines %> lines
+          </div>
+        </div>
+      <% end %>
       <% if @user.ntrp_rating.present? %>
         <div class="cr-stat-card">
           <div class="cr-stat-card-value" style="color: var(--cr-gold);"><%= @user.ntrp_rating %></div>

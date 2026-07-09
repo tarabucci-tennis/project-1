@@ -674,6 +674,7 @@ class TeamsController < ApplicationController
       match.match_lines.each do |line|
         line.match_line_players.each do |mlp|
           pd = player_data[mlp.user_id] ||= {
+            user: mlp.user,
             name: mlp.user.name,
             matches_played: Set.new,
             singles: 0, doubles: 0,
@@ -700,6 +701,8 @@ class TeamsController < ApplicationController
 
       {
         name: pd[:name],
+        user_id: pd[:user]&.id,
+        rating: pd[:user]&.court_report_rating,
         matches_played: pd[:matches_played].size,
         singles_pct: total_lines > 0 ? (pd[:singles].to_f / total_lines * 100).round(0) : 0,
         doubles_pct: total_lines > 0 ? (pd[:doubles].to_f / total_lines * 100).round(0) : 0,

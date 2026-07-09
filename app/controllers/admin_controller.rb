@@ -54,6 +54,7 @@ class AdminController < ApplicationController
     standings = DeltriStandings.new.call
     deltri = DeltriResults.new.call
     players = DeltriPlayerImport.sync_all
+    RatingCalculator.recompute!
 
     pieces = []
     pieces << result.to_s if result.summaries.any?

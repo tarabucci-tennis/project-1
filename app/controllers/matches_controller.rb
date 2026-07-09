@@ -119,6 +119,9 @@ class MatchesController < ApplicationController
       end
     end
 
+    # Ratings update the instant a result is saved.
+    RatingCalculator.recompute!
+
     redirect_to team_path(@team), notice: "Match results saved!"
   rescue ActiveRecord::RecordInvalid => e
     redirect_to edit_results_team_match_path(@team, @match), alert: "Error saving results: #{e.message}"

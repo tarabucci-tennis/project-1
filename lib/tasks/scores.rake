@@ -24,5 +24,8 @@ namespace :scores do
 
     players = DeltriPlayerImport.sync_all
     puts "[#{stamp}] Del-Tri player history — #{players}"
+
+    RatingCalculator.recompute!
+    puts "[#{stamp}] Court Report ratings recomputed"
   end
 end
