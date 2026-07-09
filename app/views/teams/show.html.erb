@@ -575,6 +575,8 @@
             <div class="cr-captain-analytics-table">
               <div class="cr-captain-analytics-header">
                 <span class="cr-captain-col-name">Player</span>
+                <span class="cr-captain-col-stat">YCR</span>
+                <span class="cr-captain-col-stat">TR</span>
                 <span class="cr-captain-col-stat">Played</span>
                 <span class="cr-captain-col-stat">W</span>
                 <span class="cr-captain-col-stat">L</span>
@@ -586,10 +588,18 @@
               <% @player_stats_data.each do |ps| %>
                 <div class="cr-captain-analytics-row">
                   <span class="cr-captain-col-name">
-                    <%= link_to ps[:name], tennis_record_url(ps[:name]), target: "_blank", rel: "noopener", style: "text-decoration: none; color: inherit; font-weight: 600;", title: "View #{ps[:name]} on TennisRecord" %>
+                    <%= ps[:name] %>
                     <% if ps[:user_id] == current_user.id %>
                       <span style="color: var(--cr-gold); font-size: 0.75rem;">(you)</span>
                     <% end %>
+                  </span>
+                  <span class="cr-captain-col-stat">
+                    <% if ps[:user_id] && ps[:rating].present? %>
+                      <%= link_to ps[:rating], player_path(ps[:user_id]), style: "color: var(--cr-gold); font-weight: 800; text-decoration: none;", title: "Court Report Rating — tap for full stats" %>
+                    <% else %>—<% end %>
+                  </span>
+                  <span class="cr-captain-col-stat">
+                    <%= link_to "view", tennis_record_url(ps[:name]), target: "_blank", rel: "noopener", style: "color: var(--cr-text-light); font-size: 0.72rem; text-decoration: underline;", title: "#{ps[:name]} on TennisRecord" %>
                   </span>
                   <span class="cr-captain-col-stat"><%= ps[:matches_played] %></span>
                   <span class="cr-captain-col-stat" style="color: var(--cr-green);"><%= ps[:wins] %></span>
@@ -602,7 +612,7 @@
               <% end %>
             </div>
             <p style="font-size: 0.8rem; color: var(--cr-text-muted); margin-top: 8px;">
-              Click a player's name for their full stats, doubles partner win %, and recent matches.
+              <strong>YCR</strong> = Court Report Rating, computed live from your entered scores — tap it for full stats. <strong>TR</strong> = TennisRecord (opens their site).
             </p>
           </div>
         <% end %>
