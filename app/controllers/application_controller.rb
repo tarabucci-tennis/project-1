@@ -17,9 +17,11 @@ class ApplicationController < ActionController::Base
 
   def no_html_caching
     return unless request.format.html?
-    response.headers["Cache-Control"] = "no-store, no-cache, must-revalidate"
+    # Set via the cache_control hash (not a raw header) so Rails doesn't rebuild
+    # over it. no-cache makes Rack::ETag skip adding an ETag, so the browser has
+    # no validator to 304 against and always refetches the current page.
+    response.cache_control.replace(no_cache: true, extras: [ "no-store" ])
     response.headers["Pragma"] = "no-cache"
-    response.headers["Expires"] = "0"
   end
 
   def current_user
