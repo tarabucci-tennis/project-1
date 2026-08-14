@@ -54,6 +54,7 @@ class AdminController < ApplicationController
     standings = DeltriStandings.new.call
     deltri = DeltriResults.new.call
     players = DeltriPlayerImport.sync_all
+    playoffs = TennisrecordPlayoffs.new.call
     RatingCalculator.recompute!
 
     pieces = []
@@ -61,11 +62,12 @@ class AdminController < ApplicationController
     pieces << "Standings — #{standings}" if standings.updated.any?
     pieces << "Del-Tri results — #{deltri}" if deltri.updated.any?
     pieces << "Player history — #{players}" if players.imported.any?
+    pieces << "Postseason — #{playoffs}" if playoffs.updated.any?
 
     if pieces.any?
       redirect_to teams_path, notice: "Synced — #{pieces.join(' | ')}"
     else
-      messages = (result.notes + standings.notes + deltri.notes + players.notes).reject(&:blank?)
+      messages = (result.notes + standings.notes + deltri.notes + players.notes + playoffs.notes).reject(&:blank?)
       redirect_to teams_path, alert: "Sync ran but found nothing to update. #{messages.join('; ')}"
     end
   rescue StandardError => e

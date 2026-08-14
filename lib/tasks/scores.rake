@@ -25,6 +25,9 @@ namespace :scores do
     players = DeltriPlayerImport.sync_all
     puts "[#{stamp}] Del-Tri player history — #{players}"
 
+    playoffs = TennisrecordPlayoffs.new.call
+    puts "[#{stamp}] Postseason (TennisRecord) — #{playoffs}"
+
     RatingCalculator.recompute!
     puts "[#{stamp}] Court Report ratings recomputed"
   end
