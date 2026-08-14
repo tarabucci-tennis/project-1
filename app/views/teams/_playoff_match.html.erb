@@ -1,0 +1,57 @@
+<% lines = match.match_lines.sort_by(&:position) %>
+<% has_lines = lines.any? { |l| l.result.present? || l.score_display.present? } %>
+<details class="cr-sched-item">
+  <summary class="cr-sched-row">
+    <div class="cr-sched-date">
+      <div class="cr-sched-date-mon"><%= match.match_date.strftime("%b").upcase %></div>
+      <div class="cr-sched-date-day"><%= match.match_date.strftime("%-d") %></div>
+    </div>
+    <div class="cr-sched-main">
+      <div class="cr-sched-opp">vs. <%= match.opponent %></div>
+      <div class="cr-sched-sub">
+        <span class="cr-tag cr-tag-playoff">🏆 <%= match.playoff_level %></span>
+        <% if match.home? %><span class="cr-tag cr-tag-home">Home</span><% elsif match.away? %><span class="cr-tag cr-tag-away">Away</span><% end %>
+        <% if match.location.present? %><span><%= match.location %></span><% end %>
+      </div>
+    </div>
+    <div class="cr-sched-right">
+      <% if match.played? %>
+        <span class="cr-result-badge <%= match.won? ? 'cr-result-badge-win' : (match.tied? ? 'cr-result-badge-tie' : 'cr-result-badge-loss') %>"><%= match.result_label %></span>
+        <% if match.score_summary.present? %><span class="cr-sched-score"><%= match.score_summary %></span><% end %>
+      <% else %>
+        <span class="cr-sched-upcoming">Scheduled</span>
+      <% end %>
+      <span class="cr-sched-caret" aria-hidden="true">▾</span>
+    </div>
+  </summary>
+  <div class="cr-sched-detail">
+    <% if @is_captain %>
+      <div class="cr-sched-actions">
+        <%= link_to edit_results_team_match_path(@team, match), class: "cr-chip-btn" do %>🎾 Enter Results<% end %>
+        <%= link_to edit_team_match_lineup_path(@team, match), class: "cr-chip-btn" do %>📋 Set Lineup<% end %>
+        <%= link_to edit_team_match_path(@team, match), class: "cr-chip-btn" do %>✏️ Edit Match<% end %>
+      </div>
+    <% end %>
+    <% if has_lines %>
+      <div class="cr-sched-detail-title">Line Scores</div>
+      <table class="cr-result-lines">
+        <thead><tr><th>Line</th><th>Players</th><th>Opponents</th><th>Score &amp; Result</th></tr></thead>
+        <tbody>
+          <% lines.each do |line| %>
+            <tr>
+              <td class="cr-result-line-label"><%= line.short_label %></td>
+              <td class="cr-result-line-players"><% names = line.match_line_players.map { |mlp| mlp.user.name }.reject(&:blank?) %><%= names.any? ? names.join(" / ") : "—" %></td>
+              <td class="cr-result-line-players"><%= line.opponents.presence || "—" %></td>
+              <td class="cr-result-line-outcome">
+                <% if line.result.present? %><span class="cr-result-badge <%= line.won? ? 'cr-result-badge-win' : 'cr-result-badge-loss' %>"><%= line.won? ? "W" : "L" %></span><% else %>—<% end %>
+                <% if line.score_display.present? %><span class="cr-result-line-score"><%= line.score_display %></span><% end %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    <% elsif @is_captain %>
+      <p class="cr-result-detail-empty">No line scores yet — tap “Enter Results”.</p>
+    <% end %>
+  </div>
+</details>

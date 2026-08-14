@@ -117,13 +117,17 @@ class TeamsController < ApplicationController
     @losses           = @team.matches.where(result: "loss").count
     @division_teams   = @team.division_teams.ranked
 
-    # Playoff run (Districts / Sectionals / Nationals) — shown in its own tab,
-    # separate from the regular season.
+    # Playoff run — shown as extra segments next to Schedule/Results. A stage
+    # (Districts → Sectionals → Nationals) appears once the team reaches it:
+    # it has matches at that stage, or the team's current level is that stage.
     @playoff_matches = @team.matches.where.not(playoff_level: [ nil, "" ])
                             .includes(match_lines: { match_line_players: :user })
                             .order(match_date: :asc)
                             .to_a
-    @show_playoffs = @team.in_playoffs? || @playoff_matches.any?
+    @playoff_by_level = @playoff_matches.group_by(&:playoff_level)
+    @playoff_stages = TennisTeam::PLAYOFF_LEVELS.select do |lvl|
+      @playoff_by_level.key?(lvl) || @team.playoff_level == lvl
+    end
 
     # Build combined standings. Del-Tri (Local) and Inter-Club (Cup) are both
     # scored by points (games/lines won), pulled from their tenniscores pages.
