@@ -117,6 +117,14 @@ class TeamsController < ApplicationController
     @losses           = @team.matches.where(result: "loss").count
     @division_teams   = @team.division_teams.ranked
 
+    # Playoff run (Districts / Sectionals / Nationals) — shown in its own tab,
+    # separate from the regular season.
+    @playoff_matches = @team.matches.where.not(playoff_level: [ nil, "" ])
+                            .includes(match_lines: { match_line_players: :user })
+                            .order(match_date: :asc)
+                            .to_a
+    @show_playoffs = @team.in_playoffs? || @playoff_matches.any?
+
     # Build combined standings. Del-Tri (Local) and Inter-Club (Cup) are both
     # scored by points (games/lines won), pulled from their tenniscores pages.
     @is_points_league = %w[Local Inter-Club].include?(@team.league_category)
