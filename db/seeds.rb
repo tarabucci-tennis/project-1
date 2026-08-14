@@ -40,6 +40,21 @@ tara.update!(
 )
 
 # --------------------------------------------------------------
+# Idempotency guard — protect live data on every deploy
+# --------------------------------------------------------------
+# The deploy pipeline runs `db:seed` on every deploy. The block below is
+# destructive (it deletes and recreates teams/matches), so once real data
+# exists we STOP here — otherwise every deploy would wipe entered results,
+# standings, playoff status, and any matches added in the app.
+#
+# To intentionally re-seed from the canonical data, clear the teams first
+# (or reset the DB) and run `bin/rails db:seed` manually.
+if TennisTeam.exists?
+  puts "Teams already exist — skipping destructive re-seed to preserve live data."
+  return
+end
+
+# --------------------------------------------------------------
 # Clean out any old team data from previous seeds
 # --------------------------------------------------------------
 # Use raw SQL to delete in correct order (child tables first) to avoid
