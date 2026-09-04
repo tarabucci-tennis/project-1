@@ -2,12 +2,18 @@ module ApplicationHelper
   # Returns the current user's teams grouped by league category.
   # Used by the shared league nav partial. Returns an empty hash when
   # there's no logged-in user.
+  # Teams grouped by the league they actually play in, keyed by the name a
+  # player would recognise ("USTA", "Inter-Club", "Del-Tri", "Bux-Mont").
+  # Grouping used to be by league_category, which put every local league in
+  # one "Local" bucket that the UI then hardcoded as "Del-Tri" — so a second
+  # local league showed up under the wrong name. Ordering is stable: USTA
+  # first, then Inter-Club, then local leagues alphabetically.
   def current_user_teams_by_league
     return {} unless current_user
 
     teams = current_user.member_teams.to_a
     teams = current_user.tennis_teams.to_a if teams.empty?
-    teams.group_by(&:league_category)
+    TennisTeam.group_by_league(teams)
   end
 
   # TennisRecord.com profile URL for a player by name. TennisRecord is

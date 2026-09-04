@@ -21,11 +21,25 @@ class DeltriPlayerImport
     end
   end
 
-  # League label per site host, for display.
+  # League label per site host, for display. Only a fallback now — the first
+  # place we look is the league_name saved on a team that plays on that host,
+  # so a new league labels itself correctly with no code change.
   LEAGUES = {
-    "deltri.tenniscores.com" => "Del-Tri",
-    "witap.tenniscores.com"  => "Inter-Club"
+    "deltri.tenniscores.com"  => "Del-Tri",
+    "witap.tenniscores.com"   => "Inter-Club",
+    "buxmont.tenniscores.com" => "Bux-Mont"
   }.freeze
+
+  # Del-Tri and Bux-Mont are different leagues that happen to share a
+  # platform, so matches must never be filed under each other's name.
+  def self.league_for(host)
+    return "Tennis" if host.blank?
+
+    from_team = TennisTeam.where.not(tenniscores_url: [ nil, "" ])
+                          .where.not(league_name: [ nil, "" ])
+                          .find { |t| host_of(t.tenniscores_url) == host }
+    from_team&.league_name || LEAGUES[host] || "Tennis"
+  end
 
   def self.sync_all
     imported = {}
@@ -124,7 +138,7 @@ class DeltriPlayerImport
 
   def import_from(url, host)
     rows = DeltriPlayerHistory.new(url).call
-    league = LEAGUES[host] || "Tennis"
+    league = self.class.league_for(host)
     seen = []
     rows.each do |row|
       next if row[:source_key].blank?

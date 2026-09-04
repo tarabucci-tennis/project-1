@@ -31,6 +31,20 @@ class TennisTeam < ApplicationRecord
   scope :inter_club, -> { where(league_category: "Inter-Club") }
   scope :local, -> { where(league_category: "Local") }
 
+  # Groups teams into an ordered hash of { league label => [teams] }.
+  # USTA first, then Inter-Club, then any other league alphabetically, so
+  # adding a league is a matter of saving its name — no code change.
+  CATEGORY_ORDER = { "USTA" => 0, "Inter-Club" => 1 }.freeze
+
+  def self.group_by_league(teams)
+    teams
+      .group_by(&:league_label)
+      .sort_by { |label, group|
+        [ CATEGORY_ORDER.fetch(group.first.league_category, 2), label.to_s.downcase ]
+      }
+      .to_h
+  end
+
   def league_display_name
     case league_category
     when "USTA"       then "USTA"
@@ -38,6 +52,24 @@ class TennisTeam < ApplicationRecord
     when "Local"      then "Local Leagues"
     else league_category
     end
+  end
+
+  # The name to show the player: the real league ("Del-Tri", "Bux-Mont",
+  # "USTA Middle States") when we know it, otherwise the generic category.
+  # Used for the My Teams league tabs and the card sub-labels, which used to
+  # hardcode "Del-Tri" for anything in the Local category.
+  def league_label
+    league_name.presence || league_display_name
+  end
+
+  # How this league's table is scored. Stored per team so a second local
+  # league (Bux-Mont) isn't forced into Del-Tri's points layout.
+  #   "points"   — Del-Tri / Inter-Club: total games won
+  #   "win_loss" — Bux-Mont: W/L/T, line wins, games lost
+  #   "usta"     — TennisLink layout: sets/games/percentages
+  def standings_layout
+    return standings_style if standings_style.present?
+    %w[Local Inter-Club].include?(league_category) ? "points" : "usta"
   end
 
   def captain

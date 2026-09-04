@@ -330,6 +330,8 @@ pcc = tara.tennis_teams.create!(
   rating:          nil,
   start_date:      Date.new(2026, 4, 27),
   league_category: "Inter-Club",
+  league_name:     "Inter-Club",
+  standings_style: "points",
   home_court:      "Philadelphia Country Club, 1601 Spring Mill Rd, Gladwyne PA 19035",
   season_name:     "Spring 2026"
 )
@@ -396,6 +398,8 @@ legacy_2 = tara.tennis_teams.create!(
   rating:          nil,
   start_date:      Date.new(2025, 10, 3),
   league_category: "Local",
+  league_name:     "Del-Tri",
+  standings_style: "points",
   home_court:      "Legacy Tennis, 4842 Ridge Ave, Philadelphia PA 19129",
   season_name:     "Fall/Winter 2025-26 (Completed)"
 )

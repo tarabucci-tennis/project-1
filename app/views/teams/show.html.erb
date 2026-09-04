@@ -645,7 +645,7 @@
       <section class="cr-section">
         <h2 class="cr-section-title">Team Standings</h2>
 
-        <% unless @is_points_league %>
+        <% if @standings_layout == "usta" %>
           <p class="cr-standings-criteria">
             Match Win Criteria: <strong>Points per Position</strong>
           </p>
@@ -663,7 +663,40 @@
         <%# Horizontal scroll wrapper so the wide table is readable
             on narrow mobile viewports %>
         <div class="cr-standings-scroll">
-          <% if @is_points_league %>
+          <% if @standings_layout == "win_loss" %>
+            <%# Bux-Mont layout — W/L/T, line wins, games lost %>
+            <table class="cr-standings-tbl">
+              <thead>
+                <tr>
+                  <th class="cr-standings-tbl-rank">#</th>
+                  <th class="cr-standings-tbl-team">Team</th>
+                  <th>W/L/T</th>
+                  <th>Line<br>Wins</th>
+                  <th>Games<br>Lost</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% @standings.each_with_index do |entry, idx| %>
+                  <% clickable = entry[:id].present? && entry[:drilldown] && !entry[:is_self] %>
+                  <tr class="<%= 'cr-standings-tbl-self' if entry[:is_self] %><%= ' cr-standings-tbl-link' if clickable %>"
+                      <% if clickable %>onclick="window.location='<%= team_division_team_path(@team, entry[:id]) %>'"<% end %>>
+                    <td class="cr-standings-tbl-rank"><%= idx + 1 %></td>
+                    <td class="cr-standings-tbl-team">
+                      <%= entry[:name] %>
+                      <% if entry[:is_self] %>
+                        <span class="cr-standings-you-badge">You</span>
+                      <% elsif clickable %>
+                        <span class="cr-standings-drill" aria-hidden="true">›</span>
+                      <% end %>
+                    </td>
+                    <td class="cr-standings-tbl-highlight"><%= "#{entry[:wins]}/#{entry[:losses]}/#{entry[:ties]}" %></td>
+                    <td><%= entry[:line_wins] %></td>
+                    <td><%= entry[:games_lost] %></td>
+                  </tr>
+                <% end %>
+              </tbody>
+            </table>
+          <% elsif @is_points_league %>
             <table class="cr-standings-tbl">
               <thead>
                 <tr>

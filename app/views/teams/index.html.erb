@@ -56,7 +56,7 @@
                   <td>
                     <%= link_to team.name, team_path(team), class: "cr-st-team" %>
                     <div class="cr-st-sub">
-                      <%= team.league_category == "Local" ? "Del-Tri" : team.team_type %><% if team.rating.present? %> · <%= team.rating %><% end %>
+                      <%= team.league_label %><% if team.team_type.present? %> · <%= team.team_type %><% end %><% if team.rating.present? %> · <%= team.rating %><% end %>
                     </div>
                   </td>
                   <td class="cr-st-n cr-st-w"><%= team.wins_count %></td>
@@ -230,7 +230,7 @@
                   <div class="cr-my-week-day"><%= match.match_date.strftime("%-d") %></div>
                 </div>
                 <div class="cr-my-week-info">
-                  <div class="cr-my-week-league-label"><%= team.league_category == "Local" ? "DEL-TRI" : team.league_category.upcase %></div>
+                  <div class="cr-my-week-league-label"><%= team.league_label.upcase %></div>
                   <div class="cr-my-week-team"><%= team.name %></div>
                   <div class="cr-my-week-opponent">vs. <%= match.opponent %></div>
                   <div class="cr-my-week-detail">

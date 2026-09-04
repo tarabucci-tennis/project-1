@@ -16,7 +16,7 @@
       <%= @error %>
       <% if @division_team.source_url.present? %>
         <div style="margin-top: 10px;">
-          <%= link_to "View on Del-Tri →", @division_team.source_url, target: "_blank", rel: "noopener", class: "cr-dt-extlink" %>
+          <%= link_to "View on #{@team.league_label} →", @division_team.source_url, target: "_blank", rel: "noopener", class: "cr-dt-extlink" %>
         </div>
       <% end %>
     </div>
@@ -33,7 +33,7 @@
       <% end %>
     </div>
     <p class="cr-dt-foot">
-      Pulled live from Del-Tri.
+      Pulled live from <%= @team.league_label %>.
       <% if @division_team.source_url.present? %>
         <%= link_to "View source →", @division_team.source_url, target: "_blank", rel: "noopener", class: "cr-dt-extlink" %>
       <% end %>

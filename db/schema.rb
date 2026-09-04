@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_06_28_060000) do
+ActiveRecord::Schema[8.1].define(version: 2026_09_04_120000) do
   create_table "availabilities", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.integer "match_id", null: false
@@ -36,6 +36,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_28_060000) do
     t.integer "sets_won", default: 0, null: false
     t.string "source_url"
     t.integer "tennis_team_id", null: false
+    t.integer "ties", default: 0, null: false
     t.datetime "updated_at", null: false
     t.integer "wins", default: 0, null: false
     t.index ["tennis_team_id", "name"], name: "index_division_teams_on_tennis_team_id_and_name", unique: true
@@ -196,11 +197,14 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_28_060000) do
     t.string "home_court"
     t.string "join_code"
     t.string "league_category", default: "USTA", null: false
+    t.string "league_name"
     t.string "name"
     t.string "playoff_level"
     t.decimal "rating"
+    t.boolean "schedule_sync", default: false, null: false
     t.string "season_name"
     t.string "section"
+    t.string "standings_style"
     t.date "start_date"
     t.string "team_type"
     t.string "tenniscores_url"

@@ -57,17 +57,40 @@ class DeltriStandings
     parse(res.body.to_s)
   end
 
-  # Returns [{ name:, points:, source_url: }] in standings order.
-  # Team name from <td class="team2">, points from <td class="pts2">, and the
-  # team's own page link (for the opponent drill-down) from the team2 cell.
+  # Returns [{ name:, points:, wins:, losses:, ties:, line_wins:, games_lost:,
+  # source_url: }] in standings order.
+  #
+  # Team name comes from <td class="team2">, the team's own page link from that
+  # same cell (for the opponent drill-down), and the record from <td class="pts2">.
+  # Two record formats are in the wild on tenniscores and both are supported:
+  #
+  #   Del-Tri / Inter-Club  pts2 = "68"     — a points total (games won)
+  #   Bux-Mont              pts2 = "3/1/0"  — W/L/T, with Line Wins and Games
+  #                                           Lost in the trailing <td class="std">
+  #
+  # Before this, a non-numeric pts2 failed the integer check and the whole
+  # division was skipped, so a W/L/T league imported zero rows.
   def parse(html)
     table = html[/<table[^>]*class="[^"]*standings-table2[^"]*"[^>]*>(.*?)<\/table>/im, 1] || ""
     table.scan(/<tr[^>]*>(.*?)<\/tr>/im).filter_map do |(row)|
       team_cell = row[/<td[^>]*class="[^"]*\bteam2\b[^"]*"[^>]*>(.*?)<\/td>/im, 1].to_s
       name   = clean(team_cell)
-      points = clean(row[/<td[^>]*class="[^"]*\bpts2\b[^"]*"[^>]*>(.*?)<\/td>/im, 1].to_s)
-      next if name.blank? || !points.match?(/\A\d+\z/)
-      { name: name, points: points.to_i, source_url: absolutize(team_cell[/href="([^"]+)"/i, 1]) }
+      record = clean(row[/<td[^>]*class="[^"]*\bpts2\b[^"]*"[^>]*>(.*?)<\/td>/im, 1].to_s)
+      next if name.blank?
+
+      stats = row.scan(/<td[^>]*class="[^"]*\bstd\b[^"]*"[^>]*>(.*?)<\/td>/im)
+                 .map { |(c)| clean(c) }
+
+      base = { name: name, source_url: absolutize(team_cell[/href="([^"]+)"/i, 1]) }
+
+      if (m = record.match(/\A(\d+)\s*\/\s*(\d+)(?:\s*\/\s*(\d+))?\z/))
+        base.merge(wins: m[1].to_i, losses: m[2].to_i, ties: m[3].to_i,
+                   line_wins: stats[0].to_i, games_lost: stats[1].to_i,
+                   points: stats[0].to_i)
+      elsif record.match?(/\A\d+\z/)
+        base.merge(wins: record.to_i, losses: 0, ties: 0,
+                   line_wins: 0, games_lost: 0, points: record.to_i)
+      end
     end
   end
 
@@ -77,8 +100,14 @@ class DeltriStandings
     seen = []
     rows.each_with_index do |row, i|
       dt = team.division_teams.find_or_initialize_by(name: row[:name])
-      dt.wins = row[:points] # points league standings render dt.wins as points
-      dt.losses = 0
+      # In a points league (Del-Tri, Inter-Club) wins IS the points total —
+      # that's what the Standings tab renders. In a W/L/T league (Bux-Mont)
+      # they're a real record, with line wins carried in points.
+      dt.wins = row[:wins]
+      dt.losses = row[:losses]
+      dt.ties = row[:ties]
+      dt.points = row[:points]
+      dt.games_lost = row[:games_lost]
       dt.position = i + 1
       dt.source_url = row[:source_url] if row[:source_url].present?
       dt.save!
