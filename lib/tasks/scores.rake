@@ -1,6 +1,7 @@
 # Refreshes everything Court Report pulls from public sources:
 #   * match results + posted lineups, from Tara's Google Sheet
-#   * opponent league standings, from the public Del-Tri site
+#   * opponent league standings, from the public tenniscores sites
+#   * fixture lists, for teams opted in via schedule_sync (Bux-Mont)
 #
 # Designed to be run on a schedule (hourly cron) so the site stays current
 # with no button-clicking:
@@ -18,6 +19,9 @@ namespace :scores do
 
     standings = DeltriStandings.new.call
     puts "[#{stamp}] Standings — #{standings}"
+
+    schedules = TenniscoresSchedule.sync_all
+    puts "[#{stamp}] Schedules — #{schedules}"
 
     deltri = DeltriResults.new.call
     puts "[#{stamp}] Del-Tri results — #{deltri}"

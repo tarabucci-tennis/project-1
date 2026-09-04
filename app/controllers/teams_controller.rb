@@ -4,20 +4,15 @@ class TeamsController < ApplicationController
   def index
     all_teams = current_user.member_teams.includes(:matches, :team_memberships)
 
-    @teams_by_league = {
-      "USTA"        => all_teams.select { |t| t.league_category == "USTA" },
-      "Inter-Club"  => all_teams.select { |t| t.league_category == "Inter-Club" },
-      "Local"       => all_teams.select { |t| t.league_category == "Local" }
-    }
+    # Keyed by the league's real name ("USTA", "Inter-Club", "Del-Tri",
+    # "Bux-Mont") so a new league appears on its own tab as soon as a team
+    # is saved with that league_name — no code change needed.
+    @teams_by_league = TennisTeam.group_by_league(all_teams.to_a)
 
     # Fallback: include teams Tara owns even if she has no team_membership row
     if @teams_by_league.values.flatten.empty? && current_user.tennis_teams.any?
       owned = current_user.tennis_teams.order(start_date: :desc)
-      @teams_by_league = {
-        "USTA"        => owned.select { |t| t.league_category == "USTA" },
-        "Inter-Club"  => owned.select { |t| t.league_category == "Inter-Club" },
-        "Local"       => owned.select { |t| t.league_category == "Local" }
-      }
+      @teams_by_league = TennisTeam.group_by_league(owned.to_a)
     end
 
     # My upcoming matches across all teams — powers the smaller cards
@@ -131,10 +126,23 @@ class TeamsController < ApplicationController
 
     # Build combined standings. Del-Tri (Local) and Inter-Club (Cup) are both
     # scored by points (games/lines won), pulled from their tenniscores pages.
-    @is_points_league = %w[Local Inter-Club].include?(@team.league_category)
+    # "points" (Del-Tri, Inter-Club) · "win_loss" (Bux-Mont) · "usta" (TennisLink)
+    @standings_layout = @team.standings_layout
+    @is_points_league = @standings_layout == "points"
     @standings = []
 
-    if @is_points_league
+    if @standings_layout == "win_loss"
+      # Bux-Mont: W/L/T with line wins and games lost, scraped from the
+      # public division table. Our own row comes from the same source, so
+      # it stays consistent with every opponent's.
+      self_key = @team.name.to_s.strip.downcase
+      @standings = @division_teams.map do |dt|
+        { id: dt.id, name: dt.name, wins: dt.wins, losses: dt.losses, ties: dt.ties,
+          line_wins: dt.points, games_lost: dt.games_lost,
+          is_self: dt.name.to_s.strip.downcase == self_key,
+          drilldown: dt.source_url.present? }
+      end
+    elsif @is_points_league
       # Del-Tri uses points (total games won across the season).
       if @division_teams.any?
         # Real league table, scraped from the public Del-Tri site. Points come

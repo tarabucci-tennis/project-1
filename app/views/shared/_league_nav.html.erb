@@ -4,13 +4,8 @@
 <% if has_teams %>
   <nav class="cr-league-nav" data-controller="league-dropdown">
     <div class="cr-league-nav-inner">
-      <% [
-           [ "USTA",       "USTA" ],
-           [ "Inter-Club", "Inter-Club" ],
-           [ "Local",      "Local Leagues" ]
-         ].each do |key, label| %>
-        <% teams = teams_by_league[key] || [] %>
-        <% next if teams.empty? %>
+      <% teams_by_league.each do |label, teams| %>
+        <% next if teams.blank? %>
 
         <div class="cr-league-tab" data-league-dropdown-target="tab">
           <button type="button"
