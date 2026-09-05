@@ -25,6 +25,7 @@
 :root {
   --cr-black: #0a1628;
   --cr-black-soft: #111f36;
+  --cr-navy-page: #15263f;           /* lighter, cleaner navy for dark page canvases */
   --cr-header-bg: #030a1a;          /* darker near-black deep blue for the header */
   --cr-dark-panel: #0a1a33;         /* dark calendar background */
   --cr-dark-panel-soft: #142545;    /* lighter inset for day cells */
@@ -4461,7 +4462,7 @@ body { background: #f3f0e9; }
    Scoped to the home page via the body context class so other
    pages stay on the light theme until we extend it deliberately.
    ============================================================ */
-body.cr-ctx-teams-index { background: var(--cr-black); }
+body.cr-ctx-teams-index { background: var(--cr-navy-page); }
 body.cr-ctx-teams-index .cr-page-title { color: var(--cr-white); }
 body.cr-ctx-teams-index .cr-home-subtitle { color: rgba(255, 255, 255, 0.6); }
 body.cr-ctx-teams-index .cr-home-tabs { border-bottom-color: rgba(255, 255, 255, 0.12); }
@@ -4471,10 +4472,24 @@ body.cr-ctx-teams-index .cr-home-tab-active { color: var(--cr-white); background
 body.cr-ctx-teams-index .cr-st-hint { color: rgba(255, 255, 255, 0.5); }
 body.cr-ctx-teams-index .cr-coming-up-empty { color: rgba(255, 255, 255, 0.6); }
 
+/* Page-header action buttons — smaller, cleaner pills. Scoped to the header
+   row so it wins over both stylesheets' generic .cr-btn / .cr-btn-outline. */
+.cr-page-header-actions .cr-btn {
+  padding: 6px 13px;
+  font-size: 0.76rem;
+  font-weight: 600;
+  border-radius: 7px;
+  letter-spacing: 0.2px;
+  line-height: 1.25;
+}
+.cr-page-header-actions .cr-btn-outline {
+  border-width: 1px;
+}
+
 /* ============================================================
    Dark team page (scoped). Dark canvas; hero + light cards on top.
    ============================================================ */
-body.cr-ctx-teams-show { background: var(--cr-black); }
+body.cr-ctx-teams-show { background: var(--cr-navy-page); }
 body.cr-ctx-teams-show .cr-back-link a { color: rgba(255, 255, 255, 0.55); }
 body.cr-ctx-teams-show .cr-back-link a:hover { color: var(--cr-gold); }
 body.cr-ctx-teams-show .cr-section-title { color: rgba(255, 255, 255, 0.82); border-bottom-color: rgba(255, 255, 255, 0.12); }
@@ -4490,7 +4505,7 @@ body.cr-ctx-teams-show .cr-team-hero { border: 1px solid rgba(201, 162, 74, 0.18
    ============================================================ */
 body.cr-ctx-profiles-show,
 body.cr-ctx-lineups-dashboard,
-body.cr-ctx-teams-search { background: var(--cr-black); }
+body.cr-ctx-teams-search { background: var(--cr-navy-page); }
 
 /* Find a Team */
 body.cr-ctx-teams-search .cr-page-title { color: var(--cr-white); }
