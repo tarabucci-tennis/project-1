@@ -92,7 +92,7 @@ class ProfilesController < ApplicationController
     lines = MatchLine.joins(:match_line_players)
                      .where(match_line_players: { user_id: user.id })
                      .where.not(result: nil)
-                     .includes(match: :tennis_team)
+                     .includes({ match: :tennis_team }, match_line_players: :user)
 
     # Always return a well-formed hash so the view can show the stat
     # structure even before any matches have been played. Empty sections
@@ -186,7 +186,11 @@ class ProfilesController < ApplicationController
         team: line.match.tennis_team.name,
         line_label: line.line_type == "singles" ? "#{line.position}S" : "#{line.position}D",
         result: line.result,
-        score: line.score_display
+        score: line.score_display,
+        # Players on this line (this player + partner) so their names can link
+        # to full stats; opponents is the free-text names captains entered.
+        players: line.match_line_players.map(&:user).compact.map { |u| { id: u.id, name: u.name } },
+        opponents: line.opponents
       }
     end
 

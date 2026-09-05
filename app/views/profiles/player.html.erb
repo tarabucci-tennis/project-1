@@ -211,9 +211,10 @@
         <% end %>
       <% end %>
 
-      <%# Recent Matches %>
+      <%# Recent Matches — tap a row to see the line's players + opponents %>
       <% if @playing_stats[:recent].any? %>
         <h3 class="cr-section-subtitle" style="margin-top: 20px;">Recent Matches</h3>
+        <p style="font-size: 0.78rem; color: var(--cr-text-muted); margin: 0 0 8px;">Tap a match to see who played and who they faced.</p>
         <div class="cr-playing-stats-table">
           <div class="cr-playing-stats-header">
             <span class="cr-ps-col-name">Opponent</span>
@@ -222,19 +223,40 @@
             <span class="cr-ps-col-detail">Result</span>
           </div>
           <% @playing_stats[:recent].each do |match| %>
-            <div class="cr-playing-stats-row">
-              <span class="cr-ps-col-name">
-                vs. <%= match[:opponent] %>
-                <div style="font-size: 0.7rem; color: var(--cr-text-light);"><%= match[:team] %> · <%= match[:date].strftime("%-m/%-d/%y") %></div>
-              </span>
-              <span class="cr-ps-col-line"><%= match[:line_label] %></span>
-              <span class="cr-ps-col-stat"><%= match[:score].presence || "—" %></span>
-              <span class="cr-ps-col-detail">
-                <span class="cr-result-badge <%= match[:result] == 'win' ? 'cr-result-badge-win' : 'cr-result-badge-loss' %>">
-                  <%= match[:result] == 'win' ? 'W' : 'L' %>
+            <details class="cr-ps-details">
+              <summary class="cr-playing-stats-row cr-ps-summary">
+                <span class="cr-ps-col-name">
+                  <span class="cr-ps-caret">▸</span> vs. <%= match[:opponent] %>
+                  <div style="font-size: 0.7rem; color: var(--cr-text-light);"><%= match[:team] %> · <%= match[:date].strftime("%-m/%-d/%y") %></div>
                 </span>
-              </span>
-            </div>
+                <span class="cr-ps-col-line"><%= match[:line_label] %></span>
+                <span class="cr-ps-col-stat"><%= match[:score].presence || "—" %></span>
+                <span class="cr-ps-col-detail">
+                  <span class="cr-result-badge <%= match[:result] == 'win' ? 'cr-result-badge-win' : 'cr-result-badge-loss' %>">
+                    <%= match[:result] == 'win' ? 'W' : 'L' %>
+                  </span>
+                </span>
+              </summary>
+              <div class="cr-ps-expand">
+                <div class="cr-ps-expand-row">
+                  <span class="cr-ps-expand-label">Our line</span>
+                  <span class="cr-ps-expand-val">
+                    <% players = match[:players] || [] %>
+                    <% if players.any? %>
+                      <% players.each_with_index do |pl, i| %>
+                        <%= link_to pl[:name], player_path(pl[:id]), class: "cr-ps-playerlink" %><%= "," unless i == players.size - 1 %>
+                      <% end %>
+                    <% else %>—<% end %>
+                  </span>
+                </div>
+                <div class="cr-ps-expand-row">
+                  <span class="cr-ps-expand-label">Opponents</span>
+                  <span class="cr-ps-expand-val">
+                    <%= match[:opponents].present? ? match[:opponents] : "Not entered yet" %>
+                  </span>
+                </div>
+              </div>
+            </details>
           <% end %>
         </div>
       <% end %>
