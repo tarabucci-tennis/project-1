@@ -10,6 +10,7 @@ class ProfilesController < ApplicationController
     @is_self = true
     @shared_teams = []
     @playing_stats = build_playing_stats(@user)
+    @league_year_stats = build_league_year_stats(@user)
     @deltri_matches = @user.player_matches.chronological.group_by { |pm| [ pm.league, pm.division ] }
     render :player
   end
@@ -51,12 +52,40 @@ class ProfilesController < ApplicationController
     shared_ids = my_team_ids & their_team_ids
     @shared_teams = TennisTeam.where(id: shared_ids).order(start_date: :desc)
     @playing_stats = build_playing_stats(@user)
+    @league_year_stats = build_league_year_stats(@user)
   end
 
   private
 
   def require_login
     redirect_to login_path unless current_user
+  end
+
+  # Per-league, per-year win/loss from the lines this player actually played.
+  # Returns { league_label => { year => { matches:, won:, lost: } } } so the
+  # player page can show one clean stats table per league, like TennisRecord's
+  # Advanced Player Stats matrix. Only uses decided lines (result present), so
+  # there's nothing to fabricate — the numbers are our own entered results.
+  def build_league_year_stats(user)
+    lines = MatchLine.joins(:match_line_players)
+                     .where(match_line_players: { user_id: user.id })
+                     .where.not(result: nil)
+                     .includes(match: :tennis_team)
+
+    data = {}
+    lines.each do |line|
+      match = line.match
+      team  = match&.tennis_team
+      next unless team && match.match_date
+
+      league = team.league_label
+      year   = match.match_date.year
+      cell = ((data[league] ||= {})[year] ||= { matches: 0, won: 0, lost: 0 })
+      cell[:matches] += 1
+      cell[:won]  += 1 if line.result == "win"
+      cell[:lost] += 1 if line.result == "loss"
+    end
+    data
   end
 
   def build_playing_stats(user)

@@ -4,65 +4,85 @@
 
   <%= link_to "← Back", :back, class: "cr-back-link" %>
 
-  <%# ── Player header ── %>
-  <div class="cr-player-header">
-    <div class="cr-player-avatar">
-      <%= @user.name.split.map { |n| n[0] }.join.upcase[0..1] %>
+  <%# ── Player Profile card (TennisRecord-style, clean light card) ── %>
+  <%
+    gender  = @teams.map { |t| t.gender.presence }.compact.first
+    section = @teams.map { |t| t.section.presence }.compact.first
+    dyn     = @user.court_report_rating || @user.dynamic_rating
+    meter   = rating_meter_data(ntrp: @user.ntrp_rating, dynamic: dyn)
+  %>
+  <div class="cr-pp">
+    <div class="cr-pp-head">
+      <span class="cr-pp-head-title">Player Profile</span>
+      <%= link_to "View Advanced Player Stats →", tennis_record_url(@user.name),
+            target: "_blank", rel: "noopener", class: "cr-pp-head-link" %>
     </div>
-    <div class="cr-player-info">
-      <h1 class="cr-player-name">
-        <%= @user.name %>
-        <% if @is_self %>
-          <span class="cr-player-you">(you)</span>
+
+    <div class="cr-pp-body">
+      <div class="cr-pp-left">
+        <div class="cr-pp-row">
+          <div>
+            <div class="cr-pp-name">
+              <%= @user.name %><% if @user.location.present? %> <span class="cr-pp-loc">(<%= @user.location %>)</span><% end %>
+              <% if @is_self %><span class="cr-pp-you">(you)</span><% end %>
+            </div>
+            <div class="cr-pp-sub"><%= [ gender, section ].compact.join(" · ").presence || "USTA" %></div>
+          </div>
+          <div class="cr-pp-metric">
+            <div class="cr-pp-metric-val"><%= @user.ntrp_rating.present? ? @user.ntrp_rating : "—" %></div>
+            <div class="cr-pp-metric-cap">
+              NTRP<% if @user.ntrp_rating_date.present? %><br><%= @user.ntrp_rating_date.strftime("%-m/%-d/%Y") %><% end %>
+            </div>
+          </div>
+        </div>
+
+        <div class="cr-pp-row">
+          <div class="cr-pp-label">Court Report Rating <span class="cr-pp-live">live</span></div>
+          <div class="cr-pp-metric">
+            <div class="cr-pp-metric-val cr-pp-gold">
+              <%= @user.court_report_rating.present? ? sprintf("%.2f", @user.court_report_rating) : "—" %>
+            </div>
+            <div class="cr-pp-metric-cap">
+              <% if @user.court_report_rating.present? %>from <%= @user.court_report_rating_lines %> lines<% else %>no scores yet<% end %>
+            </div>
+          </div>
+        </div>
+
+        <div class="cr-pp-row">
+          <div class="cr-pp-label">TennisRecord Dynamic</div>
+          <div class="cr-pp-metric">
+            <div class="cr-pp-metric-val"><%= @user.dynamic_rating.present? ? sprintf("%.4f", @user.dynamic_rating) : "—" %></div>
+            <div class="cr-pp-metric-cap">
+              <% if @user.dynamic_rating_date.present? %><%= @user.dynamic_rating_date.strftime("%-m/%-d/%Y") %><% else %>——<% end %>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="cr-pp-right">
+        <% if meter %>
+          <div class="cr-pp-meter-title"><%= meter[:title] %></div>
+          <svg viewBox="0 0 260 150" class="cr-pp-meter" role="img" aria-label="Rating meter">
+            <path d="M26,130 A104,104 0 0 1 45.86,68.87" fill="none" stroke="#dc2626" stroke-width="20" stroke-linecap="butt"/>
+            <path d="M45.86,68.87 A104,104 0 0 1 97.86,31.09" fill="none" stroke="#f97316" stroke-width="20"/>
+            <path d="M97.86,31.09 A104,104 0 0 1 162.14,31.09" fill="none" stroke="#eab308" stroke-width="20"/>
+            <path d="M162.14,31.09 A104,104 0 0 1 214.14,68.87" fill="none" stroke="#84cc16" stroke-width="20"/>
+            <path d="M214.14,68.87 A104,104 0 0 1 234,130" fill="none" stroke="#16a34a" stroke-width="20" stroke-linecap="butt"/>
+            <line x1="130" y1="130" x2="<%= meter[:needle_x] %>" y2="<%= meter[:needle_y] %>"
+                  stroke="#0a1628" stroke-width="4" stroke-linecap="round"/>
+            <circle cx="130" cy="130" r="8" fill="#0a1628"/>
+          </svg>
+          <div class="cr-pp-meter-scale"><span>Low</span><span>Average</span><span>High</span></div>
+          <div class="cr-pp-meter-band"><%= meter[:band_label] %></div>
         <% end %>
-      </h1>
-      <div class="cr-player-meta">
-        <% if @user.location.present? %>
-          <span>📍 <%= @user.location %></span>
-        <% end %>
-        <% if @user.ntrp_rating.present? %>
-          <span class="cr-player-rating-chip"><%= @user.ntrp_rating %> NTRP</span>
-        <% end %>
+        <div class="cr-pp-links">
+          <%= link_to "Recent Match History", tennis_record_match_history_url(@user.name),
+                target: "_blank", rel: "noopener", class: "cr-pp-link" %>
+          <a href="#cr-advanced-stats" class="cr-pp-link">Advanced Stats ↓</a>
+        </div>
       </div>
     </div>
   </div>
-
-  <%# ── Rating cards ── %>
-  <% if @user.court_report_rating.present? || @user.ntrp_rating.present? || @user.dynamic_rating.present? %>
-    <div class="cr-stat-cards" style="margin-bottom: 32px;">
-      <% if @user.court_report_rating.present? %>
-        <div class="cr-stat-card" style="border: 1px solid var(--cr-gold);">
-          <div class="cr-stat-card-value" style="color: var(--cr-gold);"><%= sprintf("%.2f", @user.court_report_rating) %></div>
-          <div class="cr-stat-card-label">Court Report Rating</div>
-          <div style="font-size: 0.7rem; color: var(--cr-text-light); margin-top: 4px;">
-            live · from <%= @user.court_report_rating_lines %> lines
-          </div>
-        </div>
-      <% end %>
-      <% if @user.ntrp_rating.present? %>
-        <div class="cr-stat-card">
-          <div class="cr-stat-card-value" style="color: var(--cr-gold);"><%= @user.ntrp_rating %></div>
-          <div class="cr-stat-card-label">NTRP Rating</div>
-          <% if @user.ntrp_rating_date.present? %>
-            <div style="font-size: 0.7rem; color: var(--cr-text-light); margin-top: 4px;">
-              as of <%= @user.ntrp_rating_date.strftime("%-m/%-d/%Y") %>
-            </div>
-          <% end %>
-        </div>
-      <% end %>
-      <% if @user.dynamic_rating.present? %>
-        <div class="cr-stat-card">
-          <div class="cr-stat-card-value" style="color: var(--cr-gold);"><%= sprintf("%.2f", @user.dynamic_rating) %></div>
-          <div class="cr-stat-card-label">Dynamic Rating</div>
-          <% if @user.dynamic_rating_date.present? %>
-            <div style="font-size: 0.7rem; color: var(--cr-text-light); margin-top: 4px;">
-              as of <%= @user.dynamic_rating_date.strftime("%-m/%-d/%Y") %>
-            </div>
-          <% end %>
-        </div>
-      <% end %>
-    </div>
-  <% end %>
 
   <%# ── Lineup Quick Facts — at-a-glance info captains need when setting a lineup ── %>
   <% if @playing_stats.present? %>
@@ -294,111 +314,103 @@
     </section>
   <% end %>
 
-  <%# ── Match history with clickable years ── %>
-  <% if @stats.any? %>
-    <section class="cr-section">
-      <h2 class="cr-section-title">Match History</h2>
-      <div class="cr-match-list" data-controller="year-expand">
-        <% @stats.each do |s| %>
-          <div class="cr-year-row">
-            <button type="button"
-                    class="cr-year-header"
-                    data-action="click->year-expand#toggle"
-                    data-year-expand-target="header">
-              <div class="cr-year-label"><%= s.year %></div>
-              <div class="cr-year-summary">
-                <span><%= s.matches_total || 0 %> matches</span>
-                <% if s.matches_won %>
-                  <span class="cr-year-win"><%= s.matches_won %>W</span>
-                <% end %>
-                <% if s.matches_lost %>
-                  <span class="cr-year-loss"><%= s.matches_lost %>L</span>
-                <% end %>
-                <% if s.match_wpct %>
-                  <span class="cr-year-pct"><%= s.match_wpct %>%</span>
-                <% end %>
-              </div>
-              <div class="cr-year-caret">▾</div>
-            </button>
-            <div class="cr-year-detail" data-year-expand-target="detail">
+  <%# ── Advanced stats: clean per-year matrix, TennisRecord style ── %>
+  <% if @stats.any? || @league_year_stats.present? %>
+    <section class="cr-section" id="cr-advanced-stats">
+      <h2 class="cr-section-title">Advanced Player Stats</h2>
 
-              <%# ── Matches ── %>
-              <div class="cr-year-section-label">Matches</div>
-              <div class="cr-year-detail-grid">
-                <div class="cr-year-stat">
-                  <div class="cr-year-stat-value"><%= s.matches_total || "—" %></div>
-                  <div class="cr-year-stat-label">Total</div>
-                </div>
-                <div class="cr-year-stat">
-                  <div class="cr-year-stat-value cr-year-win"><%= s.matches_won || "—" %></div>
-                  <div class="cr-year-stat-label">Won</div>
-                </div>
-                <div class="cr-year-stat">
-                  <div class="cr-year-stat-value cr-year-loss"><%= s.matches_lost || "—" %></div>
-                  <div class="cr-year-stat-label">Lost</div>
-                </div>
-                <div class="cr-year-stat">
-                  <div class="cr-year-stat-value"><%= s.match_wpct ? "#{s.match_wpct}%" : "—" %></div>
-                  <div class="cr-year-stat-label">Win %</div>
-                </div>
-              </div>
-
-              <%# ── Sets ── %>
-              <div class="cr-year-section-label">Sets</div>
-              <div class="cr-year-detail-grid">
-                <div class="cr-year-stat">
-                  <div class="cr-year-stat-value"><%= s.sets_total || "—" %></div>
-                  <div class="cr-year-stat-label">Total</div>
-                </div>
-                <div class="cr-year-stat">
-                  <div class="cr-year-stat-value cr-year-win"><%= s.sets_won || "—" %></div>
-                  <div class="cr-year-stat-label">Won</div>
-                </div>
-                <div class="cr-year-stat">
-                  <div class="cr-year-stat-value cr-year-loss"><%= s.sets_lost || "—" %></div>
-                  <div class="cr-year-stat-label">Lost</div>
-                </div>
-                <div class="cr-year-stat">
-                  <div class="cr-year-stat-value"><%= s.set_wpct ? "#{s.set_wpct}%" : "—" %></div>
-                  <div class="cr-year-stat-label">Win %</div>
-                </div>
-              </div>
-
-              <%# ── Games ── %>
-              <div class="cr-year-section-label">Games</div>
-              <div class="cr-year-detail-grid">
-                <div class="cr-year-stat">
-                  <div class="cr-year-stat-value"><%= s.games_total || "—" %></div>
-                  <div class="cr-year-stat-label">Total</div>
-                </div>
-                <div class="cr-year-stat">
-                  <div class="cr-year-stat-value cr-year-win"><%= s.games_won || "—" %></div>
-                  <div class="cr-year-stat-label">Won</div>
-                </div>
-                <div class="cr-year-stat">
-                  <div class="cr-year-stat-value cr-year-loss"><%= s.games_lost || "—" %></div>
-                  <div class="cr-year-stat-label">Lost</div>
-                </div>
-                <div class="cr-year-stat">
-                  <div class="cr-year-stat-value"><%= s.game_wpct ? "#{s.game_wpct}%" : "—" %></div>
-                  <div class="cr-year-stat-label">Win %</div>
-                </div>
-              </div>
-
-              <% if s.defaults && s.defaults > 0 %>
-                <div class="cr-year-section-label">Other</div>
-                <div class="cr-year-detail-grid">
-                  <div class="cr-year-stat">
-                    <div class="cr-year-stat-value"><%= s.defaults %></div>
-                    <div class="cr-year-stat-label">Defaults</div>
-                  </div>
-                </div>
+      <%# Overall matrix (imported season totals: matches / sets / games / defaults) %>
+      <% if @stats.any? %>
+        <div class="cr-adv-league-label">Overall</div>
+        <div class="cr-adv-wrap">
+          <table class="cr-adv">
+            <thead>
+              <tr>
+                <th class="cr-adv-rowhead">All Matches</th>
+                <th>Total Matches</th><th>Win</th><th>Loss</th><th>WPct</th>
+                <th class="cr-adv-group">Total Sets</th><th>Win</th><th>Loss</th><th>WPct</th>
+                <th class="cr-adv-group">Total Games</th><th>Win</th><th>Loss</th><th>WPct</th>
+                <th class="cr-adv-group">Defaults</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @stats.each do |s| %>
+                <tr>
+                  <td class="cr-adv-rowhead cr-adv-year"><%= s.year %></td>
+                  <td><%= s.matches_total || "—" %></td>
+                  <td class="cr-adv-win"><%= s.matches_won || "—" %></td>
+                  <td class="cr-adv-loss"><%= s.matches_lost || "—" %></td>
+                  <td><%= s.match_wpct ? sprintf("%.1f", s.match_wpct) : "—" %></td>
+                  <td class="cr-adv-group"><%= s.sets_total || "—" %></td>
+                  <td class="cr-adv-win"><%= s.sets_won || "—" %></td>
+                  <td class="cr-adv-loss"><%= s.sets_lost || "—" %></td>
+                  <td><%= s.set_wpct ? sprintf("%.1f", s.set_wpct) : "—" %></td>
+                  <td class="cr-adv-group"><%= s.games_total || "—" %></td>
+                  <td class="cr-adv-win"><%= s.games_won || "—" %></td>
+                  <td class="cr-adv-loss"><%= s.games_lost || "—" %></td>
+                  <td><%= s.game_wpct ? sprintf("%.1f", s.game_wpct) : "—" %></td>
+                  <td class="cr-adv-group"><%= s.defaults || 0 %></td>
+                </tr>
               <% end %>
+              <%
+                mt = @stats.sum { |s| s.matches_total.to_i }; mw = @stats.sum { |s| s.matches_won.to_i }; ml = @stats.sum { |s| s.matches_lost.to_i }
+                st = @stats.sum { |s| s.sets_total.to_i };    sw = @stats.sum { |s| s.sets_won.to_i };    sl = @stats.sum { |s| s.sets_lost.to_i }
+                gt = @stats.sum { |s| s.games_total.to_i };   gw = @stats.sum { |s| s.games_won.to_i };   gl = @stats.sum { |s| s.games_lost.to_i }
+                df = @stats.sum { |s| s.defaults.to_i }
+                pct = ->(w, t) { t.positive? ? sprintf("%.1f", w.to_f / t * 100) : "—" }
+              %>
+              <tr class="cr-adv-total">
+                <td class="cr-adv-rowhead">Total</td>
+                <td><%= mt %></td><td class="cr-adv-win"><%= mw %></td><td class="cr-adv-loss"><%= ml %></td><td><%= pct.call(mw, mt) %></td>
+                <td class="cr-adv-group"><%= st %></td><td class="cr-adv-win"><%= sw %></td><td class="cr-adv-loss"><%= sl %></td><td><%= pct.call(sw, st) %></td>
+                <td class="cr-adv-group"><%= gt %></td><td class="cr-adv-win"><%= gw %></td><td class="cr-adv-loss"><%= gl %></td><td><%= pct.call(gw, gt) %></td>
+                <td class="cr-adv-group"><%= df %></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      <% end %>
 
-            </div>
+      <%# One matrix per league, from the results entered into Court Report %>
+      <% if @league_year_stats.present? %>
+        <% @league_year_stats.sort_by { |label, _| label.to_s }.each do |league, by_year| %>
+          <div class="cr-adv-league-label"><%= league %></div>
+          <div class="cr-adv-wrap">
+            <table class="cr-adv cr-adv-compact">
+              <thead>
+                <tr>
+                  <th class="cr-adv-rowhead"><%= league %></th>
+                  <th>Matches</th><th>Win</th><th>Loss</th><th>WPct</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% by_year.sort_by { |year, _| -year }.each do |year, c| %>
+                  <tr>
+                    <td class="cr-adv-rowhead cr-adv-year"><%= year %></td>
+                    <td><%= c[:matches] %></td>
+                    <td class="cr-adv-win"><%= c[:won] %></td>
+                    <td class="cr-adv-loss"><%= c[:lost] %></td>
+                    <td><%= c[:matches].positive? ? sprintf("%.1f", c[:won].to_f / c[:matches] * 100) : "—" %></td>
+                  </tr>
+                <% end %>
+                <%
+                  lm = by_year.values.sum { |c| c[:matches] }
+                  lw = by_year.values.sum { |c| c[:won] }
+                  ll = by_year.values.sum { |c| c[:lost] }
+                %>
+                <tr class="cr-adv-total">
+                  <td class="cr-adv-rowhead">Total</td>
+                  <td><%= lm %></td>
+                  <td class="cr-adv-win"><%= lw %></td>
+                  <td class="cr-adv-loss"><%= ll %></td>
+                  <td><%= lm.positive? ? sprintf("%.1f", lw.to_f / lm * 100) : "—" %></td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         <% end %>
-      </div>
+        <p class="cr-adv-note">Per-league tables count the lines you played from results entered into Court Report. The Overall table above shows your imported season totals.</p>
+      <% end %>
     </section>
   <% end %>
 
