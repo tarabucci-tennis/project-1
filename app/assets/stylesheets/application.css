@@ -4782,3 +4782,20 @@ body.cr-ctx-lineups-edit .cr-field > span { color: rgba(255, 255, 255, 0.8); }
 .cr-adv-loss { color: var(--cr-red); font-weight: 600; }
 .cr-adv-total td { background: #f7f9fc; font-weight: 800; border-top: 2px solid var(--cr-border); }
 .cr-adv-note { font-size: 0.78rem; color: rgba(255, 255, 255, 0.6); margin-top: 10px; }
+
+/* Recent Matches — expandable rows (players + opponents) on the player page */
+.cr-ps-details { border-bottom: 1px solid var(--cr-border); }
+.cr-ps-details:last-child { border-bottom: none; }
+.cr-ps-summary { cursor: pointer; list-style: none; }
+.cr-ps-summary::-webkit-details-marker { display: none; }
+.cr-ps-summary::marker { content: ""; }
+.cr-ps-details .cr-playing-stats-row { border-bottom: none; }
+.cr-ps-caret { display: inline-block; color: var(--cr-text-muted); font-size: 0.75rem; transition: transform 0.15s; }
+.cr-ps-details[open] .cr-ps-caret { transform: rotate(90deg); }
+.cr-ps-summary:hover { background: var(--cr-bg); }
+.cr-ps-expand { padding: 4px 16px 14px 30px; background: var(--cr-bg); }
+.cr-ps-expand-row { display: flex; gap: 10px; padding: 5px 0; font-size: 0.85rem; }
+.cr-ps-expand-label { flex: 0 0 82px; color: var(--cr-text-muted); font-weight: 600; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.4px; padding-top: 2px; }
+.cr-ps-expand-val { flex: 1; min-width: 0; color: var(--cr-text); }
+.cr-ps-playerlink { color: #2563eb; font-weight: 600; text-decoration: none; }
+.cr-ps-playerlink:hover { text-decoration: underline; }
