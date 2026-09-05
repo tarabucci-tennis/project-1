@@ -14,6 +14,7 @@
               form: { style: "display:inline;" },
               data: { turbo_confirm: "Pull the latest results from your Google Sheet?" } %>
       <% end %>
+      <%= link_to "🔍 Players & Teams", lookup_path, class: "cr-btn cr-btn-outline cr-btn-compact" %>
       <%= link_to "+ Join a Team", find_team_path, class: "cr-btn cr-btn-outline cr-btn-compact" %>
       <%= link_to "Create a Team", new_team_path, class: "cr-btn cr-btn-outline cr-btn-compact" %>
     </div>

@@ -71,6 +71,9 @@ Rails.application.routes.draw do
   # Lineups dashboard — all upcoming matches across user's teams
   get "lineups", to: "lineups#dashboard", as: :lineups_dashboard
 
+  # Players & Teams lookup — search/browse everyone in YOUR leagues
+  get "lookup", to: "lookups#index", as: :lookup
+
   # Root: sends logged-in users to My Teams; logged-out users to login
   root "pages#home"
 end
