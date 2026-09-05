@@ -59,7 +59,10 @@ class User < ApplicationRecord
   end
 
   def live_line_record
-    lines = match_lines_played.joins(:match_line).where.not(match_lines: { result: nil })
+    # match_lines_played is already the match_lines table (has_many :through
+    # match_line_players), so there's nothing to join — the old .joins(:match_line)
+    # referenced a non-existent association and raised.
+    lines = match_lines_played.where.not(match_lines: { result: nil })
     won = lines.where(match_lines: { result: "win" }).count
     lost = lines.where(match_lines: { result: "loss" }).count
     { won: won, lost: lost, total: won + lost }
