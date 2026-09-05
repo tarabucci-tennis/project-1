@@ -1,0 +1,211 @@
+<% content_for :title, "Players & Teams · Court Report" %>
+
+<div class="cr-home-page">
+
+  <div class="cr-page-header cr-page-header-row">
+    <div>
+      <h1 class="cr-page-title">Players &amp; Teams</h1>
+      <p class="cr-home-subtitle">
+        Everyone in your leagues<% if @league_labels.any? %> ·
+          <%= @league_labels.join(" · ") %><% end %>
+      </p>
+    </div>
+    <div class="cr-page-header-actions">
+      <%= link_to "← My Teams", teams_path, class: "cr-btn cr-btn-outline cr-btn-compact" %>
+    </div>
+  </div>
+
+  <%# ── Search box ─────────────────────────────────────────────── %>
+  <%= form_with url: lookup_path, method: :get, data: { turbo: false },
+        class: "cr-lookup-search" do %>
+    <input type="search" name="q" value="<%= @query %>"
+           placeholder="Search a player or team name…"
+           class="cr-lookup-input" autocomplete="off" />
+    <button type="submit" class="cr-btn cr-btn-gold cr-btn-compact">Search</button>
+    <% if @query.present? %>
+      <%= link_to "Clear", lookup_path, class: "cr-btn cr-btn-outline cr-btn-compact" %>
+    <% end %>
+  <% end %>
+
+  <% if @query.present? %>
+    <p class="cr-lookup-result-note">
+      Showing matches for “<strong><%= @query %></strong>” —
+      <%= pluralize(@players.size, "player") %>,
+      <%= pluralize(@my_teams_list.size + @opponent_teams.size, "team") %>.
+    </p>
+  <% end %>
+
+  <%# ── Players ────────────────────────────────────────────────── %>
+  <div class="cr-standings-wrap" style="margin-bottom: 26px;">
+    <div class="cr-standings-head">
+      <span class="cr-standings-head-title">Players (<%= @players.size %>)</span>
+      <span class="cr-standings-head-season">YCR = live Court Report Rating · TR = TennisRecord</span>
+    </div>
+
+    <% if @players.any? %>
+      <div style="overflow-x: auto;">
+        <table class="cr-standings">
+          <thead>
+            <tr>
+              <th style="min-width: 140px;">Player</th>
+              <th class="cr-st-n">YCR</th>
+              <th class="cr-st-n">NTRP</th>
+              <th class="cr-st-n">W</th>
+              <th class="cr-st-n">L</th>
+              <th>Teams</th>
+              <th class="cr-st-n">TR</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @players.each do |p| %>
+              <tr class="cr-st-row">
+                <td style="min-width: 140px;">
+                  <%= link_to p[:user].name, player_path(p[:user].id), class: "cr-st-team" %>
+                  <% if p[:user].id == current_user.id %>
+                    <span style="color: var(--cr-gold); font-size: 0.72rem;">(you)</span>
+                  <% end %>
+                </td>
+                <td class="cr-st-n">
+                  <% if p[:ycr].present? %>
+                    <%= link_to sprintf("%.2f", p[:ycr]), player_path(p[:user].id),
+                          style: "color: var(--cr-gold); font-weight: 800; text-decoration: none;",
+                          title: "Court Report Rating — tap for full stats" %>
+                  <% else %>—<% end %>
+                </td>
+                <td class="cr-st-n"><%= p[:ntrp].present? ? p[:ntrp] : "—" %></td>
+                <td class="cr-st-n" style="color: var(--cr-green);"><%= p[:won] %></td>
+                <td class="cr-st-n" style="color: var(--cr-red);"><%= p[:lost] %></td>
+                <td style="font-size: 0.8rem; color: var(--cr-text-muted);">
+                  <%= p[:teams].join(", ") %>
+                </td>
+                <td class="cr-st-n">
+                  <%= link_to "view", tennis_record_url(p[:user].name),
+                        target: "_blank", rel: "noopener",
+                        style: "color: var(--cr-text-light); font-size: 0.72rem; text-decoration: underline;",
+                        title: "#{p[:user].name} on TennisRecord" %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    <% else %>
+      <p class="cr-chart-empty-inline" style="padding: 18px;">
+        <% if @query.present? %>No players match “<%= @query %>”.<% else %>No players yet.<% end %>
+      </p>
+    <% end %>
+  </div>
+
+  <%# ── My teams ───────────────────────────────────────────────── %>
+  <div class="cr-standings-wrap" style="margin-bottom: 26px;">
+    <div class="cr-standings-head">
+      <span class="cr-standings-head-title">Your Teams (<%= @my_teams_list.size %>)</span>
+      <span class="cr-standings-head-season">Tap a team to open it</span>
+    </div>
+
+    <% if @my_teams_list.any? %>
+      <table class="cr-standings">
+        <thead>
+          <tr>
+            <th>Team</th>
+            <th>League</th>
+            <th class="cr-st-n">W</th>
+            <th class="cr-st-n">L</th>
+            <th class="cr-st-n">Win%</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @my_teams_list.each do |team| %>
+            <tr class="cr-st-row" onclick="if (!event.target.closest('a')) window.location='<%= team_path(team) %>'">
+              <td><%= link_to team.name, team_path(team), class: "cr-st-team" %></td>
+              <td style="font-size: 0.82rem; color: var(--cr-text-muted);"><%= team.league_label %></td>
+              <td class="cr-st-n" style="color: var(--cr-green);"><%= team.wins_count %></td>
+              <td class="cr-st-n" style="color: var(--cr-red);"><%= team.losses_count %></td>
+              <td class="cr-st-n"><%= team.win_pct ? "#{team.win_pct}%" : "—" %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    <% else %>
+      <p class="cr-chart-empty-inline" style="padding: 18px;">
+        <% if @query.present? %>None of your teams match “<%= @query %>”.<% else %>You're not on any teams yet.<% end %>
+      </p>
+    <% end %>
+  </div>
+
+  <%# ── Opponent teams in your divisions ───────────────────────── %>
+  <div class="cr-standings-wrap">
+    <div class="cr-standings-head">
+      <span class="cr-standings-head-title">Opponents in Your Divisions (<%= @opponent_teams.size %>)</span>
+      <span class="cr-standings-head-season">From each league's public standings</span>
+    </div>
+
+    <% if @opponent_teams.any? %>
+      <table class="cr-standings">
+        <thead>
+          <tr>
+            <th class="cr-st-n">#</th>
+            <th>Team</th>
+            <th>League</th>
+            <th class="cr-st-n">W</th>
+            <th class="cr-st-n">L</th>
+            <th class="cr-st-n">Pts</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @opponent_teams.each do |t| %>
+            <tr class="cr-st-row">
+              <td class="cr-st-n"><%= t[:position] || "—" %></td>
+              <td><%= t[:name] %></td>
+              <td style="font-size: 0.82rem; color: var(--cr-text-muted);"><%= t[:league] %></td>
+              <td class="cr-st-n" style="color: var(--cr-green);"><%= t[:wins].to_i %></td>
+              <td class="cr-st-n" style="color: var(--cr-red);"><%= t[:losses].to_i %></td>
+              <td class="cr-st-n"><%= t[:points].to_i.positive? ? t[:points] : "—" %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    <% else %>
+      <p class="cr-chart-empty-inline" style="padding: 18px;">
+        <% if @query.present? %>No opponent teams match “<%= @query %>”.<% else %>No opponent standings pulled yet.<% end %>
+      </p>
+    <% end %>
+  </div>
+
+  <p style="font-size: 0.8rem; color: var(--cr-text-muted); margin-top: 18px;">
+    This shows the players and teams inside your own leagues — the people you
+    actually play. Ratings and records come from the scores entered into Court
+    Report; the TennisRecord links open their public site in a new tab.
+  </p>
+
+</div>
+
+<style>
+  .cr-lookup-search {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-bottom: 14px;
+  }
+  .cr-lookup-input {
+    flex: 1 1 220px;
+    min-width: 0;
+    padding: 11px 14px;
+    border: 1px solid var(--cr-dark-border, rgba(201, 162, 74, 0.3));
+    border-radius: 10px;
+    font-size: 1rem;
+    background: #fff;
+    color: var(--cr-black, #0a1628);
+  }
+  .cr-lookup-input:focus {
+    outline: none;
+    border-color: var(--cr-gold, #c9a24a);
+    box-shadow: 0 0 0 2px rgba(201, 162, 74, 0.2);
+  }
+  .cr-lookup-result-note {
+    font-size: 0.9rem;
+    color: var(--cr-text-muted, #5a6b82);
+    margin: 0 0 16px;
+  }
+</style>
