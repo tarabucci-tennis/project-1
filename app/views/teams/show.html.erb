@@ -643,7 +643,40 @@
     <%# ── Tab 5: Standings ───────────────────────────── %>
     <div data-team-tabs-target="panel" style="display: none;">
       <section class="cr-section">
-        <h2 class="cr-section-title">Team Standings</h2>
+        <h2 class="cr-section-title">Team Summary</h2>
+
+        <%# ── Team info grid (TennisLink-style) ── %>
+        <%
+          info = []
+          info << [ "Section", @team.section ] if @team.section.present?
+          info << [ "League", @team.team_type.presence || @team.league_label ]
+          flight = [ @team.rating.present? ? "#{@team.rating}" : nil, @team.gender.presence ].compact.join(" · ")
+          info << [ "Flight", flight ] if flight.present?
+          info << [ "Home Facility", @team.home_court ] if @team.home_court.present?
+          info << [ "Season", @team.season_name ] if @team.season_name.present?
+          info << [ "Season Starts", @team.start_date.strftime("%-m/%-d/%Y") ] if @team.start_date.present?
+        %>
+        <div class="cr-teaminfo">
+          <% info.each do |label, value| %>
+            <div class="cr-teaminfo-item">
+              <span class="cr-teaminfo-label"><%= label %></span>
+              <span class="cr-teaminfo-val"><%= value %></span>
+            </div>
+          <% end %>
+          <% if @captain %>
+            <div class="cr-teaminfo-item">
+              <span class="cr-teaminfo-label">Captain</span>
+              <span class="cr-teaminfo-val">
+                <%= link_to @captain.name, player_path(@captain.id), class: "cr-teaminfo-link" %>
+                <% if @captain.email.present? %>
+                  <br><a href="mailto:<%= @captain.email %>" class="cr-teaminfo-sub"><%= @captain.email %></a>
+                <% end %>
+              </span>
+            </div>
+          <% end %>
+        </div>
+
+        <h2 class="cr-section-title" style="margin-top: 26px;">Team Standings</h2>
 
         <% if @standings_layout == "usta" %>
           <p class="cr-standings-criteria">
