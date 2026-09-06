@@ -39,7 +39,7 @@
   <div class="cr-standings-wrap" style="margin-bottom: 26px;">
     <div class="cr-standings-head">
       <span class="cr-standings-head-title">Players (<%= @players.size %>)</span>
-      <span class="cr-standings-head-season">YCR = live Court Report Rating · TR = TennisRecord</span>
+      <span class="cr-standings-head-season">YCR = live Court Report Rating · tap a name for full stats</span>
     </div>
 
     <% if @players.any? %>
@@ -53,7 +53,6 @@
               <th class="cr-st-n">W</th>
               <th class="cr-st-n">L</th>
               <th>Teams</th>
-              <th class="cr-st-n">TR</th>
             </tr>
           </thead>
           <tbody>
@@ -77,12 +76,6 @@
                 <td class="cr-st-n" style="color: var(--cr-red);"><%= p[:lost] %></td>
                 <td style="font-size: 0.8rem; color: var(--cr-text-muted);">
                   <%= p[:teams].join(", ") %>
-                </td>
-                <td class="cr-st-n">
-                  <%= link_to "view", tennis_record_url(p[:user].name),
-                        target: "_blank", rel: "noopener",
-                        style: "color: var(--cr-text-light); font-size: 0.72rem; text-decoration: underline;",
-                        title: "#{p[:user].name} on TennisRecord" %>
                 </td>
               </tr>
             <% end %>
@@ -174,8 +167,8 @@
 
   <p style="font-size: 0.8rem; color: var(--cr-text-muted); margin-top: 18px;">
     This shows the players and teams inside your own leagues — the people you
-    actually play. Ratings and records come from the scores entered into Court
-    Report; the TennisRecord links open their public site in a new tab.
+    actually play. Ratings and records are computed from the scores entered
+    into Court Report.
   </p>
 
 </div>

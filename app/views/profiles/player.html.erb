@@ -4,18 +4,16 @@
 
   <%= link_to "← Back", :back, class: "cr-back-link" %>
 
-  <%# ── Player Profile card (TennisRecord-style, clean light card) ── %>
+  <%# ── Player Profile card — clean, Court Report's own rating (no TennisRecord) ── %>
   <%
     gender  = @teams.map { |t| t.gender.presence }.compact.first
     section = @teams.map { |t| t.section.presence }.compact.first
-    dyn     = @user.court_report_rating || @user.dynamic_rating
-    meter   = rating_meter_data(ntrp: @user.ntrp_rating, dynamic: dyn)
+    meter   = rating_meter_data(rating: @user.court_report_rating || @user.ntrp_rating)
   %>
   <div class="cr-pp">
     <div class="cr-pp-head">
       <span class="cr-pp-head-title">Player Profile</span>
-      <%= link_to "View Advanced Player Stats →", tennis_record_url(@user.name),
-            target: "_blank", rel: "noopener", class: "cr-pp-head-link" %>
+      <a href="#cr-advanced-stats" class="cr-pp-head-link">Advanced Player Stats ↓</a>
     </div>
 
     <div class="cr-pp-body">
@@ -49,12 +47,9 @@
         </div>
 
         <div class="cr-pp-row">
-          <div class="cr-pp-label">TennisRecord Dynamic</div>
-          <div class="cr-pp-metric">
-            <div class="cr-pp-metric-val"><%= @user.dynamic_rating.present? ? sprintf("%.4f", @user.dynamic_rating) : "—" %></div>
-            <div class="cr-pp-metric-cap">
-              <% if @user.dynamic_rating_date.present? %><%= @user.dynamic_rating_date.strftime("%-m/%-d/%Y") %><% else %>——<% end %>
-            </div>
+          <div class="cr-pp-label">How it's built</div>
+          <div class="cr-pp-metric cr-pp-metric-note">
+            Games won &amp; lost vs. each flight's level, averaged over the season.
           </div>
         </div>
       </div>
@@ -76,8 +71,6 @@
           <div class="cr-pp-meter-band"><%= meter[:band_label] %></div>
         <% end %>
         <div class="cr-pp-links">
-          <%= link_to "Recent Match History", tennis_record_match_history_url(@user.name),
-                target: "_blank", rel: "noopener", class: "cr-pp-link" %>
           <a href="#cr-advanced-stats" class="cr-pp-link">Advanced Stats ↓</a>
         </div>
       </div>

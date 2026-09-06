@@ -49,31 +49,28 @@ module ApplicationHelper
             html_options.merge(target: "_blank", rel: "noopener", title: "View #{name} on TennisRecord")
   end
 
-  # Geometry for the semicircular "rating meter" gauge on a player profile,
-  # styled after TennisRecord's. The needle sits within the 0.5-wide NTRP band
-  # (e.g. a 4.0 rating → the 3.5001–4.0000 band); the live Court Report Rating
-  # (or, if absent, the band midpoint) decides where in the band it points.
-  # Returns nil when there's no NTRP to anchor the band. Coordinates are for a
-  # 260×150 viewBox with the hub at (130,130), radius 88 for the needle.
-  def rating_meter_data(ntrp:, dynamic: nil)
-    return nil if ntrp.blank?
+  # Geometry for the semicircular "rating meter" gauge on a player profile.
+  # The band is the 0.5-wide NTRP level the given rating falls in (e.g. 3.40 →
+  # the 3.0001–3.5000 band); the needle points to where the rating sits inside
+  # it. Pass the live Court Report dynamic rating. Returns nil when there's no
+  # rating to place. Coordinates are for a 260×150 viewBox with the hub at
+  # (130,130), radius 88 for the needle.
+  def rating_meter_data(rating:)
+    return nil if rating.blank?
 
-    ntrp = ntrp.to_f
-    hi = ntrp
-    lo = (ntrp - 0.5).round(4)
-    value = dynamic.present? ? dynamic.to_f : (lo + hi) / 2.0
+    value = rating.to_f
+    hi = (value * 2).ceil / 2.0          # round up to the nearest 0.5
+    hi = value + 0.5 if hi <= value      # exactly on a boundary → its own band top
+    lo = (hi - 0.5).round(4)
 
-    position = (value - lo) / (hi - lo)
-    position = 0.0 if position < 0
-    position = 1.0 if position > 1
-
+    position = ((value - lo) / (hi - lo)).clamp(0.0, 1.0)
     angle = (180 - position * 180) * Math::PI / 180.0
     {
       lo: lo,
       hi: hi,
       value: value,
       position: position,
-      title: format("%.1f Rating Meter", ntrp),
+      title: format("%.1f Rating Meter", hi),
       band_label: format("%.4f – %.4f", lo + 0.0001, hi),
       needle_x: (130 + 88 * Math.cos(angle)).round(2),
       needle_y: (130 - 88 * Math.sin(angle)).round(2)
