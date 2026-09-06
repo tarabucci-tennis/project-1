@@ -25,7 +25,7 @@
 :root {
   --cr-black: #0a1628;
   --cr-black-soft: #111f36;
-  --cr-navy-page: #15263f;           /* lighter, cleaner navy for dark page canvases */
+  --cr-navy-page: #dbe7f6;           /* light blue page canvas */
   --cr-header-bg: #030a1a;          /* darker near-black deep blue for the header */
   --cr-dark-panel: #0a1a33;         /* dark calendar background */
   --cr-dark-panel-soft: #142545;    /* lighter inset for day cells */
@@ -4463,14 +4463,14 @@ body { background: #f3f0e9; }
    pages stay on the light theme until we extend it deliberately.
    ============================================================ */
 body.cr-ctx-teams-index { background: var(--cr-navy-page); }
-body.cr-ctx-teams-index .cr-page-title { color: var(--cr-white); }
-body.cr-ctx-teams-index .cr-home-subtitle { color: rgba(255, 255, 255, 0.6); }
-body.cr-ctx-teams-index .cr-home-tabs { border-bottom-color: rgba(255, 255, 255, 0.12); }
-body.cr-ctx-teams-index .cr-home-tab { color: rgba(255, 255, 255, 0.55); }
-body.cr-ctx-teams-index .cr-home-tab:hover { color: var(--cr-white); }
-body.cr-ctx-teams-index .cr-home-tab-active { color: var(--cr-white); background: rgba(201, 162, 74, 0.20); }
-body.cr-ctx-teams-index .cr-st-hint { color: rgba(255, 255, 255, 0.5); }
-body.cr-ctx-teams-index .cr-coming-up-empty { color: rgba(255, 255, 255, 0.6); }
+body.cr-ctx-teams-index .cr-page-title { color: var(--cr-text); }
+body.cr-ctx-teams-index .cr-home-subtitle { color: var(--cr-text-muted); }
+body.cr-ctx-teams-index .cr-home-tabs { border-bottom-color: rgba(10, 22, 40, 0.12); }
+body.cr-ctx-teams-index .cr-home-tab { color: var(--cr-text-muted); }
+body.cr-ctx-teams-index .cr-home-tab:hover { color: var(--cr-text); }
+body.cr-ctx-teams-index .cr-home-tab-active { color: var(--cr-text); background: rgba(201, 162, 74, 0.28); }
+body.cr-ctx-teams-index .cr-st-hint { color: var(--cr-text-muted); }
+body.cr-ctx-teams-index .cr-coming-up-empty { color: var(--cr-text-muted); }
 
 /* Page-header action buttons — smaller, cleaner pills. Scoped to the header
    row so it wins over both stylesheets' generic .cr-btn / .cr-btn-outline. */
@@ -4490,14 +4490,14 @@ body.cr-ctx-teams-index .cr-coming-up-empty { color: rgba(255, 255, 255, 0.6); }
    Dark team page (scoped). Dark canvas; hero + light cards on top.
    ============================================================ */
 body.cr-ctx-teams-show { background: var(--cr-navy-page); }
-body.cr-ctx-teams-show .cr-back-link a { color: rgba(255, 255, 255, 0.55); }
+body.cr-ctx-teams-show .cr-back-link a { color: var(--cr-text-muted); }
 body.cr-ctx-teams-show .cr-back-link a:hover { color: var(--cr-gold); }
-body.cr-ctx-teams-show .cr-section-title { color: rgba(255, 255, 255, 0.82); border-bottom-color: rgba(255, 255, 255, 0.12); }
-body.cr-ctx-teams-show .cr-subtabs { border-bottom-color: rgba(255, 255, 255, 0.12); }
-body.cr-ctx-teams-show .cr-subtab { color: rgba(255, 255, 255, 0.55); }
-body.cr-ctx-teams-show .cr-subtab:hover { color: var(--cr-white); }
-body.cr-ctx-teams-show .cr-subtab-active { color: var(--cr-white); }
-body.cr-ctx-teams-show .cr-empty { color: rgba(255, 255, 255, 0.6); }
+body.cr-ctx-teams-show .cr-section-title { color: var(--cr-text); border-bottom-color: rgba(10, 22, 40, 0.12); }
+body.cr-ctx-teams-show .cr-subtabs { border-bottom-color: rgba(10, 22, 40, 0.12); }
+body.cr-ctx-teams-show .cr-subtab { color: var(--cr-text-muted); }
+body.cr-ctx-teams-show .cr-subtab:hover { color: var(--cr-text); }
+body.cr-ctx-teams-show .cr-subtab-active { color: var(--cr-text); }
+body.cr-ctx-teams-show .cr-empty { color: var(--cr-text-muted); }
 body.cr-ctx-teams-show .cr-team-hero { border: 1px solid rgba(201, 162, 74, 0.18); }
 
 /* ============================================================
@@ -4508,20 +4508,20 @@ body.cr-ctx-lineups-dashboard,
 body.cr-ctx-teams-search { background: var(--cr-navy-page); }
 
 /* Find a Team */
-body.cr-ctx-teams-search .cr-page-title { color: var(--cr-white); }
-body.cr-ctx-teams-search .cr-page > p { color: rgba(255, 255, 255, 0.7); }
+body.cr-ctx-teams-search .cr-page-title { color: var(--cr-text); }
+body.cr-ctx-teams-search .cr-page > p { color: var(--cr-text-muted); }
 
 /* Lineups dashboard */
-body.cr-ctx-lineups-dashboard .lineups-header h1 { color: var(--cr-white); }
-body.cr-ctx-lineups-dashboard .lineups-header p { color: rgba(255, 255, 255, 0.6); }
-body.cr-ctx-lineups-dashboard .lineup-empty { color: rgba(255, 255, 255, 0.75); }
-body.cr-ctx-lineups-dashboard .lineup-empty strong { color: var(--cr-white); }
+body.cr-ctx-lineups-dashboard .lineups-header h1 { color: var(--cr-text); }
+body.cr-ctx-lineups-dashboard .lineups-header p { color: var(--cr-text-muted); }
+body.cr-ctx-lineups-dashboard .lineup-empty { color: var(--cr-text-muted); }
+body.cr-ctx-lineups-dashboard .lineup-empty strong { color: var(--cr-text); }
 
 /* Profile (player page) */
-body.cr-ctx-profiles-show .cr-player-name { color: var(--cr-white); }
-body.cr-ctx-profiles-show .cr-player-meta { color: rgba(255, 255, 255, 0.65); }
-body.cr-ctx-profiles-show .cr-section-title { color: rgba(255, 255, 255, 0.82); border-bottom-color: rgba(255, 255, 255, 0.12); }
-body.cr-ctx-profiles-show .cr-section-subtitle { color: rgba(255, 255, 255, 0.6); }
+body.cr-ctx-profiles-show .cr-player-name { color: var(--cr-text); }
+body.cr-ctx-profiles-show .cr-player-meta { color: var(--cr-text-muted); }
+body.cr-ctx-profiles-show .cr-section-title { color: var(--cr-text); border-bottom-color: rgba(10, 22, 40, 0.12); }
+body.cr-ctx-profiles-show .cr-section-subtitle { color: var(--cr-text-muted); }
 
 /* ============================================================
    Del-Tri personal match history (profile page)
@@ -4544,9 +4544,9 @@ body.cr-ctx-profiles-show .cr-section-subtitle { color: rgba(255, 255, 255, 0.6)
 
 /* Dark-profile theming for the hint + inputs */
 body.cr-ctx-profiles-show .cr-deltri-hint,
-body.cr-ctx-profiles-player .cr-deltri-hint { color: rgba(255,255,255,0.6); }
+body.cr-ctx-profiles-player .cr-deltri-hint { color: var(--cr-text-muted); }
 body.cr-ctx-profiles-show .cr-deltri-empty,
-body.cr-ctx-profiles-player .cr-deltri-empty { color: rgba(255,255,255,0.6); }
+body.cr-ctx-profiles-player .cr-deltri-empty { color: var(--cr-text-muted); }
 
 /* ============================================================
    Division-team drill-down (opponent results from the Standings tab)
@@ -4628,9 +4628,9 @@ body.cr-ctx-division_teams-show { background: var(--cr-black); }
 .cr-chip-btn { display: inline-flex; align-items: center; gap: 5px; padding: 8px 14px; border-radius: 999px; border: 1px solid var(--cr-border); background: var(--cr-white); color: var(--cr-text); font-size: 0.78rem; font-weight: 600; text-decoration: none; white-space: nowrap; }
 .cr-chip-btn:hover { border-color: var(--cr-gold); background: rgba(201,162,74,0.06); }
 
-/* Dark team page: segmented control reads on the dark canvas */
-body.cr-ctx-teams-show .cr-seg { background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.12); }
-body.cr-ctx-teams-show .cr-seg-btn { color: rgba(255,255,255,0.6); }
+/* Team page: segmented control reads on the light-blue canvas */
+body.cr-ctx-teams-show .cr-seg { background: var(--cr-white); border-color: var(--cr-border); }
+body.cr-ctx-teams-show .cr-seg-btn { color: var(--cr-text-muted); }
 body.cr-ctx-teams-show .cr-seg-btn-active { background: var(--cr-gold); color: var(--cr-black); box-shadow: none; }
 
 @media (max-width: 640px) {
@@ -4644,14 +4644,17 @@ body.cr-ctx-teams-show .cr-seg-btn-active { background: var(--cr-gold); color: v
 /* ============================================================
    Dark theme: remaining pages (auth, admin, captain forms)
    ============================================================ */
+/* Login / sign-up keep the branded dark marketing hero */
 body.cr-ctx-sessions-new,
-body.cr-ctx-registrations-new,
+body.cr-ctx-registrations-new { background: var(--cr-black); }
+
+/* App pages match the light-blue canvas */
 body.cr-ctx-users-index,
 body.cr-ctx-matches-edit_results,
 body.cr-ctx-matches-edit,
 body.cr-ctx-matches-new,
 body.cr-ctx-matches-show,
-body.cr-ctx-lineups-edit { background: var(--cr-black); }
+body.cr-ctx-lineups-edit { background: var(--cr-navy-page); }
 
 /* Sign-in landing */
 body.cr-ctx-sessions-new .cr-landing-headline { color: var(--cr-white); }
@@ -4667,26 +4670,26 @@ body.cr-ctx-sessions-new .cr-admin-reset-note { color: rgba(255, 255, 255, 0.5);
 body.cr-ctx-registrations-new .cr-auth-switch { color: rgba(255, 255, 255, 0.7); }
 
 /* Players admin */
-body.cr-ctx-users-index .cr-page-title { color: var(--cr-white); }
+body.cr-ctx-users-index .cr-page-title { color: var(--cr-text); }
 
-/* Captain forms — lighten on-canvas headings & labels (inputs stay light) */
+/* Captain forms — headings & labels read dark on the light canvas (inputs stay light) */
 body.cr-ctx-matches-edit_results .cr-page-title,
 body.cr-ctx-matches-edit .cr-page-title,
 body.cr-ctx-matches-new .cr-page-title,
 body.cr-ctx-matches-show .cr-page-title,
-body.cr-ctx-lineups-edit .cr-page-title { color: var(--cr-white); }
+body.cr-ctx-lineups-edit .cr-page-title { color: var(--cr-text); }
 body.cr-ctx-matches-edit_results .cr-form-section-title,
 body.cr-ctx-matches-edit_results .cr-line-label,
 body.cr-ctx-matches-edit_results .cr-line-players-label,
 body.cr-ctx-matches-edit_results .cr-result-label,
-body.cr-ctx-matches-edit .cr-section-title { color: rgba(255, 255, 255, 0.85); }
-body.cr-ctx-matches-edit_results .cr-form-help { color: rgba(255, 255, 255, 0.55); }
+body.cr-ctx-matches-edit .cr-section-title { color: var(--cr-text); }
+body.cr-ctx-matches-edit_results .cr-form-help { color: var(--cr-text-muted); }
 body.cr-ctx-matches-edit_results .cr-field > label,
 body.cr-ctx-matches-edit_results .cr-field > span,
 body.cr-ctx-matches-edit .cr-field > label,
 body.cr-ctx-matches-edit .cr-field > span,
 body.cr-ctx-lineups-edit .cr-field > label,
-body.cr-ctx-lineups-edit .cr-field > span { color: rgba(255, 255, 255, 0.8); }
+body.cr-ctx-lineups-edit .cr-field > span { color: var(--cr-text); }
 
 /* ============================================================
    Player Profile card + rating meter (TennisRecord-style)
@@ -4761,7 +4764,7 @@ body.cr-ctx-lineups-edit .cr-field > span { color: rgba(255, 255, 255, 0.8); }
    Advanced Player Stats — clean per-year / per-league matrix
    ============================================================ */
 .cr-adv-league-label {
-  font-size: 0.95rem; font-weight: 800; color: rgba(255, 255, 255, 0.85);
+  font-size: 0.95rem; font-weight: 800; color: var(--cr-text);
   margin: 18px 0 8px; letter-spacing: 0.3px;
 }
 .cr-adv-wrap {
@@ -4782,7 +4785,7 @@ body.cr-ctx-lineups-edit .cr-field > span { color: rgba(255, 255, 255, 0.8); }
 .cr-adv-win { color: var(--cr-green); font-weight: 600; }
 .cr-adv-loss { color: var(--cr-red); font-weight: 600; }
 .cr-adv-total td { background: #f7f9fc; font-weight: 800; border-top: 2px solid var(--cr-border); }
-.cr-adv-note { font-size: 0.78rem; color: rgba(255, 255, 255, 0.6); margin-top: 10px; }
+.cr-adv-note { font-size: 0.78rem; color: var(--cr-text-muted); margin-top: 10px; }
 
 /* Recent Matches — expandable rows (players + opponents) on the player page */
 .cr-ps-details { border-bottom: 1px solid var(--cr-border); }
