@@ -22,25 +22,33 @@
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+/* ── "Fresh Court" palette ─────────────────────────────────────────
+   Cream canvas · court navy ink · teal lead accent · ace gold brand ·
+   softened win/loss. Retuning these tokens re-skins the whole app.
+   Division of accents: teal = interaction (links, active, highlights),
+   gold = identity (logo, primary buttons, leader stripe). */
 :root {
-  --cr-black: #0a1628;
-  --cr-black-soft: #111f36;
-  --cr-navy-page: #dbe7f6;           /* light blue page canvas */
-  --cr-header-bg: #030a1a;          /* darker near-black deep blue for the header */
-  --cr-dark-panel: #0a1a33;         /* dark calendar background */
-  --cr-dark-panel-soft: #142545;    /* lighter inset for day cells */
-  --cr-dark-border: rgba(201, 162, 74, 0.18);  /* gold-tinted border on dark */
-  --cr-gold: #c9a24a;
-  --cr-gold-soft: #e4c36a;
-  --cr-gold-bright: #f0d97a;
+  --cr-black: #14263f;              /* court navy — ink, dark surfaces, hero */
+  --cr-black-soft: #1d3350;
+  --cr-navy-page: #f6f1e6;          /* cream page canvas */
+  --cr-header-bg: #0f1e33;          /* deep navy header bar */
+  --cr-dark-panel: #12233c;         /* dark calendar background */
+  --cr-dark-panel-soft: #1b3050;    /* lighter inset for day cells */
+  --cr-dark-border: rgba(228, 178, 62, 0.20);  /* gold-tinted border on dark */
+  --cr-gold: #e4b23e;               /* ace gold — brand identity */
+  --cr-gold-soft: #efc766;
+  --cr-gold-bright: #f6d780;
+  --cr-teal: #17b4a6;              /* teal — the fresh lead accent (fills) */
+  --cr-teal-deep: #0e7d73;         /* readable teal for link text on light */
+  --cr-teal-tint: rgba(23, 180, 166, 0.14);
   --cr-white: #ffffff;
-  --cr-bg: #f7f8fa;
-  --cr-border: #e6e8ec;
-  --cr-text: #0a1628;
-  --cr-text-muted: #6b7280;
-  --cr-text-light: #9ca3af;
-  --cr-green: #16a34a;
-  --cr-red: #dc2626;
+  --cr-bg: #f2ece0;                 /* warm cream for subtle inset fills */
+  --cr-border: #e6ddcc;
+  --cr-text: #14263f;
+  --cr-text-muted: #6a6656;
+  --cr-text-light: #9a9484;
+  --cr-green: #2fa45e;              /* win green */
+  --cr-red: #e4573d;               /* loss red */
 }
 
 body {
@@ -4712,7 +4720,7 @@ body.cr-ctx-lineups-edit .cr-field > span { color: var(--cr-text); }
   border-bottom: 1px solid var(--cr-border);
 }
 .cr-pp-head-title { font-size: 1.25rem; font-weight: 800; color: #64748b; letter-spacing: 0.3px; }
-.cr-pp-head-link { font-size: 0.9rem; font-weight: 600; color: #2563eb; text-decoration: none; }
+.cr-pp-head-link { font-size: 0.9rem; font-weight: 600; color: var(--cr-teal-deep); text-decoration: none; }
 .cr-pp-head-link:hover { text-decoration: underline; }
 
 .cr-pp-body { display: flex; gap: 8px; flex-wrap: wrap; }
@@ -4729,14 +4737,14 @@ body.cr-ctx-lineups-edit .cr-field > span { color: var(--cr-text); }
   border-bottom: 1px solid var(--cr-border);
 }
 .cr-pp-left .cr-pp-row:last-child { border-bottom: none; }
-.cr-pp-name { font-size: 1.3rem; font-weight: 800; color: #2563eb; line-height: 1.2; }
+.cr-pp-name { font-size: 1.3rem; font-weight: 800; color: var(--cr-teal-deep); line-height: 1.2; }
 .cr-pp-loc { color: var(--cr-text); font-weight: 700; }
 .cr-pp-you { color: var(--cr-gold); font-size: 0.8rem; font-weight: 700; }
 .cr-pp-sub { font-size: 0.85rem; color: #64748b; margin-top: 3px; }
 .cr-pp-label { font-size: 1rem; font-weight: 600; color: var(--cr-text); }
 .cr-pp-live {
   font-size: 0.62rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;
-  color: #16a34a; background: #e6f4ea; border-radius: 999px; padding: 2px 7px; margin-left: 6px;
+  color: var(--cr-teal-deep); background: var(--cr-teal-tint); border-radius: 999px; padding: 2px 7px; margin-left: 6px;
   vertical-align: middle;
 }
 .cr-pp-metric { text-align: right; white-space: nowrap; }
@@ -4753,7 +4761,7 @@ body.cr-ctx-lineups-edit .cr-field > span { color: var(--cr-text); }
 }
 .cr-pp-meter-band { font-size: 1.05rem; font-weight: 800; color: var(--cr-text); margin: 6px 0 12px; letter-spacing: 0.5px; }
 .cr-pp-links { display: flex; flex-direction: column; gap: 6px; align-items: center; margin-top: auto; }
-.cr-pp-link { font-size: 0.9rem; font-weight: 600; color: #2563eb; text-decoration: none; }
+.cr-pp-link { font-size: 0.9rem; font-weight: 600; color: var(--cr-teal-deep); text-decoration: none; }
 .cr-pp-link:hover { text-decoration: underline; }
 
 @media (max-width: 640px) {
@@ -4780,7 +4788,7 @@ body.cr-ctx-lineups-edit .cr-field > span { color: var(--cr-text); }
 .cr-adv tbody tr { border-bottom: 1px solid #eef1f5; }
 .cr-adv tbody tr:last-child { border-bottom: none; }
 .cr-adv-rowhead { text-align: left !important; padding-left: 18px !important; font-weight: 700; }
-.cr-adv-year { color: #2563eb; }
+.cr-adv-year { color: var(--cr-teal-deep); }
 .cr-adv-group { border-left: 1px solid var(--cr-border); }
 .cr-adv-win { color: var(--cr-green); font-weight: 600; }
 .cr-adv-loss { color: var(--cr-red); font-weight: 600; }
@@ -4801,5 +4809,5 @@ body.cr-ctx-lineups-edit .cr-field > span { color: var(--cr-text); }
 .cr-ps-expand-row { display: flex; gap: 10px; padding: 5px 0; font-size: 0.85rem; }
 .cr-ps-expand-label { flex: 0 0 82px; color: var(--cr-text-muted); font-weight: 600; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.4px; padding-top: 2px; }
 .cr-ps-expand-val { flex: 1; min-width: 0; color: var(--cr-text); }
-.cr-ps-playerlink { color: #2563eb; font-weight: 600; text-decoration: none; }
+.cr-ps-playerlink { color: var(--cr-teal-deep); font-weight: 600; text-decoration: none; }
 .cr-ps-playerlink:hover { text-decoration: underline; }
