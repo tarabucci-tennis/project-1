@@ -194,7 +194,31 @@ class ProfilesController < ApplicationController
       }
     end
 
+    # Resolve opponent names to Court Report players so they can link to that
+    # player's stats. Names we don't have a profile for stay as plain text.
+    # One query for every opponent name across the recent matches (no N+1).
+    all_names = stats[:recent].flat_map { |m| split_opponent_names(m[:opponents]) }.uniq
+    id_by_name = {}
+    if all_names.any?
+      User.where("LOWER(name) IN (?)", all_names.map(&:downcase))
+          .each { |u| id_by_name[u.name.downcase] = u.id }
+    end
+    stats[:recent].each do |m|
+      m[:opponent_players] = split_opponent_names(m[:opponents]).map do |name|
+        { name: name, id: id_by_name[name.downcase] }
+      end
+    end
+
     stats
+  end
+
+  # Splits a free-text opponents string ("Jane Smith / Mary Jones") into
+  # individual names, dropping blanks and obvious placeholders ("N/A",
+  # "Default", "TBD") that early seed rows carried.
+  def split_opponent_names(str)
+    str.to_s.split(%r{[/,]}).map(&:strip).reject do |n|
+      n.blank? || n.match?(/\A(n\/?a|default|tbd|—|-)\z/i) || n.downcase.include?("default")
+    end
   end
 
   def pct(won, total)
