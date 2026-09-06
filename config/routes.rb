@@ -55,7 +55,7 @@ Rails.application.routes.draw do
       post "advance", to: "teams#advance"
       get  "edit_standings", to: "teams#edit_standings"
       patch "update_standings", to: "teams#update_standings"
-      get  "edit_info", to: "teams#edit_info"
+      get "edit_info", to: "teams#edit_info"
       patch "update_info", to: "teams#update_info"
     end
   end
