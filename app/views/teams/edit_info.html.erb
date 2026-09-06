@@ -1,0 +1,66 @@
+<% content_for :title, "Edit Team Info · #{@team.name}" %>
+
+<div class="cr-main">
+  <div class="cr-section" style="max-width: 720px; margin: 24px auto;">
+    <%= link_to "← Back to #{@team.name}", team_path(@team, anchor: "standings"), class: "cr-back-link", style: "display:inline-block; margin-bottom: 12px;" %>
+    <h1 class="cr-section-title" style="margin-bottom: 6px;">Edit Team Info</h1>
+    <p style="font-size: 0.85rem; color: var(--cr-text-muted); margin-bottom: 20px;">
+      These details show at the top of your Standings tab, TennisLink-style. Fill in whatever you know — blank fields are simply hidden.
+    </p>
+
+    <%= form_with model: @team, url: update_info_team_path(@team), method: :patch, local: true do |f| %>
+      <div class="cr-info-grid">
+        <label class="cr-info-field">
+          <span>Section</span>
+          <%= f.text_field :section, placeholder: "e.g. Middle States" %>
+        </label>
+        <label class="cr-info-field">
+          <span>District / Area</span>
+          <%= f.text_field :district, placeholder: "e.g. Philadelphia" %>
+        </label>
+        <label class="cr-info-field">
+          <span>League</span>
+          <%= f.text_field :team_type, placeholder: "e.g. Adult 40 &amp; Over" %>
+        </label>
+        <label class="cr-info-field">
+          <span>Flight / Sub-Flight</span>
+          <%= f.text_field :flight, placeholder: "e.g. 4.0 Women Delches - Tues / Sub-Flight 2" %>
+        </label>
+        <label class="cr-info-field">
+          <span>NTRP Rating</span>
+          <%= f.number_field :rating, step: 0.5, min: 1.0, max: 7.0, placeholder: "e.g. 4.0" %>
+        </label>
+        <label class="cr-info-field">
+          <span>Gender</span>
+          <%= f.text_field :gender, placeholder: "e.g. Women's" %>
+        </label>
+        <label class="cr-info-field">
+          <span>Home Facility</span>
+          <%= f.text_field :home_court, placeholder: "e.g. Bryn Mawr Racquet Club" %>
+        </label>
+        <label class="cr-info-field">
+          <span>Facility Address</span>
+          <%= f.text_field :home_court_address, placeholder: "e.g. 4 N Warner Ave, Bryn Mawr, PA 19010" %>
+        </label>
+        <label class="cr-info-field">
+          <span>Season</span>
+          <%= f.text_field :season_name, placeholder: "e.g. Spring 2026" %>
+        </label>
+        <label class="cr-info-field">
+          <span>Season Starts</span>
+          <%= f.date_field :start_date %>
+        </label>
+        <label class="cr-info-field">
+          <span>Captain Phone<% if @captain %> (<%= @captain.name %>)<% end %></span>
+          <input type="tel" name="captain_phone" value="<%= @captain&.phone %>" placeholder="e.g. 610-329-8911"<%= " disabled" unless @captain %>>
+          <% unless @captain %><small style="color: var(--cr-text-light);">No captain set for this team yet.</small><% end %>
+        </label>
+      </div>
+
+      <div style="display:flex; gap:12px; margin-top: 22px;">
+        <%= f.submit "Save Team Info", class: "cr-btn cr-btn-gold" %>
+        <%= link_to "Cancel", team_path(@team, anchor: "standings"), class: "cr-btn cr-btn-outline" %>
+      </div>
+    <% end %>
+  </div>
+</div>

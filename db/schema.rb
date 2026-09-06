@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_09_06_000000) do
+ActiveRecord::Schema[8.1].define(version: 2026_09_06_010000) do
   create_table "availabilities", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.integer "match_id", null: false
@@ -193,8 +193,11 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_06_000000) do
 
   create_table "tennis_teams", force: :cascade do |t|
     t.datetime "created_at", null: false
+    t.string "district"
+    t.string "flight"
     t.string "gender"
     t.string "home_court"
+    t.string "home_court_address"
     t.string "join_code"
     t.string "league_category", default: "USTA", null: false
     t.string "league_name"
@@ -229,6 +232,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_06_000000) do
     t.decimal "ntrp_rating"
     t.date "ntrp_rating_date"
     t.string "password_digest"
+    t.string "phone"
     t.datetime "reset_password_sent_at"
     t.string "reset_password_token"
     t.string "tennislink_person_id"

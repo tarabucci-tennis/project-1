@@ -4845,3 +4845,16 @@ body.cr-ctx-lineups-edit .cr-field > span { color: var(--cr-text); }
 .cr-teaminfo-link:hover { text-decoration: underline; }
 .cr-teaminfo-sub { font-size: 0.78rem; font-weight: 500; color: var(--cr-teal-deep); text-decoration: none; }
 .cr-teaminfo-sub:hover { text-decoration: underline; }
+
+.cr-teaminfo-address { font-size: 0.8rem; font-weight: 500; color: var(--cr-text-muted); }
+
+/* Edit Team Info form */
+.cr-info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 14px; }
+.cr-info-field { display: flex; flex-direction: column; gap: 5px; }
+.cr-info-field > span { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--cr-text-muted); }
+.cr-info-field input {
+  padding: 9px 12px; font-size: 0.9rem; border: 1px solid var(--cr-border);
+  border-radius: 8px; background: var(--cr-white); color: var(--cr-text); width: 100%;
+}
+.cr-info-field input:focus { outline: none; border-color: var(--cr-teal); box-shadow: 0 0 0 2px var(--cr-teal-tint); }
+.cr-info-field input:disabled { background: var(--cr-bg); color: var(--cr-text-light); }
