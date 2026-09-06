@@ -22,33 +22,32 @@
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-/* ── "Fresh Court" palette ─────────────────────────────────────────
-   Cream canvas · court navy ink · teal lead accent · ace gold brand ·
-   softened win/loss. Retuning these tokens re-skins the whole app.
-   Division of accents: teal = interaction (links, active, highlights),
-   gold = identity (logo, primary buttons, leader stripe). */
+/* ── "Modern" palette ──────────────────────────────────────────────
+   Cool near-white canvas · ink navy · teal lead accent · sunny amber
+   pop · crisp win/loss. Muted text is deliberately dark for legibility.
+   Division of accents: teal = interaction, amber = pop/brand highlight. */
 :root {
-  --cr-black: #14263f;              /* court navy — ink, dark surfaces, hero */
-  --cr-black-soft: #1d3350;
-  --cr-navy-page: #f6f1e6;          /* cream page canvas */
-  --cr-header-bg: #0f1e33;          /* deep navy header bar */
-  --cr-dark-panel: #12233c;         /* dark calendar background */
-  --cr-dark-panel-soft: #1b3050;    /* lighter inset for day cells */
-  --cr-dark-border: rgba(228, 178, 62, 0.20);  /* gold-tinted border on dark */
-  --cr-gold: #e4b23e;               /* ace gold — brand identity */
-  --cr-gold-soft: #efc766;
-  --cr-gold-bright: #f6d780;
-  --cr-teal: #17b4a6;              /* teal — the fresh lead accent (fills) */
+  --cr-black: #182740;              /* ink navy — text, dark surfaces, hero */
+  --cr-black-soft: #24344f;
+  --cr-navy-page: #f4f8fc;          /* cool near-white page canvas */
+  --cr-header-bg: #101d33;          /* deep navy header bar */
+  --cr-dark-panel: #16273f;         /* dark calendar background */
+  --cr-dark-panel-soft: #21344f;    /* lighter inset for day cells */
+  --cr-dark-border: rgba(23, 180, 166, 0.22);  /* teal-tinted border on dark */
+  --cr-gold: #f4b431;               /* sunny amber — pop / brand highlight */
+  --cr-gold-soft: #ffce62;
+  --cr-gold-bright: #ffdb85;
+  --cr-teal: #17b4a6;              /* teal — the lead accent (fills) */
   --cr-teal-deep: #0e7d73;         /* readable teal for link text on light */
   --cr-teal-tint: rgba(23, 180, 166, 0.14);
   --cr-white: #ffffff;
-  --cr-bg: #f2ece0;                 /* warm cream for subtle inset fills */
-  --cr-border: #e6ddcc;
-  --cr-text: #14263f;
-  --cr-text-muted: #6a6656;
-  --cr-text-light: #9a9484;
-  --cr-green: #2fa45e;              /* win green */
-  --cr-red: #e4573d;               /* loss red */
+  --cr-bg: #eef3f9;                 /* cool light for subtle inset fills */
+  --cr-border: #e1e8f1;
+  --cr-text: #182740;
+  --cr-text-muted: #4d5a72;         /* darker slate — reads clearly on light */
+  --cr-text-light: #6f7c92;
+  --cr-green: #1ea97c;              /* win green */
+  --cr-red: #f1654f;               /* loss red */
 }
 
 body {
@@ -4749,15 +4748,15 @@ body.cr-ctx-lineups-edit .cr-field > span { color: var(--cr-text); }
 }
 .cr-pp-metric { text-align: right; white-space: nowrap; }
 .cr-pp-metric-val { font-size: 1.7rem; font-weight: 800; color: var(--cr-text); line-height: 1.05; }
-.cr-pp-metric-note { max-width: 190px; font-size: 0.72rem; color: #94a3b8; line-height: 1.35; white-space: normal; }
+.cr-pp-metric-note { max-width: 190px; font-size: 0.72rem; color: var(--cr-text-muted); line-height: 1.35; white-space: normal; }
 .cr-pp-metric-val.cr-pp-gold { color: var(--cr-gold); }
-.cr-pp-metric-cap { font-size: 0.68rem; color: #94a3b8; margin-top: 2px; }
+.cr-pp-metric-cap { font-size: 0.68rem; color: var(--cr-text-muted); margin-top: 2px; }
 
 .cr-pp-meter-title { font-size: 0.8rem; color: #64748b; margin-bottom: 2px; }
 .cr-pp-meter { width: 100%; max-width: 240px; height: auto; }
 .cr-pp-meter-scale {
   display: flex; justify-content: space-between; width: 100%; max-width: 200px;
-  font-size: 0.6rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px; margin-top: -6px;
+  font-size: 0.6rem; color: var(--cr-text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-top: -6px;
 }
 .cr-pp-meter-band { font-size: 1.05rem; font-weight: 800; color: var(--cr-text); margin: 6px 0 12px; letter-spacing: 0.5px; }
 .cr-pp-links { display: flex; flex-direction: column; gap: 6px; align-items: center; margin-top: auto; }
