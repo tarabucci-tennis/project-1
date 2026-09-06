@@ -245,7 +245,16 @@
                 <div class="cr-ps-expand-row">
                   <span class="cr-ps-expand-label">Opponents</span>
                   <span class="cr-ps-expand-val">
-                    <%= match[:opponents].present? ? match[:opponents] : "Not entered yet" %>
+                    <% opps = match[:opponent_players] || [] %>
+                    <% if opps.any? %>
+                      <% opps.each_with_index do |op, i| %>
+                        <% if op[:id] %>
+                          <%= link_to op[:name], player_path(op[:id]), class: "cr-ps-playerlink" %>
+                        <% else %>
+                          <%= op[:name] %>
+                        <% end %><%= "," unless i == opps.size - 1 %>
+                      <% end %>
+                    <% else %>Not entered yet<% end %>
                   </span>
                 </div>
               </div>
