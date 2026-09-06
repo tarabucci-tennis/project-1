@@ -454,7 +454,38 @@ class TeamsController < ApplicationController
     redirect_to team_path(@team, anchor: "standings"), notice: "Opponent standings updated."
   end
 
+  def edit_info
+    @team = TennisTeam.find(params[:id])
+    unless @team.can_set_lineup?(current_user) || current_user.admin?
+      return redirect_to team_path(@team), alert: "Only captains can edit team info."
+    end
+    @captain = @team.captain
+  end
+
+  def update_info
+    @team = TennisTeam.find(params[:id])
+    unless @team.can_set_lineup?(current_user) || current_user.admin?
+      return redirect_to team_path(@team), alert: "Only captains can edit team info."
+    end
+
+    @team.update(team_info_params)
+
+    captain = @team.captain
+    if captain && params[:captain_phone]
+      captain.update(phone: params[:captain_phone].to_s.strip.presence)
+    end
+
+    redirect_to team_path(@team, anchor: "standings"), notice: "Team info updated."
+  end
+
   private
+
+  def team_info_params
+    params.require(:tennis_team).permit(
+      :section, :district, :team_type, :flight, :rating, :gender,
+      :home_court, :home_court_address, :season_name, :start_date
+    )
+  end
 
   def standings_attrs(attrs)
     {
