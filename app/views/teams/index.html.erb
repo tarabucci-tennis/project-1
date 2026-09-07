@@ -282,4 +282,23 @@
       </div>
     </div>
   <% end %>
+
+  <%# ── Past Seasons (archived teams) — still fully viewable ── %>
+  <% if @archived_teams.present? %>
+    <section class="cr-archive-section">
+      <h2 class="cr-archive-title">📦 Past Seasons</h2>
+      <p class="cr-archive-sub">Archived teams — tap any one to see its full schedule, results &amp; standings.</p>
+      <div class="cr-archive-grid">
+        <% @archived_teams.each do |team| %>
+          <%= link_to team_path(team), class: "cr-archive-card" do %>
+            <div class="cr-archive-card-name"><%= team.name %></div>
+            <div class="cr-archive-card-meta">
+              <%= team.league_label %><% if team.season_name.present? %> · <%= team.season_name %><% end %>
+            </div>
+            <div class="cr-archive-card-record"><%= team.record_label %></div>
+          <% end %>
+        <% end %>
+      </div>
+    </section>
+  <% end %>
 </div>

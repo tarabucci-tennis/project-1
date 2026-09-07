@@ -4,6 +4,23 @@
 
   <%= link_to "← My Teams", teams_path, class: "cr-back-link" %>
 
+  <% can_archive = @is_captain || @team.user_id == current_user.id %>
+  <% if @team.archived? %>
+    <div class="cr-archived-banner">
+      <span>📦 This team is in <strong>Past Seasons</strong> — you're viewing its archived results.</span>
+      <% if can_archive %>
+        <%= button_to "Restore to active", unarchive_team_path(@team), method: :post,
+              class: "cr-chip-btn", form: { style: "display:inline;" } %>
+      <% end %>
+    </div>
+  <% elsif can_archive %>
+    <div class="cr-team-archive-action">
+      <%= button_to "📦 Archive team", archive_team_path(@team), method: :post,
+            class: "cr-chip-btn", form: { style: "display:inline;" },
+            data: { turbo_confirm: "Move #{@team.name} to Past Seasons? Its schedule, results, and standings stay saved and viewable — you can restore it any time." } %>
+    </div>
+  <% end %>
+
   <%# ── Hero ────────────────────────────────────────── %>
   <div class="cr-team-hero">
     <div class="cr-team-hero-content">

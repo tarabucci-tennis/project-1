@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_09_06_040000) do
+ActiveRecord::Schema[8.1].define(version: 2026_09_07_000000) do
   create_table "availabilities", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.integer "match_id", null: false
@@ -192,6 +192,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_06_040000) do
   end
 
   create_table "tennis_teams", force: :cascade do |t|
+    t.boolean "archived", default: false, null: false
     t.datetime "created_at", null: false
     t.string "district"
     t.string "flight"
@@ -213,6 +214,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_06_040000) do
     t.string "tenniscores_url"
     t.datetime "updated_at", null: false
     t.integer "user_id", null: false
+    t.index ["archived"], name: "index_tennis_teams_on_archived"
     t.index ["join_code"], name: "index_tennis_teams_on_join_code", unique: true
     t.index ["league_category"], name: "index_tennis_teams_on_league_category"
     t.index ["user_id"], name: "index_tennis_teams_on_user_id"
