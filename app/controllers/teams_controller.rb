@@ -4,14 +4,19 @@ class TeamsController < ApplicationController
   def index
     all_teams = current_user.member_teams.includes(:matches, :team_memberships)
 
+    # Archived teams drop out of the active view and into a "Past Seasons"
+    # section; they stay full team records so their results are still viewable.
+    active_teams   = all_teams.reject(&:archived?)
+    @archived_teams = all_teams.select(&:archived?).sort_by { |t| [ t.start_date || Date.new(0), t.name.to_s ] }.reverse
+
     # Keyed by the league's real name ("USTA", "Inter-Club", "Del-Tri",
     # "Bux-Mont") so a new league appears on its own tab as soon as a team
     # is saved with that league_name — no code change needed.
-    @teams_by_league = TennisTeam.group_by_league(all_teams.to_a)
+    @teams_by_league = TennisTeam.group_by_league(active_teams)
 
     # Fallback: include teams Tara owns even if she has no team_membership row
     if @teams_by_league.values.flatten.empty? && current_user.tennis_teams.any?
-      owned = current_user.tennis_teams.order(start_date: :desc)
+      owned = current_user.tennis_teams.where(archived: false).order(start_date: :desc)
       @teams_by_league = TennisTeam.group_by_league(owned.to_a)
     end
 
@@ -452,6 +457,28 @@ class TeamsController < ApplicationController
     end
 
     redirect_to team_path(@team, anchor: "standings"), notice: "Opponent standings updated."
+  end
+
+  # POST /teams/:id/archive — move a whole team into Past Seasons. It stays a
+  # full record (schedule, results, standings all viewable), just out of the
+  # active My Teams list.
+  def archive
+    team = TennisTeam.find(params[:id])
+    unless team.can_set_lineup?(current_user) || current_user.admin? || team.user_id == current_user.id
+      return redirect_to team_path(team), alert: "Only captains can archive a team."
+    end
+    team.update_column(:archived, true)
+    redirect_to teams_path, notice: "#{team.name} moved to Past Seasons. You can still open it any time."
+  end
+
+  # POST /teams/:id/unarchive — bring a team back to the active list.
+  def unarchive
+    team = TennisTeam.find(params[:id])
+    unless team.can_set_lineup?(current_user) || current_user.admin? || team.user_id == current_user.id
+      return redirect_to team_path(team), alert: "Only captains can restore a team."
+    end
+    team.update_column(:archived, false)
+    redirect_to team_path(team), notice: "#{team.name} is active again."
   end
 
   def edit_info

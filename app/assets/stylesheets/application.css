@@ -4858,3 +4858,25 @@ body.cr-ctx-lineups-edit .cr-field > span { color: var(--cr-text); }
 }
 .cr-info-field input:focus { outline: none; border-color: var(--cr-teal); box-shadow: 0 0 0 2px var(--cr-teal-tint); }
 .cr-info-field input:disabled { background: var(--cr-bg); color: var(--cr-text-light); }
+
+/* ── Teams archive (Past Seasons) ── */
+.cr-archive-section { margin: 34px 0 0; }
+.cr-archive-title { font-size: 1.15rem; font-weight: 800; color: var(--cr-text); margin: 0 0 4px; letter-spacing: 0.2px; }
+.cr-archive-sub { font-size: 0.85rem; color: var(--cr-text-muted); margin: 0 0 16px; }
+.cr-archive-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 14px; }
+.cr-archive-card {
+  display: block; text-decoration: none;
+  background: var(--cr-white); border: 1px solid var(--cr-border); border-radius: 12px;
+  padding: 16px 18px; transition: border-color 0.15s, box-shadow 0.15s, transform 0.15s;
+}
+.cr-archive-card:hover { border-color: var(--cr-teal); box-shadow: 0 6px 18px rgba(24, 39, 64, 0.08); transform: translateY(-2px); }
+.cr-archive-card-name { font-size: 1rem; font-weight: 800; color: var(--cr-text); }
+.cr-archive-card-meta { font-size: 0.78rem; color: var(--cr-text-muted); margin-top: 3px; }
+.cr-archive-card-record { font-size: 0.82rem; font-weight: 700; color: var(--cr-teal-deep); margin-top: 8px; font-variant-numeric: tabular-nums; }
+
+.cr-team-archive-action { text-align: right; margin: -2px 0 10px; }
+.cr-archived-banner {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap;
+  background: var(--cr-teal-tint); border: 1px solid rgba(23, 180, 166, 0.3); border-radius: 10px;
+  padding: 10px 16px; margin: 0 0 14px; font-size: 0.88rem; color: var(--cr-text);
+}
