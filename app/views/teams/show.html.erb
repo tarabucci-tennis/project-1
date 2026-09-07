@@ -669,12 +669,20 @@
           <% end %>
 
           <% if @team.home_court.present? || @team.home_court_address.present? %>
+            <%
+              facility = @team.home_court.to_s.strip
+              address  = @team.home_court_address.to_s.strip
+              # Skip the address line if the facility name already contains it
+              # (older rows stored name + address in one field).
+              street = address.split(",").first.to_s.strip
+              show_address = address.present? && (facility.blank? || (street.present? && !facility.include?(street)))
+            %>
             <div class="cr-teaminfo-item">
               <span class="cr-teaminfo-label">Home Facility</span>
               <span class="cr-teaminfo-val">
-                <%= @team.home_court %>
-                <% if @team.home_court_address.present? %>
-                  <br><span class="cr-teaminfo-address"><%= @team.home_court_address %></span>
+                <%= facility.presence || address %>
+                <% if show_address %>
+                  <span class="cr-teaminfo-address"><%= address %></span>
                 <% end %>
               </span>
             </div>
