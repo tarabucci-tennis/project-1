@@ -45,6 +45,67 @@
 - **Verify before declaring victory.** Don't say "done" if you haven't actually tested it works in a browser.
 - **Ask before building.** If the task doesn't match what's in the code, ask clarifying questions first — don't just start coding on assumptions.
 
+## League Rules (REMEMBER THESE — per Tara + the verified Sept 2026 build brief)
+
+Tara asked that all her leagues' rules be remembered across sessions. Store any
+new rule she states here. The exact Bux-Mont EAST rules PDF
+(`buxmont.tenniscores.com/leaguedata/library/94/EAST_version_4_rules___Buxmont_.pdf`)
+is robots-blocked AND cannot be text-extracted in this sandbox (no PDF tooling —
+renderer, pdftotext, and zlib stream extraction all fail on the embedded-font
+PDF). Sections D–G still need to be supplied by Tara as text/screenshot.
+
+### Bux-Mont (Tenniscores)
+- **Everything is counted in TOTAL GAMES.** A court/line is won by the pair with the
+  **most total games across the whole match** — sum every set in the string, NOT most
+  sets won (Rule B.7). The **team match** goes to whoever wins **more courts**; a 3–3
+  court tie is broken by **total games across all courts** (Rule B.8).
+- **Advancement = win your division → move UP one division (promotion).** Finish low →
+  relegated down a division. **There are NO districts / sectionals / nationals** (that's
+  USTA). If you're already in the **top division**, winning it just means you won that
+  division — there's nowhere higher to go. *(stated by Tara, Sept 21 2026)*
+- **Timed play:** 10 min warmup, then **1 h 15 m** of play + 5 min reserved for a
+  tiebreak. Play stops on the signal; **only fully completed games count** — so partial
+  scores like `5-5`, `4-3`, `6-5`, `0-2` are NORMAL, never parse errors.
+- Tied on total games in a line → 9-point sudden-death tiebreak (first to 5); winner
+  **adds 1 game**. Tied team match after everything → each team gets **half a point**
+  (records need decimals, not a tie boolean).
+- **Division B = 6 doubles pairs / 12-player roster** (Advantage Us is B). Division A =
+  5 pairs / 10 players.
+- **Defaults (A.6):** 1 free default per match, one court, different lines, 48 h notice,
+  **3 free per season**. Monday matches: notify by **Fri 2:00 PM**; Friday matches: Wed
+  2:00 PM. Past that it's $80 (Div B) / $100 (Div A); default at 20:01 late.
+- **Score confirmation (A.11):** home captain enters within 24 h, away confirms/disputes
+  within 48 h, hard deadline **Wed 5:00 PM**. **Unconfirmed scores become official
+  automatically** — this is the real data-integrity risk, not tampering.
+- **40% minimum play (C.3):** a rostered player must play ≥ 40% of the season's matches
+  (18 dates → 8). Open Q: do the 3 byes count toward the denominator (→ 9)?
+- **Penalty games** are deducted at the very END, after the tiebreak (phone sounds −2,
+  answering −2, lateness −2/−4/−6/−8 by 5-min band, leaving court −2/−5). **A published
+  score may have been reduced for reasons unrelated to play.**
+
+### USTA (TennisLink)
+- **Points per position**, untimed, standard sets.
+- **Games-won % EXCLUDES defaulted matches and CANNOT be recomputed** from the published
+  games columns (Kiss My Ace shows 56.83%; 390/(390+278) = 58.38%). **Store USTA's
+  published figure; never recalculate it.**
+- **Advancement:** Adult 18+/40+ (Middle States) → Flight → **District → Sectionals →
+  Nationals**. **Tri-Level** → Flight → **Sectionals (Hershey), NO district round.**
+
+### Del-Tri (Tenniscores — same platform as Bux-Mont, stricter privacy)
+- **Divisions 1–6 with promotion/relegation, NO postseason.** Points = total games won.
+- Sub eligibility is by rating AND court (Div 3: 4.0 subs only on courts 1–2; Div 4: 4.0
+  players only on courts 1–3). Ratings frozen at season start. 2026-27: 10/02–12/04 +
+  01/08–03/12.
+
+### Cross-league display rules (from the build brief)
+- **Never put the two leagues' games-% in one ranked column** — Bux-Mont's is
+  penalty-contaminated and clock-truncated; USTA's is not. Label each with its basis.
+- **Line win rate is the honest cross-league number.**
+- Always show **both sides of a count** (`41–63`), never one (`63 games lost`), and show
+  sample size next to every percentage. Suppress percentages under 5 lines played.
+
+---
+
 ## Current Status (as of May 3, 2026 — end of Session 15)
 
 **Site is up at https://yourcourtreport.com.** Session 15 shipped **PR #86** (squash-merged as `78fa12c`, auto-deployed): the TennisLink fetch POC from Session 14's plan. Smallest possible scaffolding — admin-only `GET /admin/tennislink_test?person_id=X&year=Y` server-side fetches the public `IndividualPlayerRecord.aspx` page via `Net::HTTP` stdlib (no new gems), 15s timeout, prints raw response in a scrollable `<pre>`, with a loud red banner specifically for HTTP 503, HTTP 403, timeouts, and generic errors. Migration adds nullable `tennislink_person_id` string to `users`; admin-editable on `/users/:id/edit`. **Tara has not yet visited the endpoint from her phone — that's the first action of Session 16.** Full Session 15 write-up at the bottom of this file. Other Session 15 activity:
