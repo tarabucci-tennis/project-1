@@ -8,15 +8,31 @@
       <p class="cr-home-subtitle">2026 Season · standings, calendar &amp; upcoming</p>
     </div>
     <div class="cr-page-header-actions">
-      <% if current_user.admin? %>
-        <%= button_to "🔄 Sync Scores", admin_sync_scores_path, method: :post,
-              class: "cr-btn cr-btn-gold cr-btn-compact",
-              form: { style: "display:inline;" },
-              data: { turbo_confirm: "Pull the latest results from your Google Sheet?" } %>
-      <% end %>
       <%= link_to "🔍 Players & Teams", lookup_path, class: "cr-btn cr-btn-outline cr-btn-compact" %>
-      <%= link_to "+ Join a Team", find_team_path, class: "cr-btn cr-btn-outline cr-btn-compact" %>
-      <%= link_to "Create a Team", new_team_path, class: "cr-btn cr-btn-outline cr-btn-compact" %>
+
+      <div class="cr-menu" data-controller="menu">
+        <button type="button" class="cr-btn cr-btn-gold cr-btn-compact cr-menu-trigger"
+                data-action="menu#toggle" data-menu-target="trigger"
+                aria-haspopup="true" aria-expanded="false">
+          + New Team <span class="cr-menu-caret" aria-hidden="true">▾</span>
+        </button>
+        <div class="cr-menu-panel" data-menu-target="panel" role="menu">
+          <%= link_to new_team_path, class: "cr-menu-item", role: "menuitem" do %>
+            <span class="cr-menu-ico">➕</span> Create a team
+          <% end %>
+          <%= link_to find_team_path, class: "cr-menu-item", role: "menuitem" do %>
+            <span class="cr-menu-ico">🔗</span> Join a team
+          <% end %>
+          <% if current_user.admin? %>
+            <div class="cr-menu-divider"></div>
+            <%= button_to admin_sync_scores_path, method: :post,
+                  form: { style: "margin:0;", data: { turbo_confirm: "Pull the latest results from your Google Sheet?" } },
+                  class: "cr-menu-item cr-menu-item-btn", role: "menuitem" do %>
+              <span class="cr-menu-ico">🔄</span> Sync scores
+            <% end %>
+          <% end %>
+        </div>
+      </div>
     </div>
   </div>
 
