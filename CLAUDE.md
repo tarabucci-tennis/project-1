@@ -52,7 +52,29 @@ new rule she states here. The exact Bux-Mont EAST rules PDF
 (`buxmont.tenniscores.com/leaguedata/library/94/EAST_version_4_rules___Buxmont_.pdf`)
 is robots-blocked AND cannot be text-extracted in this sandbox (no PDF tooling —
 renderer, pdftotext, and zlib stream extraction all fail on the embedded-font
-PDF). Sections D–G still need to be supplied by Tara as text/screenshot.
+PDF). **Tara supplied screenshots of pages 1–3 on Sept 21 2026** (Sections A, B,
+C, and the start of D) — the low-res but legible content is captured below and
+CONFIRMS the build brief's Bux-Mont rules. Later pages (rest of D, and E–G if
+they exist) still need screenshots.
+
+**From the PDF — "EAST 2026-27 Rules for players and captains (version 4)":**
+- **Section A (Captain Responsibility):** roster due ≥ 5 days before the first
+  match; add subs via the Tenniscores team-site tab *before* the match so they
+  print on the score sheet; free defaults = 1 court/match, 48 h notice, 3/season
+  (Mon notify by Fri 2 PM, Fri by Wed 2 PM); paid default $80 (B)/$100 (A);
+  exchange printed scorecards at match start and lineups are then final; home
+  captain enters score within 24 h, away confirms/disputes within 48 h, hard
+  deadline **Wed 5 PM**, unconfirmed → official automatically.
+- **Section C (Format of teams):** all players & subs must be **≥ 19** by the
+  first match; **Division B = 6 doubles pairs / 12-player roster**, Division A =
+  5 pairs / 10; **40% minimum play**; **C.4** a replacement inherits her
+  predecessor's match count (they combine toward 40%); **C.5** a player who
+  changes lines carries her own count; **C.7** a player may be rostered on only
+  one team, double-rostering needs Director approval.
+- **Section D (Rosters):** a new team must submit a complete roster to the League
+  Director by **June 30**; roster is an order-of-strength list on Tenniscores;
+  ratings are used for lineup order and are frozen at season start. (Rest of D
+  and any E–G not yet legible/supplied.)
 
 ### Bux-Mont (Tenniscores)
 - **Everything is counted in TOTAL GAMES.** A court/line is won by the pair with the
