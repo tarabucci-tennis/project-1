@@ -52,10 +52,10 @@ new rule she states here. The exact Bux-Mont EAST rules PDF
 (`buxmont.tenniscores.com/leaguedata/library/94/EAST_version_4_rules___Buxmont_.pdf`)
 is robots-blocked AND cannot be text-extracted in this sandbox (no PDF tooling —
 renderer, pdftotext, and zlib stream extraction all fail on the embedded-font
-PDF). **Tara supplied screenshots of pages 1–3 on Sept 21 2026** (Sections A, B,
-C, and the start of D) — the low-res but legible content is captured below and
-CONFIRMS the build brief's Bux-Mont rules. Later pages (rest of D, and E–G if
-they exist) still need screenshots.
+PDF). **Tara supplied screenshots of the full rules on Sept 21 2026** (Sections
+A–I) — the low-res but legible content is captured below and CONFIRMS the build
+brief's Bux-Mont rules. Exact numbers on the rating chart (Section E) were too
+small to read precisely; everything else is captured.
 
 **From the PDF — "EAST 2026-27 Rules for players and captains (version 4)":**
 - **Section A (Captain Responsibility):** roster due ≥ 5 days before the first
@@ -73,8 +73,40 @@ they exist) still need screenshots.
   one team, double-rostering needs Director approval.
 - **Section D (Rosters):** a new team must submit a complete roster to the League
   Director by **June 30**; roster is an order-of-strength list on Tenniscores;
-  ratings are used for lineup order and are frozen at season start. (Rest of D
-  and any E–G not yet legible/supplied.)
+  ratings are used for lineup order and are frozen at season start.
+- **Section D (Substitutes):** a sub plays in place of an absent rostered player,
+  **max 3 matches/day**; sub court-range is promoted/relegated by record (>60% win
+  at a range → move up a level; <40% → move down); **USTA-rated subs are exempt**
+  from the range cap; **B players who play courts 1–3 may not sub in A**, and A
+  players who play courts 1–3 may sub in B only on courts 1 and 3; lineup shifting —
+  a player may move UP any number of positions to prevent a default (subject to the
+  rating chart), or DOWN exactly one; **club-loyalty/transfer:** a sub plays for one
+  club, but from the first January match a player may transfer to finish the season
+  with another club.
+- **Section E (Rating chart):** each court position has a min/max rating and combined-
+  pair caps (e.g. A1 combined max, B2 combined min); pairs must fit the chart.
+- **Section F (Penalties / Retirement / Default scoring):** **late arrival** deducts
+  games by 5-min band — **0–5 late = −2, 5–10 = −4, 10–15 = −6, 15–20 = −8, 20:01+ =
+  automatic match default**; **leaving court mid-match −2 (0–5 min) / −5 (5–10) then
+  default**; **phone sounds −2, actively answering −2 more**; penalty games come off
+  at the very end. **Late/default scoring:** the punctual pair gets the win plus the
+  average games won on that team's other courts; the defaulting pair gets a loss and
+  0 games. **Injury retirement:** the retiring pair keeps games earned to that point;
+  the winners get the greater of the games at retirement or their team's court average.
+- **Section G (Reschedules & Makeups):** every match is expected to be played;
+  postponement only for hazardous conditions / closures / acts of God / a Director
+  directive; **one makeup week is built into the schedule**; a single unplayable court
+  is recalculated, not rescheduled.
+- **Section H (Rules & Grievance Committee):** grievances by **email only, ≤250 words**,
+  filed **within 3 days** of the match (to Director + opposing captain), response due
+  within a week; the committee may adjust scores or issue sanctions; the Director may
+  rule directly on clear infractions.
+- **Section I (Determining League Winners):** standings by total **match points**;
+  ties broken by **court/line wins**, then total games; **promotion/relegation** —
+  win your division and you **move up a division**, finish low and you drop; a team
+  must meet the 40% roster-play requirement to be eligible; **no district/sectional/
+  national rounds** (top division simply wins its division).
+
 
 ### Bux-Mont (Tenniscores)
 - **Everything is counted in TOTAL GAMES.** A court/line is won by the pair with the
