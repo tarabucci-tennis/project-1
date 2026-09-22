@@ -319,6 +319,36 @@ class TeamsController < ApplicationController
     end
   end
 
+  # POST /teams/:team_id/make_captain — hand the captain role to another
+  # rostered player. Whoever manages the team (its current captain, or an
+  # admin) can do this, and the previous captain becomes a player, so there
+  # stays exactly one clear captain — matching how the roster and lineup
+  # permissions read TennisTeam#captain. This is what lets you set up a team
+  # you don't captain (you're a player on all yours) and hand it to the
+  # real captain.
+  def make_captain
+    @team = TennisTeam.find(params[:team_id])
+    unless @team.can_set_lineup?(current_user) || current_user.admin?
+      return redirect_to team_path(@team), alert: "Only the current captain can change who's captain."
+    end
+
+    membership = @team.team_memberships.active.find_by(user_id: params[:user_id])
+    unless membership
+      return redirect_to team_path(@team), alert: "That player isn't on the active roster."
+    end
+
+    if membership.captain?
+      return redirect_to team_path(@team), notice: "#{membership.user.name} is already the captain."
+    end
+
+    ActiveRecord::Base.transaction do
+      @team.team_memberships.active.captains.where.not(id: membership.id).update_all(role: "player")
+      membership.update!(role: "captain")
+    end
+
+    redirect_to team_path(@team), notice: "#{membership.user.name} is now the captain of #{@team.name}."
+  end
+
   # POST /teams/:id/paste_roster
   #
   # Accepts a big textarea of pasted roster text and creates placeholder

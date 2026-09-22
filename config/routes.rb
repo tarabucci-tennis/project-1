@@ -50,6 +50,7 @@ Rails.application.routes.draw do
     get "captain", to: "matches#captain", as: :captain
     member do
       post "add_player", to: "teams#add_player"
+      post "make_captain", to: "teams#make_captain"
       post "paste_roster", to: "teams#paste_roster"
       post "archive_season", to: "teams#archive_season"
       post "advance", to: "teams#advance"
