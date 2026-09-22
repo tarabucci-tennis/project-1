@@ -33,6 +33,20 @@
     </div>
   </div>
 
+  <%# ── Final scores (played match) ── %>
+  <% if @match.match_lines.any?(&:scored?) %>
+    <div class="cr-sched-detail" style="margin-top: 14px;">
+      <div class="cr-sched-detail-title" style="display: flex; align-items: center; gap: 10px;">
+        Final Scores
+        <% if @match.result.present? %>
+          <span class="cr-result-badge <%= @match.won? ? 'cr-result-badge-win' : (@match.tied? ? 'cr-result-badge-tie' : 'cr-result-badge-loss') %>"><%= @match.result_label %></span>
+        <% end %>
+        <% if @match.score_summary.present? %><span class="cr-sched-score"><%= @match.score_summary %></span><% end %>
+      </div>
+      <%= render "matches/scoresheet", match: @match, team: @team, is_captain: @is_captain %>
+    </div>
+  <% end %>
+
   <%# ── Lineup table ── %>
   <% if @lineup&.published? && @slots&.any? %>
     <div class="cr-lineup-table">

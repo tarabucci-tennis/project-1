@@ -19,6 +19,40 @@ class MatchLine < ApplicationRecord
     sets.join(", ")
   end
 
+  # Per-set game breakdown, parsed from the "ours-theirs" set strings
+  # (e.g. "2-6" → our pair 2, their pair 6). Returns one entry per set
+  # that was actually played: [{ ours: "2", theirs: "6" }, ...].
+  def set_games
+    [ set1_score, set2_score, set3_score ].filter_map do |s|
+      next if s.blank?
+      ours, theirs = s.to_s.split("-", 2).map { |n| n.to_s.strip }
+      { ours: ours.presence || "–", theirs: theirs.presence || "–" }
+    end
+  end
+
+  def our_games
+    set_games.map { |g| g[:ours] }
+  end
+
+  def their_games
+    set_games.map { |g| g[:theirs] }
+  end
+
+  def scored?
+    set_games.any? || result.present?
+  end
+
+  # Names of our players on this line (app users).
+  def our_player_names
+    match_line_players.map { |mlp| mlp.user&.name }.compact.reject(&:blank?)
+  end
+
+  # Opponent player names, parsed from the free-text "opponents" field
+  # (captains type "Jane Smith / Mary Jones").
+  def opponent_names
+    opponents.to_s.split(%r{\s*/\s*}).map(&:strip).reject(&:blank?)
+  end
+
   def line_label
     if line_type == "singles"
       "Singles #{display_position}"
