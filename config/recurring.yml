@@ -1,0 +1,7 @@
+# Scheduled background jobs, run by Solid Queue. In production Solid Queue
+# runs inside Puma (SOLID_QUEUE_IN_PUMA=1), so these fire with no extra
+# process and no server cron. Schedules use standard cron syntax in UTC.
+production:
+  nightly_league_sync:
+    class: NightlySyncJob
+    schedule: "0 8 * * *" # 08:00 UTC ≈ overnight in US Eastern
