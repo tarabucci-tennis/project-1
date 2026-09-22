@@ -137,6 +137,22 @@ small to read precisely; everything else is captured.
   answering −2, lateness −2/−4/−6/−8 by 5-min band, leaving court −2/−5). **A published
   score may have been reduced for reasons unrelated to play.**
 
+### Ratings — who owns them (stated by Tara, Sept 22 2026)
+- **USTA is the ONLY league that sets a player's rating.** Your USTA results feed the
+  year-end USTA/NTRP computer rating (e.g. Tara is 4.0). USTA is "completely different"
+  from the other leagues in this one way: it's the rating authority.
+- **Bux-Mont, Inter-Club ("club"), and Del-Tri do NOT change your rating.** Playing (or
+  winning/losing) in those leagues has zero effect on your USTA/NTRP number. They each
+  run their own separate systems.
+- **But your USTA rating STILL matters inside those leagues** — it's used to decide
+  which lines/courts you're eligible to play and the lineup order (see each league's
+  rating chart / court-eligibility rules). So the flow is one-directional: USTA rating →
+  determines your lines everywhere; other leagues' play → never feeds back to the rating.
+- **Implication for Court Report:** a player has ONE true USTA rating (store on the
+  person), which drives line eligibility across all four teams. Per-league "ratings"
+  like Tara's Del-Tri 3.5 are that league's own internal number, not her real rating —
+  keep them clearly labeled and separate, never averaged with the USTA figure.
+
 ### USTA (TennisLink)
 - **Points per position**, untimed, standard sets.
 - **Games-won % EXCLUDES defaulted matches and CANNOT be recomputed** from the published
