@@ -147,6 +147,15 @@ class TeamsController < ApplicationController
           is_self: dt.name.to_s.strip.downcase == self_key,
           drilldown: dt.source_url.present? }
       end
+      # Bux-Mont standings order (EAST Rule I): most match wins first, then
+      # fewest losses, then the tiebreakers — most line/court wins, then
+      # fewest total games lost — and finally name so it's stable. The plain
+      # `ranked` scope only breaks ties alphabetically, which mis-ranked teams
+      # level on record (e.g. Frog Hollow Platinum lost fewer games than
+      # Advantage Slice Girls, so it should sit above it).
+      @standings.sort_by! { |s|
+        [ -s[:wins].to_i, s[:losses].to_i, -s[:line_wins].to_i, s[:games_lost].to_i, s[:name].to_s.downcase ]
+      }
     elsif @is_points_league
       # Del-Tri uses points (total games won across the season).
       if @division_teams.any?
