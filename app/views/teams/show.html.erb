@@ -215,8 +215,6 @@
           <% if results.any? %>
             <div class="cr-sched-list">
               <% results.each do |match| %>
-                <% lines = match.match_lines.sort_by(&:position) %>
-                <% has_lines = lines.any? { |l| l.result.present? || l.score_display.present? } %>
                 <details class="cr-sched-item">
                   <summary class="cr-sched-row">
                     <div class="cr-sched-date">
@@ -245,26 +243,7 @@
                       </div>
                     <% end %>
                     <div class="cr-sched-detail-title">Line Scores</div>
-                    <% if has_lines %>
-                      <table class="cr-result-lines">
-                        <thead><tr><th>Line</th><th>Players</th><th>Opponents</th><th>Score &amp; Result</th></tr></thead>
-                        <tbody>
-                          <% lines.each do |line| %>
-                            <tr>
-                              <td class="cr-result-line-label"><%= line.short_label %></td>
-                              <td class="cr-result-line-players"><% names = line.match_line_players.map { |mlp| mlp.user.name }.reject(&:blank?) %><%= names.any? ? names.join(" / ") : "—" %></td>
-                              <td class="cr-result-line-players"><%= line.opponents.presence || "—" %></td>
-                              <td class="cr-result-line-outcome">
-                                <% if line.result.present? %><span class="cr-result-badge <%= line.won? ? 'cr-result-badge-win' : 'cr-result-badge-loss' %>"><%= line.won? ? "W" : "L" %></span><% else %>—<% end %>
-                                <% if line.score_display.present? %><span class="cr-result-line-score"><%= line.score_display %></span><% end %>
-                              </td>
-                            </tr>
-                          <% end %>
-                        </tbody>
-                      </table>
-                    <% else %>
-                      <p class="cr-result-detail-empty">Line-by-line results haven't been entered yet.<% if @is_captain %> <%= link_to "Enter them now →", edit_results_team_match_path(@team, match), class: "cr-enter-results-link" %><% end %></p>
-                    <% end %>
+                    <%= render "matches/scoresheet", match: match, team: @team, is_captain: @is_captain %>
                   </div>
                 </details>
               <% end %>

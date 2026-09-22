@@ -1,0 +1,47 @@
+<%# Renders a played match line-by-line, TennisRecord style: each line shows
+    both pairs stacked, with the per-set game scores broken into columns and a
+    W / L badge. Our players link to their profiles.
+    Locals: match (a Match), team (its TennisTeam). %>
+<% lines = match.match_lines.sort_by(&:position).select(&:scored?) %>
+<% if lines.any? %>
+  <div class="cr-sheet">
+    <% lines.each do |line| %>
+      <% our_row = { names: line.our_player_names, ids: line.match_line_players.map { |mlp| mlp.user_id },
+                     games: line.our_games, won: line.won?, ours: true } %>
+      <% opp_names = line.opponent_names.any? ? line.opponent_names : [ match.opponent ].compact %>
+      <% opp_row = { names: opp_names, ids: [], games: line.their_games, won: line.lost?, ours: false } %>
+      <% rows = line.won? ? [ our_row, opp_row ] : [ opp_row, our_row ] %>
+      <div class="cr-sheet-line">
+        <div class="cr-sheet-line-head">
+          <span class="cr-sheet-line-label"><%= line.line_label %></span>
+          <% if line.result.present? %>
+            <span class="cr-result-badge <%= line.won? ? 'cr-result-badge-win' : 'cr-result-badge-loss' %>"><%= line.won? ? "W" : "L" %></span>
+          <% end %>
+        </div>
+        <% rows.each do |row| %>
+          <div class="cr-sheet-pair <%= 'cr-sheet-pair-win' if row[:won] %>">
+            <span class="cr-sheet-names">
+              <% if row[:names].any? %>
+                <% row[:names].each_with_index do |nm, i| %>
+                  <% pid = row[:ids][i] %>
+                  <% if row[:ours] && pid %>
+                    <%= link_to nm, player_path(pid), class: "cr-sheet-playerlink" %>
+                  <% else %>
+                    <%= nm %>
+                  <% end %><%= " / " unless i == row[:names].size - 1 %>
+                <% end %>
+              <% else %>
+                <span style="color: var(--cr-text-light);"><%= row[:ours] ? "Our line" : "Opponent" %></span>
+              <% end %>
+            </span>
+            <span class="cr-sheet-sets">
+              <% row[:games].each do |g| %><span class="cr-sheet-set"><%= g %></span><% end %>
+            </span>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+<% else %>
+  <p class="cr-result-detail-empty">Line-by-line results haven't been entered yet.<% if local_assigns[:is_captain] %> <%= link_to "Enter them now →", edit_results_team_match_path(team, match), class: "cr-enter-results-link" %><% end %></p>
+<% end %>
