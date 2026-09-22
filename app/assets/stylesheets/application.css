@@ -2212,6 +2212,112 @@ button.cr-header-pill {
   font-weight: 800;
   margin-left: 6px;
 }
+.cr-standings-tbl .cr-standings-tbl-active td {
+  background: #eef4fb;
+}
+.cr-standings-tbl .cr-standings-tbl-self.cr-standings-tbl-active td {
+  background: #fbf3df;
+}
+
+/* Standings spotlight — the panel that opens below the table when a
+   team row is tapped (roster + schedule for your team, record for opponents) */
+.cr-spotlight-wrap {
+  margin-top: 14px;
+}
+.cr-spotlight {
+  border: 1px solid var(--cr-border);
+  border-radius: 10px;
+  background: var(--cr-white);
+  padding: 14px 16px;
+}
+.cr-spotlight-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 12px;
+  padding-bottom: 10px;
+  margin-bottom: 12px;
+  border-bottom: 1px solid var(--cr-border);
+}
+.cr-spotlight-name {
+  font-weight: 800;
+  font-size: 1rem;
+  color: var(--cr-text);
+}
+.cr-spotlight-record {
+  font-size: 0.8rem;
+  color: var(--cr-text-muted);
+  font-variant-numeric: tabular-nums;
+}
+.cr-spotlight-cols {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+.cr-spotlight-col-title {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--cr-text-muted);
+  margin-bottom: 8px;
+}
+.cr-spotlight-player,
+.cr-spotlight-match {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 5px 0;
+  border-bottom: 1px solid var(--cr-border);
+  font-size: 0.85rem;
+}
+.cr-spotlight-player:last-child,
+.cr-spotlight-match:last-child {
+  border-bottom: none;
+}
+.cr-spotlight-captain {
+  color: var(--cr-gold);
+  font-weight: 700;
+}
+.cr-spotlight-rating {
+  color: var(--cr-text-muted);
+  font-variant-numeric: tabular-nums;
+}
+.cr-spotlight-date {
+  font-weight: 600;
+  white-space: nowrap;
+  color: var(--cr-text);
+}
+.cr-spotlight-opp {
+  flex: 1;
+  text-align: left;
+  color: var(--cr-text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.cr-spotlight-score {
+  white-space: nowrap;
+  color: var(--cr-text-muted);
+  font-variant-numeric: tabular-nums;
+}
+.cr-spotlight-note {
+  font-size: 0.85rem;
+  color: var(--cr-text-muted);
+  line-height: 1.5;
+  margin: 0;
+}
+.cr-spotlight-empty {
+  font-size: 0.82rem;
+  color: var(--cr-text-light);
+  margin: 0;
+}
+@media (max-width: 560px) {
+  .cr-spotlight-cols {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+}
 
 /* Legacy standings table — still used by a few places */
 .cr-standings-table {

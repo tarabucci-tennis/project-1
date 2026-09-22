@@ -725,9 +725,11 @@
 
         <%# Horizontal scroll wrapper so the wide table is readable
             on narrow mobile viewports %>
+        <div<%= ' data-controller="standings"'.html_safe if @standings_layout == "win_loss" %>>
         <div class="cr-standings-scroll">
           <% if @standings_layout == "win_loss" %>
-            <%# Bux-Mont layout — W/L/T, line wins, games lost %>
+            <%# Bux-Mont layout — W/L/T, line wins, games lost. Tap a team to
+                open its panel below (roster + schedule for your own team). %>
             <table class="cr-standings-tbl">
               <thead>
                 <tr>
@@ -740,17 +742,17 @@
               </thead>
               <tbody>
                 <% @standings.each_with_index do |entry, idx| %>
-                  <% clickable = entry[:id].present? && entry[:drilldown] && !entry[:is_self] %>
-                  <tr class="<%= 'cr-standings-tbl-self' if entry[:is_self] %><%= ' cr-standings-tbl-link' if clickable %>"
-                      <% if clickable %>onclick="window.location='<%= team_division_team_path(@team, entry[:id]) %>'"<% end %>>
+                  <% key = entry[:is_self] ? "self" : "opp-#{entry[:id]}" %>
+                  <tr class="cr-standings-tbl-link<%= ' cr-standings-tbl-self' if entry[:is_self] %>"
+                      data-standings-target="row"
+                      data-standings-id="<%= key %>"
+                      data-standings-self="<%= entry[:is_self] ? 'true' : 'false' %>"
+                      data-action="click->standings#select">
                     <td class="cr-standings-tbl-rank"><%= idx + 1 %></td>
                     <td class="cr-standings-tbl-team">
                       <%= entry[:name] %>
-                      <% if entry[:is_self] %>
-                        <span class="cr-standings-you-badge">You</span>
-                      <% elsif clickable %>
-                        <span class="cr-standings-drill" aria-hidden="true">›</span>
-                      <% end %>
+                      <% if entry[:is_self] %><span class="cr-standings-you-badge">You</span><% end %>
+                      <span class="cr-standings-drill" aria-hidden="true">›</span>
                     </td>
                     <td class="cr-standings-tbl-highlight"><%= "#{entry[:wins]}/#{entry[:losses]}/#{entry[:ties]}" %></td>
                     <td><%= entry[:line_wins] %></td>
@@ -823,6 +825,59 @@
               </tbody>
             </table>
           <% end %>
+        </div>
+        <% if @standings_layout == "win_loss" %>
+          <% our_schedule = (@past_matches.to_a + @upcoming_matches.to_a).uniq.sort_by { |m| m.match_date || Time.current } %>
+          <div class="cr-spotlight-wrap">
+            <% @standings.each do |entry| %>
+              <% key = entry[:is_self] ? "self" : "opp-#{entry[:id]}" %>
+              <div class="cr-spotlight" data-standings-target="panel" data-standings-panel="<%= key %>" <%= "hidden" unless entry[:is_self] %>>
+                <div class="cr-spotlight-head">
+                  <span class="cr-spotlight-name"><%= entry[:name] %><% if entry[:is_self] %> <span class="cr-standings-you-badge">You</span><% end %></span>
+                  <span class="cr-spotlight-record"><%= "#{entry[:wins]}/#{entry[:losses]}/#{entry[:ties]}" %> · <%= entry[:line_wins] %> line wins · <%= entry[:games_lost] %> games lost</span>
+                </div>
+                <% if entry[:is_self] %>
+                  <div class="cr-spotlight-cols">
+                    <div class="cr-spotlight-col">
+                      <div class="cr-spotlight-col-title">Roster</div>
+                      <% if @roster.any? %>
+                        <% @roster.each do |m| %>
+                          <div class="cr-spotlight-player">
+                            <span><%= m.user.name %><% if m.captain? %> <span class="cr-spotlight-captain">(C)</span><% end %></span>
+                            <% if m.user.ntrp_rating.present? %><span class="cr-spotlight-rating"><%= m.user.ntrp_rating %></span><% end %>
+                          </div>
+                        <% end %>
+                      <% else %>
+                        <p class="cr-spotlight-empty">No players on the roster yet.</p>
+                      <% end %>
+                    </div>
+                    <div class="cr-spotlight-col">
+                      <div class="cr-spotlight-col-title">Schedule</div>
+                      <% if our_schedule.any? %>
+                        <% our_schedule.each do |m| %>
+                          <div class="cr-spotlight-match">
+                            <span class="cr-spotlight-date"><%= m.match_date&.strftime("%-m/%-d") %><% if m.home? %> (H)<% elsif m.away? %> (A)<% end %></span>
+                            <span class="cr-spotlight-opp"><%= m.opponent %></span>
+                            <span class="cr-spotlight-score"><% if m.played? && m.score_summary.present? %><%= m.score_summary %><% elsif m.match_time.present? %><%= m.match_time.gsub(" ", "").downcase %><% end %></span>
+                          </div>
+                        <% end %>
+                      <% else %>
+                        <p class="cr-spotlight-empty">No matches scheduled yet.</p>
+                      <% end %>
+                    </div>
+                  </div>
+                <% else %>
+                  <p class="cr-spotlight-note">
+                    We don't have <%= entry[:name] %>'s roster or schedule in Court Report yet — only their standings line above. These fill in once we pull opponent data from Tenniscores.
+                    <% if entry[:drilldown] %>
+                      <br><%= link_to "View their season results →", team_division_team_path(@team, entry[:id]), class: "cr-enter-results-link" %>
+                    <% end %>
+                  </p>
+                <% end %>
+              </div>
+            <% end %>
+          </div>
+        <% end %>
         </div>
 
         <% if @wins == 0 && @losses == 0 && @division_teams.none? { |dt| dt.wins > 0 || dt.losses > 0 } %>
