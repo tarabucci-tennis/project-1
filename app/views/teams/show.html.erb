@@ -377,6 +377,13 @@
                             target: "_blank", rel: "noopener",
                             class: "cr-roster-history-link",
                             title: "#{membership.user.name}'s TennisRecord match history" %>
+                <% if @is_captain && !membership.captain? %>
+                  <%= button_to "Make captain",
+                                make_captain_team_path(@team, user_id: membership.user_id),
+                                form: { style: "display: inline; margin: 0;" },
+                                class: "cr-roster-history-link",
+                                data: { turbo_confirm: "Make #{membership.user.name} the captain of #{@team.name}?" } %>
+                <% end %>
               </div>
             <% end %>
           </div>
