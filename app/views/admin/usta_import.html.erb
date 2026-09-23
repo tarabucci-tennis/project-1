@@ -1,0 +1,75 @@
+<% content_for :title, "Import USTA Results · Court Report" %>
+
+<div class="cr-page" style="max-width: 820px; margin: 0 auto; padding: 24px;">
+  <%= link_to "← My Teams", teams_path, class: "cr-back-link" %>
+
+  <h1 class="cr-section-title" style="margin-top: 8px;">Import USTA Results</h1>
+  <p style="color: var(--cr-text-muted); font-size: 0.9rem; line-height: 1.5; margin-bottom: 18px;">
+    On your USTA record page, tap <strong>Send To Excel</strong>, then upload that file here.
+    This shows you everything we can read from it, from your point of view. <strong>Nothing is saved yet</strong> —
+    this is the check step so we know the scores are right before they go into your teams.
+  </p>
+
+  <%= form_with url: admin_usta_import_path, method: :post, multipart: true, data: { turbo: false } do %>
+    <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center; background: var(--cr-white); border: 1px solid var(--cr-border); border-radius: 10px; padding: 16px;">
+      <input type="file" name="file" accept=".xls,.xlsx,.html,.htm,text/html" style="flex: 1; min-width: 200px;">
+      <button type="submit" class="cr-btn cr-btn-gold" style="padding: 9px 20px;">Read the file</button>
+    </div>
+  <% end %>
+
+  <% if @error.present? %>
+    <div style="margin-top: 16px; padding: 14px 16px; background: #fdecea; border: 1px solid #f5c6cb; border-radius: 10px; color: #a12a2a; font-size: 0.9rem;">
+      <%= @error %>
+    </div>
+  <% end %>
+
+  <% if @result && @result.leagues.any? %>
+    <div style="margin-top: 22px;">
+      <div style="font-size: 0.95rem; margin-bottom: 6px;">
+        Read <strong><%= @result.match_count %></strong> matches for
+        <strong><%= @result.player_name %></strong> across
+        <strong><%= @result.leagues.size %></strong> USTA leagues:
+      </div>
+
+      <% @result.leagues.each do |league| %>
+        <div class="cr-sched-detail" style="margin-top: 16px;">
+          <div class="cr-sched-detail-title"><%= league.name %></div>
+          <div class="cr-standings-scroll" style="margin-top: 8px;">
+            <table class="cr-standings-tbl">
+              <thead>
+                <tr>
+                  <th class="cr-standings-tbl-team">Date</th>
+                  <th>Line</th>
+                  <th></th>
+                  <th class="cr-standings-tbl-team">Your side</th>
+                  <th class="cr-standings-tbl-team">Opponents</th>
+                  <th>Score</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% league.matches.each do |m| %>
+                  <tr>
+                    <td class="cr-standings-tbl-team"><%= m.date&.strftime("%-m/%-d/%y") %></td>
+                    <td><%= m.match_type %></td>
+                    <td>
+                      <span class="cr-result-badge <%= m.won ? 'cr-result-badge-win' : 'cr-result-badge-loss' %>"><%= m.won ? "W" : "L" %></span>
+                    </td>
+                    <td class="cr-standings-tbl-team"><%= m.our_players.join(" / ") %></td>
+                    <td class="cr-standings-tbl-team"><%= m.opponents.join(" / ") %></td>
+                    <td style="white-space: nowrap; font-variant-numeric: tabular-nums;"><%= m.set_scores.join(", ") %></td>
+                  </tr>
+                <% end %>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      <% end %>
+
+      <p style="margin-top: 18px; color: var(--cr-text-muted); font-size: 0.85rem; line-height: 1.5;">
+        If this all looks right, the next step is a button that writes these into the matching teams
+        (for example the <strong>Adult Tri-Level League</strong> results into your <strong>Tri Hards</strong> team).
+        Tell me it looks good and I'll turn that on.
+      </p>
+    </div>
+  <% end %>
+</div>
