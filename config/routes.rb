@@ -21,6 +21,8 @@ Rails.application.routes.draw do
 
   # Admin: TennisLink fetch POC (Session 15)
   get "admin/tennislink_test", to: "admin#tennislink_test", as: :admin_tennislink_test
+  get "admin/usta_import", to: "admin#usta_import", as: :admin_usta_import
+  post "admin/usta_import", to: "admin#usta_import"
 
   # Pull results from the public Google Sheet
   post "admin/sync_scores", to: "admin#sync_scores", as: :admin_sync_scores

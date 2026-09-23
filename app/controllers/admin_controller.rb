@@ -73,4 +73,28 @@ class AdminController < ApplicationController
   rescue StandardError => e
     redirect_to teams_path, alert: "Sync failed: #{e.message}"
   end
+
+  # Upload a USTA TennisLink "Send To Excel" export and see it parsed. This is
+  # the read-only preview step: it shows what we pulled out of the file (every
+  # league, every match, from your point of view) so we can confirm it's right
+  # before a later step writes it into your teams. Nothing is saved here.
+  def usta_import
+    @result = nil
+    @error = nil
+    return unless request.post?
+
+    file = params[:file]
+    if file.blank?
+      @error = "Choose your USTA export file first (the .xls from 'Send To Excel')."
+      return
+    end
+
+    html = file.read.to_s.dup.force_encoding("UTF-8").encode("UTF-8", invalid: :replace, undef: :replace)
+    @result = UstaResultsParser.parse(html)
+    if @result.leagues.empty?
+      @error = "No results found in that file. Make sure it's the 'Send To Excel' download from your USTA Individual Player Record page."
+    end
+  rescue StandardError => e
+    @error = "Couldn't read that file (#{e.message})."
+  end
 end
