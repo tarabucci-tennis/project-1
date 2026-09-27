@@ -307,22 +307,23 @@
     </div>
   <% end %>
 
-  <%# ── Past Seasons (archived teams) — still fully viewable ── %>
+  <%# ── Past Seasons (archived teams) — collapsed by default so it doesn't
+       crowd the page; opens to a compact list grouped by league, then season. %>
   <% if @archived_teams.present? %>
-    <section class="cr-archive-section">
-      <h2 class="cr-archive-title">📦 Past Seasons</h2>
-      <p class="cr-archive-sub">Archived teams — tap any one to see its full schedule, results &amp; standings.</p>
-      <div class="cr-archive-grid">
-        <% @archived_teams.each do |team| %>
-          <%= link_to team_path(team), class: "cr-archive-card" do %>
-            <div class="cr-archive-card-name"><%= team.name %></div>
-            <div class="cr-archive-card-meta">
-              <%= team.league_label %><% if team.season_name.present? %> · <%= team.season_name %><% end %>
-            </div>
-            <div class="cr-archive-card-record"><%= team.record_label %></div>
+    <details class="cr-archive-section">
+      <summary class="cr-archive-toggle">📦 Past Seasons (<%= @archived_teams.size %>)</summary>
+      <% TennisTeam.group_by_league(@archived_teams).each do |league, teams| %>
+        <div class="cr-archive-league">
+          <div class="cr-archive-league-name"><%= league %></div>
+          <% teams.each do |team| %>
+            <%= link_to team_path(team), class: "cr-archive-row" do %>
+              <span class="cr-archive-row-season"><%= team.season_name.to_s.sub(/\s*\(completed\)\s*/i, "").presence || team.start_date&.year %></span>
+              <span class="cr-archive-row-name"><%= team.name %></span>
+              <span class="cr-archive-row-record"><%= team.record_label %></span>
+            <% end %>
           <% end %>
-        <% end %>
-      </div>
-    </section>
+        </div>
+      <% end %>
+    </details>
   <% end %>
 </div>

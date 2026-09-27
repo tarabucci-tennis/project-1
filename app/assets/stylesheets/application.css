@@ -5058,19 +5058,29 @@ body.cr-ctx-lineups-edit .cr-field > span { color: var(--cr-text); }
 .cr-info-field input:disabled { background: var(--cr-bg); color: var(--cr-text-light); }
 
 /* ── Teams archive (Past Seasons) ── */
-.cr-archive-section { margin: 34px 0 0; }
-.cr-archive-title { font-size: 1.15rem; font-weight: 800; color: var(--cr-text); margin: 0 0 4px; letter-spacing: 0.2px; }
-.cr-archive-sub { font-size: 0.85rem; color: var(--cr-text-muted); margin: 0 0 16px; }
-.cr-archive-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 14px; }
-.cr-archive-card {
-  display: block; text-decoration: none;
-  background: var(--cr-white); border: 1px solid var(--cr-border); border-radius: 12px;
-  padding: 16px 18px; transition: border-color 0.15s, box-shadow 0.15s, transform 0.15s;
+.cr-archive-section { margin: 28px 0 0; }
+.cr-archive-toggle {
+  cursor: pointer; display: inline-block; list-style: none;
+  font-size: 0.85rem; font-weight: 700; color: var(--cr-text-muted);
 }
-.cr-archive-card:hover { border-color: var(--cr-teal); box-shadow: 0 6px 18px rgba(24, 39, 64, 0.08); transform: translateY(-2px); }
-.cr-archive-card-name { font-size: 1rem; font-weight: 800; color: var(--cr-text); }
-.cr-archive-card-meta { font-size: 0.78rem; color: var(--cr-text-muted); margin-top: 3px; }
-.cr-archive-card-record { font-size: 0.82rem; font-weight: 700; color: var(--cr-teal-deep); margin-top: 8px; font-variant-numeric: tabular-nums; }
+.cr-archive-toggle::-webkit-details-marker { display: none; }
+.cr-archive-toggle::after { content: " ▸"; }
+.cr-archive-section[open] > .cr-archive-toggle::after { content: " ▾"; }
+.cr-archive-toggle:hover { color: var(--cr-teal-deep); }
+.cr-archive-league { margin-top: 12px; max-width: 520px; }
+.cr-archive-league-name {
+  font-size: 0.68rem; font-weight: 800; letter-spacing: 1.4px; text-transform: uppercase;
+  color: var(--cr-gold); border-bottom: 1px solid rgba(201, 162, 74, 0.35); padding-bottom: 3px; margin-bottom: 2px;
+}
+.cr-archive-row {
+  display: flex; gap: 10px; align-items: baseline; padding: 6px 2px;
+  text-decoration: none; font-size: 0.85rem; color: var(--cr-text);
+  border-bottom: 1px solid var(--cr-border);
+}
+.cr-archive-row:hover .cr-archive-row-name { color: var(--cr-teal-deep); }
+.cr-archive-row-season { color: var(--cr-text-muted); min-width: 130px; font-size: 0.78rem; }
+.cr-archive-row-name { flex: 1; font-weight: 700; }
+.cr-archive-row-record { font-weight: 700; color: var(--cr-teal-deep); font-variant-numeric: tabular-nums; }
 
 .cr-team-archive-action { text-align: right; margin: -2px 0 10px; }
 .cr-archived-banner {
