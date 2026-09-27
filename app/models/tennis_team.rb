@@ -31,18 +31,26 @@ class TennisTeam < ApplicationRecord
   scope :inter_club, -> { where(league_category: "Inter-Club") }
   scope :local, -> { where(league_category: "Local") }
 
-  # Groups teams into an ordered hash of { league label => [teams] }.
-  # USTA first, then Inter-Club, then any other league alphabetically, so
-  # adding a league is a matter of saving its name — no code change.
-  CATEGORY_ORDER = { "USTA" => 0, "Inter-Club" => 1 }.freeze
+  # My Teams sections, in the order Tara reads them. Every USTA team (Adult,
+  # 40+, Tri-Level...) stacks under one "USTA" heading, and Inter-Club shows
+  # as "Cup" (its divisions are Cup 1-6). Any other league sorts after these.
+  LEAGUE_GROUP_ORDER = %w[USTA Del-Tri Bux-Mont Cup].freeze
 
   def self.group_by_league(teams)
     teams
-      .group_by(&:league_label)
-      .sort_by { |label, group|
-        [ CATEGORY_ORDER.fetch(group.first.league_category, 2), label.to_s.downcase ]
-      }
+      .group_by(&:league_group)
+      .sort_by { |label, _| [ LEAGUE_GROUP_ORDER.index(label) || LEAGUE_GROUP_ORDER.size, label.to_s.downcase ] }
       .to_h
+  end
+
+  # The My Teams section a team belongs under. Unlike league_label, this
+  # folds every USTA league_name ("USTA Adult Tri-Level" etc.) into "USTA".
+  def league_group
+    case league_category
+    when "USTA"       then "USTA"
+    when "Inter-Club" then "Cup"
+    else league_label
+    end
   end
 
   def league_display_name
