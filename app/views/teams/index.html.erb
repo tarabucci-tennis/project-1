@@ -51,7 +51,6 @@
 
       <%# ── Panel 1: Standings (the landing view) ───────────────── %>
       <div data-home-tabs-target="panel">
-        <% standings = @my_teams.sort_by { |t| [ (t.wins_count + t.losses_count).positive? ? 0 : 1, -(t.win_pct || 0), -t.wins_count, t.name.to_s.downcase ] } %>
         <div class="cr-standings-wrap">
           <div class="cr-standings-head">
             <span class="cr-standings-head-title">Team Standings</span>
@@ -70,6 +69,11 @@
               </tr>
             </thead>
             <tbody>
+              <%# One section per league (USTA, Del-Tri, Bux-Mont, Cup) — records
+                  from different leagues aren't comparable, so each ranks on its own. %>
+              <% @teams_by_league.each do |league, league_teams| %>
+              <tr class="cr-st-league"><td colspan="7"><%= league %></td></tr>
+              <% standings = league_teams.sort_by { |t| [ (t.wins_count + t.losses_count).positive? ? 0 : 1, -(t.win_pct || 0), -t.wins_count, t.name.to_s.downcase ] } %>
               <% standings.each_with_index do |team, i| %>
                 <tr class="cr-st-row" onclick="if (!event.target.closest('a')) window.location='<%= team_path(team) %>'">
                   <td class="cr-st-n cr-st-rank"><span class="cr-st-rank-badge"><%= i + 1 %></span></td>
@@ -107,6 +111,7 @@
                     <% end %>
                   </td>
                 </tr>
+              <% end %>
               <% end %>
             </tbody>
           </table>
