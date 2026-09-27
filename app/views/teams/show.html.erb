@@ -214,14 +214,22 @@
         <div data-seg-target="panel" style="display: none;">
           <% if results.any? %>
             <div class="cr-sched-list">
+              <%# Each result opens a pop-up (native <dialog>) with the line
+                  scores, instead of expanding in place or leaving the page.
+                  Our team's name leads each row because Tara plays on many
+                  teams and wants to see whose result it is at a glance. %>
               <% results.each do |match| %>
-                <details class="cr-sched-item">
-                  <summary class="cr-sched-row">
+                <% dialog_id = "cr-result-dialog-#{match.id}" %>
+                <% badge_class = match.won? ? 'cr-result-badge-win' : (match.tied? ? 'cr-result-badge-tie' : 'cr-result-badge-loss') %>
+                <div class="cr-sched-item">
+                  <button type="button" class="cr-sched-row cr-sched-row-btn"
+                          onclick="document.getElementById('<%= dialog_id %>').showModal()">
                     <div class="cr-sched-date">
                       <div class="cr-sched-date-mon"><%= match.match_date.strftime("%b").upcase %></div>
                       <div class="cr-sched-date-day"><%= match.match_date.strftime("%-d") %></div>
                     </div>
                     <div class="cr-sched-main">
+                      <div class="cr-sched-myteam"><%= @team.name %></div>
                       <div class="cr-sched-opp">vs. <%= match.opponent %></div>
                       <div class="cr-sched-sub">
                         <% if match.playoff? %><span class="cr-tag cr-tag-playoff">🏆 <%= match.playoff_level %></span><% end %>
@@ -230,22 +238,39 @@
                       </div>
                     </div>
                     <div class="cr-sched-right">
-                      <span class="cr-result-badge <%= match.won? ? 'cr-result-badge-win' : (match.tied? ? 'cr-result-badge-tie' : 'cr-result-badge-loss') %>"><%= match.result_label %></span>
+                      <span class="cr-result-badge <%= badge_class %>"><%= match.result_label %></span>
                       <% if match.score_summary.present? %><span class="cr-sched-score"><%= match.score_summary %></span><% end %>
-                      <span class="cr-sched-caret" aria-hidden="true">▾</span>
+                      <span class="cr-sched-caret" aria-hidden="true">›</span>
                     </div>
-                  </summary>
-                  <div class="cr-sched-detail">
-                    <% if @is_captain %>
-                      <div class="cr-sched-actions">
-                        <%= link_to edit_results_team_match_path(@team, match), class: "cr-chip-btn" do %>🏆 Edit Results<% end %>
-                        <%= link_to edit_team_match_path(@team, match), class: "cr-chip-btn" do %>✏️ Edit Match<% end %>
+                  </button>
+
+                  <dialog id="<%= dialog_id %>" class="cr-result-dialog"
+                          onclick="if (event.target === this) this.close()">
+                    <div class="cr-result-dialog-panel">
+                      <button type="button" class="cr-result-dialog-close" aria-label="Close"
+                              onclick="this.closest('dialog').close()">&times;</button>
+                      <div class="cr-result-dialog-date"><%= match.match_date.strftime("%a, %b %-d, %Y") %></div>
+                      <h3 class="cr-result-dialog-title"><%= @team.name %> <span class="cr-result-dialog-vs">vs.</span> <%= match.opponent %></h3>
+                      <div class="cr-sched-sub">
+                        <% if match.playoff? %><span class="cr-tag cr-tag-playoff">🏆 <%= match.playoff_level %></span><% end %>
+                        <% if match.home? %><span class="cr-tag cr-tag-home">Home</span><% elsif match.away? %><span class="cr-tag cr-tag-away">Away</span><% end %>
+                        <% if match.location.present? %><span><%= match.location %></span><% end %>
                       </div>
-                    <% end %>
-                    <div class="cr-sched-detail-title">Line Scores</div>
-                    <%= render "matches/scoresheet", match: match, team: @team, is_captain: @is_captain %>
-                  </div>
-                </details>
+                      <div class="cr-result-dialog-score">
+                        <span class="cr-result-badge <%= badge_class %>"><%= match.result_label %></span>
+                        <% if match.score_summary.present? %><span class="cr-sched-score"><%= match.score_summary %></span><% end %>
+                      </div>
+                      <div class="cr-sched-detail-title">Line Scores</div>
+                      <%= render "matches/scoresheet", match: match, team: @team, is_captain: @is_captain %>
+                      <% if @is_captain %>
+                        <div class="cr-sched-actions" style="margin-top: 14px;">
+                          <%= link_to edit_results_team_match_path(@team, match), class: "cr-chip-btn" do %>🏆 Edit Results<% end %>
+                          <%= link_to edit_team_match_path(@team, match), class: "cr-chip-btn" do %>✏️ Edit Match<% end %>
+                        </div>
+                      <% end %>
+                    </div>
+                  </dialog>
+                </div>
               <% end %>
             </div>
           <% else %>
