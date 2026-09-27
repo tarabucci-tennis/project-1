@@ -4842,6 +4842,9 @@ body.cr-ctx-division_teams-show { background: var(--cr-black); }
 
 /* Result pop-up */
 .cr-result-dialog {
+  /* The global reset zeroes margins, which pins a modal <dialog> to the
+     top-left; margin:auto + inset:0 restores the browser's centering. */
+  position: fixed; inset: 0; margin: auto; height: fit-content;
   border: 0; padding: 0; border-radius: 16px; width: min(560px, calc(100vw - 32px));
   max-height: calc(100vh - 48px); background: var(--cr-white); color: var(--cr-text);
   box-shadow: 0 20px 60px rgba(10, 22, 40, 0.35);
