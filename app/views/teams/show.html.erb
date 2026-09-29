@@ -262,12 +262,13 @@
                       </div>
                       <div class="cr-sched-detail-title">Line Scores</div>
                       <%= render "matches/scoresheet", match: match, team: @team, is_captain: @is_captain %>
-                      <% if @is_captain %>
-                        <div class="cr-sched-actions" style="margin-top: 14px;">
-                          <%= link_to edit_results_team_match_path(@team, match), class: "cr-chip-btn" do %>🏆 Edit Results<% end %>
+                      <%# Any player can enter/fix scores; editing the fixture itself stays with captains. %>
+                      <div class="cr-sched-actions" style="margin-top: 14px;">
+                        <%= link_to edit_results_team_match_path(@team, match), class: "cr-chip-btn" do %>🏆 <%= match.match_lines.any? ? "Edit Results" : "Enter Results" %><% end %>
+                        <% if @is_captain %>
                           <%= link_to edit_team_match_path(@team, match), class: "cr-chip-btn" do %>✏️ Edit Match<% end %>
-                        </div>
-                      <% end %>
+                        <% end %>
+                      </div>
                     </div>
                   </dialog>
                 </div>

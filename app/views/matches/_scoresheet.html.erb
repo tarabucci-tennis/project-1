@@ -43,5 +43,7 @@
     <% end %>
   </div>
 <% else %>
-  <p class="cr-result-detail-empty">Line-by-line results haven't been entered yet.<% if local_assigns[:is_captain] %> <%= link_to "Enter them now →", edit_results_team_match_path(team, match), class: "cr-enter-results-link" %><% end %></p>
+  <%# Any player on the team may enter scores (the pages that render this are
+      members-only, and matches#update_results only requires membership). %>
+  <p class="cr-result-detail-empty">Line-by-line results haven't been entered yet. <%= link_to "Enter them now →", edit_results_team_match_path(team, match), class: "cr-enter-results-link" %></p>
 <% end %>
