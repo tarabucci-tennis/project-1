@@ -176,6 +176,70 @@ small to read precisely; everything else is captured.
 
 ---
 
+## Current Status (as of Oct 1, 2026 — session of Sept 27–Oct 1, PRs #162–#172)
+
+**Site is up at https://yourcourtreport.com.** Every PR below passed CI and was squash-merged to main.
+**None of them were viewed in a real browser by Claude.** Tara viewed #169/#170 (the result pop-up) and confirmed it looks right.
+
+**Shipped:**
+- **#162 / #163 — Legacy 1** (Del-Tri **Division 1**, 2026-27). It's a different team from Legacy 2 (Div 4). 18 matches from the
+  team's Tenniscores `.ics` export. In that export the titles read "Away vs Home", so home/away comes from the *site*:
+  Legacy Tennis = home. 12-player roster with **Annie Duke as captain**. "Beth Overley-Adamson" is a GUESS: the
+  screenshot cut the name off at "Overley-Adamsc". Del-Tri ratings (4.0/4.5) were deliberately NOT written to users.
+- **#164 — My Teams grouped by league.** New `TennisTeam#league_group` sorts every USTA team (any league_name,
+  e.g. "USTA Adult Tri-Level") under **USTA**, Inter-Club under **Cup**, and local leagues under their own name.
+  Order: USTA → Del-Tri → Bux-Mont → Cup. Each league has its own section in the My Teams standings table and its own
+  ranking (leagues are never ranked against each other). The header league menu uses the same grouping.
+- **#165 — Past Seasons** is now a small collapsed `<details>` link ("📦 Past Seasons (N)"). It opens to compact
+  rows grouped by league: season · team · record.
+- **#166 / #167 / #168 — AGC Aces**: Tara's second USTA Tri-Level team (**Tri Level Womens 4.5-3.5 Wednesday**,
+  home court Aronimink Golf Club). **Gwynne Barnes captain, Stephanie Finnerty co-captain**, 22-player roster
+  (TennisLink player numbers 11–32). 8 matches built from the TennisLink "Match Schedule by Team" export, which is an
+  HTML table despite the `.xls` name. TennisLink's "4:00 AM" times are junk, so match times are blank. Results so
+  far: 9/9 W 2-1 Whitchester Tri, 9/16 W 3-0 Alley Cats, 9/23 W 2-1 @ Cynwyd Ringers (that one was reported but
+  not confirmed as of 9/27). **Team scores only — no line scores yet.**
+- **#169 / #170 — Results open in a pop-up.** Each Results-tab row is a `<button>` that opens a native `<dialog>`
+  showing "<Team> vs. <Opponent>", the score, line scores and actions. Each row also shows our team name in gold.
+  **Gotcha:** the global reset `* { margin: 0 }` breaks the default centering of a modal `<dialog>`, so it needs
+  `position: fixed; inset: 0; margin: auto; height: fit-content`.
+- **#171 — Any player can enter scores.** `matches#edit_results/update_results` only ever required team membership;
+  the problem was the UI hiding the buttons from non-captains. "Enter them now →" and Enter/Edit Results now show to
+  every member. **Edit Match stays captain-only.**
+- **#172 — USTA standings points = lines won** ("Points per Position"). This used to be 2 × team wins, which was
+  wrong for every USTA team: AGC Aces showed 6 instead of 7. The count uses match_line results; if a match has no
+  lines, it uses the first number of `score_summary` (our lines first).
+
+**Decisions Tara made this session (REMEMBER):**
+- **No TennisRecord. "I don't want to take anything from tennis record."** A TennisRecord regular-season importer
+  was built and then thrown away, unpushed. NOTE: the *existing* `TennisrecordPlayoffs` (Kiss My Ace postseason,
+  nightly) still runs. Tara hasn't said whether to remove it — ASK before touching it.
+- **No paid per-use AI** (e.g. Claude API reading scorecard screenshots). Players enter their own scores instead.
+- **No stored USTA password / automated USTA login.** Explained the risks (account lock, the site's security checks
+  breaking it, stored secret). Tara wants USTA data but hasn't picked a path. The free options left are the
+  TennisLink "Send To Excel" upload (phase 2 of #161, ~1 session) or Claude-in-Chrome on her own computer.
+- **Tri-Level teams:** Tara is on both Tri Hards (4.0-3.0) and AGC Aces (4.5-3.5). Both play every Wednesday
+  9/9–10/28. She doesn't play every week for either one: the captain texts her and she says yes or no. Proposed (not
+  built): fade the matches she said "no" to on her home page.
+
+**Pending / waiting on Tara:**
+1. AGC Aces line scores: screenshots of the 3 TennisLink scorecards (Match ID → View Score).
+2. AGC Aces flight standings: a screenshot of the TennisLink Stats & Standings table, which is login-walled. Enter
+   it via "Edit opponent standings" / a data migration. Also check USTA's official points against our new formula.
+3. Keep or remove the TennisRecord playoff import for Kiss My Ace.
+4. Confirm the spelling "Beth Overley-Adamson".
+
+**New lessons:**
+- **Links to TennisLink Stats & Standings (`...StatsAndStandings.aspx?t=R-3#&&s=...`) are useless to Claude.** The
+  team is identified only by the `#` part, which is never sent to the server, and the page is login-walled anyway.
+  Ask for a screenshot or the "Send To Excel"/export file. Exports come through cleanly.
+- **Tenniscores `.ics` exports have no roster.** Ask for the roster separately (a screenshot of the team page works).
+- **This sandbox can't reach tennisrecord.com** (TLS failure via the proxy; WebFetch gets 503). The droplet can.
+- **Data for a new team = a data migration** in the Tri Hards pattern: idempotent find-or-create, reuse users by
+  lowercased name, never overwrite a match that already has a result, bump the version in schema.rb. Roster in a
+  separate migration that no-ops if the team doesn't exist.
+
+---
+
 ## Current Status (as of May 3, 2026 — end of Session 15)
 
 **Site is up at https://yourcourtreport.com.** Session 15 shipped **PR #86** (squash-merged as `78fa12c`, auto-deployed): the TennisLink fetch POC from Session 14's plan. Smallest possible scaffolding — admin-only `GET /admin/tennislink_test?person_id=X&year=Y` server-side fetches the public `IndividualPlayerRecord.aspx` page via `Net::HTTP` stdlib (no new gems), 15s timeout, prints raw response in a scrollable `<pre>`, with a loud red banner specifically for HTTP 503, HTTP 403, timeouts, and generic errors. Migration adds nullable `tennislink_person_id` string to `users`; admin-editable on `/users/:id/edit`. **Tara has not yet visited the endpoint from her phone — that's the first action of Session 16.** Full Session 15 write-up at the bottom of this file. Other Session 15 activity:

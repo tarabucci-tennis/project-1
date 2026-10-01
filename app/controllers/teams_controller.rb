@@ -625,12 +625,22 @@ class TeamsController < ApplicationController
   # Scores are assumed to be entered from OUR team's perspective:
   # "6-3" means our team won 6 games, opponent won 3 in that set.
   # All stats default to 0 if no results have been entered yet.
+  def usta_points_for(match)
+    lines = match.match_lines.select { |l| l.result.present? }
+    return lines.count(&:won?) if lines.any?
+
+    match.score_summary.to_s[/\A\s*(\d+)\s*-\s*\d+/, 1].to_i
+  end
+
   def compute_team_standings_stats(team)
     completed = team.matches.completed.includes(:match_lines)
 
     stats = {
       matches_played: completed.count,
-      points:         completed.where(result: "win").count * 2,
+      # USTA "Points per Position": one point per line (position) won, not
+      # per team match won. Counted from the entered line results; a match
+      # with only a team score ("2-1", our lines first) counts its first number.
+      points:         completed.sum { |m| usta_points_for(m) },
       sets_won:       0,
       sets_lost:      0,
       games_won:      0,
