@@ -226,7 +226,9 @@ small to read precisely; everything else is captured.
 2. AGC Aces flight standings: a screenshot of the TennisLink Stats & Standings table, which is login-walled. Enter
    it via "Edit opponent standings" / a data migration. Also check USTA's official points against our new formula.
 3. Keep or remove the TennisRecord playoff import for Kiss My Ace.
-4. Confirm the spelling "Beth Overley-Adamson".
+4. ~~Confirm "Beth Overley-Adamson"~~ — CONFIRMED from the Legacy 1 Tenniscores page (Oct 2).
+5. **Legacy 1 Tenniscores link** saved (Oct 2): `deltri.tenniscores.com/?mod=nndz-TjJiOWtORzkwTlJFb0NVU1NzOD0%3D&team=nndz-WnllK3lMOD0%3D`.
+   Nightly sync now pulls its results + Division 1 standings. schedule_sync left OFF (schedule came from the .ics).
 
 **New lessons:**
 - **Links to TennisLink Stats & Standings (`...StatsAndStandings.aspx?t=R-3#&&s=...`) are useless to Claude.** The
