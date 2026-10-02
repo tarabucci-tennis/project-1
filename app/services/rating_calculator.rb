@@ -77,8 +77,13 @@ class RatingCalculator
     end
   end
 
+  # Only USTA lines count. USTA is the one league that sets a player's
+  # rating; Bux-Mont / Del-Tri / Cup results never feed it (and Bux-Mont's
+  # games are clock-truncated and penalty-adjusted, so they'd skew it anyway).
   def scored_lines
     MatchLine.where.not(result: nil)
+             .joins(match: :tennis_team)
+             .where(tennis_teams: { league_category: "USTA" })
              .includes(:match, match_line_players: :user)
              .to_a
   end
@@ -96,6 +101,12 @@ class RatingCalculator
 
   def persist(sums, counts)
     ids = counts.keys.map { |k| k[2..].to_i }
+
+    # Anyone whose rating came only from lines that no longer count (e.g.
+    # non-USTA leagues) goes back to "no scores yet" instead of a stale number.
+    User.where.not(id: ids).where.not(court_report_rating: nil)
+        .update_all(court_report_rating: nil, court_report_rating_lines: 0)
+
     User.where(id: ids).find_each do |u|
       key = "u:#{u.id}"
       n = counts[key]
