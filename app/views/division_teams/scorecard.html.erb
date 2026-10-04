@@ -1,0 +1,29 @@
+<%# Body of the opponent-match pop-up on division_teams#show. Lines are from
+    that opponent team's point of view, read live from the league site. %>
+<% if @card && @card[:lines].any? %>
+  <div class="cr-sheet">
+    <% @card[:lines].sort_by { |l| l[:number] }.each do |ln| %>
+      <% won = ln[:result] == "W" %>
+      <% ours = ln[:score].to_s.split.map { |s| s.split("-").first } %>
+      <% theirs = ln[:score].to_s.split.map { |s| s.split("-").last } %>
+      <% rows = [ { names: ln[:our], games: ours, won: won }, { names: ln[:opp], games: theirs, won: !won } ] %>
+      <div class="cr-sheet-line">
+        <div class="cr-sheet-line-head">
+          <span class="cr-sheet-line-label">Line <%= ln[:number] %></span>
+          <span class="cr-result-badge <%= won ? 'cr-result-badge-win' : 'cr-result-badge-loss' %>"><%= won ? "W" : "L" %></span>
+        </div>
+        <% rows.each do |row| %>
+          <div class="cr-sheet-pair <%= 'cr-sheet-pair-win' if row[:won] %>">
+            <span class="cr-sheet-names"><%= row[:names].presence&.join(" / ") || "—" %></span>
+            <span class="cr-sheet-sets">
+              <% row[:games].each do |g| %><span class="cr-sheet-set"><%= g %></span><% end %>
+            </span>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+  <p class="cr-dt-pop-note">Top name on each line is <%= @division_team.name %>.</p>
+<% else %>
+  <p class="cr-result-detail-empty"><%= @error || "The line-by-line scorecard for this match isn't posted yet." %></p>
+<% end %>

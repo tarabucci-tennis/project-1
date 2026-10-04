@@ -48,7 +48,9 @@ Rails.application.routes.draw do
         patch "confirm", on: :member
       end
     end
-    resources :division_teams, only: [ :show ]
+    resources :division_teams, only: [ :show ] do
+      member { get :scorecard }
+    end
     get "captain", to: "matches#captain", as: :captain
     member do
       post "add_player", to: "teams#add_player"

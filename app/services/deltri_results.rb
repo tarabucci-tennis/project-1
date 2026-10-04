@@ -75,6 +75,24 @@ class DeltriResults
     Result.new(updated: updated, notes: notes)
   end
 
+  # One team's line-by-line result for the match on `month_day` ("09/14"),
+  # read live from its public page — used by the opponent drill-down pop-up,
+  # so nothing is saved. The standings row lists scorecards out of date order,
+  # so each card is opened (cached for a few hours) until the date matches.
+  # Lines are from that team's point of view. Returns nil if not found.
+  def card_for(team_url, team_name, month_day)
+    team = Struct.new(:tenniscores_url, :name).new(team_url, team_name)
+    base = base_of(team_url)
+    team_match_links(fetch(team_url), team).each do |link|
+      card = Rails.cache.fetch([ "tenniscores-card", base, link[:path] ], expires_in: 6.hours) do
+        fetch("#{base}/#{link[:path]}")
+      end
+      parsed = parse_scorecard(card, home: link[:home])
+      return parsed if parsed[:date]&.strftime("%m/%d") == month_day
+    end
+    nil
+  end
+
   private
 
   def fetch(url)

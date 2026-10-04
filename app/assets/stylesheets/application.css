@@ -4769,6 +4769,12 @@ body.cr-ctx-division_teams-show { background: var(--cr-black); }
   background: var(--cr-white); border: 1px solid var(--cr-border); border-radius: 10px;
   padding: 12px 14px;
 }
+.cr-dt-row-btn {
+  width: 100%; font: inherit; color: inherit; text-align: left; cursor: pointer;
+  -webkit-appearance: none; appearance: none;
+}
+.cr-dt-row-btn:hover { border-color: var(--cr-gold); }
+.cr-dt-pop-note { font-size: 0.72rem; color: var(--cr-text-light); margin-top: 10px; }
 .cr-dt-date { font-weight: 700; color: var(--cr-text-muted); width: 48px; flex-shrink: 0; font-size: 0.85rem; }
 .cr-dt-ha { font-size: 0.66rem; font-weight: 800; border-radius: 5px; padding: 2px 6px; flex-shrink: 0; }
 .cr-dt-ha-home { background: rgba(22,163,74,0.12); color: #15803d; }
