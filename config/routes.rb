@@ -62,6 +62,9 @@ Rails.application.routes.draw do
       post "archive_season", to: "teams#archive_season"
       post "advance", to: "teams#advance"
       post "archive", to: "teams#archive"
+      get  "usta_upload", to: "usta_uploads#new", as: :usta_upload
+      post "usta_upload", to: "usta_uploads#preview"
+      post "usta_upload/confirm", to: "usta_uploads#create", as: :usta_upload_confirm
       post "unarchive", to: "teams#unarchive"
       get  "edit_standings", to: "teams#edit_standings"
       patch "update_standings", to: "teams#update_standings"

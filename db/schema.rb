@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_02_000000) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_05_000000) do
   create_table "availabilities", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.integer "match_id", null: false
@@ -27,6 +27,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_02_000000) do
     t.datetime "created_at", null: false
     t.integer "games_lost", default: 0, null: false
     t.integer "games_won", default: 0, null: false
+    t.decimal "games_won_pct", precision: 5, scale: 2
     t.integer "losses", default: 0, null: false
     t.integer "matches_played", default: 0, null: false
     t.string "name", null: false
@@ -104,6 +105,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_02_000000) do
     t.string "score_summary"
     t.integer "tennis_team_id", null: false
     t.datetime "updated_at", null: false
+    t.string "usta_status"
     t.index ["tennis_team_id", "match_date"], name: "index_matches_on_tennis_team_id_and_match_date"
     t.index ["tennis_team_id"], name: "index_matches_on_tennis_team_id"
   end
@@ -214,6 +216,14 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_02_000000) do
     t.string "tenniscores_url"
     t.datetime "updated_at", null: false
     t.integer "user_id", null: false
+    t.decimal "usta_games_won_pct", precision: 5, scale: 2
+    t.integer "usta_games_lost"
+    t.integer "usta_games_won"
+    t.integer "usta_matches_played"
+    t.integer "usta_points"
+    t.integer "usta_sets_lost"
+    t.integer "usta_sets_won"
+    t.datetime "usta_synced_at"
     t.index ["archived"], name: "index_tennis_teams_on_archived"
     t.index ["join_code"], name: "index_tennis_teams_on_join_code", unique: true
     t.index ["league_category"], name: "index_tennis_teams_on_league_category"
