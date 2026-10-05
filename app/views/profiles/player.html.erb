@@ -8,7 +8,9 @@
   <%
     gender  = @teams.map { |t| t.gender.presence }.compact.first
     section = @teams.map { |t| t.section.presence }.compact.first
-    meter   = rating_meter_data(rating: @user.court_report_rating || @user.ntrp_rating)
+    # The meter places a live rating inside its 0.5 band; a flat NTRP has no
+    # position in its band, so the meter is hidden with the Court Report rating.
+    meter   = User::SHOW_COURT_REPORT_RATING ? rating_meter_data(rating: @user.court_report_rating || @user.ntrp_rating) : nil
   %>
   <div class="cr-pp">
     <div class="cr-pp-head">
@@ -34,6 +36,7 @@
           </div>
         </div>
 
+        <% if User::SHOW_COURT_REPORT_RATING %>
         <div class="cr-pp-row">
           <div class="cr-pp-label">Court Report Rating <span class="cr-pp-live">live</span></div>
           <div class="cr-pp-metric">
@@ -52,6 +55,7 @@
             Games won &amp; lost vs. each flight's level, averaged over the season.
           </div>
         </div>
+        <% end %>
       </div>
 
       <div class="cr-pp-right">

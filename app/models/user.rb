@@ -1,4 +1,10 @@
 class User < ApplicationRecord
+  # Court Report's own rating is hidden everywhere until it's rebuilt (Tara,
+  # Oct 2026): it scored every line at the team's level and ignored opponents'
+  # ratings, so e.g. a 3.0 on a Tri-Level 3.0 line could outrank a 4.0 who
+  # plays line 1. Players see only their official USTA (NTRP) rating. The
+  # number is still computed in the background; flip this to bring it back.
+  SHOW_COURT_REPORT_RATING = false
   # has_secure_password with validations: false so existing users without a
   # password_digest can still be saved. New users created via /signup get
   # their password validated by an explicit check in RegistrationsController.

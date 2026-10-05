@@ -833,7 +833,7 @@ class TeamsController < ApplicationController
       {
         name: pd[:name],
         user_id: pd[:user]&.id,
-        rating: pd[:user]&.court_report_rating,
+        rating: (User::SHOW_COURT_REPORT_RATING ? pd[:user]&.court_report_rating : pd[:user]&.ntrp_rating),
         matches_played: pd[:matches_played].size,
         singles_pct: total_lines > 0 ? (pd[:singles].to_f / total_lines * 100).round(0) : 0,
         doubles_pct: total_lines > 0 ? (pd[:doubles].to_f / total_lines * 100).round(0) : 0,

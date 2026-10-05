@@ -39,7 +39,7 @@
   <div class="cr-standings-wrap" style="margin-bottom: 26px;">
     <div class="cr-standings-head">
       <span class="cr-standings-head-title">Players (<%= @players.size %>)</span>
-      <span class="cr-standings-head-season">YCR = live Court Report Rating · tap a name for full stats</span>
+      <span class="cr-standings-head-season"><% if User::SHOW_COURT_REPORT_RATING %>YCR = live Court Report Rating · <% else %>NTRP = official USTA rating · <% end %>tap a name for full stats</span>
     </div>
 
     <% if @players.any? %>
@@ -48,7 +48,7 @@
           <thead>
             <tr>
               <th style="min-width: 140px;">Player</th>
-              <th class="cr-st-n">YCR</th>
+              <% if User::SHOW_COURT_REPORT_RATING %><th class="cr-st-n">YCR</th><% end %>
               <th class="cr-st-n">NTRP</th>
               <th class="cr-st-n">W</th>
               <th class="cr-st-n">L</th>
@@ -64,6 +64,7 @@
                     <span style="color: var(--cr-gold); font-size: 0.72rem;">(you)</span>
                   <% end %>
                 </td>
+                <% if User::SHOW_COURT_REPORT_RATING %>
                 <td class="cr-st-n">
                   <% if p[:ycr].present? %>
                     <%= link_to sprintf("%.2f", p[:ycr]), player_path(p[:user].id),
@@ -71,6 +72,7 @@
                           title: "Court Report Rating — tap for full stats" %>
                   <% else %>—<% end %>
                 </td>
+                <% end %>
                 <td class="cr-st-n"><%= p[:ntrp].present? ? p[:ntrp] : "—" %></td>
                 <td class="cr-st-n" style="color: var(--cr-green);"><%= p[:won] %></td>
                 <td class="cr-st-n" style="color: var(--cr-red);"><%= p[:lost] %></td>
