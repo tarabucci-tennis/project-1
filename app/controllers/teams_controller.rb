@@ -102,7 +102,8 @@ class TeamsController < ApplicationController
 
     @captain          = @team.captain
     active_memberships = @team.team_memberships.active.includes(:user)
-    @roster           = active_memberships.sort_by { |m| [ m.captain? ? 0 : 1, m.user.name.to_s.downcase ] }
+    # Highest official USTA (NTRP) rating first; unrated players last, then by name.
+    @roster           = active_memberships.sort_by { |m| [ -(m.user.ntrp_rating || 0).to_f, m.user.name.to_s.downcase ] }
     @archived_rosters = @team.team_memberships.archived.includes(:user)
                              .group_by(&:archived_season)
                              .transform_values { |ms| ms.sort_by { |m| m.user.name.to_s.downcase } }

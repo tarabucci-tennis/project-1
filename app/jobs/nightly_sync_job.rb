@@ -19,6 +19,7 @@ class NightlySyncJob < ApplicationJob
     step("Google Sheet")    { SheetScoreSync.new.call }
     step("Standings")       { DeltriStandings.new.call }
     step("Schedules")       { TenniscoresSchedule.sync_all }
+    step("Rosters")         { TenniscoresRosterSync.new.call }
     step("Del-Tri results") { DeltriResults.new.call }
     step("Player history")  { DeltriPlayerImport.sync_all }
     step("Postseason")      { TennisrecordPlayoffs.new.call }

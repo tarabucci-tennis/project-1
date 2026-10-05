@@ -23,6 +23,9 @@ namespace :scores do
     schedules = TenniscoresSchedule.sync_all
     puts "[#{stamp}] Schedules — #{schedules}"
 
+    rosters = TenniscoresRosterSync.new.call
+    puts "[#{stamp}] Rosters — #{rosters}"
+
     deltri = DeltriResults.new.call
     puts "[#{stamp}] Del-Tri results — #{deltri}"
 
