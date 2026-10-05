@@ -21,17 +21,48 @@
       <% end %>
     </div>
   <% else %>
+    <%# Tap a match to open its line-by-line scorecard in a pop-up. The
+        scorecard is fetched live only when opened, so the page stays fast. %>
     <div class="cr-dt-results">
       <% @results.each do |m| %>
-        <div class="cr-dt-row">
+        <button type="button" class="cr-dt-row cr-dt-row-btn"
+                data-url="<%= scorecard_team_division_team_path(@team, @division_team, d: m.date_label) %>"
+                data-title="<%= @division_team.name %> vs. <%= m.opponent.presence || "Opponent" %>"
+                data-sub="<%= m.date_label %> · <%= m.home_label %> · <%= m.result %> <%= m.score %>"
+                onclick="crOpenDtCard(this)">
           <span class="cr-dt-date"><%= m.date_label %></span>
           <span class="cr-dt-ha cr-dt-ha-<%= m.home ? 'home' : 'away' %>"><%= m.home ? "H" : "A" %></span>
           <span class="cr-dt-opp">vs <%= m.opponent.presence || "—" %></span>
           <span class="cr-dt-score"><%= m.score %></span>
           <span class="cr-result-badge <%= m.result == 'W' ? 'cr-result-badge-win' : (m.result == 'T' ? 'cr-result-badge-tie' : 'cr-result-badge-loss') %>"><%= m.result %></span>
-        </div>
+        </button>
       <% end %>
     </div>
+
+    <dialog id="cr-dt-dialog" class="cr-result-dialog" onclick="if (event.target === this) this.close()">
+      <div class="cr-result-dialog-panel">
+        <button type="button" class="cr-result-dialog-close" aria-label="Close"
+                onclick="this.closest('dialog').close()">&times;</button>
+        <div class="cr-result-dialog-date" id="cr-dt-dialog-sub"></div>
+        <h3 class="cr-result-dialog-title" id="cr-dt-dialog-title"></h3>
+        <div class="cr-sched-detail-title">Line Scores</div>
+        <div id="cr-dt-dialog-body"></div>
+      </div>
+    </dialog>
+    <script>
+      function crOpenDtCard(btn) {
+        var dlg = document.getElementById("cr-dt-dialog");
+        var body = document.getElementById("cr-dt-dialog-body");
+        document.getElementById("cr-dt-dialog-title").textContent = btn.dataset.title;
+        document.getElementById("cr-dt-dialog-sub").textContent = btn.dataset.sub;
+        body.innerHTML = '<p class="cr-result-detail-empty">Loading scorecard…</p>';
+        dlg.showModal();
+        fetch(btn.dataset.url, { headers: { "Accept": "text/html" } })
+          .then(function (r) { return r.text(); })
+          .then(function (html) { body.innerHTML = html; })
+          .catch(function () { body.innerHTML = '<p class="cr-result-detail-empty">Couldn\'t load this scorecard right now.</p>'; });
+      }
+    </script>
     <p class="cr-dt-foot">
       Pulled live from <%= @team.league_label %>.
       <% if @division_team.source_url.present? %>
