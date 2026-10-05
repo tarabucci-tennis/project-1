@@ -23,6 +23,11 @@ class TenniscoresRoster
     parse(html)
   end
 
+  # Skips the cache — for the nightly roster sync.
+  def fetch_fresh
+    parse(fetch(@url))
+  end
+
   def parse(html)
     table = html[/<table[^>]*class="[^"]*team_roster_table[^"]*"[^>]*>(.*?)<\/table>/im, 1] || ""
     group = "Players"

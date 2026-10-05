@@ -259,6 +259,9 @@
                       <div class="cr-result-dialog-score">
                         <span class="cr-result-badge <%= badge_class %>"><%= match.result_label %></span>
                         <% if match.score_summary.present? %><span class="cr-sched-score"><%= match.score_summary %></span><% end %>
+                        <% if match.usta_status.present? %>
+                          <span class="cr-tag <%= match.usta_status.match?(/confirmed/i) ? 'cr-tag-home' : 'cr-tag-away' %>"><%= match.usta_status.match?(/confirmed/i) ? "Official ✓" : "Pending USTA" %></span>
+                        <% end %>
                       </div>
                       <div class="cr-sched-detail-title">Line Scores</div>
                       <%= render "matches/scoresheet", match: match, team: @team, is_captain: @is_captain %>
@@ -773,12 +776,13 @@
           <p class="cr-standings-note">
             * Calculation of game-winning percentage does not include defaulted matches.
           </p>
-          <% if @is_captain %>
-            <p style="margin: 4px 0 14px;">
-              <%= link_to "✏️ Edit opponent standings", edit_standings_team_path(@team), class: "cr-chip-btn" %>
-              <span style="font-size: 0.75rem; color: var(--cr-text-light); margin-left: 6px;">USTA hides rival records — type them in from TennisLink.</span>
-            </p>
-          <% end %>
+          <p style="margin: 4px 0 14px; display: flex; gap: 8px; flex-wrap: wrap; align-items: center;">
+            <%= link_to "⬆️ Upload USTA file", usta_upload_team_path(@team), class: "cr-chip-btn" %>
+            <% if @is_captain %><%= link_to "✏️ Edit opponent standings", edit_standings_team_path(@team), class: "cr-chip-btn" %><% end %>
+            <span style="font-size: 0.75rem; color: var(--cr-text-light);">
+              <% if @team.usta_synced_at %>USTA's numbers as of <%= @team.usta_synced_at.in_time_zone("Eastern Time (US & Canada)").strftime("%-m/%-d %-l:%M %p") %>.<% else %>Upload TennisLink's Team Summary (Send To Excel) to fill in the flight.<% end %>
+            </span>
+          </p>
         <% end %>
 
         <%# Horizontal scroll wrapper so the wide table is readable
@@ -872,7 +876,7 @@
                       <% end %>
                     </td>
                     <td><%= entry[:matches_played] %></td>
-                    <td class="cr-standings-tbl-highlight"><%= entry[:points] %></td>
+                    <td class="cr-standings-tbl-highlight"><%= entry[:points].nil? ? "—" : entry[:points] %></td>
                     <td><%= entry[:sets_won] %></td>
                     <td><%= entry[:sets_lost] %></td>
                     <td><%= entry[:games_won] %></td>

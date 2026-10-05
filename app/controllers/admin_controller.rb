@@ -52,6 +52,7 @@ class AdminController < ApplicationController
   def sync_scores
     result = SheetScoreSync.new.call
     standings = DeltriStandings.new.call
+    rosters = TenniscoresRosterSync.new.call
     deltri = DeltriResults.new.call
     players = DeltriPlayerImport.sync_all
     playoffs = TennisrecordPlayoffs.new.call
@@ -60,6 +61,7 @@ class AdminController < ApplicationController
     pieces = []
     pieces << result.to_s if result.summaries.any?
     pieces << "Standings — #{standings}" if standings.updated.any?
+    pieces << "Rosters — #{rosters}" if rosters.added.any? || rosters.notes.any?
     pieces << "Del-Tri results — #{deltri}" if deltri.updated.any?
     pieces << "Player history — #{players}" if players.imported.any?
     pieces << "Postseason — #{playoffs}" if playoffs.updated.any?

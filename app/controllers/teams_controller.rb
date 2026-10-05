@@ -102,7 +102,8 @@ class TeamsController < ApplicationController
 
     @captain          = @team.captain
     active_memberships = @team.team_memberships.active.includes(:user)
-    @roster           = active_memberships.sort_by { |m| [ m.captain? ? 0 : 1, m.user.name.to_s.downcase ] }
+    # Highest official USTA (NTRP) rating first; unrated players last, then by name.
+    @roster           = active_memberships.sort_by { |m| [ -(m.user.ntrp_rating || 0).to_f, m.user.name.to_s.downcase ] }
     @archived_rosters = @team.team_memberships.archived.includes(:user)
                              .group_by(&:archived_season)
                              .transform_values { |ms| ms.sort_by { |m| m.user.name.to_s.downcase } }
@@ -189,13 +190,26 @@ class TeamsController < ApplicationController
       # isn't tracked yet. When we either (a) start scraping TennisLink
       # or (b) let captains manually enter opponent standings, it'll
       # populate the same row format.
-      my_stats = compute_team_standings_stats(@team)
+      # Our row: USTA's published numbers from the last Team Summary upload.
+      # Before any upload, sets/games come from entered line scores and points
+      # stay blank — USTA weights points per position, so we can't count them.
+      my_stats =
+        if @team.usta_synced_at
+          { matches_played: @team.usta_matches_played.to_i, points: @team.usta_points.to_i,
+            sets_won: @team.usta_sets_won.to_i, sets_lost: @team.usta_sets_lost.to_i,
+            games_won: @team.usta_games_won.to_i, games_lost: @team.usta_games_lost.to_i,
+            games_won_pct: @team.usta_games_won_pct.to_f }
+        else
+          compute_team_standings_stats(@team)
+        end
       @standings << my_stats.merge(name: @team.name, is_self: true)
 
       @division_teams.each do |dt|
         gw = dt.games_won.to_i
         gl = dt.games_lost.to_i
-        pct = (gw + gl).positive? ? (gw.to_f / (gw + gl) * 100).round(2) : 0.0
+        # Prefer USTA's published % (it excludes defaults; ours can't).
+        pct = dt.games_won_pct&.to_f ||
+              ((gw + gl).positive? ? (gw.to_f / (gw + gl) * 100).round(2) : 0.0)
         @standings << {
           name: dt.name,
           is_self: false,
@@ -629,22 +643,14 @@ class TeamsController < ApplicationController
   # Scores are assumed to be entered from OUR team's perspective:
   # "6-3" means our team won 6 games, opponent won 3 in that set.
   # All stats default to 0 if no results have been entered yet.
-  def usta_points_for(match)
-    lines = match.match_lines.select { |l| l.result.present? }
-    return lines.count(&:won?) if lines.any?
-
-    match.score_summary.to_s[/\A\s*(\d+)\s*-\s*\d+/, 1].to_i
-  end
-
   def compute_team_standings_stats(team)
     completed = team.matches.completed.includes(:match_lines)
 
     stats = {
       matches_played: completed.count,
-      # USTA "Points per Position": one point per line (position) won, not
-      # per team match won. Counted from the entered line results; a match
-      # with only a team score ("2-1", our lines first) counts its first number.
-      points:         completed.sum { |m| usta_points_for(m) },
+      # Unknown until a USTA Team Summary is uploaded — USTA weights points
+      # per position (e.g. a 4-line match can be worth 23), so we don't guess.
+      points:         nil,
       sets_won:       0,
       sets_lost:      0,
       games_won:      0,
