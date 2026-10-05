@@ -48,9 +48,11 @@ class LookupsController < ApplicationController
     end
 
     @players = filter_by_name(@players) { |p| p[:user].name }
-    # Rated players first (highest YCR), then everyone else alphabetically.
+    # Rated players first (highest shown rating), then everyone else
+    # alphabetically. While the Court Report rating is hidden, that's NTRP.
+    rating_key = User::SHOW_COURT_REPORT_RATING ? :ycr : :ntrp
     @players.sort_by! do |p|
-      [ p[:ycr] ? 0 : 1, -(p[:ycr] || 0).to_f, p[:user].name.to_s.downcase ]
+      [ p[rating_key] ? 0 : 1, -(p[rating_key] || 0).to_f, p[:user].name.to_s.downcase ]
     end
 
     # ── Teams: your own teams, plus opponents in your divisions ───────────

@@ -650,7 +650,7 @@
             <div class="cr-captain-analytics-table">
               <div class="cr-captain-analytics-header">
                 <span class="cr-captain-col-name">Player</span>
-                <span class="cr-captain-col-stat">YCR</span>
+                <span class="cr-captain-col-stat"><%= User::SHOW_COURT_REPORT_RATING ? "YCR" : "NTRP" %></span>
                 <span class="cr-captain-col-stat">TR</span>
                 <span class="cr-captain-col-stat">Played</span>
                 <span class="cr-captain-col-stat">W</span>
@@ -670,7 +670,7 @@
                   </span>
                   <span class="cr-captain-col-stat">
                     <% if ps[:user_id] && ps[:rating].present? %>
-                      <%= link_to ps[:rating], player_path(ps[:user_id]), style: "color: var(--cr-gold); font-weight: 800; text-decoration: none;", title: "Court Report Rating — tap for full stats" %>
+                      <%= link_to ps[:rating], player_path(ps[:user_id]), style: "color: var(--cr-gold); font-weight: 800; text-decoration: none;", title: (User::SHOW_COURT_REPORT_RATING ? "Court Report Rating" : "Official USTA rating") + " — tap for full stats" %>
                     <% else %>—<% end %>
                   </span>
                   <span class="cr-captain-col-stat">
@@ -687,7 +687,7 @@
               <% end %>
             </div>
             <p style="font-size: 0.8rem; color: var(--cr-text-muted); margin-top: 8px;">
-              <strong>YCR</strong> = Court Report Rating, computed live from your entered scores — tap it for full stats. <strong>TR</strong> = TennisRecord (opens their site).
+              <% if User::SHOW_COURT_REPORT_RATING %><strong>YCR</strong> = Court Report Rating, computed live from your entered scores<% else %><strong>NTRP</strong> = official USTA rating<% end %> — tap it for full stats. <strong>TR</strong> = TennisRecord (opens their site).
             </p>
           </div>
         <% end %>
