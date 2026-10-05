@@ -35,6 +35,18 @@ class DivisionTeamsController < ApplicationController
     render layout: false
   end
 
+  # GET /teams/:team_id/division_teams/:id/roster
+  # Pop-up body: that opponent's roster with each player's W-L, read live.
+  def roster
+    @players = []
+    begin
+      @players = TenniscoresRoster.new(@division_team.source_url).call if @division_team.source_url.present?
+    rescue StandardError => e
+      @error = "Couldn't load this roster right now (#{e.message})."
+    end
+    render layout: false
+  end
+
   private
 
   def load_team_and_division_team

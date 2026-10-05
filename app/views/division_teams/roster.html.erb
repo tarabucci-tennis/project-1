@@ -1,0 +1,20 @@
+<%# Body of the opponent roster pop-up, read live from the league site. The
+    rating is that league's own number, not a USTA rating. %>
+<% if @players.any? %>
+  <% @players.group_by(&:group).each do |group, players| %>
+    <div class="cr-sched-detail-title"><%= group %></div>
+    <div class="cr-roster-pop">
+      <% players.each do |p| %>
+        <div class="cr-roster-pop-row">
+          <span class="cr-roster-pop-seed"><%= p.seed %></span>
+          <span class="cr-roster-pop-name"><%= p.name %><% if p.role %> <span class="cr-roster-pop-role">(<%= p.role == "C" ? "Captain" : "Co-captain" %>)</span><% end %></span>
+          <span class="cr-roster-pop-rating"><%= p.rating || "—" %></span>
+          <span class="cr-roster-pop-record"><%= p.wins %>–<%= p.losses %><%= "–#{p.ties}" if p.ties.positive? %></span>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+  <p class="cr-dt-pop-note">Rating = <%= @team.league_label %>'s own rating, not USTA. Record = lines won–lost this season.</p>
+<% else %>
+  <p class="cr-result-detail-empty"><%= @error || "This team's roster isn't posted yet." %></p>
+<% end %>

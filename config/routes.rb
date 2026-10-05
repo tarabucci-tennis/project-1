@@ -49,7 +49,10 @@ Rails.application.routes.draw do
       end
     end
     resources :division_teams, only: [ :show ] do
-      member { get :scorecard }
+      member do
+        get :scorecard
+        get :roster
+      end
     end
     get "captain", to: "matches#captain", as: :captain
     member do

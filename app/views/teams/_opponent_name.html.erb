@@ -1,0 +1,13 @@
+<%# "vs. Opponent" — tappable when we can read that team's roster from its
+    league site. Stops the click so the surrounding row doesn't also toggle.
+    Locals: team, match, division_by_name. %>
+<% dt = division_by_name && division_by_name[match.opponent.to_s.strip.downcase.gsub(/\s+/, " ")] %>
+<% if dt %>
+  vs. <span class="cr-opp-link" role="button" tabindex="0"
+            data-url="<%= roster_team_division_team_path(team, dt) %>"
+            data-title="<%= dt.name %>"
+            data-sub="<%= [ ("##{dt.position} in standings" if dt.position.present?), "#{dt.wins} pts" ].compact.join(" · ") %>"
+            onclick="event.preventDefault(); event.stopPropagation(); crOpenRoster(this)"><%= match.opponent %> <span class="cr-opp-link-icon" aria-hidden="true">👥</span></span>
+<% else %>
+  vs. <%= match.opponent %>
+<% end %>
