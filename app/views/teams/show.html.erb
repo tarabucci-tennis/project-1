@@ -151,7 +151,7 @@
                       <div class="cr-sched-date-day"><%= match.match_date.strftime("%-d") %></div>
                     </div>
                     <div class="cr-sched-main">
-                      <div class="cr-sched-opp">vs. <%= match.opponent %></div>
+                      <div class="cr-sched-opp"><%= render "teams/opponent_name", team: @team, match: match, division_by_name: @division_by_name %></div>
                       <div class="cr-sched-sub">
                         <% if match.playoff? %><span class="cr-tag cr-tag-playoff">🏆 <%= match.playoff_level %></span><% end %>
                         <% if match.home? %><span class="cr-tag cr-tag-home">Home</span><% elsif match.away? %><span class="cr-tag cr-tag-away">Away</span><% end %>
@@ -230,7 +230,7 @@
                     </div>
                     <div class="cr-sched-main">
                       <div class="cr-sched-myteam"><%= @team.name %></div>
-                      <div class="cr-sched-opp">vs. <%= match.opponent %></div>
+                      <div class="cr-sched-opp"><%= render "teams/opponent_name", team: @team, match: match, division_by_name: @division_by_name %></div>
                       <div class="cr-sched-sub">
                         <% if match.playoff? %><span class="cr-tag cr-tag-playoff">🏆 <%= match.playoff_level %></span><% end %>
                         <% if match.home? %><span class="cr-tag cr-tag-home">Home</span><% elsif match.away? %><span class="cr-tag cr-tag-away">Away</span><% end %>
@@ -280,6 +280,31 @@
             </div>
           <% end %>
         </div>
+
+        <%# One shared pop-up for opponent rosters (opened from any "vs. Team 👥"). %>
+        <dialog id="cr-roster-dialog" class="cr-result-dialog" onclick="if (event.target === this) this.close()">
+          <div class="cr-result-dialog-panel">
+            <button type="button" class="cr-result-dialog-close" aria-label="Close"
+                    onclick="this.closest('dialog').close()">&times;</button>
+            <div class="cr-result-dialog-date" id="cr-roster-dialog-sub"></div>
+            <h3 class="cr-result-dialog-title" id="cr-roster-dialog-title"></h3>
+            <div id="cr-roster-dialog-body"></div>
+          </div>
+        </dialog>
+        <script>
+          function crOpenRoster(el) {
+            var dlg = document.getElementById("cr-roster-dialog");
+            var body = document.getElementById("cr-roster-dialog-body");
+            document.getElementById("cr-roster-dialog-title").textContent = el.dataset.title;
+            document.getElementById("cr-roster-dialog-sub").textContent = el.dataset.sub;
+            body.innerHTML = '<p class="cr-result-detail-empty">Loading roster…</p>';
+            dlg.showModal();
+            fetch(el.dataset.url, { headers: { "Accept": "text/html" } })
+              .then(function (r) { return r.text(); })
+              .then(function (html) { body.innerHTML = html; })
+              .catch(function () { body.innerHTML = '<p class="cr-result-detail-empty">Couldn\'t load this roster right now.</p>'; });
+          }
+        </script>
 
         <%# ── Playoff stage panels (Districts → Sectionals → Nationals) ── %>
         <% @playoff_stages.each do |stage| %>

@@ -4774,6 +4774,16 @@ body.cr-ctx-division_teams-show { background: var(--cr-black); }
   -webkit-appearance: none; appearance: none;
 }
 .cr-dt-row-btn:hover { border-color: var(--cr-gold); }
+.cr-opp-link { color: inherit; text-decoration: underline dotted var(--cr-gold); text-underline-offset: 3px; cursor: pointer; }
+.cr-opp-link:hover { color: var(--cr-teal-deep); }
+.cr-opp-link-icon { font-size: 0.8em; }
+.cr-roster-pop { display: flex; flex-direction: column; }
+.cr-roster-pop-row { display: flex; align-items: baseline; gap: 10px; padding: 6px 2px; border-bottom: 1px solid var(--cr-border); font-size: 0.88rem; }
+.cr-roster-pop-seed { width: 18px; color: var(--cr-text-light); font-size: 0.75rem; }
+.cr-roster-pop-name { flex: 1; font-weight: 600; }
+.cr-roster-pop-role { font-weight: 400; color: var(--cr-text-muted); font-size: 0.78rem; }
+.cr-roster-pop-rating { width: 34px; text-align: right; color: var(--cr-text-muted); font-size: 0.8rem; }
+.cr-roster-pop-record { width: 48px; text-align: right; font-weight: 700; color: var(--cr-teal-deep); font-variant-numeric: tabular-nums; }
 .cr-dt-pop-note { font-size: 0.72rem; color: var(--cr-text-light); margin-top: 10px; }
 .cr-dt-date { font-weight: 700; color: var(--cr-text-muted); width: 48px; flex-shrink: 0; font-size: 0.85rem; }
 .cr-dt-ha { font-size: 0.66rem; font-weight: 800; border-radius: 5px; padding: 2px 6px; flex-shrink: 0; }
