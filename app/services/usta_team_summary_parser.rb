@@ -127,4 +127,3 @@ class UstaTeamSummaryParser
        .gsub(/\s+/, " ").strip
   end
 end
-
