@@ -164,9 +164,10 @@ small to read precisely; everything else is captured.
 ### USTA Tri-Level (stated by Tara, Oct 8 2026)
 - **Its own USTA league.** Each team plays **three levels**, one **doubles** line per level,
   no singles: AGC Aces = 4.5 / 4.0 / 3.5, Tri Hards = 4.0 / 3.5 / 3.0. Team scores are
-  out of 3 (2-1, 3-0). Players play the line matching their USTA rating.
-- In code: `TennisTeam#tri_level?`, `#tri_levels` (from the flight name), line 1 = highest
-  level (ASSUMED — not yet confirmed by Tara).
+  out of 3 (2-1, 3-0). **A line is a level, not a player limit: players can play UP**
+  (e.g. a 3.5 on the 4.0 line). Never restrict who can be picked for a line by rating.
+- In code: `TennisTeam#tri_level?`, `#tri_levels` (from the flight name). Lines are labelled
+  by level ("4.5 Doubles"), so their internal order (line 1 = highest) doesn't matter to users.
 
 ### Del-Tri (Tenniscores — same platform as Bux-Mont, stricter privacy)
 - **Divisions 1–6 with promotion/relegation, NO postseason.** Points = total games won.
@@ -213,7 +214,7 @@ All squash-merged after green CI. **None viewed in a browser by Claude.**
   placeholder "Rebecca Zimberg". TennisRecord most likely reads TennisLink while logged in.
 
 **Waiting on Tara:** right-side tabs on team pages (desktop only?), add Kiss My Ace Winter (11/2/2026–3/31/2027,
-1S + 3D, Bryn Mawr Racquet Club), confirm Tri-Level line order, TennisRecord playoff import keep/remove.
+1S + 3D, Bryn Mawr Racquet Club), TennisRecord playoff import keep/remove.
 
 ---
 
