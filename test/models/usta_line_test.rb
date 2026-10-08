@@ -56,9 +56,50 @@ class UstaLineTest < ActiveSupport::TestCase
 
   test "summarises every player seen, opponents included" do
     UstaLine.import(@jane_file)
-    by_name = UstaLine.player_summaries.index_by(&:name)
+    by_name = RatingsHistory.player_summaries.index_by(&:name)
     assert_equal [ 1, 1 ], [ by_name["Jane Tester"].wins, by_name["Jane Tester"].losses ]
     assert_equal [ 0, 1 ], [ by_name["Opp One"].wins, by_name["Opp One"].losses ]
     assert_equal [ 1, 0 ], [ by_name["Opp Three"].wins, by_name["Opp Three"].losses ]
+  end
+
+  test "scores entered on Court Report show up without any upload" do
+    line = entered_line
+    entries = RatingsHistory.entries_for("Jane Tester")
+    assert_equal 1, entries.size
+    e = entries.first
+    assert e.won
+    assert_equal "Amy Partner", e.partner
+    assert_equal [ "Opp One", "Opp Two" ], e.opponents
+    assert_equal [ "6-3", "6-4" ], e.set_scores
+    assert_equal "#1 Doubles", e.match_type
+
+    line.update!(result: "loss", set1_score: "3-6", set2_score: "4-6")
+    lost = RatingsHistory.entries_for("Opp One").first
+    assert lost.won
+    assert_equal [ "6-3", "6-4" ], lost.set_scores
+  end
+
+  test "an uploaded copy of the same line replaces the Court Report one" do
+    entered_line
+    UstaLine.import(@jane_file)
+    entries = RatingsHistory.entries_for("Jane Tester")
+    assert_equal 2, entries.size
+    assert_equal [ "1012000002", "1012000001" ], entries.map { |e| e.line.usta_match_id }
+  end
+
+  private
+
+  # Jane + Amy win 6-3, 6-4 on 4/14/2026 at #1 Doubles (position 2, after 1S).
+  def entered_line
+    owner = User.create!(name: "Team Owner", email: "ratings-owner@example.com")
+    team = owner.tennis_teams.create!(name: "Test Aces", league_category: "USTA", league_name: "Adult 40 & Over")
+    match = team.matches.create!(match_date: Time.zone.local(2026, 4, 14, 18), opponent: "Rivals")
+    match.match_lines.create!(line_type: "singles", position: 1)
+    line = match.match_lines.create!(line_type: "doubles", position: 2, result: "win",
+                                     set1_score: "6-3", set2_score: "6-4", opponents: "Opp One / Opp Two")
+    [ "Jane Tester", "Amy Partner" ].each do |nm|
+      line.match_line_players.create!(user: User.create!(name: nm))
+    end
+    line
   end
 end

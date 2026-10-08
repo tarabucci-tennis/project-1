@@ -56,7 +56,7 @@
   <div class="cr-rp-actions">
     <%= link_to "📊 TennisRecord", tennis_record_url(@name), target: "_blank", rel: "noopener", class: "cr-chip-btn" %>
     <% if @user %><%= link_to "👤 Court Report profile", player_path(@user), class: "cr-chip-btn" %><% end %>
-    <%= link_to "⬆️ Upload USTA results", ratings_upload_path, class: "cr-chip-btn" %>
+    <% if can_upload? %><%= link_to "⬆️ Upload TennisLink results", ratings_upload_path, class: "cr-chip-btn" %><% end %>
   </div>
 
   <%# ── Match history ── %>
