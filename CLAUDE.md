@@ -161,6 +161,13 @@ small to read precisely; everything else is captured.
 - **Advancement:** Adult 18+/40+ (Middle States) → Flight → **District → Sectionals →
   Nationals**. **Tri-Level** → Flight → **Sectionals (Hershey), NO district round.**
 
+### USTA Tri-Level (stated by Tara, Oct 8 2026)
+- **Its own USTA league.** Each team plays **three levels**, one **doubles** line per level,
+  no singles: AGC Aces = 4.5 / 4.0 / 3.5, Tri Hards = 4.0 / 3.5 / 3.0. Team scores are
+  out of 3 (2-1, 3-0). Players play the line matching their USTA rating.
+- In code: `TennisTeam#tri_level?`, `#tri_levels` (from the flight name), line 1 = highest
+  level (ASSUMED — not yet confirmed by Tara).
+
 ### Del-Tri (Tenniscores — same platform as Bux-Mont, stricter privacy)
 - **Divisions 1–6 with promotion/relegation, NO postseason.** Points = total games won.
 - Sub eligibility is by rating AND court (Div 3: 4.0 subs only on courts 1–2; Div 4: 4.0
@@ -173,6 +180,40 @@ small to read precisely; everything else is captured.
 - **Line win rate is the honest cross-league number.**
 - Always show **both sides of a count** (`41–63`), never one (`63 games lost`), and show
   sample size next to every percentage. Suppress percentages under 5 lines played.
+
+---
+
+## Current Status (as of Oct 8, 2026 — PRs #173–#182)
+
+All squash-merged after green CI. **None viewed in a browser by Claude.**
+- **#173 / #177** — Court Report rating limited to USTA lines, then HIDDEN (`User::SHOW_COURT_REPORT_RATING = false`):
+  it scored lines at team level, so a 3.0 outranked Tara. Rebuild planned on top of the Ratings data below.
+- **#175 / #176** — Opponent pop-ups on Bux-Mont / Del-Tri: scorecards (`DeltriResults#card_for`) + rosters.
+- **#178** — "⬆️ Upload USTA file" (TennisLink Team Summary): published standings/points/match status + roster
+  NTRP. Nightly `TenniscoresRosterSync` adds Bux-Mont/Del-Tri/Cup roster members (never removes, never writes
+  ratings). Rosters sorted by USTA NTRP. USTA standings now use USTA's published points (#172's formula was wrong:
+  points are weighted per position).
+- **#179** — 📊 TennisRecord link next to every player on USTA scorecards (link only; nothing copied).
+- **#180 / #181** — **/ratings** pages (Ratings button on My Teams): every player's USTA history (partner,
+  opponents, score). Fed AUTOMATICALLY from line scores entered on Court Report for USTA teams
+  (`RatingsHistory`), plus optional captain-only uploads of TennisLink "Individual Result" files (`usta_lines`
+  table, deduped per match ID + line; an uploaded copy replaces the entered one). Court Report rating tile =
+  "Coming soon".
+- **#182** — Tri-Level teams get 3 doubles lines labelled by level; Enter Results builds lines from the team's
+  format (also fixed Del-Tri/Cup getting 1S+4D).
+
+**Decisions (Oct 5–8):**
+- Tara wants players' ratings "legitimate to TennisRecord." Agreed plan: build Court Report's OWN estimate
+  (USTA's published method: per-match rating from all four players' ratings + score, averaged with recent
+  matches), USTA lines only, admin-only first, compared against TennisRecord for a few weeks. Do NOT copy
+  TennisRecord's numbers into the app (Claude advised against; links only).
+- No team uploads every match: uploads are a captain option. Ratings depend on players typing OPPONENT NAMES
+  in Enter Results.
+- TennisLink public pages verified Oct 8: standings → login, scorecards → "Record Not Found", player record →
+  placeholder "Rebecca Zimberg". TennisRecord most likely reads TennisLink while logged in.
+
+**Waiting on Tara:** right-side tabs on team pages (desktop only?), add Kiss My Ace Winter (11/2/2026–3/31/2027,
+1S + 3D, Bryn Mawr Racquet Club), confirm Tri-Level line order, TennisRecord playoff import keep/remove.
 
 ---
 
