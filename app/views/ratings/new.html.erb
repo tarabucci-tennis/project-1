@@ -5,8 +5,12 @@
 
   <section class="cr-rp-card">
     <div class="cr-rp-card-head">
-      <h2 class="cr-rp-card-title">Upload your USTA results</h2>
+      <h2 class="cr-rp-card-title">Upload TennisLink results (optional)</h2>
     </div>
+    <p class="cr-rp-foot">
+      You don't need this for new matches: scores entered on Court Report show on the Ratings page by themselves.
+      Use it to add older matches. Each file holds only the matches of the person who downloads it.
+    </p>
     <ol class="cr-rp-steps">
       <li>Sign in to <strong>TennisLink</strong> and open your <strong>Individual Player Record</strong>.</li>
       <li>Tap <strong>Send To Excel</strong>. Your phone or computer saves a file ending in <strong>.xls</strong>.</li>
@@ -14,7 +18,7 @@
     </ol>
     <p class="cr-rp-foot">
       Every match in the file is saved, with partners, opponents and scores. A match a teammate already
-      uploaded is skipped, so it's safe to upload again after each match. Nothing is ever deleted.
+      uploaded is skipped, so it's safe to upload again. Nothing is ever deleted.
     </p>
 
     <%= form_with url: ratings_upload_path, method: :post, multipart: true, data: { turbo: false } do %>

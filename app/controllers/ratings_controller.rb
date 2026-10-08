@@ -1,24 +1,24 @@
 # The Ratings pages: every player's USTA match history (partners, opponents,
-# scores), built from the TennisLink "Individual Result" files players upload.
-# Any signed-in player can view and upload. Uploads only ever add lines.
+# scores). Fed automatically by scores entered on Court Report; captains can
+# also upload TennisLink "Individual Result" files for older matches.
+# Any signed-in player can view. Uploads only ever add lines.
 class RatingsController < ApplicationController
   MAX_BYTES = 2.megabytes
 
   before_action :require_login
+  before_action :require_uploader, only: [ :new, :create ]
+  helper_method :can_upload?
 
   # GET /ratings — everyone with saved USTA history.
   def index
-    @players = UstaLine.player_summaries
+    @players = RatingsHistory.player_summaries
     @users_by_name = users_by_name(@players.map(&:name))
   end
 
   # GET /ratings/player?name=Jane+Smith — one player's card + history.
   def show
     @name = params[:name].to_s.squish
-    lines = @name.present? ? UstaLine.for_player(@name).order(match_date: :desc, position: :asc).to_a : []
-    return redirect_to(ratings_path, alert: "No USTA history saved for that player yet.") if lines.empty?
-
-    @entries = lines.filter_map { |l| l.entry_for(@name) }
+    @entries = @name.present? ? RatingsHistory.entries_for(@name) : []
     return redirect_to(ratings_path, alert: "No USTA history saved for that player yet.") if @entries.empty?
     # Show the name the way TennisLink prints it.
     @name = @entries.first.line.players.find { |n| n.downcase.squish == @name.downcase } || @name
@@ -57,6 +57,18 @@ class RatingsController < ApplicationController
 
   def require_login
     redirect_to login_path, alert: "Please sign in first." unless current_user
+  end
+
+  # Uploading TennisLink files is a captain's option (plus admins).
+  def can_upload?
+    return false unless current_user
+    current_user.admin? ||
+      TeamMembership.active.leaders.exists?(user: current_user) ||
+      TennisTeam.exists?(user: current_user)
+  end
+
+  def require_uploader
+    redirect_to ratings_path, alert: "Uploading TennisLink files is a captain option." unless can_upload?
   end
 
   # Court Report users whose name matches, keyed by lowercased name — used for
