@@ -163,6 +163,9 @@ class TennisTeam < ApplicationRecord
   # on a lineup, and that lineups/edit.html.erb iterates over to render
   # the form.
   def lineup_slot_plan
+    # USTA Tri-Level: 3 doubles lines, one per level (e.g. 4.5 / 4.0 / 3.5).
+    return (1..3).to_h { |p| [ [ "doubles", p ], 2 ] } if tri_level?
+
     case league_category
     when "Inter-Club", "Local"
       # 6 doubles, no singles
@@ -181,12 +184,33 @@ class TennisTeam < ApplicationRecord
     end
   end
 
+  # USTA Tri-Level: each team plays three levels, one doubles line per level.
+  def tri_level?
+    league_category == "USTA" &&
+      (team_type.to_s.match?(/tri/i) || league_name.to_s.match?(/tri-?level/i) || flight.to_s.match?(/tri level/i))
+  end
+
+  # The three levels, highest first, e.g. ["4.5", "4.0", "3.5"]. Read from the
+  # flight ("Tri Level Womens 4.5-3.5 Wednesday"), else from the team rating.
+  def tri_levels
+    return [] unless tri_level?
+    hi = flight.to_s[/(\d\.\d)\s*-\s*\d\.\d/, 1]&.to_f || rating&.to_f
+    return [] unless hi&.positive?
+    [ hi, hi - 0.5, hi - 1.0 ].map { |r| format("%.1f", r) }
+  end
+
+  # Level of doubles line `n` (1-based) on a Tri-Level team, else nil.
+  # Line 1 is the highest level.
+  def doubles_line_level(n)
+    tri_levels[n.to_i - 1] if n.to_i.positive?
+  end
+
   # Does this team's league include a singles line?
   def has_singles_line?
     lineup_slot_plan.keys.any? { |(line_type, _)| line_type == "singles" }
   end
 
-  # How many doubles lines does this team's league use? (4 or 6)
+  # How many doubles lines does this team's league use? (3, 4 or 6)
   def doubles_line_count
     lineup_slot_plan.keys.count { |(line_type, _)| line_type == "doubles" }
   end

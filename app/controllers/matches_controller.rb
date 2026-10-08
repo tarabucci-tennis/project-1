@@ -64,7 +64,10 @@ class MatchesController < ApplicationController
     @match = @team.matches.find(params[:id])
     @members = @team.members.order(:name)
 
-    # Build empty lines if none exist yet (USTA 40+: 1 singles + 4 doubles)
+    # Build empty lines if none exist yet, in the team's format (USTA 1S+4D,
+    # Tri-Level 3 doubles, Del-Tri / Cup 6 doubles). Lines built earlier in
+    # the wrong format are rebuilt as long as nothing was entered on them.
+    rebuild_unused_lines(@match) if wrong_layout?(@match)
     if @match.match_lines.empty?
       build_default_lines(@match)
     end
@@ -139,13 +142,28 @@ class MatchesController < ApplicationController
 
   private
 
+  # Lines in the team's format. Singles take the first positions, doubles
+  # follow (positions are unique per match).
   def build_default_lines(match)
-    # Default USTA format: 1 singles + 4 doubles
-    MatchLine.create!(match: match, line_type: "singles", position: 1)
-    MatchLine.create!(match: match, line_type: "doubles", position: 2)
-    MatchLine.create!(match: match, line_type: "doubles", position: 3)
-    MatchLine.create!(match: match, line_type: "doubles", position: 4)
-    MatchLine.create!(match: match, line_type: "doubles", position: 5)
+    default_line_types(match).each_with_index do |line_type, i|
+      MatchLine.create!(match: match, line_type: line_type, position: i + 1)
+    end
+  end
+
+  def default_line_types(match)
+    plan = match.tennis_team.lineup_slot_plan.keys
+    plan.select { |(t, _)| t == "singles" }.map(&:first) + plan.select { |(t, _)| t == "doubles" }.map(&:first)
+  end
+
+  def wrong_layout?(match)
+    lines = match.match_lines.order(:position).to_a
+    lines.any? && lines.map(&:line_type) != default_line_types(match)
+  end
+
+  def rebuild_unused_lines(match)
+    # Players alone don't count: they're re-filled from the published lineup.
+    unused = match.match_lines.none? { |l| l.scored? || l.opponents.present? }
+    match.match_lines.destroy_all if unused
   end
 
   # Copy players from the published lineup into match_line_players, so the

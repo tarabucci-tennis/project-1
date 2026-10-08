@@ -59,6 +59,13 @@ class RatingsHistory
     by_key.values.sort_by { |s| [ -s.lines, s.name.downcase ] }
   end
 
+  # Tri-Level lines each have their own level; other USTA teams play one.
+  def self.line_level(team, line_type, number)
+    tri = line_type == "doubles" && team.doubles_line_level(number)
+    return tri if tri
+    team.rating.present? ? format("%.1f", team.rating) : nil
+  end
+
   # Scored lines on USTA teams, with at least one of our players named.
   def self.app_lines
     rows = MatchLine.joins(match: :tennis_team)
@@ -81,7 +88,7 @@ class RatingsHistory
       AppLine.new(
         match_date: ml.match.match_date.to_date,
         league: [ team.league_name.presence || "USTA", team.name ].join(" · "),
-        level: team.rating.present? ? format("%.1f", team.rating) : nil,
+        level: line_level(team, ml.line_type, number),
         match_type: "##{number} #{ml.line_type.capitalize}",
         line_type: ml.line_type,
         winners: won ? ours : ml.opponent_names,

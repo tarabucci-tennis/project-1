@@ -56,14 +56,23 @@ class MatchLine < ApplicationRecord
   def line_label
     if line_type == "singles"
       "Singles #{display_position}"
+    elsif (level = tri_level)
+      "#{level} Doubles"
     else
       "Doubles #{display_position}"
     end
   end
 
   # "1S" / "1D" / "2D" — matches the lineup preview style on team pages.
+  # Tri-Level lines read as their level ("4.5").
   def short_label
-    "#{display_position}#{line_type == 'singles' ? 'S' : 'D'}"
+    tri_level || "#{display_position}#{line_type == 'singles' ? 'S' : 'D'}"
+  end
+
+  # On a Tri-Level team, this doubles line's level ("4.5"); otherwise nil.
+  def tri_level
+    return nil unless line_type == "doubles"
+    match&.tennis_team&.doubles_line_level(display_position)
   end
 
   private
