@@ -1,0 +1,103 @@
+<% content_for :title, "#{@name} · Ratings · Court Report" %>
+<%
+  singles = @entries.select { |e| e.line.line_type == "singles" }
+  doubles = @entries - singles
+  total   = @entries.size
+  latest  = @entries.first.line
+%>
+
+<div class="cr-rp-page">
+  <%= link_to "← All players", ratings_path, class: "cr-back-link" %>
+
+  <%# ── Player header ── %>
+  <section class="cr-rp-hero">
+    <div class="cr-rp-hero-main">
+      <div class="cr-rp-eyebrow">USTA Player Ratings</div>
+      <h1 class="cr-rp-name"><%= @name %></h1>
+      <div class="cr-rp-sub">
+        <%= [ latest.section.to_s.sub(%r{\AUSTA/}i, ""), latest.district ].compact_blank.map(&:titleize).join(" · ").presence || "USTA" %>
+      </div>
+    </div>
+    <div class="cr-rp-hero-level">
+      <div class="cr-rp-level-val"><%= @user&.ntrp_rating.present? ? format("%.1f", @user.ntrp_rating) : "—" %></div>
+      <div class="cr-rp-level-cap">USTA level</div>
+    </div>
+  </section>
+
+  <%# ── At-a-glance tiles ── %>
+  <section class="cr-rp-tiles">
+    <div class="cr-rp-tile">
+      <div class="cr-rp-tile-label">Record</div>
+      <div class="cr-rp-tile-val"><%= @wins %>–<%= @losses %></div>
+      <div class="cr-rp-tile-cap"><%= total %> <%= "line".pluralize(total) %> played</div>
+    </div>
+    <div class="cr-rp-tile">
+      <div class="cr-rp-tile-label">Line win %</div>
+      <%# Percentages hide under 5 lines (too few to mean anything). %>
+      <div class="cr-rp-tile-val"><%= total >= 5 ? "#{(100.0 * @wins / total).round}%" : "—" %></div>
+      <div class="cr-rp-tile-cap"><%= total >= 5 ? "of #{total} lines" : "needs 5+ lines" %></div>
+    </div>
+    <div class="cr-rp-tile">
+      <div class="cr-rp-tile-label">Singles · Doubles</div>
+      <div class="cr-rp-tile-val cr-rp-tile-val-sm">
+        <%= singles.count(&:won) %>–<%= singles.count { |e| !e.won } %>
+        <span class="cr-rp-dot">·</span>
+        <%= doubles.count(&:won) %>–<%= doubles.count { |e| !e.won } %>
+      </div>
+      <div class="cr-rp-tile-cap">wins–losses</div>
+    </div>
+    <div class="cr-rp-tile cr-rp-tile-gold">
+      <div class="cr-rp-tile-label">Court Report rating</div>
+      <div class="cr-rp-tile-val cr-rp-tile-val-sm">Coming soon</div>
+      <div class="cr-rp-tile-cap">being built from these matches</div>
+    </div>
+  </section>
+
+  <div class="cr-rp-actions">
+    <%= link_to "📊 TennisRecord", tennis_record_url(@name), target: "_blank", rel: "noopener", class: "cr-chip-btn" %>
+    <% if @user %><%= link_to "👤 Court Report profile", player_path(@user), class: "cr-chip-btn" %><% end %>
+    <%= link_to "⬆️ Upload USTA results", ratings_upload_path, class: "cr-chip-btn" %>
+  </div>
+
+  <%# ── Match history ── %>
+  <section class="cr-rp-card">
+    <div class="cr-rp-card-head">
+      <h2 class="cr-rp-card-title">Match History</h2>
+      <span class="cr-rp-card-note">USTA regular season · newest first</span>
+    </div>
+    <div class="cr-rp-scroll">
+      <table class="cr-rp-tbl">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>League</th>
+            <th>Line</th>
+            <th>Partner</th>
+            <th>Opponent(s)</th>
+            <th class="cr-rp-c">W/L</th>
+            <th>Score</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @entries.each do |e| %>
+            <tr>
+              <td class="cr-rp-nowrap"><%= e.match_date&.strftime("%-m/%-d/%y") %></td>
+              <td class="cr-rp-league">
+                <%= e.league %><% if e.level.present? %> <span class="cr-rp-level-chip"><%= e.level %></span><% end %>
+              </td>
+              <td class="cr-rp-nowrap"><%= e.match_type.to_s.sub(/\A#(\d+)\s+(S|D)\w*/i) { "#{Regexp.last_match(1)}#{Regexp.last_match(2).upcase}" } %></td>
+              <td><%= e.partner.present? ? link_to(e.partner, ratings_player_path(name: e.partner), class: "cr-rp-plink") : "—" %></td>
+              <td>
+                <% e.opponents.each_with_index do |o, i| %>
+                  <%= link_to o, ratings_player_path(name: o), class: "cr-rp-plink" %><%= " / " unless i == e.opponents.size - 1 %>
+                <% end %>
+              </td>
+              <td class="cr-rp-c"><span class="cr-rp-wl <%= e.won ? 'cr-rp-wl-w' : 'cr-rp-wl-l' %>"><%= e.won ? "W" : "L" %></span></td>
+              <td class="cr-rp-nowrap cr-rp-score"><%= e.set_scores.join(", ") %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </section>
+</div>

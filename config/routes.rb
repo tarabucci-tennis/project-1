@@ -24,6 +24,12 @@ Rails.application.routes.draw do
   get "admin/usta_import", to: "admin#usta_import", as: :admin_usta_import
   post "admin/usta_import", to: "admin#usta_import"
 
+  # Ratings: USTA match history from players' TennisLink "Individual Result" files
+  get  "ratings", to: "ratings#index", as: :ratings
+  get  "ratings/player", to: "ratings#show", as: :ratings_player
+  get  "ratings/upload", to: "ratings#new", as: :ratings_upload
+  post "ratings/upload", to: "ratings#create"
+
   # Pull results from the public Google Sheet
   post "admin/sync_scores", to: "admin#sync_scores", as: :admin_sync_scores
 

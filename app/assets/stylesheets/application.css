@@ -5171,3 +5171,72 @@ body.cr-ctx-lineups-edit .cr-field > span { color: var(--cr-text); }
 .cr-menu-ico { font-size: 0.95rem; width: 18px; text-align: center; }
 .cr-menu-divider { height: 1px; background: var(--cr-border); margin: 5px 4px; }
 @media (max-width: 640px) { .cr-menu-panel { right: 0; left: auto; } }
+
+/* ============================================================
+   Player Ratings (/ratings) — navy hero, stat tiles, history table.
+   ============================================================ */
+body.cr-ctx-ratings-index, body.cr-ctx-ratings-show, body.cr-ctx-ratings-new { background: var(--cr-navy-page); }
+.cr-rp-page { max-width: 1040px; margin: 0 auto; padding: 16px 16px 96px; }
+.cr-rp-hero {
+  display: flex; justify-content: space-between; align-items: center; gap: 16px;
+  background: linear-gradient(135deg, var(--cr-header-bg) 0%, var(--cr-black-soft) 100%);
+  color: #fff; border-radius: 16px; padding: 22px 24px; margin: 10px 0 14px;
+  border-bottom: 3px solid var(--cr-gold);
+}
+.cr-rp-hero-main { min-width: 0; }
+.cr-rp-eyebrow { font-size: 0.7rem; font-weight: 700; letter-spacing: 1.6px; text-transform: uppercase; color: var(--cr-gold); }
+.cr-rp-name { font-family: "Bebas Neue", Inter, sans-serif; font-size: 2.4rem; letter-spacing: 1.5px; line-height: 1.05; margin: 4px 0 2px; color: #fff; overflow-wrap: anywhere; }
+.cr-rp-sub { font-size: 0.88rem; color: rgba(255, 255, 255, 0.72); }
+.cr-rp-hero-level {
+  flex-shrink: 0; text-align: center; min-width: 92px; padding: 10px 14px;
+  border: 2px solid var(--cr-gold); border-radius: 14px; background: rgba(244, 180, 49, 0.08);
+}
+.cr-rp-level-val { font-size: 2rem; font-weight: 800; color: var(--cr-gold); line-height: 1; font-variant-numeric: tabular-nums; }
+.cr-rp-level-cap { font-size: 0.66rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: rgba(255, 255, 255, 0.75); margin-top: 4px; }
+
+.cr-rp-tiles { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; margin-bottom: 12px; }
+.cr-rp-tile { background: var(--cr-white); border: 1px solid var(--cr-border); border-radius: 12px; padding: 14px; min-width: 0; }
+.cr-rp-tile-gold { border-color: rgba(244, 180, 49, 0.55); background: #fffaf0; }
+.cr-rp-tile-label { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase; color: var(--cr-text-light); }
+.cr-rp-tile-val { font-size: 1.6rem; font-weight: 800; color: var(--cr-text); margin-top: 4px; font-variant-numeric: tabular-nums; line-height: 1.1; }
+.cr-rp-tile-val-sm { font-size: 1.15rem; }
+.cr-rp-tile-cap { font-size: 0.74rem; color: var(--cr-text-muted); margin-top: 3px; }
+.cr-rp-dot { color: var(--cr-text-light); margin: 0 4px; }
+
+.cr-rp-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
+
+.cr-rp-card { background: var(--cr-white); border: 1px solid var(--cr-border); border-radius: 14px; overflow: hidden; }
+.cr-rp-card-head { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; padding: 14px 18px; border-bottom: 1px solid var(--cr-border); }
+.cr-rp-card-title { font-size: 1.05rem; font-weight: 800; color: var(--cr-text); margin: 0; }
+.cr-rp-card-note { font-size: 0.78rem; color: var(--cr-text-light); }
+.cr-rp-filter { padding: 7px 12px; border: 1px solid var(--cr-border); border-radius: 999px; font-size: 0.85rem; min-width: 0; width: 220px; max-width: 100%; }
+.cr-rp-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.cr-rp-tbl { width: 100%; border-collapse: collapse; font-size: 0.86rem; }
+.cr-rp-tbl th { text-align: left; font-size: 0.68rem; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase; color: var(--cr-text-light); background: var(--cr-bg); padding: 10px 12px; white-space: nowrap; }
+.cr-rp-tbl td { padding: 11px 12px; border-top: 1px solid var(--cr-border); color: var(--cr-text); vertical-align: top; }
+.cr-rp-tbl tbody tr:hover td { background: #f8fafd; }
+.cr-rp-c { text-align: center !important; }
+.cr-rp-nowrap { white-space: nowrap; }
+.cr-rp-score { font-variant-numeric: tabular-nums; font-weight: 600; }
+.cr-rp-league { min-width: 160px; color: var(--cr-text-muted); }
+.cr-rp-level-chip { display: inline-block; font-size: 0.7rem; font-weight: 700; color: var(--cr-text); background: var(--cr-bg); border-radius: 6px; padding: 1px 6px; margin-left: 2px; }
+.cr-rp-plink { color: var(--cr-teal-deep); font-weight: 600; text-decoration: none; }
+.cr-rp-plink:hover { text-decoration: underline; }
+.cr-rp-plink-strong { font-weight: 700; }
+.cr-rp-wl { display: inline-block; min-width: 24px; padding: 2px 0; border-radius: 6px; font-size: 0.75rem; font-weight: 800; color: #fff; }
+.cr-rp-wl-w { background: var(--cr-green); }
+.cr-rp-wl-l { background: var(--cr-red); }
+.cr-rp-foot { font-size: 0.78rem; color: var(--cr-text-muted); padding: 12px 18px; margin: 0; line-height: 1.5; }
+.cr-rp-empty { padding: 32px 20px; text-align: center; color: var(--cr-text-muted); line-height: 1.6; }
+.cr-rp-steps { margin: 14px 18px 4px 36px; color: var(--cr-text); font-size: 0.92rem; line-height: 1.7; }
+.cr-rp-upload { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; padding: 6px 18px 20px; }
+.cr-rp-upload input[type="file"] { flex: 1 1 220px; min-width: 0; }
+
+@media (max-width: 720px) {
+  .cr-rp-hero { padding: 18px 16px; }
+  .cr-rp-name { font-size: 1.9rem; }
+  .cr-rp-tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .cr-rp-tbl { font-size: 0.8rem; }
+  .cr-rp-tbl td, .cr-rp-tbl th { padding: 9px 8px; }
+  .cr-rp-filter { width: 100%; }
+}
