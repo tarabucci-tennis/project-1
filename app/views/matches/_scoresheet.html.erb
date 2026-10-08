@@ -3,13 +3,16 @@
     W / L badge. Our players link to their profiles.
     Locals: match (a Match), team (its TennisTeam). %>
 <% lines = match.match_lines.sort_by(&:position).select(&:scored?) %>
+<%# TennisRecord only covers USTA, so the 📊 rating links show on USTA teams only. %>
+<% tr_links = team.league_group == "USTA" %>
 <% if lines.any? %>
   <div class="cr-sheet">
     <% lines.each do |line| %>
       <% our_row = { names: line.our_player_names, ids: line.match_line_players.map { |mlp| mlp.user_id },
                      games: line.our_games, won: line.won?, ours: true } %>
       <% opp_names = line.opponent_names.any? ? line.opponent_names : [ match.opponent ].compact %>
-      <% opp_row = { names: opp_names, ids: [], games: line.their_games, won: line.lost?, ours: false } %>
+      <% opp_row = { names: opp_names, ids: [], games: line.their_games, won: line.lost?, ours: false,
+                     real: line.opponent_names.any? } %>
       <% rows = line.won? ? [ our_row, opp_row ] : [ opp_row, our_row ] %>
       <div class="cr-sheet-line">
         <div class="cr-sheet-line-head">
@@ -28,7 +31,7 @@
                     <%= link_to nm, player_path(pid), class: "cr-sheet-playerlink" %>
                   <% else %>
                     <%= nm %>
-                  <% end %><%= " / " unless i == row[:names].size - 1 %>
+                  <% end %><% if tr_links && (row[:ours] || row[:real]) %><%= link_to "📊", tennis_record_url(nm), target: "_blank", rel: "noopener", class: "cr-sheet-tr-link", title: "#{nm}'s rating on TennisRecord", "aria-label": "#{nm}'s rating on TennisRecord" %><% end %><%= " / " unless i == row[:names].size - 1 %>
                 <% end %>
               <% else %>
                 <span style="color: var(--cr-text-light);"><%= row[:ours] ? "Our line" : "Opponent" %></span>

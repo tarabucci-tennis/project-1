@@ -2044,6 +2044,14 @@ button.cr-header-pill {
   text-decoration: none;
 }
 .cr-sheet-playerlink:hover { text-decoration: underline; }
+/* 📊 next to a name on USTA scorecards: opens that player's TennisRecord rating. */
+.cr-sheet-tr-link {
+  margin-left: 3px;
+  font-size: 0.8em;
+  text-decoration: none;
+  opacity: 0.75;
+}
+.cr-sheet-tr-link:hover { opacity: 1; }
 
 .cr-sheet-sets {
   display: flex;
