@@ -1,0 +1,57 @@
+<% content_for :title, "Player Ratings · Court Report" %>
+
+<div class="cr-rp-page">
+  <section class="cr-rp-hero">
+    <div class="cr-rp-hero-main">
+      <div class="cr-rp-eyebrow">Court Report</div>
+      <h1 class="cr-rp-name">Player Ratings</h1>
+      <div class="cr-rp-sub">USTA match history for every player we've seen: teammates, partners and opponents.</div>
+    </div>
+  </section>
+
+  <div class="cr-rp-actions">
+    <%= link_to "⬆️ Upload your USTA results", ratings_upload_path, class: "cr-chip-btn" %>
+  </div>
+
+  <% if @players.any? %>
+    <section class="cr-rp-card">
+      <div class="cr-rp-card-head">
+        <h2 class="cr-rp-card-title">Players (<%= @players.size %>)</h2>
+        <input type="search" class="cr-rp-filter" placeholder="Find a player…" aria-label="Find a player"
+               oninput="var q=this.value.toLowerCase();document.querySelectorAll('[data-rp-name]').forEach(function(r){r.style.display=r.dataset.rpName.indexOf(q)>-1?'':'none'})">
+      </div>
+      <div class="cr-rp-scroll">
+        <table class="cr-rp-tbl">
+          <thead>
+            <tr>
+              <th>Player</th>
+              <th class="cr-rp-c">USTA level</th>
+              <th class="cr-rp-c">Record</th>
+              <th class="cr-rp-c">Win %</th>
+              <th>Last played</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @players.each do |p| %>
+              <% user = @users_by_name[p.name.downcase.squish] %>
+              <tr data-rp-name="<%= p.name.downcase %>">
+                <td><%= link_to p.name, ratings_player_path(name: p.name), class: "cr-rp-plink cr-rp-plink-strong" %></td>
+                <td class="cr-rp-c"><%= user&.ntrp_rating.present? ? format("%.1f", user.ntrp_rating) : "—" %></td>
+                <td class="cr-rp-c cr-rp-nowrap"><%= p.wins %>–<%= p.losses %></td>
+                <td class="cr-rp-c"><%= p.lines >= 5 ? "#{(100.0 * p.wins / p.lines).round}%" : "—" %></td>
+                <td class="cr-rp-nowrap"><%= p.last_date&.strftime("%-m/%-d/%y") %></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+      <p class="cr-rp-foot">Win % shows once a player has 5+ lines. USTA level comes from Court Report rosters.</p>
+    </section>
+  <% else %>
+    <section class="cr-rp-card cr-rp-empty">
+      <div style="font-size: 2rem;">🎾</div>
+      <p><strong>No USTA history yet.</strong></p>
+      <p>Upload your TennisLink results file and every match, partner and opponent in it shows up here.</p>
+    </section>
+  <% end %>
+</div>

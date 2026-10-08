@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_05_000000) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_08_000000) do
   create_table "availabilities", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.integer "match_id", null: false
@@ -230,6 +230,29 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_05_000000) do
     t.index ["user_id"], name: "index_tennis_teams_on_user_id"
   end
 
+  create_table "usta_lines", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "district"
+    t.string "league"
+    t.string "level"
+    t.string "line_type"
+    t.string "loser_1"
+    t.string "loser_2"
+    t.date "match_date"
+    t.string "match_type", null: false
+    t.integer "position"
+    t.string "score"
+    t.string "section"
+    t.datetime "updated_at", null: false
+    t.integer "uploaded_by_id"
+    t.string "usta_match_id", null: false
+    t.string "winner_1"
+    t.string "winner_2"
+    t.index ["match_date"], name: "index_usta_lines_on_match_date"
+    t.index ["uploaded_by_id"], name: "index_usta_lines_on_uploaded_by_id"
+    t.index ["usta_match_id", "match_type"], name: "index_usta_lines_on_usta_match_id_and_match_type", unique: true
+  end
+
   create_table "users", force: :cascade do |t|
     t.boolean "admin", default: false, null: false
     t.decimal "court_report_rating", precision: 4, scale: 2
@@ -273,4 +296,5 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_05_000000) do
   add_foreign_key "team_memberships", "users"
   add_foreign_key "tennis_stats", "users"
   add_foreign_key "tennis_teams", "users"
+  add_foreign_key "usta_lines", "users", column: "uploaded_by_id", on_delete: :nullify
 end
