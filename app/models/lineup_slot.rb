@@ -12,6 +12,8 @@ class LineupSlot < ApplicationRecord
   def line_label
     if line_type == "singles"
       "#{position}S"
+    elsif (level = lineup&.match&.tennis_team&.doubles_line_level(position))
+      "#{level} line"
     else
       "#{position}D"
     end

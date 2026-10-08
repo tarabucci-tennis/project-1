@@ -37,7 +37,8 @@
       <%# Iterate over the team's lineup_slot_plan so USTA teams get
           1S + 4×2D while Inter-Club and Del-Tri teams get 6×2D. %>
       <% @team.lineup_slot_plan.each do |(line_type, position), _slot_count| %>
-        <% line_label = line_type == "singles" ? "#{position}S — Singles" : "#{position}D — Doubles #{position}" %>
+        <% tri = line_type == "doubles" && @team.doubles_line_level(position) %>
+        <% line_label = line_type == "singles" ? "#{position}S — Singles" : (tri ? "#{tri} — Doubles" : "#{position}D — Doubles #{position}") %>
         <div class="cr-lineup-line-card">
           <div class="cr-lineup-line-label"><%= line_label %></div>
           <% slots_for_line = @slots.select { |s| s.line_type == line_type && s.position == position } %>
