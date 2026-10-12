@@ -101,7 +101,7 @@
   </div>
 
   <%# ── Sub-tabs ─────────────────────────────────────── %>
-  <div data-controller="team-tabs" class="cr-team-tabs-layout">
+  <div data-controller="team-tabs">
     <div class="cr-subtabs">
       <button class="cr-subtab cr-subtab-active" data-team-tabs-target="tab" data-action="click->team-tabs#switch">📅 Schedule</button>
       <button class="cr-subtab" data-team-tabs-target="tab" data-action="click->team-tabs#switch">✋ Availability</button>
@@ -131,7 +131,7 @@
 
       <div data-controller="seg">
         <div class="cr-seg">
-          <button class="cr-seg-btn cr-seg-btn-active" data-seg-target="tab" data-action="click->seg#switch">📅 Schedule</button>
+          <button class="cr-seg-btn cr-seg-btn-active" data-seg-target="tab" data-action="click->seg#switch">⏭️ Upcoming</button>
           <button class="cr-seg-btn" data-seg-target="tab" data-action="click->seg#switch">🏆 Results</button>
           <% @playoff_stages.each do |stage| %>
             <button class="cr-seg-btn" data-seg-target="tab" data-action="click->seg#switch">🏆 <%= stage %></button>
