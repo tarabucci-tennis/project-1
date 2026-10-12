@@ -5168,6 +5168,7 @@ body.cr-ctx-lineups-edit .cr-field > span { color: var(--cr-text); }
 }
 .cr-menu-item:hover { background: var(--cr-teal-tint); color: var(--cr-teal-deep); }
 .cr-menu-item-btn { font-weight: 600; }
+.cr-menu-note { padding: 2px 14px 8px 40px; font-size: 0.72rem; color: var(--cr-text-light); line-height: 1.35; }
 .cr-menu-ico { font-size: 0.95rem; width: 18px; text-align: center; }
 .cr-menu-divider { height: 1px; background: var(--cr-border); margin: 5px 4px; }
 @media (max-width: 640px) { .cr-menu-panel { right: 0; left: auto; } }

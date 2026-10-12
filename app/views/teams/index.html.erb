@@ -27,9 +27,20 @@
           <% if current_user.admin? %>
             <div class="cr-menu-divider"></div>
             <%= button_to admin_sync_scores_path, method: :post,
-                  form: { style: "margin:0;", data: { turbo_confirm: "Pull the latest results from your Google Sheet?" } },
+                  form: { style: "margin:0;", data: { turbo_confirm: "Update every league now? It runs in the background and takes a few minutes." } },
                   class: "cr-menu-item cr-menu-item-btn", role: "menuitem" do %>
               <span class="cr-menu-ico">🔄</span> Sync scores
+            <% end %>
+            <% if (sync = NightlySyncJob.status) %>
+              <% failed = Array(sync[:steps]).reject { |st| st[:ok] } %>
+              <div class="cr-menu-note">
+                <% if sync[:state] == "running" %>
+                  Sync running (started <%= sync[:started_at]&.to_time&.in_time_zone("Eastern Time (US & Canada)")&.strftime("%-l:%M %p") %>)
+                <% else %>
+                  Last sync <%= sync[:finished_at]&.to_time&.in_time_zone("Eastern Time (US & Canada)")&.strftime("%b %-d, %-l:%M %p") %>
+                  · <%= failed.any? ? "failed: #{failed.map { |st| st[:label] }.join(', ')}" : "all OK" %>
+                <% end %>
+              </div>
             <% end %>
             <%= link_to admin_usta_import_path, class: "cr-menu-item", role: "menuitem" do %>
               <span class="cr-menu-ico">🎾</span> Import USTA results
