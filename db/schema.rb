@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_08_000000) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_12_000000) do
   create_table "availabilities", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.integer "match_id", null: false
@@ -204,6 +204,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_08_000000) do
     t.string "join_code"
     t.string "league_category", default: "USTA", null: false
     t.string "league_name"
+    t.string "line_format"
     t.string "name"
     t.string "playoff_level"
     t.decimal "rating"

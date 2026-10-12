@@ -24,6 +24,9 @@
           <%= link_to find_team_path, class: "cr-menu-item", role: "menuitem" do %>
             <span class="cr-menu-ico">🔗</span> Join a team
           <% end %>
+          <%= link_to new_usta_team_path, class: "cr-menu-item", role: "menuitem" do %>
+            <span class="cr-menu-ico">📄</span> Add a USTA team (TennisLink file)
+          <% end %>
           <% if current_user.admin? %>
             <div class="cr-menu-divider"></div>
             <%= button_to admin_sync_scores_path, method: :post,
