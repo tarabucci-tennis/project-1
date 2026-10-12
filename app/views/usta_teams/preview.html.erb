@@ -1,0 +1,35 @@
+<% content_for :title, "Add a USTA team · Court Report" %>
+
+<div class="cr-rp-page">
+  <%= link_to "← Choose a different file", new_usta_team_path, class: "cr-back-link" %>
+
+  <section class="cr-rp-card">
+    <div class="cr-rp-card-head">
+      <h2 class="cr-rp-card-title"><%= @parsed.league %></h2>
+      <span class="cr-rp-card-note"><%= @parsed.flight %></span>
+    </div>
+    <div class="cr-rp-facts">
+      <div><span>Season</span><%= [ @parsed.season_start, @parsed.season_end ].compact.map { |d| d.strftime("%b %-d, %Y") }.join(" – ").presence || "—" %></div>
+      <div><span>Format</span><%= @parsed.format.presence || "—" %></div>
+      <div><span>Home club</span><%= @parsed.facility.presence || "—" %></div>
+      <div><span>Captain</span><%= [ @parsed.captain, (@parsed.co_captain && "#{@parsed.co_captain} (co)") ].compact.join(", ").presence || "—" %></div>
+      <div><span>Roster</span><%= @parsed.players.size %> players</div>
+      <div><span>Matches</span><%= @parsed.matches.any? ? @parsed.matches.size : "none posted yet" %></div>
+    </div>
+
+    <%= form_with url: usta_teams_path, method: :post, data: { turbo: false } do %>
+      <input type="hidden" name="token" value="<%= @token %>">
+      <div class="cr-rp-pick">
+        <label for="team_name"><strong>Which team is yours?</strong></label>
+        <select id="team_name" name="team_name" required>
+          <option value="">Choose your team…</option>
+          <% @parsed.standings.each do |s| %>
+            <option value="<%= s.name %>" <%= "selected" if s.name == @suggested %>><%= s.name %></option>
+          <% end %>
+        </select>
+        <button type="submit" class="cr-btn cr-btn-gold">Add team</button>
+      </div>
+    <% end %>
+    <p class="cr-rp-foot">The other <%= @parsed.standings.size - 1 %> teams are saved as your flight's standings.</p>
+  </section>
+</div>

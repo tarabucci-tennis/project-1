@@ -163,6 +163,14 @@ class TennisTeam < ApplicationRecord
   # on a lineup, and that lineups/edit.html.erb iterates over to render
   # the form.
   def lineup_slot_plan
+    # A published format ("1S, 3D") wins over the league default.
+    if (fmt = parsed_line_format)
+      plan = {}
+      (1..fmt[:singles]).each { |p| plan[[ "singles", p ]] = 1 }
+      (1..fmt[:doubles]).each { |p| plan[[ "doubles", p ]] = 2 }
+      return plan
+    end
+
     # USTA Tri-Level: 3 doubles lines, one per level (e.g. 4.5 / 4.0 / 3.5).
     return (1..3).to_h { |p| [ [ "doubles", p ], 2 ] } if tri_level?
 
@@ -182,6 +190,13 @@ class TennisTeam < ApplicationRecord
         [ "doubles", 4 ] => 2
       }
     end
+  end
+
+  # "1S, 3D" -> { singles: 1, doubles: 3 }; nil when unset or unreadable.
+  def parsed_line_format
+    s = line_format.to_s[/(\d+)\s*S/i, 1].to_i
+    d = line_format.to_s[/(\d+)\s*D/i, 1].to_i
+    (s + d).positive? ? { singles: s, doubles: d } : nil
   end
 
   # USTA Tri-Level: each team plays three levels, one doubles line per level.

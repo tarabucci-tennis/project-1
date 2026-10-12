@@ -24,6 +24,11 @@ Rails.application.routes.draw do
   get "admin/usta_import", to: "admin#usta_import", as: :admin_usta_import
   post "admin/usta_import", to: "admin#usta_import"
 
+  # Add a whole USTA team from its TennisLink Team Summary file
+  get  "usta-teams/new", to: "usta_teams#new", as: :new_usta_team
+  post "usta-teams/preview", to: "usta_teams#preview", as: :preview_usta_teams
+  post "usta-teams", to: "usta_teams#create", as: :usta_teams
+
   # Ratings: USTA match history from players' TennisLink "Individual Result" files
   get  "ratings", to: "ratings#index", as: :ratings
   get  "ratings/player", to: "ratings#show", as: :ratings_player

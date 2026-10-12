@@ -31,7 +31,8 @@ class UstaTeamSummaryParser
     end
   end
   Player = Struct.new(:name, :ntrp, keyword_init: true)
-  Result = Struct.new(:league, :flight, :season_start, :season_end, :format,
+  Result = Struct.new(:section, :district, :league, :flight, :season_start, :season_end, :format,
+                      :captain, :co_captain, :facility, :facility_address,
                       :standings, :matches, :players, keyword_init: true) do
     def summary_file?
       standings.any? || players.any?
@@ -50,8 +51,16 @@ class UstaTeamSummaryParser
 
   def parse
     info = row_after([ "Section", "District/Area", "League" ]) || []
+    staff = row_after([ "Captain", "Co-Captain", "Facility" ]) || []
+    facility, facility_address = split_facility(staff[2])
     dates = @rows.flatten.join(" ").scan(%r{\d{2}/\d{2}/\d{4}})
     Result.new(
+      section:      info[0],
+      district:     info[1],
+      captain:      person_name(staff[0]),
+      co_captain:   person_name(staff[1]),
+      facility:     facility,
+      facility_address: facility_address,
       league:       info[2],
       flight:       info[3],
       season_start: parse_date(dates[0]),
@@ -108,6 +117,19 @@ class UstaTeamSummaryParser
         Player.new(name: name, ntrp: (ntrp.to_s =~ /\A\d(\.\d)?\z/ ? ntrp.to_f : nil))
       end
     end
+  end
+
+  # "Jaclyn Groenen 610-555-0100 jane@x.com" -> "Jaclyn Groenen". Phone
+  # numbers and emails in the file are deliberately dropped.
+  def person_name(cell)
+    cell.to_s.split.reject { |w| w.include?("@") || w.match?(/\d/) }.join(" ").presence
+  end
+
+  # "Bryn Mawr Racquet Club4 N WARNER AVE BRYN MAWR PA 19010" — the club name
+  # and street run together in the export; split at the first digit.
+  def split_facility(cell)
+    m = cell.to_s.match(/\A(\D+?)\s*(\d.*)\z/)
+    m ? [ m[1].strip, m[2].strip ] : [ cell.to_s.strip.presence, nil ]
   end
 
   def row_after(header_prefix)
