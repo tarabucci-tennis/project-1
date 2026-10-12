@@ -213,6 +213,14 @@ All squash-merged after green CI. **None viewed in a browser by Claude.**
 - TennisLink public pages verified Oct 8: standings → login, scorecards → "Record Not Found", player record →
   placeholder "Rebecca Zimberg". TennisRecord most likely reads TennisLink while logged in.
 
+**League sync schedule (verified on the droplet Oct 12):** a root crontab line runs
+`docker exec project-1 bin/rails scores:sync` **every hour** (log: `/var/log/cr-sync.log`). That is the
+ONLY schedule. `config/recurring.yml` / Solid Queue is NOT running in production (`SOLID_QUEUE_IN_PUMA` is
+unset, no `db/queue_schema.rb`). Since #186 the rake task runs `NightlySyncJob` (isolated steps + status shown
+under "Sync scores" in the admin menu). Since #185 the Sync scores button queues that job in the background
+(it used to run in the request and time out). Lesson: check `crontab -l` on the droplet before claiming a
+schedule does or doesn't run.
+
 **Waiting on Tara:** right-side tabs on team pages (desktop only?), add Kiss My Ace Winter (11/2/2026–3/31/2027,
 1S + 3D, Bryn Mawr Racquet Club), TennisRecord playoff import keep/remove.
 

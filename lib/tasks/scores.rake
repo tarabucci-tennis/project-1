@@ -1,41 +1,20 @@
-# Refreshes everything Court Report pulls from public sources:
-#   * match results + posted lineups, from Tara's Google Sheet
-#   * opponent league standings, from the public tenniscores sites
-#   * fixture lists, for teams opted in via schedule_sync (Bux-Mont)
-#
-# Designed to be run on a schedule (hourly cron) so the site stays current
-# with no button-clicking:
+# Refreshes everything Court Report pulls from public sources (Google Sheet,
+# tenniscores standings / schedules / rosters / results, player history,
+# TennisRecord postseason, ratings). Runs on the droplet every hour:
 #
 #   0 * * * * docker exec project-1 bin/rails scores:sync >> /var/log/cr-sync.log 2>&1
 #
-# Both steps are idempotent and safe to re-run.
+# It runs the same NightlySyncJob as the admin "Sync scores" button, so each
+# step is isolated (one league failing doesn't stop the rest) and the admin
+# menu's "Last sync" line reflects these hourly runs too.
 namespace :scores do
-  desc "Pull latest scores (Google Sheet) and standings (Del-Tri) from public sources"
+  desc "Pull the latest scores, standings, rosters and results from every league"
   task sync: :environment do
+    NightlySyncJob.perform_now
+    status = NightlySyncJob.status || {}
     stamp = Time.current.strftime("%Y-%m-%d %H:%M:%S")
-
-    sheet = SheetScoreSync.new.call
-    puts "[#{stamp}] Scores — #{sheet}"
-
-    standings = DeltriStandings.new.call
-    puts "[#{stamp}] Standings — #{standings}"
-
-    schedules = TenniscoresSchedule.sync_all
-    puts "[#{stamp}] Schedules — #{schedules}"
-
-    rosters = TenniscoresRosterSync.new.call
-    puts "[#{stamp}] Rosters — #{rosters}"
-
-    deltri = DeltriResults.new.call
-    puts "[#{stamp}] Del-Tri results — #{deltri}"
-
-    players = DeltriPlayerImport.sync_all
-    puts "[#{stamp}] Del-Tri player history — #{players}"
-
-    playoffs = TennisrecordPlayoffs.new.call
-    puts "[#{stamp}] Postseason (TennisRecord) — #{playoffs}"
-
-    RatingCalculator.recompute!
-    puts "[#{stamp}] Court Report ratings recomputed"
+    Array(status[:steps]).each do |st|
+      puts "[#{stamp}] #{st[:label]} — #{st[:ok] ? 'ok' : "FAILED: #{st[:error]}"}"
+    end
   end
 end

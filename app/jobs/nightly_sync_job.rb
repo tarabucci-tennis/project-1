@@ -11,7 +11,9 @@ class NightlySyncJob < ApplicationJob
   #   * USTA postseason info, from TennisRecord
   # then recomputes Court Report ratings.
   #
-  # Scheduled nightly in config/recurring.yml. Every step is isolated so
+  # Runs every hour from a cron line on the droplet (`bin/rails scores:sync`).
+  # config/recurring.yml is NOT active in production: SOLID_QUEUE_IN_PUMA isn't
+  # set and there is no queue schema. Every step is isolated so
   # one league being unreachable doesn't stop the others, and every call
   # here is idempotent and safe to re-run. The admin "Sync scores" button
   # queues this same job in the background (running it inside the page
