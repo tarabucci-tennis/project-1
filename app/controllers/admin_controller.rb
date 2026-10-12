@@ -49,31 +49,16 @@ class AdminController < ApplicationController
   # Pull the latest results from the public Google Sheet (match results +
   # posted lineups) AND the public Del-Tri site (opponent league standings),
   # then import both. Idempotent.
+  # Runs the full league update (the same job as the nightly schedule) in the
+  # background. It fetches dozens of league pages and takes minutes, so doing
+  # it inside the page request made the page time out and crash.
   def sync_scores
-    result = SheetScoreSync.new.call
-    standings = DeltriStandings.new.call
-    rosters = TenniscoresRosterSync.new.call
-    deltri = DeltriResults.new.call
-    players = DeltriPlayerImport.sync_all
-    playoffs = TennisrecordPlayoffs.new.call
-    RatingCalculator.recompute!
-
-    pieces = []
-    pieces << result.to_s if result.summaries.any?
-    pieces << "Standings — #{standings}" if standings.updated.any?
-    pieces << "Rosters — #{rosters}" if rosters.added.any? || rosters.notes.any?
-    pieces << "Del-Tri results — #{deltri}" if deltri.updated.any?
-    pieces << "Player history — #{players}" if players.imported.any?
-    pieces << "Postseason — #{playoffs}" if playoffs.updated.any?
-
-    if pieces.any?
-      redirect_to teams_path, notice: "Synced — #{pieces.join(' | ')}"
+    if NightlySyncJob.running?
+      redirect_to teams_path, notice: "A sync is already running. Check back in a few minutes."
     else
-      messages = (result.notes + standings.notes + deltri.notes + players.notes + playoffs.notes).reject(&:blank?)
-      redirect_to teams_path, alert: "Sync ran but found nothing to update. #{messages.join('; ')}"
+      NightlySyncJob.perform_later
+      redirect_to teams_path, notice: "Sync started. It takes a few minutes; refresh the page later to see new scores."
     end
-  rescue StandardError => e
-    redirect_to teams_path, alert: "Sync failed: #{e.message}"
   end
 
   # Upload a USTA TennisLink "Send To Excel" export and see it parsed. This is
