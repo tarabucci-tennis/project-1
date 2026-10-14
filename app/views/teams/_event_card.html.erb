@@ -1,0 +1,41 @@
+<%# A friendly (shared sign-up link) or a team clinic/friendly on the My Teams
+    lists. Same card shape as a match on Coming Up. %>
+<% if item.is_a?(Friendly) %>
+  <% when_at = item.starts_at %>
+  <div class="cr-my-week-card cr-my-week-card-compact cr-my-week-card-event"
+       onclick="window.location='<%= friendly_path(item) %>'" style="cursor: pointer;">
+    <div class="cr-my-week-date">
+      <div class="cr-my-week-day-name"><%= when_at.strftime("%a").upcase %></div>
+      <div class="cr-my-week-month"><%= when_at.strftime("%b").upcase %></div>
+      <div class="cr-my-week-day"><%= when_at.strftime("%-d") %></div>
+    </div>
+    <div class="cr-my-week-info">
+      <div class="cr-my-week-league-label"><span class="cr-dash-cal-dot cr-dash-cal-dot-friendly"></span> FRIENDLY</div>
+      <div class="cr-my-week-team"><%= item.title %></div>
+      <div class="cr-my-week-opponent">
+        <%= item.courts.zero? ? "#{item.spots.size} signed up · courts not booked yet" : "#{[item.spots.size, item.capacity].min}/#{item.capacity} spots claimed · #{item.courts} #{'court'.pluralize(item.courts)}" %>
+      </div>
+      <div class="cr-my-week-detail">
+        <span style="font-weight: 600; color: var(--cr-text);"><%= when_at.strftime("%-l:%M %p") %></span>
+        <% if item.location.present? %><span><%= item.location.split(",").first %></span><% end %>
+      </div>
+    </div>
+  </div>
+<% else %>
+  <div class="cr-my-week-card cr-my-week-card-compact cr-my-week-card-event">
+    <div class="cr-my-week-date">
+      <div class="cr-my-week-day-name"><%= item.event_date.strftime("%a").upcase %></div>
+      <div class="cr-my-week-month"><%= item.event_date.strftime("%b").upcase %></div>
+      <div class="cr-my-week-day"><%= item.event_date.strftime("%-d") %></div>
+    </div>
+    <div class="cr-my-week-info">
+      <div class="cr-my-week-league-label"><span class="cr-dash-cal-dot cr-dash-cal-dot-<%= item.display_kind %>"></span> <%= item.kind_label.upcase %></div>
+      <div class="cr-my-week-team"><%= item.title %></div>
+      <div class="cr-my-week-opponent"><%= item.tennis_team.name %></div>
+      <div class="cr-my-week-detail">
+        <% if item.start_time.present? %><span style="font-weight: 600; color: var(--cr-text);"><%= item.start_time %></span><% end %>
+        <% if item.location.present? %><span><%= item.location.split(",").first %></span><% end %>
+      </div>
+    </div>
+  </div>
+<% end %>

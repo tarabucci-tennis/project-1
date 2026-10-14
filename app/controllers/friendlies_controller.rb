@@ -46,13 +46,14 @@ class FriendliesController < ApplicationController
     if spot.save
       remember_guest(spot.guest_key) if spot.guest_key
       place = @friendly.reload.spots.index(spot).to_i
-      msg = if @friendly.courts.zero?
-              "You're signed up (##{place + 1}). You'll be placed when courts are added."
-            elsif place < @friendly.capacity
-              "You're in! ✓"
-            else
-              "It's full, so you're on the waitlist (##{place - @friendly.capacity + 1})."
-            end
+      msg =
+        if @friendly.courts.zero?
+          "You're signed up (##{place + 1}). You'll be placed when courts are added."
+        elsif place < @friendly.capacity
+          "You're in! ✓"
+        else
+          "It's full, so you're on the waitlist (##{place - @friendly.capacity + 1})."
+        end
       redirect_to friendly_path(@friendly), notice: msg
     else
       redirect_to friendly_path(@friendly), alert: spot.errors.full_messages.to_sentence

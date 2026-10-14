@@ -13,7 +13,7 @@ class TeamEventsController < ApplicationController
       event_date: params[:event_date],
       start_time: params[:start_time].to_s.strip.presence,
       location:   params[:location].to_s.strip.presence,
-      kind:       params[:kind].to_s.strip.presence || "practice",
+      kind:       params[:kind].to_s.strip.presence || "friendly",
       notes:      params[:notes].to_s.strip.presence
     )
 
@@ -49,9 +49,8 @@ class TeamEventsController < ApplicationController
 
   def default_title_for(kind)
     case kind.to_s
-    when "clinic"   then "Team Clinic"
-    when "friendly" then "Friendly Match"
-    else "Team Practice"
+    when "clinic" then "Team Clinic"
+    else "Friendly Match"
     end
   end
 end

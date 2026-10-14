@@ -91,6 +91,14 @@ class TeamsController < ApplicationController
                                           .where(starts_at: month_range.first.beginning_of_day..month_range.last.end_of_day)
                                           .includes(:spots)
                                           .group_by { |f| f.starts_at.to_date }
+
+    # Friendlies & Clinics tab: everything coming up, not just this month.
+    @upcoming_friendlies = Friendly.involving(current_user).upcoming.includes(:spots, :organizer).order(:starts_at)
+    @upcoming_team_events = TeamEvent.where(tennis_team_id: team_ids).upcoming.includes(:tennis_team).to_a
+
+    # Coming Up: matches, friendlies and clinics together, soonest first.
+    @coming_up_items = (@full_upcoming_matches + @upcoming_friendlies.to_a + @upcoming_team_events)
+                         .sort_by { |item| coming_up_time(item) }
   end
 
   def show
@@ -569,6 +577,15 @@ class TeamsController < ApplicationController
   end
 
   private
+
+  # When an item on the Coming Up list happens (team events have a date only).
+  def coming_up_time(item)
+    case item
+    when Match    then item.match_date
+    when Friendly then item.starts_at
+    else item.event_date.in_time_zone
+    end
+  end
 
   def team_info_params
     params.require(:tennis_team).permit(

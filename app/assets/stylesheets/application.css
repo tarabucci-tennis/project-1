@@ -5282,3 +5282,7 @@ body.cr-ctx-friendlies-new, body.cr-ctx-friendlies-show, body.cr-ctx-friendlies-
 .cr-fr-court-controls { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 10px; padding: 14px 18px; margin-bottom: 12px; color: var(--cr-text); }
 .cr-fr-court-btns { display: flex; gap: 8px; flex-wrap: wrap; }
 .cr-fr-hint { color: var(--cr-teal-deep); font-weight: 600; font-size: 0.85rem; }
+
+/* ── My Teams: Friendlies & Clinics tab ── */
+.cr-fr-tab-head { display: flex; justify-content: flex-end; margin-bottom: 12px; }
+.cr-my-week-card-event .cr-my-week-league-label { display: flex; align-items: center; gap: 5px; }
