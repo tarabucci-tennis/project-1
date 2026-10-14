@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_14_000000) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_15_000000) do
   create_table "availabilities", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.integer "match_id", null: false
@@ -47,9 +47,11 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_14_000000) do
   create_table "friendlies", force: :cascade do |t|
     t.integer "courts", default: 1, null: false
     t.datetime "created_at", null: false
+    t.text "lineup"
     t.string "location"
     t.text "notes"
     t.integer "organizer_id", null: false
+    t.integer "sets_count", default: 3, null: false
     t.datetime "starts_at", null: false
     t.string "title", default: "Friendly", null: false
     t.string "token", null: false
@@ -63,6 +65,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_14_000000) do
     t.datetime "created_at", null: false
     t.integer "friendly_id", null: false
     t.string "guest_key"
+    t.boolean "in_lineup", default: true, null: false
     t.string "name", null: false
     t.datetime "updated_at", null: false
     t.integer "user_id"

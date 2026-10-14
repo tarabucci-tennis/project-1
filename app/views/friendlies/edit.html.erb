@@ -1,0 +1,12 @@
+<% content_for :title, "Edit friendly · Court Report" %>
+
+<div class="cr-rp-page">
+  <%= link_to "← Back to the friendly", friendly_path(@friendly), class: "cr-back-link" %>
+
+  <section class="cr-rp-card">
+    <div class="cr-rp-card-head">
+      <h2 class="cr-rp-card-title">✏️ Edit friendly</h2>
+    </div>
+    <%= render "form", friendly: @friendly, url: friendly_path(@friendly), method: :patch %>
+  </section>
+</div>

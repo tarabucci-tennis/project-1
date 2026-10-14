@@ -1,11 +1,12 @@
 <% content_for :title, "#{@friendly.title} · Court Report" %>
 <% share_url = friendly_url(@friendly) %>
 <% when_text = @friendly.starts_at.strftime("%a, %b %-d · %-l:%M %p") %>
-<% claim_label = @friendly.courts.zero? ? "✓ Sign me up" : (@friendly.full? ? "Join the waitlist" : "✓ Count me in") %>
-<% invite = "🎾 #{@friendly.title}: #{when_text}#{" at #{@friendly.location}" if @friendly.location.present?}. #{@friendly.courts.zero? ? "Courts to be booked" : "#{@friendly.courts} #{'court'.pluralize(@friendly.courts)}"}, first come first served. Claim a spot: #{share_url}" %>
+<% n_players = @friendly.playing_spots.size %>
+<% courts = @friendly.courts_needed %>
+<% invite = "🎾 #{@friendly.title}: #{when_text}#{" at #{@friendly.location}" if @friendly.location.present?}. Add your name if you can play: #{share_url}" %>
 
-<div class="cr-rp-page">
-  <% if current_user %><%= link_to "← My Teams", teams_path, class: "cr-back-link" %><% end %>
+<div class="cr-rp-page cr-fr-page">
+  <% if current_user %><%= link_to "← Friendlies", friendlies_path, class: "cr-back-link cr-no-print" %><% end %>
 
   <section class="cr-rp-hero">
     <div class="cr-rp-hero-main">
@@ -17,128 +18,191 @@
       </div>
     </div>
     <div class="cr-rp-hero-level">
-      <% if @friendly.courts.zero? %>
-        <div class="cr-rp-level-val"><%= @friendly.spots.size %></div>
-        <div class="cr-rp-level-cap">signed up</div>
-      <% else %>
-        <div class="cr-rp-level-val"><%= @friendly.open_spots %></div>
-        <div class="cr-rp-level-cap"><%= @friendly.open_spots == 1 ? "spot left" : "spots left" %></div>
-      <% end %>
+      <div class="cr-rp-level-val"><%= courts %></div>
+      <div class="cr-rp-level-cap"><%= "court".pluralize(courts) %> needed</div>
     </div>
   </section>
 
   <% if @friendly.notes.present? %>
-    <p class="cr-fr-note"><%= @friendly.notes %></p>
+    <p class="cr-fr-note cr-no-print"><%= @friendly.notes %></p>
   <% end %>
 
-  <%# ── Claim / your status ── %>
-  <section class="cr-rp-card cr-fr-claim">
+  <%# ── Add your name ── %>
+  <section class="cr-rp-card cr-fr-claim cr-no-print">
     <% if @my_spot %>
-      <% on_court = @friendly.players.include?(@my_spot) %>
       <div class="cr-fr-status">
-        <strong><%= if on_court then "✓ You're in, #{@my_spot.name}!" elsif @friendly.courts.zero? then "You're signed up, #{@my_spot.name}. You'll be placed when courts are added." else "You're on the waitlist, #{@my_spot.name}." end %></strong>
+        <strong>✓ You're in, <%= @my_spot.name %>!</strong>
         <%= button_to "Can't make it anymore", claim_friendly_path(@friendly), method: :delete,
               params: { spot_id: @my_spot.id }, class: "cr-chip-btn",
               form: { style: "display:inline;", data: { turbo_confirm: "Take your name off this friendly?" } } %>
       </div>
     <% else %>
       <%= form_with url: claim_friendly_path(@friendly), method: :post, data: { turbo: false }, class: "cr-fr-claim-form" do %>
-        <% if current_user %>
-          <button type="submit" class="cr-btn cr-btn-gold"><%= claim_label %></button>
-        <% else %>
+        <% unless current_user %>
           <input type="text" name="name" placeholder="Your name" required maxlength="60" autocomplete="name">
-          <button type="submit" class="cr-btn cr-btn-gold"><%= claim_label %></button>
+        <% end %>
+        <button type="submit" class="cr-btn cr-btn-gold cr-fr-big-btn">✓ Count me in</button>
+      <% end %>
+    <% end %>
+  </section>
+
+  <%# ── Who's playing ── %>
+  <section class="cr-rp-card cr-no-print" id="players">
+    <div class="cr-rp-card-head">
+      <h2 class="cr-rp-card-title">Who's playing (<%= n_players %>)</h2>
+      <span class="cr-rp-card-note">Every 4 names = 1 court</span>
+    </div>
+    <p class="cr-fr-courts-summary">
+      <% if n_players < Friendly::MIN_PLAYERS %>
+        <strong><%= Friendly::MIN_PLAYERS - n_players %> more <%= "player".pluralize(Friendly::MIN_PLAYERS - n_players) %></strong> needed for a court.
+      <% else %>
+        <strong><%= n_players %> players = <%= courts %> <%= "court".pluralize(courts) %></strong>
+        <% if @friendly.sitting_each_set.positive? %>
+          · <%= @friendly.sitting_each_set %> sit<%= "s" if @friendly.sitting_each_set == 1 %> out each set (taking turns)
+          · <%= @friendly.players_for_next_court %> more for court <%= courts + 1 %>
         <% end %>
       <% end %>
-      <p class="cr-rp-foot" style="padding: 8px 0 0;">
-        <% if @friendly.courts.zero? %>
-          No courts booked yet. Sign up now and you'll be placed in order as courts are added.
-        <% else %>
-          First come, first served<%= " · it's full, so new names go on the waitlist (they move up if a court is added)" if @friendly.full? %>.
-        <% end %>
-      </p>
-    <% end %>
-  </section>
-
-  <%# ── Courts ── %>
-  <section class="cr-fr-courts">
-    <% @friendly.courts_with_players.each_with_index do |court, ci| %>
-      <div class="cr-rp-card cr-fr-court">
-        <div class="cr-rp-card-head"><h2 class="cr-rp-card-title">Court <%= ci + 1 %></h2>
-          <span class="cr-rp-card-note"><%= court.compact.size %> / <%= Friendly::PER_COURT %></span></div>
-        <ul class="cr-fr-list">
-          <% court.each do |spot| %>
-            <% if spot %>
-              <li class="cr-fr-filled">
-                <span class="cr-fr-check">✓</span> <%= spot.name %>
-                <% if can_remove?(spot) && spot != @my_spot %>
-                  <%= button_to "×", claim_friendly_path(@friendly), method: :delete, params: { spot_id: spot.id },
-                        class: "cr-fr-remove", title: "Remove #{spot.name}",
-                        form: { style: "display:inline;", data: { turbo_confirm: "Remove #{spot.name}?" } } %>
-                <% end %>
-              </li>
-            <% else %>
-              <li class="cr-fr-open">Open spot</li>
-            <% end %>
+    </p>
+    <ul class="cr-fr-list">
+      <% @friendly.spots.each do |spot| %>
+        <li class="<%= 'cr-fr-off' unless spot.in_lineup %>">
+          <span class="cr-fr-check"><%= spot.in_lineup ? "✓" : "–" %></span>
+          <span class="cr-fr-name"><%= spot.name %><%= " (not playing today)" unless spot.in_lineup %></span>
+          <% if organizer? %>
+            <%= button_to (spot.in_lineup ? "Out" : "In"), toggle_friendly_spot_path(@friendly, spot_id: spot.id), method: :patch,
+                  class: "cr-chip-btn cr-fr-toggle", title: (spot.in_lineup ? "Take out of today's rotation" : "Put back in today's rotation"),
+                  form: { style: "display:inline;" } %>
           <% end %>
-        </ul>
-      </div>
+          <% if can_remove?(spot) && spot != @my_spot %>
+            <%= button_to "×", claim_friendly_path(@friendly), method: :delete, params: { spot_id: spot.id },
+                  class: "cr-fr-remove", title: "Remove #{spot.name}",
+                  form: { style: "display:inline;", data: { turbo_confirm: "Remove #{spot.name}?" } } %>
+          <% end %>
+        </li>
+      <% end %>
+      <% if @friendly.spots.empty? %>
+        <li class="cr-fr-open">No names yet. Share the link below.</li>
+      <% end %>
+    </ul>
+    <% if organizer? %>
+      <%= form_with url: friendly_players_path(@friendly), method: :post, data: { turbo: false }, class: "cr-fr-claim-form cr-fr-add-form" do %>
+        <input type="text" name="name" placeholder="Add a player by name" required maxlength="60" list="cr-fr-names" autocomplete="off">
+        <datalist id="cr-fr-names">
+          <% @suggest_names.each do |nm| %><option value="<%= nm %>"></option><% end %>
+        </datalist>
+        <button type="submit" class="cr-chip-btn cr-fr-big-btn">+ Add</button>
+      <% end %>
     <% end %>
   </section>
 
-  <% if organizer? %>
-    <section class="cr-rp-card cr-fr-court-controls">
-      <div>
-        <strong><%= @friendly.courts %> <%= "court".pluralize(@friendly.courts) %></strong>
-        <% if @friendly.room_for_another_court? %>
-          <span class="cr-fr-hint">· <%= @friendly.waitlist.size %> waiting, enough for another court</span>
-        <% end %>
-      </div>
-      <div class="cr-fr-court-btns">
-        <% if @friendly.courts.positive? %>
-          <%= button_to "➖ Remove a court", friendly_courts_path(@friendly), method: :patch, params: { change: -1 },
-                class: "cr-chip-btn", form: { style: "display:inline;", data: { turbo_confirm: "Remove a court? Its players go back on the waitlist." } } %>
-        <% end %>
-        <% if @friendly.courts < Friendly::MAX_COURTS %>
-          <%= button_to "➕ Add a court", friendly_courts_path(@friendly), method: :patch, params: { change: 1 },
-                class: "cr-chip-btn", form: { style: "display:inline;" } %>
-        <% end %>
-      </div>
-    </section>
-  <% end %>
+  <%# ── Lineup ── %>
+  <section id="lineup" class="cr-fr-lineup" data-controller="friendly-swap">
+    <div class="cr-fr-lineup-head">
+      <h2 class="cr-fr-lineup-title">Lineup</h2>
+      <% if @friendly.lineup? %>
+        <div class="cr-fr-lineup-tools cr-no-print">
+          <button type="button" class="cr-chip-btn" data-text="<%= friendly_lineup_text(@friendly) %>"
+                  onclick="var t=this.dataset.text,b=this;if(navigator.clipboard){navigator.clipboard.writeText(t).then(function(){b.textContent='Copied ✓'},function(){if(navigator.share){navigator.share({text:t})}})}else if(navigator.share){navigator.share({text:t})}">📋 Copy as text</button>
+          <button type="button" class="cr-chip-btn" onclick="window.print()">🖨️ Print</button>
+        </div>
+      <% end %>
+    </div>
 
-  <% if @friendly.waitlist.any? %>
-    <section class="cr-rp-card">
-      <div class="cr-rp-card-head"><h2 class="cr-rp-card-title"><%= @friendly.courts.zero? ? "Signed up" : "Waitlist" %></h2>
-        <span class="cr-rp-card-note"><%= @friendly.courts.zero? ? "Placed in this order when courts are added" : "Moves up if someone drops out or a court is added" %></span></div>
-      <ol class="cr-fr-list cr-fr-wait">
-        <% @friendly.waitlist.each do |spot| %>
-          <li><%= spot.name %>
-            <% if can_remove?(spot) && spot != @my_spot %>
-              <%= button_to "×", claim_friendly_path(@friendly), method: :delete, params: { spot_id: spot.id },
-                    class: "cr-fr-remove", form: { style: "display:inline;" } %>
-            <% end %>
-          </li>
+    <% if organizer? %>
+      <div class="cr-fr-generate cr-no-print">
+        <% if @friendly.lineup_out_of_date? %>
+          <p class="cr-fr-warn">The names have changed since this lineup was made. Regenerate to include everyone (sets marked played stay as they are).</p>
         <% end %>
-      </ol>
-    </section>
-  <% end %>
+        <% if @friendly.can_generate? %>
+          <%= button_to (@friendly.lineup? ? "🔄 Regenerate unplayed sets" : "🎾 Generate lineup"), friendly_lineup_path(@friendly),
+                method: :post, class: "cr-btn cr-btn-gold cr-fr-big-btn",
+                form: { style: "display:inline;", data: (@friendly.lineup? ? { turbo_confirm: "Make a new lineup for every set not marked played?" } : {}) } %>
+          <%= link_to "Sets: #{@friendly.sets_count} · change", edit_friendly_path(@friendly), class: "cr-fr-sets-link" %>
+        <% else %>
+          <p class="cr-fr-courts-summary">Once <%= Friendly::MIN_PLAYERS %> people have added their names, you can generate the lineup here.</p>
+        <% end %>
+      </div>
+    <% end %>
+
+    <% if @friendly.lineup? %>
+      <% if organizer? %>
+        <p class="cr-fr-swap-hint cr-no-print">Tap two names in the same set to swap them.</p>
+        <%= form_with url: swap_friendly_lineup_path(@friendly), method: :patch, data: { turbo: false, friendly_swap_target: "form" }, html: { hidden: true } do %>
+          <input type="hidden" name="set" data-friendly-swap-target="setField">
+          <input type="hidden" name="a" data-friendly-swap-target="aField">
+          <input type="hidden" name="b" data-friendly-swap-target="bField">
+        <% end %>
+      <% end %>
+
+      <div class="cr-fr-sets">
+        <% @friendly.lineup_sets.first(@friendly.sets_count).each_with_index do |set, si| %>
+          <% swappable = organizer? && !set["done"] %>
+          <div class="cr-fr-set <%= 'cr-fr-set-done' if set['done'] %>" id="set-<%= si + 1 %>">
+            <div class="cr-fr-set-head">
+              <h3>Set <%= si + 1 %><% if set["done"] %> <span class="cr-fr-played">✓ Played</span><% end %></h3>
+              <% if organizer? %>
+                <%= button_to (set["done"] ? "Undo played" : "Mark played"), friendly_set_done_path(@friendly, set: si),
+                      method: :patch, params: { done: set["done"] ? "0" : "1" }, class: "cr-chip-btn cr-no-print",
+                      form: { style: "display:inline;" } %>
+              <% end %>
+            </div>
+            <% Array(set["courts"]).each_with_index do |court, ci| %>
+              <div class="cr-fr-court-row">
+                <div class="cr-fr-court-label">Court <%= ci + 1 %></div>
+                <div class="cr-fr-match">
+                  <% [ [ 0, 1 ], [ 2, 3 ] ].each_with_index do |pair, side| %>
+                    <% if side == 1 %><span class="cr-fr-vs">vs</span><% end %>
+                    <div class="cr-fr-pair">
+                      <% pair.each do |pi| %>
+                        <% if swappable %>
+                          <button type="button" class="cr-fr-chip" data-friendly-swap-target="chip"
+                                  data-set="<%= si %>" data-pos="<%= ci %>-<%= pi %>" data-action="click->friendly-swap#pick"><%= court[pi] %></button>
+                        <% else %>
+                          <span class="cr-fr-chip"><%= court[pi] %></span>
+                        <% end %>
+                      <% end %>
+                    </div>
+                  <% end %>
+                </div>
+              </div>
+            <% end %>
+            <% if Array(set["sitting"]).any? %>
+              <div class="cr-fr-sitting">
+                <span class="cr-fr-court-label">Sitting out</span>
+                <% set["sitting"].each_with_index do |name, i| %>
+                  <% if swappable %>
+                    <button type="button" class="cr-fr-chip cr-fr-chip-sit" data-friendly-swap-target="chip"
+                            data-set="<%= si %>" data-pos="s-<%= i %>" data-action="click->friendly-swap#pick"><%= name %></button>
+                  <% else %>
+                    <span class="cr-fr-chip cr-fr-chip-sit"><%= name %></span>
+                  <% end %>
+                <% end %>
+              </div>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+    <% elsif !organizer? %>
+      <p class="cr-fr-courts-summary">The organizer hasn't made the lineup yet. Check back here closer to the day.</p>
+    <% end %>
+  </section>
 
   <%# ── Share + calendar ── %>
-  <div class="cr-rp-actions" style="margin-top: 14px;">
-    <%= link_to "📅 Add to Google Calendar", friendly_google_calendar_url(@friendly, share_url: share_url),
-          target: "_blank", rel: "noopener", class: "cr-chip-btn" %>
+  <div class="cr-rp-actions cr-no-print" style="margin-top: 14px;">
     <button type="button" class="cr-chip-btn" data-invite="<%= invite %>"
             onclick="var t=this.dataset.invite,b=this;if(navigator.share){navigator.share({text:t}).catch(function(){})}else if(navigator.clipboard){navigator.clipboard.writeText(t).then(function(){b.textContent='Copied ✓'})}">
       🔗 Share invite
     </button>
+    <%= link_to "📅 Add to Google Calendar", friendly_google_calendar_url(@friendly, share_url: share_url),
+          target: "_blank", rel: "noopener", class: "cr-chip-btn" %>
     <% if organizer? %>
+      <%= link_to "✏️ Edit", edit_friendly_path(@friendly), class: "cr-chip-btn" %>
       <%= button_to "Cancel friendly", friendly_path(@friendly), method: :delete, class: "cr-chip-btn",
             form: { style: "display:inline;", data: { turbo_confirm: "Cancel this friendly for everyone?" } } %>
     <% end %>
   </div>
   <% if organizer? %>
-    <p class="cr-rp-foot" style="padding: 8px 0;">Share invite sends the link by text, WhatsApp or email on your phone (or copies it on a computer).
-      Anyone with the link can claim a spot, with no account needed. You can remove anyone with ×.</p>
+    <p class="cr-rp-foot cr-no-print" style="padding: 8px 0;">Share invite sends the link by text, WhatsApp or email on your phone (or copies it on a computer).
+      Anyone with the link can add their name, no account needed. Court Report counts the courts for you.</p>
   <% end %>
 </div>

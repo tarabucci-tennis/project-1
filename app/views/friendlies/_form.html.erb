@@ -1,0 +1,28 @@
+<% if friendly.errors.any? %>
+  <p class="cr-fr-error"><%= friendly.errors.full_messages.to_sentence %></p>
+<% end %>
+
+<%= form_with model: friendly, url: url, method: method, data: { turbo: false }, class: "cr-fr-form" do |f| %>
+  <label>Name <span>(optional)</span>
+    <%= f.text_field :title, placeholder: "e.g. Saturday morning mixer" %>
+  </label>
+  <label>Date &amp; time
+    <%= f.datetime_local_field :starts_at, required: true %>
+  </label>
+  <label>Where <span>(optional)</span>
+    <%= f.text_field :location, placeholder: "e.g. Aronimink Golf Club" %>
+  </label>
+  <label>Sets to plan
+    <%= f.select :sets_count, [ [ "1 set", 1 ], [ "2 sets", 2 ], [ "3 sets (if we can squeeze in a third)", 3 ] ] %>
+  </label>
+  <label>Note <span>(optional)</span>
+    <%= f.text_area :notes, rows: 2, placeholder: "e.g. 4.0 level, bring a can of balls" %>
+  </label>
+  <% if friendly.new_record? %>
+    <label class="cr-fr-radio">
+      <%= check_box_tag :im_playing, "1", true %> I'm playing (add my name)
+    </label>
+  <% end %>
+  <p class="cr-fr-hint-block">No need to count courts. People add their names from your link, and Court Report works out the courts: every 4 names = 1 court.</p>
+  <button type="submit" class="cr-btn cr-btn-gold"><%= friendly.new_record? ? "Book it & get the link" : "Save" %></button>
+<% end %>
