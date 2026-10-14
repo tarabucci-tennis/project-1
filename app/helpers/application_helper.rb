@@ -77,6 +77,19 @@ module ApplicationHelper
     }
   end
 
+  # A friendly's lineup as plain text for a group chat.
+  def friendly_lineup_text(friendly)
+    lines = [ "#{friendly.title} — #{friendly.starts_at.strftime('%a, %b %-d · %-l:%M %p')}" ]
+    friendly.lineup_sets.first(friendly.sets_count).each_with_index do |set, i|
+      lines << "" << "Set #{i + 1}"
+      Array(set["courts"]).each_with_index do |(a, b, c, d), ci|
+        lines << "Ct #{ci + 1}: #{a} + #{b} vs #{c} + #{d}"
+      end
+      lines << "Sitting out: #{set['sitting'].join(', ')}" if Array(set["sitting"]).any?
+    end
+    lines.join("\n")
+  end
+
   # Google Calendar "add event" link for a friendly (2 hours long). Times are
   # written without a zone, like the match links, so Google uses the viewer's.
   def friendly_google_calendar_url(friendly, share_url: nil)

@@ -1,0 +1,32 @@
+<% content_for :title, "Friendlies · Court Report" %>
+
+<div class="cr-rp-page">
+  <%= link_to "← My Teams", teams_path, class: "cr-back-link" %>
+
+  <div class="cr-fr-index-head">
+    <h1 class="cr-rp-name">🎾 Friendlies</h1>
+    <%= link_to "+ New friendly", new_friendly_path, class: "cr-btn cr-btn-gold" %>
+  </div>
+
+  <% if @friendlies.any? %>
+    <div class="cr-fr-index">
+      <% @friendlies.each do |f| %>
+        <% n = f.playing_spots.size %>
+        <%= link_to friendly_path(f), class: "cr-fr-index-row" do %>
+          <div class="cr-fr-index-main">
+            <div class="cr-fr-index-title"><%= f.title %></div>
+            <div class="cr-fr-index-sub">
+              <%= f.starts_at.strftime("%a, %b %-d · %-l:%M %p") %><% if f.location.present? %> · <%= f.location %><% end %>
+            </div>
+            <div class="cr-fr-index-sub">
+              <%= n %> <%= "player".pluralize(n) %> · <%= f.courts_needed %> <%= "court".pluralize(f.courts_needed) %>
+            </div>
+          </div>
+          <span class="cr-fr-badge <%= f.done? ? "cr-fr-badge-done" : "cr-fr-badge-up" %>"><%= f.done? ? "Done" : "Upcoming" %></span>
+        <% end %>
+      <% end %>
+    </div>
+  <% else %>
+    <p class="cr-coming-up-empty">No friendlies yet. Book one and share the link: people add their names and Court Report makes the lineup.</p>
+  <% end %>
+</div>

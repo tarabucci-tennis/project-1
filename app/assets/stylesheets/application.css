@@ -5284,5 +5284,63 @@ body.cr-ctx-friendlies-new, body.cr-ctx-friendlies-show, body.cr-ctx-friendlies-
 .cr-fr-hint { color: var(--cr-teal-deep); font-weight: 600; font-size: 0.85rem; }
 
 /* ── My Teams: Friendlies & Clinics tab ── */
-.cr-fr-tab-head { display: flex; justify-content: flex-end; margin-bottom: 12px; }
+.cr-fr-tab-head { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px; margin-bottom: 12px; }
 .cr-my-week-card-event .cr-my-week-league-label { display: flex; align-items: center; gap: 5px; }
+
+/* ── Friendlies: list page + round-robin lineup ── */
+body.cr-ctx-friendlies-index, body.cr-ctx-friendlies-edit, body.cr-ctx-friendlies-update { background: var(--cr-navy-page); }
+.cr-fr-index-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; margin: 6px 0 16px; }
+.cr-fr-index-head .cr-rp-name { color: #fff; }
+.cr-fr-index { display: grid; gap: 10px; }
+.cr-fr-index-row { display: flex; align-items: center; gap: 12px; padding: 14px 16px; background: var(--cr-white); border: 1px solid var(--cr-border); border-radius: 12px; text-decoration: none; color: var(--cr-text); min-height: 56px; }
+.cr-fr-index-main { flex: 1 1 auto; min-width: 0; }
+.cr-fr-index-title { font-weight: 800; font-size: 1rem; color: var(--cr-black); }
+.cr-fr-index-sub { font-size: 0.85rem; color: var(--cr-text); margin-top: 2px; }
+.cr-fr-badge { flex-shrink: 0; font-size: 0.75rem; font-weight: 800; padding: 4px 10px; border-radius: 999px; }
+.cr-fr-badge-up { background: #dcfce7; color: #14532d; }
+.cr-fr-badge-done { background: #e5e7eb; color: #1f2937; }
+.cr-fr-hint-block { margin: 0; font-size: 0.85rem; color: var(--cr-text); background: var(--cr-bg); border-radius: 8px; padding: 10px 12px; }
+.cr-fr-big-btn { min-height: 44px; padding-left: 18px; padding-right: 18px; font-size: 0.95rem; }
+.cr-fr-courts-summary { margin: 0; padding: 10px 18px 4px; color: var(--cr-text); font-size: 0.92rem; }
+.cr-fr-name { flex: 1 1 auto; min-width: 0; }
+.cr-fr-off { color: var(--cr-text-muted) !important; }
+.cr-fr-off .cr-fr-check { background: #9ca3af; }
+.cr-fr-toggle { min-height: 36px; min-width: 52px; }
+.cr-fr-add-form { padding: 6px 18px 16px; }
+.cr-fr-lineup { margin-top: 14px; }
+.cr-fr-lineup-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 10px; }
+.cr-fr-lineup-title { font-size: 1.3rem; font-weight: 800; color: #fff; margin: 0; }
+.cr-fr-lineup-tools { display: flex; gap: 8px; flex-wrap: wrap; }
+.cr-fr-generate { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-bottom: 12px; }
+.cr-fr-generate .cr-fr-courts-summary { padding: 0; color: #fff; }
+.cr-fr-sets-link { color: #fff; font-weight: 600; font-size: 0.88rem; }
+.cr-fr-warn { flex-basis: 100%; margin: 0; padding: 10px 14px; border-radius: 10px; background: #fef3c7; color: #78350f; font-weight: 600; font-size: 0.9rem; }
+.cr-fr-swap-hint { color: #fff; font-size: 0.88rem; margin: 0 0 10px; }
+.cr-fr-sets { display: grid; gap: 12px; }
+.cr-fr-set { background: var(--cr-white); border: 2px solid var(--cr-border); border-radius: 14px; padding: 12px 14px; }
+.cr-fr-set-done { border-color: #86efac; }
+.cr-fr-set-head { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 6px; }
+.cr-fr-set-head h3 { margin: 0; font-size: 1.15rem; font-weight: 800; color: var(--cr-black); }
+.cr-fr-played { font-size: 0.8rem; color: #14532d; background: #dcfce7; border-radius: 999px; padding: 2px 8px; vertical-align: middle; }
+.cr-fr-court-row { padding: 10px 0; border-top: 1px solid var(--cr-border); }
+.cr-fr-court-label { display: block; font-size: 0.72rem; font-weight: 800; letter-spacing: 0.8px; text-transform: uppercase; color: var(--cr-black); margin-bottom: 6px; }
+.cr-fr-match { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.cr-fr-pair { display: flex; flex-wrap: wrap; gap: 6px; }
+.cr-fr-vs { font-weight: 800; color: var(--cr-black); font-size: 0.85rem; }
+.cr-fr-chip { display: inline-flex; align-items: center; min-height: 44px; padding: 8px 14px; border-radius: 10px; border: 2px solid var(--cr-black); background: #fff; color: var(--cr-black); font: inherit; font-size: 1rem; font-weight: 700; cursor: pointer; touch-action: manipulation; }
+span.cr-fr-chip { cursor: default; }
+.cr-fr-chip.is-picked { background: var(--cr-gold); border-color: var(--cr-gold); color: var(--cr-black); }
+.cr-fr-sitting { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding-top: 10px; border-top: 1px dashed var(--cr-border); }
+.cr-fr-sitting .cr-fr-court-label { flex-basis: 100%; margin-bottom: 0; }
+.cr-fr-chip-sit { border-style: dashed; }
+
+@media print {
+  .cr-header, .cr-bottom-nav, .cr-flash, .cr-no-print, .app-footer, footer { display: none !important; }
+  body { background: #fff !important; }
+  .cr-fr-lineup-title, .cr-fr-swap-hint { color: #000 !important; }
+  .cr-rp-hero { background: none !important; color: #000 !important; box-shadow: none !important; }
+  .cr-rp-hero * { color: #000 !important; }
+  .cr-fr-sets { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 8px; }
+  .cr-fr-set { break-inside: avoid; padding: 8px 10px; }
+  .cr-fr-chip { min-height: 0; padding: 2px 6px; font-size: 0.85rem; border-width: 1px; }
+}

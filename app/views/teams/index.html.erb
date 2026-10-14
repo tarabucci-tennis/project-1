@@ -173,7 +173,7 @@
                      },
                      friendlies: friendlies_today.map { |f|
                        { title: f.title, time: f.starts_at.strftime("%-l:%M %p"), location: f.location,
-                         spots: (f.courts.zero? ? "#{f.spots.size} signed up" : "#{f.spots.size}/#{f.capacity} claimed"), url: friendly_path(f) }
+                         spots: "#{f.playing_spots.size} signed up · #{f.courts_needed} #{'court'.pluralize(f.courts_needed)}", url: friendly_path(f) }
                      }
                    }.to_json %>
 
@@ -322,6 +322,7 @@
       <%# ── Panel 4: Friendlies & Clinics ───────────────────────── %>
       <div data-home-tabs-target="panel" style="display: none;">
         <div class="cr-fr-tab-head">
+          <%= link_to "All my friendlies →", friendlies_path, class: "cr-btn cr-btn-outline cr-btn-compact" %>
           <%= link_to "🎾 Book a friendly", new_friendly_path, class: "cr-btn cr-btn-gold cr-btn-compact" %>
         </div>
         <% fc_items = (@upcoming_friendlies.to_a + @upcoming_team_events) %>

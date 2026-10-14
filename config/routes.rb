@@ -25,13 +25,20 @@ Rails.application.routes.draw do
   post "admin/usta_import", to: "admin#usta_import"
 
   # Friendlies: book a casual match and share one link to fill the courts
+  get    "friendlies", to: "friendlies#index", as: :friendlies
   get    "friendlies/new", to: "friendlies#new", as: :new_friendly
-  post   "friendlies", to: "friendlies#create", as: :friendlies
+  post   "friendlies", to: "friendlies#create"
   get    "f/:token", to: "friendlies#show", as: :friendly
+  patch  "f/:token", to: "friendlies#update"
   delete "f/:token", to: "friendlies#destroy"
+  get    "f/:token/edit", to: "friendlies#edit", as: :edit_friendly
   post   "f/:token/claim", to: "friendlies#claim", as: :claim_friendly
   delete "f/:token/claim", to: "friendlies#unclaim"
-  patch  "f/:token/courts", to: "friendlies#courts", as: :friendly_courts
+  post   "f/:token/players", to: "friendlies#add_player", as: :friendly_players
+  patch  "f/:token/spots/:spot_id/toggle", to: "friendlies#toggle_spot", as: :toggle_friendly_spot
+  post   "f/:token/lineup", to: "friendlies#generate", as: :friendly_lineup
+  patch  "f/:token/lineup/swap", to: "friendlies#swap", as: :swap_friendly_lineup
+  patch  "f/:token/lineup/sets/:set/done", to: "friendlies#set_done", as: :friendly_set_done
 
   # Add a whole USTA team from its TennisLink Team Summary file
   get  "usta-teams/new", to: "usta_teams#new", as: :new_usta_team
