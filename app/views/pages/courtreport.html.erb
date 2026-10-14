@@ -156,7 +156,7 @@ body{
   margin:0 auto;
   padding:20px 24px 80px;
   display:grid;
-  grid-template-columns:repeat(4,1fr);
+  grid-template-columns:repeat(3,1fr);
   gap:18px;
 }
 .cr-feature{
@@ -327,7 +327,7 @@ body{
 
 <section class="cr-hero">
   <h1>All Your Teams.<br><span class="gold">One App.</span></h1>
-  <p>Stop jumping between apps, group chats, and websites for different teams and leagues. Court Report puts your schedules, availability, lineups, and stats all in one place.</p>
+  <p>Stop jumping between apps, group chats, and websites for different teams and leagues. Court Report puts your schedules, availability, lineups, friendlies, and stats all in one place.</p>
   <div class="cr-cta-row">
     <a href="<%= signup_path %>" class="cr-btn-pill cr-btn-primary">Get Started — It's Free</a>
     <a href="<%= login_path %>" class="cr-btn-pill">Sign In</a>
@@ -349,6 +349,16 @@ body{
     <span class="cr-feature-icon">📝</span>
     <h3>Lineup Confirmations</h3>
     <p>Captains post the lineup. Players get an email and confirm in one click.</p>
+  </div>
+  <div class="cr-feature">
+    <span class="cr-feature-icon">🎾</span>
+    <h3>Book Friendlies</h3>
+    <p>Pick a time and 1 or 2 courts, share one link. Friends claim spots first come, first served, and it lands on your calendar.</p>
+  </div>
+  <div class="cr-feature">
+    <span class="cr-feature-icon">📈</span>
+    <h3>Player Ratings</h3>
+    <p>Every player's USTA match history (partners, opponents, scores) in one clean page.</p>
   </div>
   <div class="cr-feature">
     <span class="cr-feature-icon">📊</span>
@@ -374,7 +384,7 @@ body{
       <div class="cr-step">
         <div class="cr-step-num">03</div>
         <h4>Play tennis, not phone tag</h4>
-        <p>Your schedule, your availability, your lineups — all in one place.</p>
+        <p>Your schedule, availability, lineups and friendlies — all in one place.</p>
       </div>
     </div>
   </div>
