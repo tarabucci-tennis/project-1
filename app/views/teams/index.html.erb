@@ -10,6 +10,7 @@
     <div class="cr-page-header-actions">
       <%= link_to "🔍 Players & Teams", lookup_path, class: "cr-btn cr-btn-outline cr-btn-compact" %>
       <%= link_to "📈 Ratings", ratings_path, class: "cr-btn cr-btn-outline cr-btn-compact" %>
+      <%= link_to "🎾 Book a friendly", new_friendly_path, class: "cr-btn cr-btn-outline cr-btn-compact" %>
 
       <div class="cr-menu" data-controller="menu">
         <button type="button" class="cr-btn cr-btn-gold cr-btn-compact cr-menu-trigger"
@@ -157,7 +158,8 @@
               <% (@calendar_month..@calendar_month.end_of_month).each do |day| %>
                 <% matches_today = @calendar_matches_by_day[day] || [] %>
                 <% events_today  = @calendar_events_by_day[day]  || [] %>
-                <% has_items     = matches_today.any? || events_today.any? %>
+                <% friendlies_today = @calendar_friendlies_by_day[day] || [] %>
+                <% has_items     = matches_today.any? || events_today.any? || friendlies_today.any? %>
                 <% is_today      = day == Date.current %>
                 <% payload = {
                      date: day.strftime("%Y-%m-%d"),
@@ -167,11 +169,15 @@
                      },
                      events: events_today.map { |e|
                        { title: e.title, kind: e.kind, kind_label: e.kind_label, time: e.start_time, location: e.location, team: e.tennis_team.name, id: e.id, team_id: e.tennis_team_id }
+                     },
+                     friendlies: friendlies_today.map { |f|
+                       { title: f.title, time: f.starts_at.strftime("%-l:%M %p"), location: f.location,
+                         spots: "#{f.spots.size}/#{f.capacity} claimed", url: friendly_path(f) }
                      }
                    }.to_json %>
 
                 <button type="button"
-                        class="cr-dash-cal-day <%= 'cr-dash-cal-day-match'  if matches_today.any? %> <%= 'cr-dash-cal-day-event'  if events_today.any? && matches_today.empty? %> <%= 'cr-dash-cal-day-today' if is_today %>"
+                        class="cr-dash-cal-day <%= 'cr-dash-cal-day-match'  if matches_today.any? %> <%= 'cr-dash-cal-day-event'  if (events_today.any? || friendlies_today.any?) && matches_today.empty? %> <%= 'cr-dash-cal-day-today' if is_today %>"
                         data-action="click->dashboard-calendar#open"
                         data-dashboard-calendar-payload-param='<%= payload %>'>
                   <span class="cr-dash-cal-day-num"><%= day.day %></span>
@@ -182,6 +188,9 @@
                       <% end %>
                       <% events_today.each do |e| %>
                         <span class="cr-dash-cal-dot cr-dash-cal-dot-<%= e.kind %>"></span>
+                      <% end %>
+                      <% friendlies_today.each do |_| %>
+                        <span class="cr-dash-cal-dot cr-dash-cal-dot-friendly"></span>
                       <% end %>
                     </span>
                   <% end %>

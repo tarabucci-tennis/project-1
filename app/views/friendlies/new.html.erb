@@ -1,0 +1,40 @@
+<% content_for :title, "Book a friendly · Court Report" %>
+
+<div class="cr-rp-page">
+  <%= link_to "← My Teams", teams_path, class: "cr-back-link" %>
+
+  <section class="cr-rp-card">
+    <div class="cr-rp-card-head">
+      <h2 class="cr-rp-card-title">🎾 Book a friendly</h2>
+      <span class="cr-rp-card-note">You'll get one link to share. First come, first served.</span>
+    </div>
+
+    <% if @friendly.errors.any? %>
+      <p class="cr-fr-error"><%= @friendly.errors.full_messages.to_sentence %></p>
+    <% end %>
+
+    <%= form_with model: @friendly, url: friendlies_path, method: :post, data: { turbo: false }, class: "cr-fr-form" do |f| %>
+      <label>Name <span>(optional)</span>
+        <%= f.text_field :title, placeholder: "Friendly" %>
+      </label>
+      <label>Date &amp; time
+        <%= f.datetime_local_field :starts_at, required: true %>
+      </label>
+      <label>Where
+        <%= f.text_field :location, placeholder: "e.g. Aronimink Golf Club, courts 3 & 4" %>
+      </label>
+      <fieldset>
+        <legend>Courts</legend>
+        <label class="cr-fr-radio"><%= f.radio_button :courts, 1 %> 1 court · 4 players</label>
+        <label class="cr-fr-radio"><%= f.radio_button :courts, 2 %> 2 courts · 8 players</label>
+      </fieldset>
+      <label>Note <span>(optional)</span>
+        <%= f.text_area :notes, rows: 2, placeholder: "e.g. 4.0 level, bring a can of balls" %>
+      </label>
+      <label class="cr-fr-radio">
+        <%= check_box_tag :im_playing, "1", true %> I'm playing (take the first spot)
+      </label>
+      <button type="submit" class="cr-btn cr-btn-gold">Book it &amp; get the link</button>
+    <% end %>
+  </section>
+</div>

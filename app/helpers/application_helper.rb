@@ -77,6 +77,22 @@ module ApplicationHelper
     }
   end
 
+  # Google Calendar "add event" link for a friendly (2 hours long). Times are
+  # written without a zone, like the match links, so Google uses the viewer's.
+  def friendly_google_calendar_url(friendly, share_url: nil)
+    fmt = "%Y%m%dT%H%M%S"
+    start = friendly.starts_at
+    details = [ "Tennis friendly organized by #{friendly.organizer.name}.", friendly.notes.presence, share_url ].compact.join("\n")
+    params = {
+      action: "TEMPLATE",
+      text: "🎾 #{friendly.title}",
+      dates: "#{start.strftime(fmt)}/#{(start + 2.hours).strftime(fmt)}",
+      location: friendly.location.to_s,
+      details: details
+    }
+    "https://calendar.google.com/calendar/render?#{params.to_query}"
+  end
+
   def google_calendar_url(match)
     team_name = match.tennis_team.name
     title = "#{team_name} vs. #{match.opponent}"

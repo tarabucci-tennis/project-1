@@ -24,6 +24,14 @@ Rails.application.routes.draw do
   get "admin/usta_import", to: "admin#usta_import", as: :admin_usta_import
   post "admin/usta_import", to: "admin#usta_import"
 
+  # Friendlies: book a casual match and share one link to fill the courts
+  get    "friendlies/new", to: "friendlies#new", as: :new_friendly
+  post   "friendlies", to: "friendlies#create", as: :friendlies
+  get    "f/:token", to: "friendlies#show", as: :friendly
+  delete "f/:token", to: "friendlies#destroy"
+  post   "f/:token/claim", to: "friendlies#claim", as: :claim_friendly
+  delete "f/:token/claim", to: "friendlies#unclaim"
+
   # Add a whole USTA team from its TennisLink Team Summary file
   get  "usta-teams/new", to: "usta_teams#new", as: :new_usta_team
   post "usta-teams/preview", to: "usta_teams#preview", as: :preview_usta_teams
