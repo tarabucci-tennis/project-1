@@ -5278,3 +5278,7 @@ body.cr-ctx-friendlies-new, body.cr-ctx-friendlies-show, body.cr-ctx-friendlies-
 
 .cr-auth-perks { list-style: none; display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; margin: 0 0 18px; padding: 0; }
 .cr-auth-perks li { font-size: 0.74rem; font-weight: 600; color: var(--cr-text-muted); background: var(--cr-bg); border-radius: 999px; padding: 4px 10px; }
+.cr-fr-form input[type="number"] { padding: 10px 12px; border: 1px solid var(--cr-border); border-radius: 8px; font-size: 0.95rem; width: 120px; }
+.cr-fr-court-controls { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 10px; padding: 14px 18px; margin-bottom: 12px; color: var(--cr-text); }
+.cr-fr-court-btns { display: flex; gap: 8px; flex-wrap: wrap; }
+.cr-fr-hint { color: var(--cr-teal-deep); font-weight: 600; font-size: 0.85rem; }

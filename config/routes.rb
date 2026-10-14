@@ -31,6 +31,7 @@ Rails.application.routes.draw do
   delete "f/:token", to: "friendlies#destroy"
   post   "f/:token/claim", to: "friendlies#claim", as: :claim_friendly
   delete "f/:token/claim", to: "friendlies#unclaim"
+  patch  "f/:token/courts", to: "friendlies#courts", as: :friendly_courts
 
   # Add a whole USTA team from its TennisLink Team Summary file
   get  "usta-teams/new", to: "usta_teams#new", as: :new_usta_team

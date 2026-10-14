@@ -31,4 +31,10 @@ class FriendliesTest < ActionDispatch::IntegrationTest
     get new_friendly_path
     assert_redirected_to login_path
   end
+
+  test "only the organizer can add a court" do
+    patch friendly_courts_path(@friendly), params: { change: 1 }
+    assert_redirected_to login_path
+    assert_equal 1, @friendly.reload.courts
+  end
 end

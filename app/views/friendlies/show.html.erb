@@ -1,7 +1,8 @@
 <% content_for :title, "#{@friendly.title} · Court Report" %>
 <% share_url = friendly_url(@friendly) %>
 <% when_text = @friendly.starts_at.strftime("%a, %b %-d · %-l:%M %p") %>
-<% invite = "🎾 #{@friendly.title}: #{when_text}#{" at #{@friendly.location}" if @friendly.location.present?}. #{@friendly.courts} #{'court'.pluralize(@friendly.courts)}, first come first served. Claim a spot: #{share_url}" %>
+<% claim_label = @friendly.courts.zero? ? "✓ Sign me up" : (@friendly.full? ? "Join the waitlist" : "✓ Count me in") %>
+<% invite = "🎾 #{@friendly.title}: #{when_text}#{" at #{@friendly.location}" if @friendly.location.present?}. #{@friendly.courts.zero? ? "Courts to be booked" : "#{@friendly.courts} #{'court'.pluralize(@friendly.courts)}"}, first come first served. Claim a spot: #{share_url}" %>
 
 <div class="cr-rp-page">
   <% if current_user %><%= link_to "← My Teams", teams_path, class: "cr-back-link" %><% end %>
@@ -16,8 +17,13 @@
       </div>
     </div>
     <div class="cr-rp-hero-level">
-      <div class="cr-rp-level-val"><%= @friendly.open_spots %></div>
-      <div class="cr-rp-level-cap"><%= @friendly.open_spots == 1 ? "spot left" : "spots left" %></div>
+      <% if @friendly.courts.zero? %>
+        <div class="cr-rp-level-val"><%= @friendly.spots.size %></div>
+        <div class="cr-rp-level-cap">signed up</div>
+      <% else %>
+        <div class="cr-rp-level-val"><%= @friendly.open_spots %></div>
+        <div class="cr-rp-level-cap"><%= @friendly.open_spots == 1 ? "spot left" : "spots left" %></div>
+      <% end %>
     </div>
   </section>
 
@@ -30,7 +36,7 @@
     <% if @my_spot %>
       <% on_court = @friendly.players.include?(@my_spot) %>
       <div class="cr-fr-status">
-        <strong><%= on_court ? "✓ You're in, #{@my_spot.name}!" : "You're on the waitlist, #{@my_spot.name}." %></strong>
+        <strong><%= if on_court then "✓ You're in, #{@my_spot.name}!" elsif @friendly.courts.zero? then "You're signed up, #{@my_spot.name}. You'll be placed when courts are added." else "You're on the waitlist, #{@my_spot.name}." end %></strong>
         <%= button_to "Can't make it anymore", claim_friendly_path(@friendly), method: :delete,
               params: { spot_id: @my_spot.id }, class: "cr-chip-btn",
               form: { style: "display:inline;", data: { turbo_confirm: "Take your name off this friendly?" } } %>
@@ -38,13 +44,19 @@
     <% else %>
       <%= form_with url: claim_friendly_path(@friendly), method: :post, data: { turbo: false }, class: "cr-fr-claim-form" do %>
         <% if current_user %>
-          <button type="submit" class="cr-btn cr-btn-gold"><%= @friendly.full? ? "Join the waitlist" : "✓ Count me in" %></button>
+          <button type="submit" class="cr-btn cr-btn-gold"><%= claim_label %></button>
         <% else %>
           <input type="text" name="name" placeholder="Your name" required maxlength="60" autocomplete="name">
-          <button type="submit" class="cr-btn cr-btn-gold"><%= @friendly.full? ? "Join the waitlist" : "✓ Count me in" %></button>
+          <button type="submit" class="cr-btn cr-btn-gold"><%= claim_label %></button>
         <% end %>
       <% end %>
-      <p class="cr-rp-foot" style="padding: 8px 0 0;">First come, first served<%= " · it's full, so new names go on the waitlist" if @friendly.full? %>.</p>
+      <p class="cr-rp-foot" style="padding: 8px 0 0;">
+        <% if @friendly.courts.zero? %>
+          No courts booked yet. Sign up now and you'll be placed in order as courts are added.
+        <% else %>
+          First come, first served<%= " · it's full, so new names go on the waitlist (they move up if a court is added)" if @friendly.full? %>.
+        <% end %>
+      </p>
     <% end %>
   </section>
 
@@ -74,10 +86,31 @@
     <% end %>
   </section>
 
+  <% if organizer? %>
+    <section class="cr-rp-card cr-fr-court-controls">
+      <div>
+        <strong><%= @friendly.courts %> <%= "court".pluralize(@friendly.courts) %></strong>
+        <% if @friendly.room_for_another_court? %>
+          <span class="cr-fr-hint">· <%= @friendly.waitlist.size %> waiting, enough for another court</span>
+        <% end %>
+      </div>
+      <div class="cr-fr-court-btns">
+        <% if @friendly.courts.positive? %>
+          <%= button_to "➖ Remove a court", friendly_courts_path(@friendly), method: :patch, params: { change: -1 },
+                class: "cr-chip-btn", form: { style: "display:inline;", data: { turbo_confirm: "Remove a court? Its players go back on the waitlist." } } %>
+        <% end %>
+        <% if @friendly.courts < Friendly::MAX_COURTS %>
+          <%= button_to "➕ Add a court", friendly_courts_path(@friendly), method: :patch, params: { change: 1 },
+                class: "cr-chip-btn", form: { style: "display:inline;" } %>
+        <% end %>
+      </div>
+    </section>
+  <% end %>
+
   <% if @friendly.waitlist.any? %>
     <section class="cr-rp-card">
-      <div class="cr-rp-card-head"><h2 class="cr-rp-card-title">Waitlist</h2>
-        <span class="cr-rp-card-note">Moves up if someone drops out</span></div>
+      <div class="cr-rp-card-head"><h2 class="cr-rp-card-title"><%= @friendly.courts.zero? ? "Signed up" : "Waitlist" %></h2>
+        <span class="cr-rp-card-note"><%= @friendly.courts.zero? ? "Placed in this order when courts are added" : "Moves up if someone drops out or a court is added" %></span></div>
       <ol class="cr-fr-list cr-fr-wait">
         <% @friendly.waitlist.each do |spot| %>
           <li><%= spot.name %>
