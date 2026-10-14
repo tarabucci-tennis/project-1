@@ -63,6 +63,7 @@
         <button class="cr-home-tab cr-home-tab-active" data-home-tabs-target="tab" data-action="click->home-tabs#switch">🏆 Standings</button>
         <button class="cr-home-tab" data-home-tabs-target="tab" data-action="click->home-tabs#switch">📅 Calendar</button>
         <button class="cr-home-tab" data-home-tabs-target="tab" data-action="click->home-tabs#switch">📋 Coming Up</button>
+        <button class="cr-home-tab" data-home-tabs-target="tab" data-action="click->home-tabs#switch">🎾 Friendlies &amp; Clinics</button>
       </div>
 
       <%# ── Panel 1: Standings (the landing view) ───────────────── %>
@@ -168,11 +169,11 @@
                        { opponent: m.opponent, time: m.match_time, location: m.location, team: m.tennis_team.name, url: team_match_path(m.tennis_team, m) }
                      },
                      events: events_today.map { |e|
-                       { title: e.title, kind: e.kind, kind_label: e.kind_label, time: e.start_time, location: e.location, team: e.tennis_team.name, id: e.id, team_id: e.tennis_team_id }
+                       { title: e.title, kind: e.display_kind, kind_label: e.kind_label, time: e.start_time, location: e.location, team: e.tennis_team.name, id: e.id, team_id: e.tennis_team_id }
                      },
                      friendlies: friendlies_today.map { |f|
                        { title: f.title, time: f.starts_at.strftime("%-l:%M %p"), location: f.location,
-                         spots: "#{f.spots.size}/#{f.capacity} claimed", url: friendly_path(f) }
+                         spots: (f.courts.zero? ? "#{f.spots.size} signed up" : "#{f.spots.size}/#{f.capacity} claimed"), url: friendly_path(f) }
                      }
                    }.to_json %>
 
@@ -187,7 +188,7 @@
                         <span class="cr-dash-cal-dot cr-dash-cal-dot-match"></span>
                       <% end %>
                       <% events_today.each do |e| %>
-                        <span class="cr-dash-cal-dot cr-dash-cal-dot-<%= e.kind %>"></span>
+                        <span class="cr-dash-cal-dot cr-dash-cal-dot-<%= e.display_kind %>"></span>
                       <% end %>
                       <% friendlies_today.each do |_| %>
                         <span class="cr-dash-cal-dot cr-dash-cal-dot-friendly"></span>
@@ -200,7 +201,6 @@
 
             <div class="cr-dash-cal-legend">
               <span><span class="cr-dash-cal-dot cr-dash-cal-dot-match"></span> Match</span>
-              <span><span class="cr-dash-cal-dot cr-dash-cal-dot-practice"></span> Practice</span>
               <span><span class="cr-dash-cal-dot cr-dash-cal-dot-clinic"></span> Clinic</span>
               <span><span class="cr-dash-cal-dot cr-dash-cal-dot-friendly"></span> Friendly</span>
             </div>
@@ -234,14 +234,13 @@
                   <label class="cr-dash-cal-form-row">
                     <span>Type</span>
                     <select name="kind">
-                      <option value="practice">Practice</option>
-                      <option value="clinic">Clinic</option>
                       <option value="friendly">Friendly</option>
+                      <option value="clinic">Clinic</option>
                     </select>
                   </label>
                   <label class="cr-dash-cal-form-row">
                     <span>Title</span>
-                    <input type="text" name="title" placeholder="e.g. Saturday Drill">
+                    <input type="text" name="title" placeholder="e.g. Saturday Doubles">
                   </label>
                   <label class="cr-dash-cal-form-row">
                     <span>Time</span>
@@ -258,7 +257,7 @@
               </div>
 
               <p class="cr-dash-cal-modal-captain-note" data-dashboard-calendar-target="captainNote" style="display: none;">
-                Only captains and co-captains can add practices, clinics, or friendlies.
+                Only captains and co-captains can add friendlies or clinics here. Anyone can use 🎾 Book a friendly.
               </p>
             </div>
           </div>
@@ -267,9 +266,13 @@
 
       <%# ── Panel 3: Coming Up ──────────────────────────────────── %>
       <div data-home-tabs-target="panel" style="display: none;">
-        <% if @upcoming_matches.present? && @upcoming_matches.any? %>
+        <% if @coming_up_items.any? %>
           <div class="cr-my-week-list">
-            <% @full_upcoming_matches.each do |match| %>
+            <% @coming_up_items.each do |match| %>
+              <% unless match.is_a?(Match) %>
+                <%= render "teams/event_card", item: match %>
+                <% next %>
+              <% end %>
               <% team = match.tennis_team %>
               <div class="cr-my-week-card cr-my-week-card-compact"
                    onclick="window.location='<%= team_match_path(team, match) %>'" style="cursor: pointer;">
@@ -312,7 +315,25 @@
             <% end %>
           </div>
         <% else %>
-          <p class="cr-coming-up-empty">No upcoming matches on any of your teams.</p>
+          <p class="cr-coming-up-empty">Nothing coming up on any of your teams.</p>
+        <% end %>
+      </div>
+
+      <%# ── Panel 4: Friendlies & Clinics ───────────────────────── %>
+      <div data-home-tabs-target="panel" style="display: none;">
+        <div class="cr-fr-tab-head">
+          <%= link_to "🎾 Book a friendly", new_friendly_path, class: "cr-btn cr-btn-gold cr-btn-compact" %>
+        </div>
+        <% fc_items = (@upcoming_friendlies.to_a + @upcoming_team_events) %>
+        <% fc_items = fc_items.sort_by { |i| i.is_a?(Friendly) ? i.starts_at : i.event_date.in_time_zone } %>
+        <% if fc_items.any? %>
+          <div class="cr-my-week-list">
+            <% fc_items.each do |item| %>
+              <%= render "teams/event_card", item: item %>
+            <% end %>
+          </div>
+        <% else %>
+          <p class="cr-coming-up-empty">No friendlies or clinics coming up. Book a friendly and share the link, or a captain can add a clinic from the Calendar.</p>
         <% end %>
       </div>
     </div>

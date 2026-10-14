@@ -23,11 +23,9 @@
       <label>Where
         <%= f.text_field :location, placeholder: "e.g. Aronimink Golf Club, courts 3 & 4" %>
       </label>
-      <fieldset>
-        <legend>Courts</legend>
-        <label class="cr-fr-radio"><%= f.radio_button :courts, 1 %> 1 court · 4 players</label>
-        <label class="cr-fr-radio"><%= f.radio_button :courts, 2 %> 2 courts · 8 players</label>
-      </fieldset>
+      <label>Courts <span>(4 players each; you can add or remove courts later, or put 0 if none are booked yet)</span>
+        <%= f.number_field :courts, min: 0, max: Friendly::MAX_COURTS, step: 1, required: true, class: "cr-fr-number" %>
+      </label>
       <label>Note <span>(optional)</span>
         <%= f.text_area :notes, rows: 2, placeholder: "e.g. 4.0 level, bring a can of balls" %>
       </label>

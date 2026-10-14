@@ -39,4 +39,19 @@ class FriendlyTest < ActiveSupport::TestCase
     assert_includes Friendly.involving(@organizer), @friendly
     assert_includes Friendly.involving(other), @friendly
   end
+
+  test "any number of courts, including none yet" do
+    @friendly.update!(courts: 3)
+    13.times { |i| @friendly.spots.create!(name: "Q#{i}") }
+    @friendly.reload
+    assert_equal 12, @friendly.players.size
+    assert_equal [ "Q12" ], @friendly.waitlist.map(&:name)
+
+    @friendly.update!(courts: 0)
+    assert_empty @friendly.reload.players
+    assert_equal 13, @friendly.waitlist.size
+    assert @friendly.room_for_another_court?
+
+    assert_not @friendly.update(courts: -1)
+  end
 end

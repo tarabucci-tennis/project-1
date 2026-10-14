@@ -4,8 +4,8 @@
 class FriendliesController < ApplicationController
   GUEST_COOKIE = :friendly_guest_keys
 
-  before_action :require_login, only: [ :new, :create, :destroy ]
-  before_action :load_friendly, only: [ :show, :claim, :unclaim, :destroy ]
+  before_action :require_login, only: [ :new, :create, :destroy, :courts ]
+  before_action :load_friendly, only: [ :show, :claim, :unclaim, :destroy, :courts ]
 
   # GET /friendlies/new
   def new
@@ -46,7 +46,14 @@ class FriendliesController < ApplicationController
     if spot.save
       remember_guest(spot.guest_key) if spot.guest_key
       place = @friendly.reload.spots.index(spot).to_i
-      msg = place < @friendly.capacity ? "You're in! ✓" : "It's full, so you're on the waitlist (##{place - @friendly.capacity + 1})."
+      msg =
+        if @friendly.courts.zero?
+          "You're signed up (##{place + 1}). You'll be placed when courts are added."
+        elsif place < @friendly.capacity
+          "You're in! ✓"
+        else
+          "It's full, so you're on the waitlist (##{place - @friendly.capacity + 1})."
+        end
       redirect_to friendly_path(@friendly), notice: msg
     else
       redirect_to friendly_path(@friendly), alert: spot.errors.full_messages.to_sentence
@@ -61,6 +68,20 @@ class FriendliesController < ApplicationController
 
     spot.destroy
     redirect_to friendly_path(@friendly), notice: "#{spot.name} is off the list."
+  end
+
+  # PATCH /f/:token/courts?change=1|-1 — organizer adds or removes a court.
+  # Removing one moves its players back onto the waitlist (latest sign-ups
+  # first); adding one fills it from the waitlist in sign-up order.
+  def courts
+    unless organizer?
+      return redirect_to(friendly_path(@friendly), alert: "Only the organizer can change the courts.")
+    end
+    change = params[:change].to_i.clamp(-1, 1)
+    new_count = (@friendly.courts + change).clamp(0, Friendly::MAX_COURTS)
+    @friendly.update!(courts: new_count)
+    redirect_to friendly_path(@friendly),
+                notice: "#{new_count} #{'court'.pluralize(new_count)} now. #{change.positive? ? 'Players moved up from the waitlist.' : 'Anyone without a court is on the waitlist.'}"
   end
 
   # DELETE /f/:token

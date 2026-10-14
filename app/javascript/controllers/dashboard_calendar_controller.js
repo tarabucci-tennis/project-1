@@ -3,7 +3,7 @@ import { Controller } from "@hotwired/stimulus"
 // Powers the clickable month calendar on the My Teams home page. Each day
 // button carries a JSON payload with its matches + team events for that
 // date. Clicking opens a modal showing them, and (for captains/co-captains
-// of at least one team) a form to add a practice/clinic/friendly.
+// of at least one team) a form to add a friendly or clinic.
 export default class extends Controller {
   static targets = [
     "modal", "title", "body",
