@@ -15,6 +15,8 @@ class User < ApplicationRecord
   has_many :team_memberships, dependent: :destroy
   has_many :member_teams, through: :team_memberships, source: :tennis_team
   has_many :availabilities, dependent: :destroy
+  has_many :organized_friendlies, class_name: "Friendly", foreign_key: :organizer_id, dependent: :destroy
+  has_many :friendly_spots, dependent: :nullify
 
   validates :name, presence: true
   validates :email, uniqueness: { case_sensitive: false },

@@ -85,6 +85,12 @@ class TeamsController < ApplicationController
     @calendar_events_by_day = TeamEvent.where(tennis_team_id: team_ids, event_date: month_range)
                                        .includes(:tennis_team)
                                        .group_by(&:event_date)
+
+    # Friendlies I organized or claimed a spot in.
+    @calendar_friendlies_by_day = Friendly.involving(current_user)
+                                          .where(starts_at: month_range.first.beginning_of_day..month_range.last.end_of_day)
+                                          .includes(:spots)
+                                          .group_by { |f| f.starts_at.to_date }
   end
 
   def show

@@ -1,0 +1,111 @@
+<% content_for :title, "#{@friendly.title} · Court Report" %>
+<% share_url = friendly_url(@friendly) %>
+<% when_text = @friendly.starts_at.strftime("%a, %b %-d · %-l:%M %p") %>
+<% invite = "🎾 #{@friendly.title}: #{when_text}#{" at #{@friendly.location}" if @friendly.location.present?}. #{@friendly.courts} #{'court'.pluralize(@friendly.courts)}, first come first served. Claim a spot: #{share_url}" %>
+
+<div class="cr-rp-page">
+  <% if current_user %><%= link_to "← My Teams", teams_path, class: "cr-back-link" %><% end %>
+
+  <section class="cr-rp-hero">
+    <div class="cr-rp-hero-main">
+      <div class="cr-rp-eyebrow">Friendly · organized by <%= @friendly.organizer.name %></div>
+      <h1 class="cr-rp-name"><%= @friendly.title %></h1>
+      <div class="cr-rp-sub">
+        <%= @friendly.starts_at.strftime("%A, %B %-d · %-l:%M %p") %>
+        <% if @friendly.location.present? %> · <%= @friendly.location %><% end %>
+      </div>
+    </div>
+    <div class="cr-rp-hero-level">
+      <div class="cr-rp-level-val"><%= @friendly.open_spots %></div>
+      <div class="cr-rp-level-cap"><%= @friendly.open_spots == 1 ? "spot left" : "spots left" %></div>
+    </div>
+  </section>
+
+  <% if @friendly.notes.present? %>
+    <p class="cr-fr-note"><%= @friendly.notes %></p>
+  <% end %>
+
+  <%# ── Claim / your status ── %>
+  <section class="cr-rp-card cr-fr-claim">
+    <% if @my_spot %>
+      <% on_court = @friendly.players.include?(@my_spot) %>
+      <div class="cr-fr-status">
+        <strong><%= on_court ? "✓ You're in, #{@my_spot.name}!" : "You're on the waitlist, #{@my_spot.name}." %></strong>
+        <%= button_to "Can't make it anymore", claim_friendly_path(@friendly), method: :delete,
+              params: { spot_id: @my_spot.id }, class: "cr-chip-btn",
+              form: { style: "display:inline;", data: { turbo_confirm: "Take your name off this friendly?" } } %>
+      </div>
+    <% else %>
+      <%= form_with url: claim_friendly_path(@friendly), method: :post, data: { turbo: false }, class: "cr-fr-claim-form" do %>
+        <% if current_user %>
+          <button type="submit" class="cr-btn cr-btn-gold"><%= @friendly.full? ? "Join the waitlist" : "✓ Count me in" %></button>
+        <% else %>
+          <input type="text" name="name" placeholder="Your name" required maxlength="60" autocomplete="name">
+          <button type="submit" class="cr-btn cr-btn-gold"><%= @friendly.full? ? "Join the waitlist" : "✓ Count me in" %></button>
+        <% end %>
+      <% end %>
+      <p class="cr-rp-foot" style="padding: 8px 0 0;">First come, first served<%= " · it's full, so new names go on the waitlist" if @friendly.full? %>.</p>
+    <% end %>
+  </section>
+
+  <%# ── Courts ── %>
+  <section class="cr-fr-courts">
+    <% @friendly.courts_with_players.each_with_index do |court, ci| %>
+      <div class="cr-rp-card cr-fr-court">
+        <div class="cr-rp-card-head"><h2 class="cr-rp-card-title">Court <%= ci + 1 %></h2>
+          <span class="cr-rp-card-note"><%= court.compact.size %> / <%= Friendly::PER_COURT %></span></div>
+        <ul class="cr-fr-list">
+          <% court.each do |spot| %>
+            <% if spot %>
+              <li class="cr-fr-filled">
+                <span class="cr-fr-check">✓</span> <%= spot.name %>
+                <% if can_remove?(spot) && spot != @my_spot %>
+                  <%= button_to "×", claim_friendly_path(@friendly), method: :delete, params: { spot_id: spot.id },
+                        class: "cr-fr-remove", title: "Remove #{spot.name}",
+                        form: { style: "display:inline;", data: { turbo_confirm: "Remove #{spot.name}?" } } %>
+                <% end %>
+              </li>
+            <% else %>
+              <li class="cr-fr-open">Open spot</li>
+            <% end %>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+  </section>
+
+  <% if @friendly.waitlist.any? %>
+    <section class="cr-rp-card">
+      <div class="cr-rp-card-head"><h2 class="cr-rp-card-title">Waitlist</h2>
+        <span class="cr-rp-card-note">Moves up if someone drops out</span></div>
+      <ol class="cr-fr-list cr-fr-wait">
+        <% @friendly.waitlist.each do |spot| %>
+          <li><%= spot.name %>
+            <% if can_remove?(spot) && spot != @my_spot %>
+              <%= button_to "×", claim_friendly_path(@friendly), method: :delete, params: { spot_id: spot.id },
+                    class: "cr-fr-remove", form: { style: "display:inline;" } %>
+            <% end %>
+          </li>
+        <% end %>
+      </ol>
+    </section>
+  <% end %>
+
+  <%# ── Share + calendar ── %>
+  <div class="cr-rp-actions" style="margin-top: 14px;">
+    <%= link_to "📅 Add to Google Calendar", friendly_google_calendar_url(@friendly, share_url: share_url),
+          target: "_blank", rel: "noopener", class: "cr-chip-btn" %>
+    <button type="button" class="cr-chip-btn" data-invite="<%= invite %>"
+            onclick="var t=this.dataset.invite,b=this;if(navigator.share){navigator.share({text:t}).catch(function(){})}else if(navigator.clipboard){navigator.clipboard.writeText(t).then(function(){b.textContent='Copied ✓'})}">
+      🔗 Share invite
+    </button>
+    <% if organizer? %>
+      <%= button_to "Cancel friendly", friendly_path(@friendly), method: :delete, class: "cr-chip-btn",
+            form: { style: "display:inline;", data: { turbo_confirm: "Cancel this friendly for everyone?" } } %>
+    <% end %>
+  </div>
+  <% if organizer? %>
+    <p class="cr-rp-foot" style="padding: 8px 0;">Share invite sends the link by text, WhatsApp or email on your phone (or copies it on a computer).
+      Anyone with the link can claim a spot, with no account needed. You can remove anyone with ×.</p>
+  <% end %>
+</div>

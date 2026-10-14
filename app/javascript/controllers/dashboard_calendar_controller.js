@@ -93,8 +93,9 @@ export default class extends Controller {
   _renderItems(payload) {
     const matches = payload.matches || []
     const events  = payload.events  || []
+    const friendlies = payload.friendlies || []
 
-    if (matches.length === 0 && events.length === 0) {
+    if (matches.length === 0 && events.length === 0 && friendlies.length === 0) {
       return `<p class="cr-dash-cal-modal-empty">Nothing scheduled this day yet.</p>`
     }
 
@@ -130,6 +131,22 @@ export default class extends Controller {
           ${time}
           ${loc}
         </div>
+      `)
+    })
+
+    friendlies.forEach((f) => {
+      const loc = f.location ? `<div class="cr-dash-cal-item-meta">${escapeHtml(f.location)}</div>` : ""
+      parts.push(`
+        <a class="cr-dash-cal-item cr-dash-cal-item-friendly cr-dash-cal-item-friendly-link" href="${escapeHtml(f.url)}">
+          <div class="cr-dash-cal-item-row">
+            <span class="cr-dash-cal-item-kind">Friendly</span>
+            <span class="cr-dash-cal-item-team">${escapeHtml(f.spots || "")}</span>
+          </div>
+          <div class="cr-dash-cal-item-title">${escapeHtml(f.title || "Friendly")}</div>
+          <div class="cr-dash-cal-item-meta">${escapeHtml(f.time || "")}</div>
+          ${loc}
+          <div class="cr-dash-cal-item-view">See who's playing →</div>
+        </a>
       `)
     })
 

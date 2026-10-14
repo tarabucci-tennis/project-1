@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_12_000000) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_14_000000) do
   create_table "availabilities", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.integer "match_id", null: false
@@ -42,6 +42,32 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_12_000000) do
     t.integer "wins", default: 0, null: false
     t.index ["tennis_team_id", "name"], name: "index_division_teams_on_tennis_team_id_and_name", unique: true
     t.index ["tennis_team_id"], name: "index_division_teams_on_tennis_team_id"
+  end
+
+  create_table "friendlies", force: :cascade do |t|
+    t.integer "courts", default: 1, null: false
+    t.datetime "created_at", null: false
+    t.string "location"
+    t.text "notes"
+    t.integer "organizer_id", null: false
+    t.datetime "starts_at", null: false
+    t.string "title", default: "Friendly", null: false
+    t.string "token", null: false
+    t.datetime "updated_at", null: false
+    t.index ["organizer_id"], name: "index_friendlies_on_organizer_id"
+    t.index ["starts_at"], name: "index_friendlies_on_starts_at"
+    t.index ["token"], name: "index_friendlies_on_token", unique: true
+  end
+
+  create_table "friendly_spots", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.integer "friendly_id", null: false
+    t.string "guest_key"
+    t.string "name", null: false
+    t.datetime "updated_at", null: false
+    t.integer "user_id"
+    t.index ["friendly_id"], name: "index_friendly_spots_on_friendly_id"
+    t.index ["user_id"], name: "index_friendly_spots_on_user_id"
   end
 
   create_table "lineup_slots", force: :cascade do |t|
@@ -280,6 +306,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_12_000000) do
   add_foreign_key "availabilities", "matches"
   add_foreign_key "availabilities", "users"
   add_foreign_key "division_teams", "tennis_teams"
+  add_foreign_key "friendlies", "users", column: "organizer_id"
+  add_foreign_key "friendly_spots", "friendlies"
+  add_foreign_key "friendly_spots", "users"
   add_foreign_key "lineup_slots", "lineups"
   add_foreign_key "lineup_slots", "users"
   add_foreign_key "lineups", "matches"
