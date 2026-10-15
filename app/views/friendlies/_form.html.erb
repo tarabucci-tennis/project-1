@@ -9,9 +9,21 @@
   <label>Date &amp; start time
     <%= f.datetime_local_field :starts_at, required: true %>
   </label>
-  <label>End time <span>(optional)</span>
-    <%= f.time_field :end_time, value: friendly.end_time, step: 300 %>
-  </label>
+  <fieldset class="cr-fr-length">
+    <legend>How long is the court booked?</legend>
+    <div class="cr-fr-length-opts">
+      <% [ [ "90", "1½ hours" ], [ "120", "2 hours" ], [ "custom", "Other" ], [ "none", "Not sure" ] ].each do |val, label| %>
+        <label class="cr-fr-length-opt">
+          <%= f.radio_button :duration, val, checked: friendly.duration == val,
+                onchange: "this.form.querySelector('.cr-fr-end-time').hidden = this.value !== 'custom'" %>
+          <span><%= label %></span>
+        </label>
+      <% end %>
+    </div>
+    <label class="cr-fr-end-time" <%= "hidden" unless friendly.duration == "custom" %>>End time
+      <%= f.time_field :end_time, value: friendly.end_time, step: 300 %>
+    </label>
+  </fieldset>
   <label>Where <span>(optional)</span>
     <%= f.text_field :location, placeholder: "e.g. Aronimink Golf Club" %>
   </label>

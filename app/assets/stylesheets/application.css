@@ -5366,3 +5366,13 @@ a.cr-clubs-addr:hover { text-decoration: underline; color: var(--cr-text); }
 .cr-clubs-none { font-style: italic; }
 .cr-clubs-foot { font-size: 0.8rem; color: var(--cr-text-muted); margin: 8px 2px 0; }
 body.cr-ctx-clubs-new, body.cr-ctx-clubs-edit, body.cr-ctx-clubs-create, body.cr-ctx-clubs-update { background: var(--cr-navy-page); }
+
+/* Friendly booking: court length chips */
+.cr-fr-length-opts { display: flex; flex-wrap: wrap; gap: 8px; }
+.cr-fr-length-opt { display: inline-flex !important; align-items: center; gap: 0 !important; cursor: pointer; }
+.cr-fr-length-opt input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.cr-fr-length-opt span { display: inline-flex; align-items: center; min-height: 44px; padding: 8px 16px; border: 2px solid var(--cr-border); border-radius: 999px; font-weight: 700 !important; font-size: 0.92rem; color: var(--cr-text) !important; background: #fff; }
+.cr-fr-length-opt input:checked + span { border-color: var(--cr-gold); background: rgba(201, 162, 74, 0.16); color: var(--cr-black) !important; }
+.cr-fr-length-opt input:focus-visible + span { outline: 2px solid var(--cr-teal); outline-offset: 2px; }
+.cr-fr-end-time[hidden] { display: none !important; }
+.cr-fr-end-time { margin-top: 8px; }

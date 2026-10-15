@@ -26,6 +26,18 @@ class Friendly < ApplicationRecord
     defined?(@end_time) ? @end_time : ends_at&.strftime("%H:%M")
   end
 
+  # How long the court is booked. Most reservations are 90 minutes or
+  # 2 hours, so those are one tap; "custom" uses end_time, "none" = no end.
+  DURATIONS = { "90" => 90, "120" => 120 }.freeze
+  attr_writer :duration
+
+  def duration
+    return @duration if defined?(@duration)
+    return "none" unless ends_at && starts_at
+    mins = ((ends_at - starts_at) / 60).round
+    DURATIONS.key(mins) || "custom"
+  end
+
   before_validation :apply_end_time
   validates :sets_count, numericality: { only_integer: true, greater_than_or_equal_to: 1, less_than_or_equal_to: 3 }
 
@@ -153,6 +165,12 @@ class Friendly < ApplicationRecord
   private
 
   def apply_end_time
+    if defined?(@duration)
+      case @duration.to_s
+      when *DURATIONS.keys then return self.ends_at = starts_at && starts_at + DURATIONS[@duration.to_s].minutes
+      when "none" then return self.ends_at = nil
+      end
+    end
     return unless defined?(@end_time)
     hh, mm = @end_time.to_s.strip.split(":").map { |x| Integer(x, 10, exception: false) }
     self.ends_at = (hh && starts_at) ? starts_at.change(hour: hh, min: mm.to_i) : nil
