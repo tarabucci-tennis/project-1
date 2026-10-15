@@ -87,6 +87,7 @@ module ApplicationHelper
       end
       lines << "Sitting out: #{set['sitting'].join(', ')}" if Array(set["sitting"]).any?
     end
+    lines << "" << "Waitlist: #{friendly.waitlist.map(&:name).join(', ')}" if friendly.waitlist.any?
     lines.join("\n")
   end
 

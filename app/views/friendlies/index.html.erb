@@ -11,7 +11,7 @@
   <% if @friendlies.any? %>
     <div class="cr-fr-index">
       <% @friendlies.each do |f| %>
-        <% n = f.playing_spots.size %>
+        <% n = f.active_spots.size %>
         <%= link_to friendly_path(f), class: "cr-fr-index-row" do %>
           <div class="cr-fr-index-main">
             <div class="cr-fr-index-title"><%= f.title %></div>
@@ -19,7 +19,7 @@
               <%= f.starts_at.strftime("%a, %b %-d · %-l:%M %p") %><% if f.location.present? %> · <%= f.location %><% end %>
             </div>
             <div class="cr-fr-index-sub">
-              <%= n %> <%= "player".pluralize(n) %> · <%= f.courts_needed %> <%= "court".pluralize(f.courts_needed) %>
+              <%= n %> signed up · <%= f.courts_needed %> <%= "court".pluralize(f.courts_needed) %><%= " · #{f.waitlist.size} on the waitlist" if f.courts_needed.positive? && f.waitlist.any? %>
             </div>
           </div>
           <span class="cr-fr-badge <%= f.done? ? "cr-fr-badge-done" : "cr-fr-badge-up" %>"><%= f.done? ? "Done" : "Upcoming" %></span>

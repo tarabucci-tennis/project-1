@@ -173,7 +173,7 @@
                      },
                      friendlies: friendlies_today.map { |f|
                        { title: f.title, time: f.starts_at.strftime("%-l:%M %p"), location: f.location,
-                         spots: "#{f.playing_spots.size} signed up · #{f.courts_needed} #{'court'.pluralize(f.courts_needed)}", url: friendly_path(f) }
+                         spots: "#{f.active_spots.size} signed up · #{f.courts_needed} #{'court'.pluralize(f.courts_needed)}#{" · #{f.waitlist.size} waiting" if f.courts_needed.positive? && f.waitlist.any?}", url: friendly_path(f) }
                      }
                    }.to_json %>
 

@@ -15,23 +15,30 @@ class FriendlyTest < ActiveSupport::TestCase
     (set["courts"].flatten + set["sitting"]).sort == names.sort
   end
 
-  test "courts come from the names: every 4 = 1 court, the rest sit" do
+  test "courts come from the names: every 4 = 1 court, the rest wait" do
     assert @friendly.token.present?
     add("A", "B", "C")
     assert_equal 0, @friendly.courts_needed
     assert_not @friendly.can_generate?
 
-    add("D", "E", "F", "G", "H", "I")
-    assert_equal 2, @friendly.courts_needed
-    assert_equal 1, @friendly.sitting_each_set
+    add("D", "E", "F", "G", "H", "I", "J", "K", "L", "M")
+    assert_equal 3, @friendly.courts_needed
+    assert_equal 12, @friendly.playing_spots.size
+    assert_equal [ "M" ], @friendly.waitlist.map(&:name), "the 13th waits"
     assert_equal 3, @friendly.players_for_next_court
+
+    add("N", "O", "P")
+    assert_equal 4, @friendly.courts_needed
+    assert_empty @friendly.waitlist
   end
 
-  test "players taken out of the rotation don't count" do
+  test "someone dropping out or marked out moves the waitlist up" do
     add("A", "B", "C", "D", "E")
-    @friendly.spots.last.update!(in_lineup: false)
-    assert_equal 4, @friendly.reload.playing_spots.size
-    assert_equal 0, @friendly.sitting_each_set
+    assert_equal [ "E" ], @friendly.waitlist.map(&:name)
+    @friendly.spots.first.update!(in_lineup: false)
+    @friendly.reload
+    assert_includes @friendly.player_names, "E"
+    assert_empty @friendly.waitlist
   end
 
   test "the same name can't sign up twice" do
@@ -46,50 +53,50 @@ class FriendlyTest < ActiveSupport::TestCase
     assert_includes Friendly.involving(other), @friendly
   end
 
-  test "lineup: 3 sets, new partners each set, sit-outs taken in turn" do
+  test "lineup: full courts only, 3 sets, new partners each set" do
     names = %w[A B C D E F G H I]
     add(*names)
     @friendly.generate_lineup!(rng: Random.new(3))
     sets = @friendly.reload.lineup_sets
     assert_equal 3, sets.size
     sets.each do |set|
-      assert everyone_once?(set, names)
+      assert everyone_once?(set, names.first(8))
       assert_equal 2, set["courts"].size
-      assert_equal 1, set["sitting"].size
+      assert_empty set["sitting"]
     end
-    assert_equal 3, sets.flat_map { |s| s["sitting"] }.uniq.size, "nobody sits twice"
+    assert_not_includes sets.flat_map { |s| s["courts"].flatten }, "I", "the 9th is on the waitlist"
 
     pairs = sets.flat_map { |s| s["courts"].flat_map { |a, b, c, d| [ [ a, b ].sort, [ c, d ].sort ] } }
     assert_equal pairs.size, pairs.uniq.size, "no partner twice"
   end
 
-  test "played sets are kept when regenerating, and a late arrival gets in" do
-    add("A", "B", "C", "D", "E")
+  test "played sets are kept when regenerating, and a new court joins" do
+    add("A", "B", "C", "D", "E", "F", "G")
     @friendly.generate_lineup!(rng: Random.new(1))
     first = @friendly.lineup_sets[0]
     @friendly.mark_set_done!(0, true)
 
-    add("F")
+    add("H")
     assert @friendly.lineup_out_of_date?
     @friendly.generate_lineup!(rng: Random.new(2))
     sets = @friendly.reload.lineup_sets
     assert_equal first.merge("done" => true), sets[0]
-    assert everyone_once?(sets[1], %w[A B C D E F])
-    assert_includes sets[1]["courts"].flatten, "F", "the late arrival plays the next set"
+    assert everyone_once?(sets[1], %w[A B C D E F G H])
+    assert_equal 2, sets[1]["courts"].size
     assert_not @friendly.lineup_out_of_date?
   end
 
   test "swap two players in a set, but not in a played set" do
-    add("A", "B", "C", "D", "E")
+    add("A", "B", "C", "D", "E", "F", "G", "H")
     @friendly.generate_lineup!(rng: Random.new(5))
     set = @friendly.lineup_sets[0]
     a = set["courts"][0][0]
-    sitter = set["sitting"][0]
+    z = set["courts"][1][3]
 
-    assert @friendly.swap_players!(0, "0-0", "s-0")
+    assert @friendly.swap_players!(0, "0-0", "1-3")
     set = @friendly.reload.lineup_sets[0]
-    assert_equal sitter, set["courts"][0][0]
-    assert_equal [ a ], set["sitting"]
+    assert_equal z, set["courts"][0][0]
+    assert_equal a, set["courts"][1][3]
 
     @friendly.mark_set_done!(0, true)
     assert_not @friendly.swap_players!(0, "0-0", "0-1")

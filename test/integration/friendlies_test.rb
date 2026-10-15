@@ -14,6 +14,7 @@ class FriendliesTest < ActionDispatch::IntegrationTest
 
     post claim_friendly_path(@friendly), params: { name: "Guest Player" }
     assert_redirected_to friendly_path(@friendly)
+    assert_match "waitlist", flash[:notice], "1 name isn't a full court yet"
     spot = @friendly.spots.reload.last
     assert_equal "Guest Player", spot.name
 
@@ -46,7 +47,8 @@ class FriendliesTest < ActionDispatch::IntegrationTest
     %w[Ann Bea Cat Dee Eve].each { |n| @friendly.spots.create!(name: n) }
 
     get friendly_path(@friendly)
-    assert_match "5 players = 1 court", response.body
+    assert_match "4 players = 1 court", response.body
+    assert_match "1 on the waitlist", response.body
 
     post friendly_lineup_path(@friendly)
     assert @friendly.reload.lineup?
@@ -55,9 +57,10 @@ class FriendliesTest < ActionDispatch::IntegrationTest
     assert_match "Copy as text", response.body
 
     before = @friendly.lineup_sets[0]
-    patch swap_friendly_lineup_path(@friendly), params: { set: 0, a: "0-0", b: "s-0" }
+    patch swap_friendly_lineup_path(@friendly), params: { set: 0, a: "0-0", b: "0-3" }
     after = @friendly.reload.lineup_sets[0]
-    assert_equal before["sitting"][0], after["courts"][0][0]
+    assert_equal before["courts"][0][3], after["courts"][0][0]
+    assert_not_includes after["courts"].flatten, "Eve", "the 5th name waits"
 
     get friendlies_path
     assert_match "Sunday hit", response.body

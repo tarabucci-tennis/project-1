@@ -1,0 +1,17 @@
+<%# One list of names on a friendly (playing, waitlist or out today). %>
+<% list.each_with_index do |spot, i| %>
+  <li class="<%= 'cr-fr-off' unless spot.in_lineup %>">
+    <span class="cr-fr-check <%= 'cr-fr-check-wait' if numbered %>"><%= numbered ? i + 1 : (spot.in_lineup ? "✓" : "–") %></span>
+    <span class="cr-fr-name"><%= spot.name %></span>
+    <% if organizer? %>
+      <%= button_to (spot.in_lineup ? "Out" : "In"), toggle_friendly_spot_path(@friendly, spot_id: spot.id), method: :patch,
+            class: "cr-chip-btn cr-fr-toggle", title: (spot.in_lineup ? "Not playing today" : "Playing today after all"),
+            form: { style: "display:inline;" } %>
+    <% end %>
+    <% if can_remove?(spot) && spot != @my_spot %>
+      <%= button_to "×", claim_friendly_path(@friendly), method: :delete, params: { spot_id: spot.id },
+            class: "cr-fr-remove", title: "Remove #{spot.name}",
+            form: { style: "display:inline;", data: { turbo_confirm: "Remove #{spot.name}?" } } %>
+    <% end %>
+  </li>
+<% end %>
