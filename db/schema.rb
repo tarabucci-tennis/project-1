@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_15_000000) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_16_000000) do
   create_table "availabilities", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.integer "match_id", null: false
@@ -21,6 +21,16 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_15_000000) do
     t.index ["match_id"], name: "index_availabilities_on_match_id"
     t.index ["user_id", "match_id"], name: "index_availabilities_on_user_id_and_match_id", unique: true
     t.index ["user_id"], name: "index_availabilities_on_user_id"
+  end
+
+  create_table "clubs", force: :cascade do |t|
+    t.string "address"
+    t.string "aliases"
+    t.datetime "created_at", null: false
+    t.string "league", null: false
+    t.string "name", null: false
+    t.datetime "updated_at", null: false
+    t.index ["league", "name"], name: "index_clubs_on_league_and_name", unique: true
   end
 
   create_table "division_teams", force: :cascade do |t|

@@ -951,6 +951,41 @@
           </div>
         <% end %>
       </section>
+
+      <% if Club::LEAGUES.include?(@team.league_label) %>
+        <% clubs = Club.in_league(@team.league_label) %>
+        <% can_edit_clubs = Club.editable_by?(current_user, @team.league_label) %>
+        <section class="cr-section" id="clubs">
+          <div class="cr-clubs-head">
+            <h2 class="cr-section-title">📍 <%= @team.league_label %> Club Locations</h2>
+            <% if can_edit_clubs %>
+              <%= link_to "+ Add a club", new_club_path(league: @team.league_label, team_id: @team.id), class: "cr-chip-btn" %>
+            <% end %>
+          </div>
+          <% if clubs.any? %>
+            <ul class="cr-clubs-list">
+              <% clubs.each do |club| %>
+                <li>
+                  <div class="cr-clubs-main">
+                    <div class="cr-clubs-name"><%= club.name %></div>
+                    <% if club.address.present? %>
+                      <a class="cr-clubs-addr" href="<%= club.maps_url %>" target="_blank" rel="noopener"><%= club.address %></a>
+                    <% else %>
+                      <span class="cr-clubs-addr cr-clubs-none">No address yet</span>
+                    <% end %>
+                  </div>
+                  <% if can_edit_clubs %>
+                    <%= link_to "✏️ Edit", edit_club_path(club, team_id: @team.id), class: "cr-chip-btn" %>
+                  <% end %>
+                </li>
+              <% end %>
+            </ul>
+          <% else %>
+            <p class="cr-coming-up-empty">No clubs listed yet.</p>
+          <% end %>
+          <p class="cr-clubs-foot">Tap an address for directions. Each match shows the club it's played at.</p>
+        </section>
+      <% end %>
     </div>
 
     <%# ── Tab 5: Captain (only visible to captains) ──── %>

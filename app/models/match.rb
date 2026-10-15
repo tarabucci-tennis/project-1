@@ -50,6 +50,11 @@ class Match < ApplicationRecord
   # plays at a third club); otherwise it's our club for a home match and the
   # opponent's club for an away one. nil for other leagues or unknown sites.
   def venue
+    return @venue if defined?(@venue)
+    @venue = find_venue
+  end
+
+  def find_venue
     league = tennis_team&.league_label
     return nil unless ClubDirectory.leagues.include?(league)
 

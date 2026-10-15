@@ -1,0 +1,19 @@
+<% if club.errors.any? %>
+  <p class="cr-fr-error"><%= club.errors.full_messages.to_sentence %></p>
+<% end %>
+
+<%= form_with model: club, url: url, method: method, data: { turbo: false }, class: "cr-fr-form" do |f| %>
+  <%= hidden_field_tag :team_id, params[:team_id] %>
+  <%= hidden_field_tag :league, club.league %>
+  <label>Club name
+    <%= f.text_field :name, required: true, maxlength: 100, placeholder: "e.g. Frog Hollow Racquet Club" %>
+  </label>
+  <label>Address
+    <%= f.text_field :address, maxlength: 200, placeholder: "e.g. 2115 Weber Road, Lansdale, PA 19446" %>
+  </label>
+  <label>Team names start with <span>(optional, separate with commas)</span>
+    <%= f.text_field :aliases, maxlength: 200, placeholder: "e.g. Frog" %>
+  </label>
+  <p class="cr-fr-hint-block">This is how Court Report knows which club a team plays at. "Frog" matches teams like "Frogaritas" and "Frog Hollow Orange". The club name itself always counts.</p>
+  <button type="submit" class="cr-btn cr-btn-gold">Save</button>
+<% end %>
