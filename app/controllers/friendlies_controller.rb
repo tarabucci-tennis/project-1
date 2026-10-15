@@ -19,7 +19,7 @@ class FriendliesController < ApplicationController
 
   # GET /friendlies/new
   def new
-    @friendly = Friendly.new(starts_at: Time.current.change(min: 0) + 1.day)
+    @friendly = Friendly.new(starts_at: Time.current.change(min: 0) + 1.day, duration: "90")
   end
 
   # POST /friendlies
@@ -144,7 +144,7 @@ class FriendliesController < ApplicationController
   end
 
   def friendly_params
-    params.require(:friendly).permit(:title, :starts_at, :end_time, :location, :sets_count, :notes)
+    params.require(:friendly).permit(:title, :starts_at, :duration, :end_time, :location, :sets_count, :notes)
   end
 
   def organizer?

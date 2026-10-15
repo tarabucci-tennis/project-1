@@ -117,4 +117,24 @@ class FriendlyTest < ActiveSupport::TestCase
     assert_nil @friendly.reload.ends_at
     assert_equal "9:00 AM", @friendly.time_label
   end
+
+  test "court length: 1½ hours, 2 hours, other or not sure" do
+    start = Time.zone.local(2026, 11, 7, 9, 0)
+    @friendly.update!(starts_at: start, duration: "90")
+    assert_equal start + 90.minutes, @friendly.ends_at
+    assert_equal "9:00 – 10:30 AM", @friendly.time_label
+
+    @friendly.update!(duration: "120")
+    assert_equal start + 2.hours, @friendly.reload.ends_at
+
+    @friendly.update!(duration: "custom", end_time: "12:15")
+    assert_equal "9:00 AM – 12:15 PM", @friendly.reload.time_label
+
+    @friendly.update!(duration: "none", end_time: "12:15")
+    assert_nil @friendly.reload.ends_at
+
+    fresh = Friendly.find(@friendly.id)
+    fresh.ends_at = start + 90.minutes
+    assert_equal "90", fresh.duration
+  end
 end
