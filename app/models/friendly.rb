@@ -16,6 +16,17 @@ class Friendly < ApplicationRecord
   serialize :lineup, coder: JSON
 
   validates :starts_at, presence: true
+  validate :ends_after_start
+
+  # The form asks for an end TIME only (friendlies end the same day). Blank
+  # means no end time.
+  attr_writer :end_time
+
+  def end_time
+    defined?(@end_time) ? @end_time : ends_at&.strftime("%H:%M")
+  end
+
+  before_validation :apply_end_time
   validates :sets_count, numericality: { only_integer: true, greater_than_or_equal_to: 1, less_than_or_equal_to: 3 }
 
   before_create { self.token ||= SecureRandom.urlsafe_base64(9) }
@@ -53,6 +64,18 @@ class Friendly < ApplicationRecord
   # How many more names fill the next court.
   def players_for_next_court
     PER_COURT - (active_spots.size % PER_COURT)
+  end
+
+  # "9:00 – 11:00 AM", "11:30 AM – 1:00 PM", or just "9:00 AM".
+  def time_label
+    start = starts_at.strftime("%-l:%M %p")
+    return start unless ends_at
+    finish = ends_at.strftime("%-l:%M %p")
+    if starts_at.strftime("%p") == ends_at.strftime("%p")
+      "#{starts_at.strftime('%-l:%M')} – #{finish}"
+    else
+      "#{start} – #{finish}"
+    end
   end
 
   def done?
@@ -128,6 +151,17 @@ class Friendly < ApplicationRecord
   end
 
   private
+
+  def apply_end_time
+    return unless defined?(@end_time)
+    hh, mm = @end_time.to_s.strip.split(":").map { |x| Integer(x, 10, exception: false) }
+    self.ends_at = (hh && starts_at) ? starts_at.change(hour: hh, min: mm.to_i) : nil
+  end
+
+  def ends_after_start
+    return unless ends_at && starts_at
+    errors.add(:base, "End time must be after the start time") if ends_at <= starts_at
+  end
 
   def slot_ref(set, pos)
     kind, idx = pos.to_s.split("-", 2)

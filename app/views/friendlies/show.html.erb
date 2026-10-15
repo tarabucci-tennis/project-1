@@ -1,6 +1,6 @@
 <% content_for :title, "#{@friendly.title} · Court Report" %>
 <% share_url = friendly_url(@friendly) %>
-<% when_text = @friendly.starts_at.strftime("%a, %b %-d · %-l:%M %p") %>
+<% when_text = "#{@friendly.starts_at.strftime("%a, %b %-d")} · #{@friendly.time_label}" %>
 <% n_players = @friendly.playing_spots.size %>
 <% courts = @friendly.courts_needed %>
 <% waitlist = @friendly.waitlist %>
@@ -15,7 +15,7 @@
       <div class="cr-rp-eyebrow">Friendly · organized by <%= @friendly.organizer.name %></div>
       <h1 class="cr-rp-name"><%= @friendly.title %></h1>
       <div class="cr-rp-sub">
-        <%= @friendly.starts_at.strftime("%A, %B %-d · %-l:%M %p") %>
+        <%= @friendly.starts_at.strftime("%A, %B %-d") %> · <%= @friendly.time_label %>
         <% if @friendly.location.present? %> · <%= @friendly.location %><% end %>
       </div>
     </div>

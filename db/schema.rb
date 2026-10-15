@@ -57,6 +57,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_16_000000) do
   create_table "friendlies", force: :cascade do |t|
     t.integer "courts", default: 1, null: false
     t.datetime "created_at", null: false
+    t.datetime "ends_at"
     t.text "lineup"
     t.string "location"
     t.text "notes"

@@ -16,7 +16,7 @@
         <%= item.active_spots.size %> signed up · <%= item.courts_needed %> <%= "court".pluralize(item.courts_needed) %><%= " · #{item.waitlist.size} waiting" if item.courts_needed.positive? && item.waitlist.any? %><%= " · lineup ready" if item.lineup? %>
       </div>
       <div class="cr-my-week-detail">
-        <span style="font-weight: 600; color: var(--cr-text);"><%= when_at.strftime("%-l:%M %p") %></span>
+        <span style="font-weight: 600; color: var(--cr-text);"><%= item.time_label %></span>
         <% if item.location.present? %><span><%= item.location.split(",").first %></span><% end %>
       </div>
     </div>

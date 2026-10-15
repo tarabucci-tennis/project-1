@@ -172,7 +172,7 @@
                        { title: e.title, kind: e.display_kind, kind_label: e.kind_label, time: e.start_time, location: e.location, team: e.tennis_team.name, id: e.id, team_id: e.tennis_team_id }
                      },
                      friendlies: friendlies_today.map { |f|
-                       { title: f.title, time: f.starts_at.strftime("%-l:%M %p"), location: f.location,
+                       { title: f.title, time: f.time_label, location: f.location,
                          spots: "#{f.active_spots.size} signed up · #{f.courts_needed} #{'court'.pluralize(f.courts_needed)}#{" · #{f.waitlist.size} waiting" if f.courts_needed.positive? && f.waitlist.any?}", url: friendly_path(f) }
                      }
                    }.to_json %>

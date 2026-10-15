@@ -16,7 +16,7 @@
           <div class="cr-fr-index-main">
             <div class="cr-fr-index-title"><%= f.title %></div>
             <div class="cr-fr-index-sub">
-              <%= f.starts_at.strftime("%a, %b %-d · %-l:%M %p") %><% if f.location.present? %> · <%= f.location %><% end %>
+              <%= f.starts_at.strftime("%a, %b %-d") %> · <%= f.time_label %><% if f.location.present? %> · <%= f.location %><% end %>
             </div>
             <div class="cr-fr-index-sub">
               <%= n %> signed up · <%= f.courts_needed %> <%= "court".pluralize(f.courts_needed) %><%= " · #{f.waitlist.size} on the waitlist" if f.courts_needed.positive? && f.waitlist.any? %>
