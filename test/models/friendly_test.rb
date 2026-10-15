@@ -102,4 +102,19 @@ class FriendlyTest < ActiveSupport::TestCase
     assert_not @friendly.swap_players!(0, "0-0", "0-1")
     assert_not @friendly.swap_players!(1, "0-0", "9-9")
   end
+
+  test "optional end time on the same day" do
+    @friendly.update!(starts_at: Time.zone.local(2026, 11, 7, 9, 0), end_time: "11:00")
+    assert_equal Time.zone.local(2026, 11, 7, 11, 0), @friendly.reload.ends_at
+    assert_equal "9:00 – 11:00 AM", @friendly.time_label
+
+    @friendly.update!(end_time: "13:30")
+    assert_equal "9:00 AM – 1:30 PM", @friendly.reload.time_label
+
+    assert_not @friendly.update(end_time: "8:00"), "can't end before it starts"
+
+    @friendly.reload.update!(end_time: "")
+    assert_nil @friendly.reload.ends_at
+    assert_equal "9:00 AM", @friendly.time_label
+  end
 end

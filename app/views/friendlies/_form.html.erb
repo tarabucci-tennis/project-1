@@ -6,8 +6,11 @@
   <label>Name <span>(optional)</span>
     <%= f.text_field :title, placeholder: "e.g. Saturday morning mixer" %>
   </label>
-  <label>Date &amp; time
+  <label>Date &amp; start time
     <%= f.datetime_local_field :starts_at, required: true %>
+  </label>
+  <label>End time <span>(optional)</span>
+    <%= f.time_field :end_time, value: friendly.end_time, step: 300 %>
   </label>
   <label>Where <span>(optional)</span>
     <%= f.text_field :location, placeholder: "e.g. Aronimink Golf Club" %>

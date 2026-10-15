@@ -79,7 +79,7 @@ module ApplicationHelper
 
   # A friendly's lineup as plain text for a group chat.
   def friendly_lineup_text(friendly)
-    lines = [ "#{friendly.title} — #{friendly.starts_at.strftime('%a, %b %-d · %-l:%M %p')}" ]
+    lines = [ "#{friendly.title} — #{friendly.starts_at.strftime('%a, %b %-d')} · #{friendly.time_label}" ]
     friendly.lineup_sets.first(friendly.sets_count).each_with_index do |set, i|
       lines << "" << "Set #{i + 1}"
       Array(set["courts"]).each_with_index do |(a, b, c, d), ci|
@@ -91,7 +91,7 @@ module ApplicationHelper
     lines.join("\n")
   end
 
-  # Google Calendar "add event" link for a friendly (2 hours long). Times are
+  # Google Calendar "add event" link for a friendly (until its end time, else 2 hours). Times are
   # written without a zone, like the match links, so Google uses the viewer's.
   def friendly_google_calendar_url(friendly, share_url: nil)
     fmt = "%Y%m%dT%H%M%S"
@@ -100,7 +100,7 @@ module ApplicationHelper
     params = {
       action: "TEMPLATE",
       text: "🎾 #{friendly.title}",
-      dates: "#{start.strftime(fmt)}/#{(start + 2.hours).strftime(fmt)}",
+      dates: "#{start.strftime(fmt)}/#{(friendly.ends_at || start + 2.hours).strftime(fmt)}",
       location: friendly.location.to_s,
       details: details
     }

@@ -144,7 +144,7 @@ class FriendliesController < ApplicationController
   end
 
   def friendly_params
-    params.require(:friendly).permit(:title, :starts_at, :location, :sets_count, :notes)
+    params.require(:friendly).permit(:title, :starts_at, :end_time, :location, :sets_count, :notes)
   end
 
   def organizer?

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_16_000000) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_17_000000) do
   create_table "availabilities", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.integer "match_id", null: false
@@ -57,6 +57,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_16_000000) do
   create_table "friendlies", force: :cascade do |t|
     t.integer "courts", default: 1, null: false
     t.datetime "created_at", null: false
+    t.datetime "ends_at"
     t.text "lineup"
     t.string "location"
     t.text "notes"
