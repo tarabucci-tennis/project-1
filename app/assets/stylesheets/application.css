@@ -5353,3 +5353,16 @@ span.cr-fr-chip { cursor: default; }
 .cr-venue strong { font-weight: 700; }
 .cr-venue span { color: var(--cr-text-muted); }
 a.cr-venue:hover strong { text-decoration: underline; }
+
+/* ── Bux-Mont / Del-Tri club locations (team Standings tab) ── */
+.cr-clubs-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 10px; }
+.cr-clubs-list { list-style: none; margin: 10px 0 0; padding: 0; background: var(--cr-white); border: 1px solid var(--cr-border); border-radius: 12px; overflow: hidden; }
+.cr-clubs-list li { display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-top: 1px solid var(--cr-border); }
+.cr-clubs-list li:first-child { border-top: none; }
+.cr-clubs-main { flex: 1 1 auto; min-width: 0; }
+.cr-clubs-name { font-weight: 700; color: var(--cr-text); font-size: 0.92rem; }
+.cr-clubs-addr { display: block; font-size: 0.84rem; color: var(--cr-text-muted); text-decoration: none; margin-top: 2px; }
+a.cr-clubs-addr:hover { text-decoration: underline; color: var(--cr-text); }
+.cr-clubs-none { font-style: italic; }
+.cr-clubs-foot { font-size: 0.8rem; color: var(--cr-text-muted); margin: 8px 2px 0; }
+body.cr-ctx-clubs-new, body.cr-ctx-clubs-edit, body.cr-ctx-clubs-create, body.cr-ctx-clubs-update { background: var(--cr-navy-page); }

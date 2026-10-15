@@ -25,6 +25,9 @@ Rails.application.routes.draw do
   post "admin/usta_import", to: "admin#usta_import"
 
   # Friendlies: book a casual match and share one link to fill the courts
+  # Bux-Mont / Del-Tri club addresses (edited from those teams' Standings tab)
+  resources :clubs, only: [ :new, :create, :edit, :update, :destroy ]
+
   get    "friendlies", to: "friendlies#index", as: :friendlies
   get    "friendlies/new", to: "friendlies#new", as: :new_friendly
   post   "friendlies", to: "friendlies#create"

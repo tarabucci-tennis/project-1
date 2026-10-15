@@ -1,0 +1,16 @@
+<% content_for :title, "Edit #{@club.name} · Court Report" %>
+
+<div class="cr-rp-page">
+  <%= link_to "← Back", back_path, class: "cr-back-link" %>
+  <section class="cr-rp-card">
+    <div class="cr-rp-card-head">
+      <h2 class="cr-rp-card-title">📍 Edit <%= @club.name %></h2>
+      <span class="cr-rp-card-note"><%= @club.league %></span>
+    </div>
+    <%= render "form", club: @club, url: club_path(@club), method: :patch %>
+    <div style="padding: 0 18px 18px;">
+      <%= button_to "Remove this club", club_path(@club), method: :delete, params: { team_id: params[:team_id] },
+            class: "cr-chip-btn", form: { data: { turbo_confirm: "Remove #{@club.name} from the #{@club.league} club list?" } } %>
+    </div>
+  </section>
+</div>
