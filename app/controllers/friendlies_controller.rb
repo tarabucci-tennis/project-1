@@ -69,7 +69,7 @@ class FriendliesController < ApplicationController
 
     if spot.save
       remember_guest(spot.guest_key) if spot.guest_key
-      redirect_to friendly_path(@friendly), notice: "You're in! ✓"
+      redirect_to friendly_path(@friendly), notice: claim_message(spot)
     else
       redirect_to friendly_path(@friendly), alert: spot.errors.full_messages.to_sentence
     end
@@ -153,6 +153,14 @@ class FriendliesController < ApplicationController
 
   def require_organizer
     redirect_to(friendly_path(@friendly), alert: "Only the organizer can do that.") unless organizer?
+  end
+
+  def claim_message(spot)
+    @friendly.reload
+    place = @friendly.waitlist.index(spot)
+    return "You're in! ✓" unless place
+    more = @friendly.players_for_next_court
+    "You're on the waitlist (##{place + 1}). #{more} more #{more == 1 ? 'person makes' : 'people make'} #{@friendly.courts_needed.zero? ? 'the first' : 'another'} court."
   end
 
   # Names from the organizer's teams, suggested when they add a player.

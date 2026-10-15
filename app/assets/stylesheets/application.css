@@ -5344,3 +5344,6 @@ span.cr-fr-chip { cursor: default; }
   .cr-fr-set { break-inside: avoid; padding: 8px 10px; }
   .cr-fr-chip { min-height: 0; padding: 2px 6px; font-size: 0.85rem; border-width: 1px; }
 }
+.cr-fr-subhead { padding: 12px 18px 2px; font-size: 0.75rem; font-weight: 800; letter-spacing: 0.8px; text-transform: uppercase; color: var(--cr-black); border-top: 1px solid var(--cr-border); }
+.cr-fr-subhead span { font-weight: 600; text-transform: none; letter-spacing: 0; color: var(--cr-text); }
+.cr-fr-check-wait { background: #d97706; }

@@ -3,6 +3,8 @@
 <% when_text = @friendly.starts_at.strftime("%a, %b %-d · %-l:%M %p") %>
 <% n_players = @friendly.playing_spots.size %>
 <% courts = @friendly.courts_needed %>
+<% waitlist = @friendly.waitlist %>
+<% out_today = @friendly.spots.reject(&:in_lineup) %>
 <% invite = "🎾 #{@friendly.title}: #{when_text}#{" at #{@friendly.location}" if @friendly.location.present?}. Add your name if you can play: #{share_url}" %>
 
 <div class="cr-rp-page cr-fr-page">
@@ -31,7 +33,8 @@
   <section class="cr-rp-card cr-fr-claim cr-no-print">
     <% if @my_spot %>
       <div class="cr-fr-status">
-        <strong>✓ You're in, <%= @my_spot.name %>!</strong>
+        <% wait_place = waitlist.index(@my_spot) %>
+        <strong><%= if !@my_spot.in_lineup then "You're marked as not playing today, #{@my_spot.name}." elsif wait_place then "You're on the waitlist (##{wait_place + 1}), #{@my_spot.name}. #{@friendly.players_for_next_court} more makes another court." else "✓ You're in, #{@my_spot.name}!" end %></strong>
         <%= button_to "Can't make it anymore", claim_friendly_path(@friendly), method: :delete,
               params: { spot_id: @my_spot.id }, class: "cr-chip-btn",
               form: { style: "display:inline;", data: { turbo_confirm: "Take your name off this friendly?" } } %>
@@ -53,37 +56,29 @@
       <span class="cr-rp-card-note">Every 4 names = 1 court</span>
     </div>
     <p class="cr-fr-courts-summary">
-      <% if n_players < Friendly::MIN_PLAYERS %>
-        <strong><%= Friendly::MIN_PLAYERS - n_players %> more <%= "player".pluralize(Friendly::MIN_PLAYERS - n_players) %></strong> needed for a court.
+      <% if courts.zero? %>
+        <strong><%= @friendly.players_for_next_court %> more <%= "player".pluralize(@friendly.players_for_next_court) %></strong> needed for the first court.
       <% else %>
         <strong><%= n_players %> players = <%= courts %> <%= "court".pluralize(courts) %></strong>
-        <% if @friendly.sitting_each_set.positive? %>
-          · <%= @friendly.sitting_each_set %> sit<%= "s" if @friendly.sitting_each_set == 1 %> out each set (taking turns)
-          · <%= @friendly.players_for_next_court %> more for court <%= courts + 1 %>
+        <% if waitlist.any? %>
+          · <%= waitlist.size %> on the waitlist · <%= @friendly.players_for_next_court %> more makes court <%= courts + 1 %>
         <% end %>
       <% end %>
     </p>
     <ul class="cr-fr-list">
-      <% @friendly.spots.each do |spot| %>
-        <li class="<%= 'cr-fr-off' unless spot.in_lineup %>">
-          <span class="cr-fr-check"><%= spot.in_lineup ? "✓" : "–" %></span>
-          <span class="cr-fr-name"><%= spot.name %><%= " (not playing today)" unless spot.in_lineup %></span>
-          <% if organizer? %>
-            <%= button_to (spot.in_lineup ? "Out" : "In"), toggle_friendly_spot_path(@friendly, spot_id: spot.id), method: :patch,
-                  class: "cr-chip-btn cr-fr-toggle", title: (spot.in_lineup ? "Take out of today's rotation" : "Put back in today's rotation"),
-                  form: { style: "display:inline;" } %>
-          <% end %>
-          <% if can_remove?(spot) && spot != @my_spot %>
-            <%= button_to "×", claim_friendly_path(@friendly), method: :delete, params: { spot_id: spot.id },
-                  class: "cr-fr-remove", title: "Remove #{spot.name}",
-                  form: { style: "display:inline;", data: { turbo_confirm: "Remove #{spot.name}?" } } %>
-          <% end %>
-        </li>
-      <% end %>
+      <%= render "roster_rows", list: (courts.zero? ? waitlist : @friendly.playing_spots), numbered: false %>
       <% if @friendly.spots.empty? %>
         <li class="cr-fr-open">No names yet. Share the link below.</li>
       <% end %>
     </ul>
+    <% if courts.positive? && waitlist.any? %>
+      <div class="cr-fr-subhead">Waitlist <span>· first come, first served</span></div>
+      <ul class="cr-fr-list"><%= render "roster_rows", list: waitlist, numbered: true %></ul>
+    <% end %>
+    <% if out_today.any? %>
+      <div class="cr-fr-subhead">Not playing today</div>
+      <ul class="cr-fr-list"><%= render "roster_rows", list: out_today, numbered: false %></ul>
+    <% end %>
     <% if organizer? %>
       <%= form_with url: friendly_players_path(@friendly), method: :post, data: { turbo: false }, class: "cr-fr-claim-form cr-fr-add-form" do %>
         <input type="text" name="name" placeholder="Add a player by name" required maxlength="60" list="cr-fr-names" autocomplete="off">

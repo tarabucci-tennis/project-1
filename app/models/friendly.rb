@@ -1,9 +1,9 @@
 # A casual round robin a player organizes and shares by link. Anyone with the
-# link adds their name; there's no limit and no waitlist. The number of courts
-# comes from the sign-ups (every 4 names = 1 court) and anyone left over
-# rotates sitting out. The organizer generates set-by-set doubles lineups
-# (see FriendlyLineupGenerator), can swap players, mark sets played, and
-# regenerate the sets that haven't been played.
+# link adds their name; there's no limit. Courts come from the sign-ups
+# (every 4 names = 1 court). Anyone past a full court is on the waitlist,
+# first come first served, until enough join to make another court. The
+# organizer generates set-by-set doubles lineups (see FriendlyLineupGenerator),
+# can swap players, mark sets played, and regenerate unplayed sets.
 #
 # (The old `courts` column is no longer used: courts are worked out from names.)
 class Friendly < ApplicationRecord
@@ -26,27 +26,33 @@ class Friendly < ApplicationRecord
   }
   scope :upcoming, -> { where("starts_at >= ?", Time.current.beginning_of_day) }
 
-  # Everyone signed up who is in today's rotation.
-  def playing_spots
+  # Everyone signed up and not marked out for today, in sign-up order.
+  def active_spots
     spots.select(&:in_lineup)
+  end
+
+  # Full courts only: every 4 names = 1 court.
+  def courts_needed
+    FriendlyLineupGenerator.courts_for(active_spots.size)
+  end
+
+  # The first 4-per-court names play; anyone past a full court waits
+  # (first come, first served) until enough join to fill another court.
+  def playing_spots
+    active_spots.first(courts_needed * PER_COURT)
+  end
+
+  def waitlist
+    active_spots.drop(courts_needed * PER_COURT)
   end
 
   def player_names
     playing_spots.map(&:name)
   end
 
-  def courts_needed
-    FriendlyLineupGenerator.courts_for(playing_spots.size)
-  end
-
-  # Players sitting out each set with the current sign-ups.
-  def sitting_each_set
-    courts_needed.zero? ? 0 : playing_spots.size - courts_needed * PER_COURT
-  end
-
-  # How many more names fill another court (4 - leftovers).
+  # How many more names fill the next court.
   def players_for_next_court
-    PER_COURT - (playing_spots.size % PER_COURT)
+    PER_COURT - (active_spots.size % PER_COURT)
   end
 
   def done?

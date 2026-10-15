@@ -13,7 +13,7 @@
       <div class="cr-my-week-league-label"><span class="cr-dash-cal-dot cr-dash-cal-dot-friendly"></span> FRIENDLY</div>
       <div class="cr-my-week-team"><%= item.title %></div>
       <div class="cr-my-week-opponent">
-        <%= item.playing_spots.size %> signed up · <%= item.courts_needed %> <%= "court".pluralize(item.courts_needed) %><%= " · lineup ready" if item.lineup? %>
+        <%= item.active_spots.size %> signed up · <%= item.courts_needed %> <%= "court".pluralize(item.courts_needed) %><%= " · #{item.waitlist.size} waiting" if item.courts_needed.positive? && item.waitlist.any? %><%= " · lineup ready" if item.lineup? %>
       </div>
       <div class="cr-my-week-detail">
         <span style="font-weight: 600; color: var(--cr-text);"><%= when_at.strftime("%-l:%M %p") %></span>
