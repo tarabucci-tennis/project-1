@@ -45,6 +45,23 @@ class Match < ApplicationRecord
     false
   end
 
+  # Bux-Mont / Del-Tri: the club where this match is played, with its
+  # address (see ClubDirectory). The listed site wins (Del-Tri sometimes
+  # plays at a third club); otherwise it's our club for a home match and the
+  # opponent's club for an away one. nil for other leagues or unknown sites.
+  def venue
+    league = tennis_team&.league_label
+    return nil unless ClubDirectory.leagues.include?(league)
+
+    if location.present?
+      ClubDirectory.find(location, league: league)
+    elsif home?
+      ClubDirectory.find(tennis_team.home_court, league: league) || ClubDirectory.find(tennis_team.name, league: league)
+    elsif away?
+      ClubDirectory.find(opponent, league: league)
+    end
+  end
+
   def won?
     result == "win"
   end

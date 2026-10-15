@@ -289,7 +289,7 @@
                     <% if match.match_time.present? %>
                       <span style="font-weight: 600; color: var(--cr-text);"><%= match.match_time %></span>
                     <% end %>
-                    <% if match.location.present? %>
+                    <% if match.location.present? && !match.venue %>
                       <span><%= match.location.split(",").first %></span>
                     <% end %>
                     <% if match.home? %>
@@ -298,6 +298,7 @@
                       <span class="cr-my-week-badge-away">Away</span>
                     <% end %>
                   </div>
+                  <%= render "matches/venue", venue: match.venue %>
                 </div>
                 <div class="cr-my-week-right">
                   <a href="<%= google_calendar_url(match) %>" target="_blank" rel="noopener"
