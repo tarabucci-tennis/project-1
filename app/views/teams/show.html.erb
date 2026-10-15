@@ -155,9 +155,10 @@
                       <div class="cr-sched-sub">
                         <% if match.playoff? %><span class="cr-tag cr-tag-playoff">🏆 <%= match.playoff_level %></span><% end %>
                         <% if match.home? %><span class="cr-tag cr-tag-home">Home</span><% elsif match.away? %><span class="cr-tag cr-tag-away">Away</span><% end %>
-                        <% if match.location.present? %><span><%= match.location %></span><% end %>
+                        <% if match.location.present? && !match.venue %><span><%= match.location %></span><% end %>
                         <% if match.match_time.present? %><span>· <%= match.match_time %></span><% end %>
                       </div>
+                      <%= render "matches/venue", venue: match.venue %>
                     </div>
                     <div class="cr-sched-right">
                       <% if lineup&.published? %><span class="cr-sched-pill">Lineup set</span><% else %><span class="cr-sched-upcoming">Scheduled</span><% end %>
@@ -234,8 +235,9 @@
                       <div class="cr-sched-sub">
                         <% if match.playoff? %><span class="cr-tag cr-tag-playoff">🏆 <%= match.playoff_level %></span><% end %>
                         <% if match.home? %><span class="cr-tag cr-tag-home">Home</span><% elsif match.away? %><span class="cr-tag cr-tag-away">Away</span><% end %>
-                        <% if match.location.present? %><span><%= match.location %></span><% end %>
+                        <% if match.location.present? && !match.venue %><span><%= match.location %></span><% end %>
                       </div>
+                      <%= render "matches/venue", venue: match.venue, link: false %>
                     </div>
                     <div class="cr-sched-right">
                       <span class="cr-result-badge <%= badge_class %>"><%= match.result_label %></span>
@@ -254,8 +256,9 @@
                       <div class="cr-sched-sub">
                         <% if match.playoff? %><span class="cr-tag cr-tag-playoff">🏆 <%= match.playoff_level %></span><% end %>
                         <% if match.home? %><span class="cr-tag cr-tag-home">Home</span><% elsif match.away? %><span class="cr-tag cr-tag-away">Away</span><% end %>
-                        <% if match.location.present? %><span><%= match.location %></span><% end %>
+                        <% if match.location.present? && !match.venue %><span><%= match.location %></span><% end %>
                       </div>
+                      <%= render "matches/venue", venue: match.venue %>
                       <div class="cr-result-dialog-score">
                         <span class="cr-result-badge <%= badge_class %>"><%= match.result_label %></span>
                         <% if match.score_summary.present? %><span class="cr-sched-score"><%= match.score_summary %></span><% end %>

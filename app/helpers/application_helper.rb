@@ -110,7 +110,7 @@ module ApplicationHelper
   def google_calendar_url(match)
     team_name = match.tennis_team.name
     title = "#{team_name} vs. #{match.opponent}"
-    location = match.tennis_team.home_court.presence || match.location.to_s
+    location = match.venue&.full || match.tennis_team.home_court.presence || match.location.to_s
 
     start_time = match.match_date
     end_time = start_time + 2.hours

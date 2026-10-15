@@ -5347,3 +5347,9 @@ span.cr-fr-chip { cursor: default; }
 .cr-fr-subhead { padding: 12px 18px 2px; font-size: 0.75rem; font-weight: 800; letter-spacing: 0.8px; text-transform: uppercase; color: var(--cr-black); border-top: 1px solid var(--cr-border); }
 .cr-fr-subhead span { font-weight: 600; text-transform: none; letter-spacing: 0; color: var(--cr-text); }
 .cr-fr-check-wait { background: #d97706; }
+
+/* ── Bux-Mont / Del-Tri: where the match is played ── */
+.cr-venue { display: inline-block; margin-top: 4px; font-size: 0.8rem; line-height: 1.35; color: var(--cr-text); text-decoration: none; text-align: left; }
+.cr-venue strong { font-weight: 700; }
+.cr-venue span { color: var(--cr-text-muted); }
+a.cr-venue:hover strong { text-decoration: underline; }
