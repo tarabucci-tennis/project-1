@@ -11,12 +11,13 @@ class MyTeamsFriendliesTest < ActionDispatch::IntegrationTest
     post session_path, params: { email: @user.email, password: "tennis-123" }
   end
 
-  test "friendlies and clinics show on Coming Up and their own tab; practice reads as Friendly" do
+  test "friendlies and clinics show on Upcoming and the Friendlies tab; practice reads as Friendly" do
     get teams_path
     assert_response :success
     body = response.body
-    assert_match "Friendlies &amp; Clinics", body
-    # 3 cards (friendly, clinic, old practice) on Coming Up + the same 3 on the new tab.
+    assert_select ".cr-home-tab", text: "Friendlies"
+    assert_select ".cr-home-tab", text: "Upcoming"
+    # 3 cards (friendly, clinic, old practice) on Upcoming + the same 3 on the Friendlies tab.
     assert_select ".cr-my-week-card-event", 6
     assert_match "Thursday hit", body
     assert_match "Serve clinic", body
