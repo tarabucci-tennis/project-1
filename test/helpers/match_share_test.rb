@@ -13,11 +13,18 @@ class MatchShareTest < ActionView::TestCase
     match = @team.matches.create!(opponent: "Frog Hollow Platinum", home_away: "away",
                                   match_date: Time.zone.local(2026, 10, 19, 10, 30), match_time: "10:30 am")
     text = match_share_text(match)
-    assert_includes text, "🎾 Advantage Us vs. Frog Hollow Platinum"
-    assert_includes text, "Bux-Mont · Mon, Oct 19 · 10:30 am · Away"
-    assert_includes text, "📍 Frog Hollow Racquet Club, 2115 Weber Road, Lansdale, PA 19446"
-    assert_includes text, "https://www.google.com/maps/search/?api=1&query=Frog%20Hollow"
-    assert_includes text, "Join Court Report free: http://test.host/signup"
+    assert_equal <<~TEXT.chomp, text
+      🎾 Advantage Us vs. Frog Hollow Platinum
+      📅 Mon, Oct 19 · 10:30 am
+      Away · Bux-Mont
+
+      📍 Frog Hollow Racquet Club
+      2115 Weber Road
+      Lansdale, PA 19446
+      Map: maps.google.com/?q=2115+Weber+Road+Lansdale+PA+19446
+
+      Join Court Report free: test.host/signup
+    TEXT
   end
 
   test "no location known: no address lines" do
@@ -32,7 +39,7 @@ class MatchShareTest < ActionView::TestCase
     @team.update!(team_colors: "Any pink & black")
     assert_equal [ "#ec4899", "#111827" ], @team.color_swatches
     match = @team.matches.create!(opponent: "Somebody", home_away: "home", match_date: Time.zone.local(2026, 10, 26, 13, 30))
-    assert_includes match_share_text(match), "👕 We wear: Any pink & black"
+    assert_includes match_share_text(match), "👕 Wear: Any pink & black"
 
     @team.update!(team_colors: "All black")
     assert_equal [ "#111827" ], @team.color_swatches
