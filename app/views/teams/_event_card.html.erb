@@ -20,6 +20,9 @@
       </div>
     </div>
     <div class="cr-cu-place"><%= render "matches/venue", venue: item.place, link: false %></div>
+    <% fr_url = friendly_url(item) %>
+    <%= render "teams/cu_buttons", cal_url: friendly_google_calendar_url(item, share_url: fr_url),
+          share_text: friendly_invite_text(item), share_url: fr_url %>
   </div>
 <% else %>
   <div class="cr-my-week-card cr-my-week-card-compact cr-my-week-card-event cr-cu-row">
@@ -39,6 +42,9 @@
     <% if item.location.present? %>
       <% ev_name, ev_rest = item.location.split(/,\s*/, 2) %>
       <div class="cr-cu-place"><%= render "matches/venue", venue: Friendly::Place.new(name: ev_name, address: ev_rest), link: false %></div>
+    <% else %>
+      <div class="cr-cu-place"></div>
     <% end %>
+    <%= render "teams/cu_buttons", cal_url: team_event_google_calendar_url(item), share_text: team_event_share_text(item) %>
   </div>
 <% end %>
