@@ -2,7 +2,7 @@
     lists. Same card shape as a match on Coming Up. %>
 <% if item.is_a?(Friendly) %>
   <% when_at = item.starts_at %>
-  <div class="cr-my-week-card cr-my-week-card-compact cr-my-week-card-event"
+  <div class="cr-my-week-card cr-my-week-card-compact cr-my-week-card-event cr-cu-row"
        onclick="window.location='<%= friendly_path(item) %>'" style="cursor: pointer;">
     <div class="cr-my-week-date">
       <div class="cr-my-week-day-name"><%= when_at.strftime("%a").upcase %></div>
@@ -17,12 +17,12 @@
       </div>
       <div class="cr-my-week-detail">
         <span style="font-weight: 600; color: var(--cr-text);"><%= item.time_label %></span>
-        <% if item.location.present? %><span><%= item.location.split(",").first %></span><% end %>
       </div>
     </div>
+    <div class="cr-cu-place"><%= render "matches/venue", venue: item.place, link: false %></div>
   </div>
 <% else %>
-  <div class="cr-my-week-card cr-my-week-card-compact cr-my-week-card-event">
+  <div class="cr-my-week-card cr-my-week-card-compact cr-my-week-card-event cr-cu-row">
     <div class="cr-my-week-date">
       <div class="cr-my-week-day-name"><%= item.event_date.strftime("%a").upcase %></div>
       <div class="cr-my-week-month"><%= item.event_date.strftime("%b").upcase %></div>
@@ -34,8 +34,11 @@
       <div class="cr-my-week-opponent"><%= item.tennis_team.name %></div>
       <div class="cr-my-week-detail">
         <% if item.start_time.present? %><span style="font-weight: 600; color: var(--cr-text);"><%= item.start_time %></span><% end %>
-        <% if item.location.present? %><span><%= item.location.split(",").first %></span><% end %>
       </div>
     </div>
+    <% if item.location.present? %>
+      <% ev_name, ev_rest = item.location.split(/,\s*/, 2) %>
+      <div class="cr-cu-place"><%= render "matches/venue", venue: Friendly::Place.new(name: ev_name, address: ev_rest), link: false %></div>
+    <% end %>
   </div>
 <% end %>

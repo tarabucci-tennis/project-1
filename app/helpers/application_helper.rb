@@ -132,6 +132,16 @@ module ApplicationHelper
 
   # Where a match is played, as one line: the league club (Bux-Mont /
   # Del-Tri), else the listed site, else our home club for a home match.
+  # Where a match is, as a venue-like object for the 📍 block: the saved
+  # club, else the typed location split into name / address.
+  def match_place_block(match)
+    return match.venue if match.venue
+    text = match_place(match)
+    return unless text
+    name, rest = text.split(/,\s*/, 2)
+    Friendly::Place.new(name: name, address: rest)
+  end
+
   def match_place(match)
     return match.venue.full if match.venue
     return match.location if match.location.present?
