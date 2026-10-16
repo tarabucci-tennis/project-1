@@ -44,6 +44,13 @@
 - **Phase work in small pieces.** Don't try to build everything at once. Get one slice working and shippable before starting the next.
 - **Verify before declaring victory.** Don't say "done" if you haven't actually tested it works in a browser.
 - **Ask before building.** If the task doesn't match what's in the code, ask clarifying questions first — don't just start coding on assumptions.
+- **Every design must look clean and professional** (Tara, Oct 16 2026). Even sizes and spacing, nothing cut off or
+  needing a sideways swipe on a phone, no lopsided wrapping. Before shipping any visual change, render it: this sandbox
+  has Playwright + Chromium (`require('/opt/node22/lib/node_modules/playwright')`). Build a static HTML mock that links
+  the real `app/assets/stylesheets/*.css` with the page's markup, screenshot it at 360px, 390px and 1280px wide, and
+  look at the screenshots. Fix what looks off before opening the PR.
+- **Database update dates:** a migration's timestamp must not be more than ~1 day in the future, or Rails refuses to
+  load the schema and every test fails (hit on PR #196).
 
 ## League Rules (REMEMBER THESE — per Tara + the verified Sept 2026 build brief)
 
