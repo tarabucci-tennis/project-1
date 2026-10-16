@@ -12,6 +12,8 @@
       <%= button_to "×", claim_friendly_path(@friendly), method: :delete, params: { spot_id: spot.id },
             class: "cr-fr-remove", title: "Remove #{spot.name}",
             form: { style: "display:inline;", data: { turbo_confirm: "Remove #{spot.name}?" } } %>
+    <% elsif organizer? %>
+      <span class="cr-fr-remove-spacer" aria-hidden="true"></span>
     <% end %>
   </li>
 <% end %>
