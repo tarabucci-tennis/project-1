@@ -48,7 +48,7 @@
         <% end %>
         <% if @match.score_summary.present? %><span class="cr-sched-score"><%= @match.score_summary %></span><% end %>
       </div>
-      <%= render "matches/scoresheet", match: @match, team: @team, is_captain: @is_captain %>
+      <%= render "matches/scoresheet", match: @match, team: @team, is_captain: @is_captain, can_enter_results: @can_enter_results %>
     </div>
   <% end %>
 

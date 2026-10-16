@@ -27,6 +27,9 @@ class UstaTeamSummaryImport
     our = our_row
     warnings = []
     warnings << "This file's standings don't list \"#{@team.name}\" — check you uploaded this team's file." if our.nil? && @parsed.standings.any?
+    if @parsed.match_summary? && @parsed.matches.empty?
+      warnings << "This match summary doesn't list \"#{@team.name}\" — check you downloaded this team's report."
+    end
 
     new_m = []
     upd_m = []
@@ -88,7 +91,8 @@ class UstaTeamSummaryImport
     @parsed.matches.each do |m|
       match = find_match(m) ||
               @team.matches.new(match_date: Time.zone.local(m.date.year, m.date.month, m.date.day, 12, 0),
-                                opponent: m.opponent)
+                                opponent: m.opponent,
+                                home_away: (m.home.nil? ? nil : (m.home ? "home" : "away")))
       if m.played?
         match.score_summary = score_for(m)
         match.result = m.result

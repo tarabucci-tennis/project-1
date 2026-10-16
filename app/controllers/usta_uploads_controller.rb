@@ -1,5 +1,5 @@
-# Any player on a USTA team can upload the team's TennisLink "Team Summary"
-# export (Stats & Standings → Send To Excel). We show a preview of what will
+# A captain (or co-captain, admin, or whoever added the team) uploads the team's TennisLink "Team Summary"
+# or "Match Summary" export (Send To Excel). We show a preview of what will
 # change, then save it with UstaTeamSummaryImport. The uploaded file is held
 # in the cache between the preview and the save, keyed by a random token.
 class UstaUploadsController < ApplicationController
@@ -23,10 +23,10 @@ class UstaUploadsController < ApplicationController
     end
 
     html = file.read.to_s.force_encoding("UTF-8").scrub
-    parsed = UstaTeamSummaryParser.parse(html)
-    unless parsed.summary_file?
+    parsed = UstaTeamSummaryParser.parse(html, team_name: @team.name)
+    unless parsed.summary_file? || parsed.match_summary?
       return redirect_to usta_upload_team_path(@team),
-                         alert: "That doesn't look like a TennisLink Team Summary. On TennisLink open your team's Stats & Standings and tap \"Send To Excel\"."
+                         alert: "That doesn't look like a TennisLink Team Summary or Match Summary. On TennisLink open your team's Stats & Standings (or Match Summary) and tap \"Send To Excel\"."
     end
 
     @token = SecureRandom.hex(16)
@@ -43,7 +43,7 @@ class UstaUploadsController < ApplicationController
       return redirect_to usta_upload_team_path(@team), alert: "That upload expired — please choose the file again."
     end
 
-    UstaTeamSummaryImport.new(@team, UstaTeamSummaryParser.parse(html)).apply!
+    UstaTeamSummaryImport.new(@team, UstaTeamSummaryParser.parse(html, team_name: @team.name)).apply!
     Rails.cache.delete(cache_key(params[:token].to_s))
     redirect_to team_path(@team, anchor: "standings"), notice: "USTA standings, scores and ratings updated."
   end
@@ -54,8 +54,10 @@ class UstaUploadsController < ApplicationController
     @team = TennisTeam.find_by(id: params[:id])
     return redirect_to(teams_path, alert: "Team not found.") unless @team
 
-    unless @team.team_memberships.exists?(user: current_user) || @team.user_id == current_user.id || current_user.admin?
-      redirect_to teams_path, alert: "You're not a member of that team."
+    # It changes match results, so it's captains (and admins / whoever added
+    # the team) only, like Enter Results.
+    unless @team.can_enter_results?(current_user) || @team.user_id == current_user.id
+      redirect_to team_path(@team), alert: "Only the team's captains can upload USTA results."
     end
   end
 
