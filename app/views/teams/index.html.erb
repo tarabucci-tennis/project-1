@@ -298,7 +298,7 @@
                       <span class="cr-my-week-badge-away">Away</span>
                     <% end %>
                   </div>
-                  <%= render "matches/venue", venue: match.venue %>
+                  <%= render "matches/venue", venue: match.venue, link: false %>
                 </div>
                 <div class="cr-my-week-right">
                   <a href="<%= google_calendar_url(match) %>" target="_blank" rel="noopener"

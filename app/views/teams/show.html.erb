@@ -169,7 +169,7 @@
                       <% if lineup&.published? %><span class="cr-sched-pill">Lineup set</span><% else %><span class="cr-sched-upcoming">Scheduled</span><% end %>
                       <span class="cr-sched-caret" aria-hidden="true">▾</span>
                     </div>
-                    <%= render "matches/venue", venue: match.venue %>
+                    <%= render "matches/venue", venue: match.venue, link: false %>
                   </summary>
                   <div class="cr-sched-detail">
                     <div class="cr-sched-actions">
