@@ -122,6 +122,25 @@
       </div>
     <% end %>
 
+    <%# ── Share + calendar ── %>
+    <div class="cr-rp-actions cr-fr-actions cr-no-print">
+      <button type="button" class="cr-chip-btn" data-share-text="<%= invite %>" data-share-url="<%= share_url %>"
+              onclick="crShare(this)">
+        <span class="cr-share-label">🔗 Share invite</span>
+      </button>
+      <%= link_to "📅 Calendar", friendly_google_calendar_url(@friendly, share_url: share_url),
+            target: "_blank", rel: "noopener", class: "cr-chip-btn", title: "Add to Google Calendar" %>
+      <% if organizer? %>
+        <%= link_to "✏️ Edit", edit_friendly_path(@friendly), class: "cr-chip-btn" %>
+        <%= button_to "Cancel friendly", friendly_path(@friendly), method: :delete, class: "cr-chip-btn",
+              form: { style: "display:inline;", data: { turbo_confirm: "Cancel this friendly for everyone?" } } %>
+      <% end %>
+    </div>
+    <% if organizer? %>
+      <p class="cr-rp-foot cr-no-print" style="padding: 0 0 12px;">Share invite sends the link by text, WhatsApp or email on your phone (or copies it on a computer).
+        Anyone with the link can add their name, no account needed. Court Report counts the courts for you.</p>
+    <% end %>
+
     <% if @friendly.lineup? %>
       <% if organizer? %>
         <p class="cr-fr-swap-hint cr-no-print">Tap two names in the same set to swap them.</p>
@@ -185,20 +204,6 @@
     <% end %>
   </section>
 
-  <%# ── Share + calendar ── %>
-  <div class="cr-rp-actions cr-no-print" style="margin-top: 14px;">
-    <button type="button" class="cr-chip-btn" data-share-text="<%= invite %>" data-share-url="<%= share_url %>"
-            onclick="crShare(this)">
-      <span class="cr-share-label">🔗 Share invite</span>
-    </button>
-    <%= link_to "📅 Add to Google Calendar", friendly_google_calendar_url(@friendly, share_url: share_url),
-          target: "_blank", rel: "noopener", class: "cr-chip-btn" %>
-    <% if organizer? %>
-      <%= link_to "✏️ Edit", edit_friendly_path(@friendly), class: "cr-chip-btn" %>
-      <%= button_to "Cancel friendly", friendly_path(@friendly), method: :delete, class: "cr-chip-btn",
-            form: { style: "display:inline;", data: { turbo_confirm: "Cancel this friendly for everyone?" } } %>
-    <% end %>
-  </div>
   <% unless current_user %>
     <section class="cr-join-card cr-no-print">
       <div class="cr-join-text">
@@ -210,9 +215,5 @@
         <%= link_to "Sign in", login_path, class: "cr-join-signin" %>
       </div>
     </section>
-  <% end %>
-  <% if organizer? %>
-    <p class="cr-rp-foot cr-no-print" style="padding: 8px 0;">Share invite sends the link by text, WhatsApp or email on your phone (or copies it on a computer).
-      Anyone with the link can add their name, no account needed. Court Report counts the courts for you.</p>
   <% end %>
 </div>
