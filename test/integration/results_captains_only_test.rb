@@ -8,7 +8,7 @@ class ResultsCaptainsOnlyTest < ActionDispatch::IntegrationTest
     @team = TennisTeam.create!(user: @owner, name: "Results Team", league_category: "USTA")
     TeamMembership.create!(user: @captain, tennis_team: @team, role: "captain")
     TeamMembership.create!(user: @player, tennis_team: @team, role: "player")
-    @match = @team.matches.create!(opponent: "Rivals", match_date: 2.days.ago)
+    @match = @team.matches.create!(opponent: "Rivals", match_date: 2.days.from_now)
   end
 
   def sign_in(user)
