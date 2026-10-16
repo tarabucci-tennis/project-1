@@ -585,7 +585,9 @@ class TeamsController < ApplicationController
       return redirect_to team_path(@team), alert: "Only captains can edit team info."
     end
 
-    @team.update(team_info_params)
+    unless @team.update(team_info_params)
+      return redirect_to edit_info_team_path(@team), alert: @team.errors.full_messages.to_sentence
+    end
 
     captain = @team.captain
     if captain && params[:captain_phone]
@@ -609,7 +611,8 @@ class TeamsController < ApplicationController
   def team_info_params
     params.require(:tennis_team).permit(
       :section, :district, :team_type, :flight, :rating, :gender,
-      :home_court, :home_court_address, :season_name, :start_date, :team_colors
+      :home_court, :home_court_address, :season_name, :start_date, :team_colors,
+      :stats_sheet_url
     )
   end
 

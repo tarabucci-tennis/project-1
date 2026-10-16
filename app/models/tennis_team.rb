@@ -6,6 +6,12 @@ class TennisTeam < ApplicationRecord
   has_many :team_events, dependent: :destroy
   has_many :division_teams, dependent: :destroy
 
+  # Only a Google Sheets link may be saved as the team's stats sheet.
+  validates :stats_sheet_url, format: { with: %r{\Ahttps://docs\.google\.com/spreadsheets/}i,
+                                        message: "must be a Google Sheets link (https://docs.google.com/spreadsheets/...)" },
+                              allow_blank: true
+  normalizes :stats_sheet_url, with: ->(url) { url.strip.presence }
+
   LEAGUE_CATEGORIES = %w[USTA Inter-Club Local].freeze
 
   # The USTA playoff path a team can advance through after winning its flight.
