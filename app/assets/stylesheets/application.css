@@ -5504,3 +5504,33 @@ button.cr-cal-btn.cr-share-icon:hover { border-color: var(--cr-gold); color: var
   .cr-fr-chip { justify-content: center; text-align: center; min-height: 40px; padding: 6px 6px; font-size: 0.84rem; }
   .cr-fr-vs { padding-left: 4px; }
 }
+
+/* My Teams Upcoming / Friendlies rows. Phone: date | details | buttons, with
+   the 📍 place under the details. Computer: one tidy row (date | match |
+   place | buttons) capped at 880px so nothing floats across empty space. */
+.cr-cu-row {
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr) auto;
+  grid-template-areas: "date info right" "date place right";
+  align-items: start;
+  column-gap: 12px;
+}
+.cr-cu-row > .cr-my-week-date  { grid-area: date; align-self: center; }
+.cr-cu-row > .cr-my-week-info  { grid-area: info; }
+.cr-cu-row > .cr-cu-place      { grid-area: place; min-width: 0; }
+.cr-cu-row > .cr-my-week-right { grid-area: right; align-self: center; }
+.cr-cu-place:empty { display: none; }
+.cr-cu-place .cr-venue { margin-top: 4px; font-size: 0.74rem; }
+@media (min-width: 900px) {
+  .cr-my-week-list:has(> .cr-cu-row) { max-width: 880px; }
+  .cr-cu-row {
+    grid-template-columns: 52px minmax(0, 1.1fr) minmax(0, 1fr) 76px;
+    grid-template-areas: "date info place right";
+    align-items: center;
+    column-gap: 20px;
+    padding: 12px 18px;
+  }
+  .cr-cu-place:empty { display: block; }
+  .cr-cu-place .cr-venue { margin-top: 0; font-size: 0.8rem; }
+  .cr-cu-row > .cr-my-week-right { flex-direction: row; align-items: center; justify-content: flex-end; flex-wrap: wrap; }
+}

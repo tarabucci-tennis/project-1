@@ -278,7 +278,7 @@
                 <% next %>
               <% end %>
               <% team = match.tennis_team %>
-              <div class="cr-my-week-card cr-my-week-card-compact"
+              <div class="cr-my-week-card cr-my-week-card-compact cr-cu-row"
                    onclick="window.location='<%= team_match_path(team, match) %>'" style="cursor: pointer;">
                 <div class="cr-my-week-date">
                   <div class="cr-my-week-day-name"><%= match.match_date.strftime("%a").upcase %></div>
@@ -293,17 +293,14 @@
                     <% if match.match_time.present? %>
                       <span style="font-weight: 600; color: var(--cr-text);"><%= match.match_time %></span>
                     <% end %>
-                    <% if match.location.present? && !match.venue %>
-                      <span><%= match.location.split(",").first %></span>
-                    <% end %>
                     <% if match.home? %>
                       <span class="cr-my-week-badge-home">Home</span>
                     <% elsif match.away? %>
                       <span class="cr-my-week-badge-away">Away</span>
                     <% end %>
                   </div>
-                  <%= render "matches/venue", venue: match.venue, link: false %>
                 </div>
+                <div class="cr-cu-place"><%= render "matches/venue", venue: match_place_block(match), link: false %></div>
                 <div class="cr-my-week-right">
                   <a href="<%= google_calendar_url(match) %>" target="_blank" rel="noopener"
                      class="cr-cal-btn" title="Add to Google Calendar"
