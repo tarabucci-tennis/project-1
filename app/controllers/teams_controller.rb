@@ -542,6 +542,25 @@ class TeamsController < ApplicationController
     redirect_to teams_path, notice: "#{team.name} moved to Past Seasons. You can still open it any time."
   end
 
+  # DELETE /teams/:id — remove a team added by mistake (or set up wrong).
+  # Only an admin or whoever added the team, and only while no scores are
+  # entered: a team with results is history, so it's archived instead.
+  def destroy
+    team = TennisTeam.find(params[:id])
+    unless current_user.admin? || team.user_id == current_user.id
+      return redirect_to team_path(team), alert: "Only the person who added this team can delete it."
+    end
+    if team.matches.completed.exists?
+      return redirect_to team_path(team), alert: "#{team.name} has scores entered, so it can't be deleted. Use Archive team instead."
+    end
+
+    TennisTeam.transaction do
+      Notification.where(tennis_team_id: team.id).delete_all
+      team.destroy!
+    end
+    redirect_to teams_path, notice: "#{team.name} was deleted."
+  end
+
   # POST /teams/:id/unarchive — bring a team back to the active list.
   def unarchive
     team = TennisTeam.find(params[:id])
