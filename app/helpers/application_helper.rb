@@ -117,20 +117,47 @@ module ApplicationHelper
     [ team.home_court, team.home_court_address ].compact_blank.uniq.join(", ").presence
   end
 
-  # Plain-text summary of a match to text a sub: teams, when, where, and a
-  # Google Maps link. Readable without a Court Report account.
+  # Plain-text summary of a match to text a sub: one detail per line, the
+  # address stacked like on the site, short links. Readable without an account.
+  #
+  #   🎾 Advantage Us vs. Frog Hollow Platinum
+  #   📅 Mon, Oct 19 · 10:30 am
+  #   Away · Bux-Mont
+  #   👕 Wear: All black
+  #
+  #   📍 Frog Hollow Racquet Club
+  #   2115 Weber Road
+  #   Lansdale, PA 19446
+  #   Map: maps.google.com/?q=2115+Weber+Road+Lansdale+PA+19446
+  #
+  #   Join Court Report free: yourcourtreport.com/signup
   def match_share_text(match)
     team = match.tennis_team
-    when_line = [ match.match_date.strftime("%a, %b %-d"), match.match_time.presence,
-                  (match.home? ? "Home" : ("Away" if match.away?)) ].compact.join(" · ")
-    lines = [ "🎾 #{team.name} vs. #{match.opponent}", "#{team.league_label} · #{when_line}" ]
-    lines << "👕 We wear: #{team.team_colors}" if team.team_colors.present?
-    if (place = match_place(match))
-      lines << "📍 #{place}"
-      lines << "Directions: https://www.google.com/maps/search/?api=1&query=#{ERB::Util.url_encode(place)}"
+    side = match.home? ? "Home" : ("Away" if match.away?)
+    lines = [ "🎾 #{team.name} vs. #{match.opponent}",
+              "📅 #{[ match.match_date.strftime('%a, %b %-d'), match.match_time.presence ].compact.join(' · ')}",
+              [ side, team.league_label ].compact.join(" · ") ]
+    lines << "👕 Wear: #{team.team_colors}" if team.team_colors.present?
+
+    if (venue = match.venue)
+      lines << "" << "📍 #{venue.name}"
+      lines.concat(venue.address_lines)
+      map_query = venue.address.presence || venue.name
+    elsif (place = match_place(match))
+      lines << "" << "📍 #{place}"
+      map_query = place
     end
-    lines << "" << "All your tennis teams in one app. Join Court Report free: #{signup_url}"
+    lines << "Map: #{short_map_link(map_query)}" if map_query
+
+    lines << "" << "Join Court Report free: #{signup_url.sub(%r{\Ahttps?://(www\.)?}, '')}"
     lines.join("\n")
+  end
+
+  # A short Google Maps search link for an address (no https://, + for spaces),
+  # e.g. maps.google.com/?q=2115+Weber+Road+Lansdale+PA+19446
+  def short_map_link(query)
+    words = query.to_s.gsub(/[^A-Za-z0-9#&\- ]/, " ").split
+    "maps.google.com/?q=#{words.map { |w| ERB::Util.url_encode(w) }.join('+')}"
   end
 
   def google_calendar_url(match)
