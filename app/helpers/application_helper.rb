@@ -107,6 +107,30 @@ module ApplicationHelper
     "https://calendar.google.com/calendar/render?#{params.to_query}"
   end
 
+  # Where a match is played, as one line: the league club (Bux-Mont /
+  # Del-Tri), else the listed site, else our home club for a home match.
+  def match_place(match)
+    return match.venue.full if match.venue
+    return match.location if match.location.present?
+    return unless match.home?
+    team = match.tennis_team
+    [ team.home_court, team.home_court_address ].compact_blank.uniq.join(", ").presence
+  end
+
+  # Plain-text summary of a match to text a sub: teams, when, where, and a
+  # Google Maps link. Readable without a Court Report account.
+  def match_share_text(match)
+    team = match.tennis_team
+    when_line = [ match.match_date.strftime("%a, %b %-d"), match.match_time.presence,
+                  (match.home? ? "Home" : ("Away" if match.away?)) ].compact.join(" · ")
+    lines = [ "🎾 #{team.name} vs. #{match.opponent}", "#{team.league_label} · #{when_line}" ]
+    if (place = match_place(match))
+      lines << "📍 #{place}"
+      lines << "Directions: https://www.google.com/maps/search/?api=1&query=#{ERB::Util.url_encode(place)}"
+    end
+    lines.join("\n")
+  end
+
   def google_calendar_url(match)
     team_name = match.tennis_team.name
     title = "#{team_name} vs. #{match.opponent}"

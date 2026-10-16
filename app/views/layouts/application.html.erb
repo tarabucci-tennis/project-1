@@ -53,6 +53,23 @@
 
     <%# Tiny inline scripts: password eye toggle + join-link copy button %>
     <script>
+      // Share a match (or anything with data-share-text): the phone's share
+      // sheet (Messages, WhatsApp, email…), or copy to the clipboard on a computer.
+      function crShare(btn) {
+        var text = btn.getAttribute('data-share-text');
+        if (navigator.share) {
+          navigator.share({ text: text }).catch(function () {});
+        } else if (navigator.clipboard) {
+          navigator.clipboard.writeText(text).then(function () {
+            var label = btn.querySelector('.cr-share-label');
+            if (!label) return;
+            var original = label.textContent;
+            label.textContent = 'Copied ✓';
+            setTimeout(function () { label.textContent = original; }, 1800);
+          });
+        }
+      }
+
       function togglePassword(btn) {
         var wrapper = btn.parentElement;
         var field = wrapper.querySelector('input[type="password"], input[type="text"]');
