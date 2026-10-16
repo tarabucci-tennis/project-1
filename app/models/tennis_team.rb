@@ -43,6 +43,20 @@ class TennisTeam < ApplicationRecord
       .to_h
   end
 
+  # Color dots for what the team wears ("Any pink & black" -> pink, black),
+  # read from the captain's words. Unknown words just don't get a dot.
+  COLOR_WORDS = {
+    "pink" => "#ec4899", "black" => "#111827", "white" => "#ffffff", "navy" => "#1e3a8a",
+    "blue" => "#2563eb", "red" => "#dc2626", "green" => "#16a34a", "yellow" => "#facc15",
+    "purple" => "#7c3aed", "orange" => "#f97316", "gray" => "#9ca3af", "grey" => "#9ca3af",
+    "teal" => "#14b8a6", "gold" => "#d4a017", "maroon" => "#7f1d1d", "silver" => "#c0c0c0",
+    "turquoise" => "#06b6d4", "lavender" => "#c4b5fd", "coral" => "#fb7185", "aqua" => "#22d3ee"
+  }.freeze
+
+  def color_swatches
+    team_colors.to_s.downcase.scan(/[a-z]+/).filter_map { |w| COLOR_WORDS[w] }.uniq
+  end
+
   # The My Teams section a team belongs under. Unlike league_label, this
   # folds every USTA league_name ("USTA Adult Tri-Level" etc.) into "USTA".
   def league_group

@@ -124,6 +124,7 @@ module ApplicationHelper
     when_line = [ match.match_date.strftime("%a, %b %-d"), match.match_time.presence,
                   (match.home? ? "Home" : ("Away" if match.away?)) ].compact.join(" · ")
     lines = [ "🎾 #{team.name} vs. #{match.opponent}", "#{team.league_label} · #{when_line}" ]
+    lines << "👕 We wear: #{team.team_colors}" if team.team_colors.present?
     if (place = match_place(match))
       lines << "📍 #{place}"
       lines << "Directions: https://www.google.com/maps/search/?api=1&query=#{ERB::Util.url_encode(place)}"

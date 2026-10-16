@@ -590,7 +590,7 @@ class TeamsController < ApplicationController
   def team_info_params
     params.require(:tennis_team).permit(
       :section, :district, :team_type, :flight, :rating, :gender,
-      :home_court, :home_court_address, :season_name, :start_date
+      :home_court, :home_court_address, :season_name, :start_date, :team_colors
     )
   end
 

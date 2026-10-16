@@ -35,6 +35,12 @@
       </div>
 
       <h1 class="cr-team-hero-name"><%= @team.name %></h1>
+      <% if @team.team_colors.present? %>
+        <div class="cr-team-colors" title="Team colors">
+          <% @team.color_swatches.each do |hex| %><span class="cr-color-dot" style="background: <%= hex %>;"></span><% end %>
+          <span class="cr-team-colors-text"><span class="cr-team-colors-label">Team colors:</span> <%= @team.team_colors %></span>
+        </div>
+      <% end %>
 
       <div class="cr-team-hero-sub">
         <% if @team.home_court.present? %>
@@ -718,6 +724,7 @@
             flight = [ @team.rating.present? ? "#{@team.rating}" : nil, @team.gender.presence ].compact.join(" · ")
             info << [ "Flight", flight ] if flight.present?
           end
+          info << [ "Team Colors", @team.team_colors ] if @team.team_colors.present?
           info << [ "Season", @team.season_name ] if @team.season_name.present?
           info << [ "Season Starts", @team.start_date.strftime("%-m/%-d/%Y") ] if @team.start_date.present?
         %>

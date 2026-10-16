@@ -5357,7 +5357,10 @@ span.cr-fr-chip { cursor: default; }
 .cr-venue { display: grid; grid-template-columns: auto minmax(0, 1fr); column-gap: 6px; align-items: start; margin-top: 6px; max-width: 100%; font-size: 0.8rem; line-height: 1.4; color: var(--cr-text); text-decoration: none; text-align: left; }
 .cr-venue-pin { font-size: 0.75rem; line-height: 1.6; }
 .cr-venue-text { display: flex; flex-direction: column; min-width: 0; }
-.cr-venue-name, .cr-venue-line { overflow-wrap: anywhere; } /* never cut off; a very long name continues on the next line, still lined up */
+/* One line each; a small script shrinks a long line to fit (min 11px) and
+   only lets it continue onto a second lined-up line past that. */
+.cr-venue-name, .cr-venue-line { white-space: nowrap; overflow: hidden; }
+.cr-venue-name.cr-fit-wrap, .cr-venue-line.cr-fit-wrap { white-space: normal; overflow-wrap: anywhere; }
 .cr-venue-name { font-weight: 700; color: var(--cr-text); }
 .cr-venue-line { color: var(--cr-text-muted); }
 a.cr-venue:hover .cr-venue-name { text-decoration: underline; }
@@ -5428,3 +5431,24 @@ body.cr-ctx-clubs-new, body.cr-ctx-clubs-edit, body.cr-ctx-clubs-create, body.cr
 .cr-share-btn svg { flex-shrink: 0; }
 button.cr-cal-btn.cr-share-icon { display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; padding: 0; border: 1px solid var(--cr-border); border-radius: 6px; background: var(--cr-white); color: var(--cr-text-muted); cursor: pointer; font-family: inherit; }
 button.cr-cal-btn.cr-share-icon:hover { border-color: var(--cr-gold); color: var(--cr-gold); }
+
+/* Computers: a tighter team page, and match rows laid out like a fixture
+   list (date | opponent & time | location | status) instead of leaving a
+   wide empty gap before the status. Phones keep the stacked layout. */
+@media (min-width: 900px) {
+  .cr-team-page { max-width: 880px; }
+  .cr-sched-row.cr-has-venue {
+    grid-template-columns: auto minmax(0, 1.15fr) minmax(0, 1fr) auto;
+    column-gap: 20px;
+  }
+  .cr-sched-row.cr-has-venue > .cr-sched-date { grid-row: 1; }
+  .cr-sched-row.cr-has-venue > .cr-sched-main { grid-column: 2; grid-row: 1; }
+  .cr-sched-row.cr-has-venue > .cr-venue { grid-column: 3; grid-row: 1; margin-top: 0; }
+  .cr-sched-row.cr-has-venue > .cr-sched-right { grid-column: 4; grid-row: 1; }
+}
+
+/* Team colors next to the team name (hero) */
+.cr-team-colors { display: flex; align-items: center; gap: 6px; margin: 2px 0 8px; }
+.cr-color-dot { width: 14px; height: 14px; border-radius: 50%; box-shadow: 0 0 0 1.5px rgba(255, 255, 255, 0.75); flex-shrink: 0; }
+.cr-team-colors-text { margin-left: 4px; font-size: 0.85rem; font-weight: 600; color: #fff; }
+.cr-team-colors-label { font-weight: 500; color: rgba(255, 255, 255, 0.6); }

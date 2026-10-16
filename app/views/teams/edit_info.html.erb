@@ -43,6 +43,10 @@
           <%= f.text_field :home_court_address, placeholder: "e.g. 4 N Warner Ave, Bryn Mawr, PA 19010" %>
         </label>
         <label class="cr-info-field">
+          <span>Team Colors (what we wear)</span>
+          <%= f.text_field :team_colors, maxlength: 60, placeholder: "e.g. Any pink & black" %>
+        </label>
+        <label class="cr-info-field">
           <span>Season</span>
           <%= f.text_field :season_name, placeholder: "e.g. Spring 2026" %>
         </label>

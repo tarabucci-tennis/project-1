@@ -26,4 +26,14 @@ class MatchShareTest < ActionView::TestCase
     assert_includes text, "Some USTA vs. Somebody"
     assert_not_includes text, "📍"
   end
+
+  test "team colors: dots from the captain's words, and in the shared text" do
+    @team.update!(team_colors: "Any pink & black")
+    assert_equal [ "#ec4899", "#111827" ], @team.color_swatches
+    match = @team.matches.create!(opponent: "Somebody", home_away: "home", match_date: Time.zone.local(2026, 10, 26, 13, 30))
+    assert_includes match_share_text(match), "👕 We wear: Any pink & black"
+
+    @team.update!(team_colors: "All black")
+    assert_equal [ "#111827" ], @team.color_swatches
+  end
 end
