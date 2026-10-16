@@ -1,6 +1,6 @@
 import { Controller } from "@hotwired/stimulus"
 
-// Tabbed dashboard on the My Teams home page: Standings / Calendar / Coming Up.
+// Tabbed dashboard on the My Teams home page: Standings / Calendar / Upcoming / Friendlies.
 // Unlike team-tabs (which hides tabs and stacks panels on mobile), these tabs
 // stay tab-like on every screen size — switching is the whole point here.
 export default class extends Controller {

@@ -4480,33 +4480,44 @@ button.cr-header-pill {
 
 .cr-home-subtitle { color: var(--cr-text-muted); font-size: 0.9rem; margin-top: 4px; }
 
+/* My Teams tabs: one even segmented control, every tab visible on a phone. */
 .cr-home-tabs {
-  display: flex;
-  gap: 2px;
-  border-bottom: 1px solid var(--cr-border);
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(0, 1fr);
+  gap: 4px;
+  padding: 4px;
   margin-bottom: 22px;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
+  background: #e6ebf2;
+  border-radius: 12px;
+  max-width: 600px;
 }
-.cr-home-tabs::-webkit-scrollbar { display: none; }
-
 .cr-home-tab {
-  padding: 12px 18px;
-  font-size: 0.9rem;
-  font-weight: 700;
-  color: var(--cr-text-muted);
-  background: none;
-  border: none;
-  border-bottom: 2px solid transparent;
-  cursor: pointer;
+  min-width: 0;
+  min-height: 40px;
+  padding: 8px 6px;
   font-family: inherit;
+  font-size: 0.88rem;
+  font-weight: 600;
+  letter-spacing: 0.1px;
+  color: #475569;
+  background: transparent;
+  border: none;
+  border-radius: 9px;
+  cursor: pointer;
   white-space: nowrap;
-  flex-shrink: 0;
-  transition: color 0.15s, border-color 0.15s;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  -webkit-tap-highlight-color: transparent;
+  transition: background 0.15s, color 0.15s, box-shadow 0.15s;
 }
-.cr-home-tab:hover { color: var(--cr-text); }
-.cr-home-tab-active { color: var(--cr-teal-deep); border-bottom-color: var(--cr-teal); }
+.cr-home-tab:hover { color: var(--cr-black); }
+.cr-home-tab-active,
+.cr-home-tab-active:hover {
+  color: var(--cr-black);
+  background: #fff;
+  box-shadow: 0 1px 2px rgba(10, 22, 40, 0.10), 0 1px 6px rgba(10, 22, 40, 0.06);
+}
 
 /* — Standings table — */
 .cr-standings-wrap {
@@ -4573,19 +4584,13 @@ button.cr-header-pill {
   }
   .cr-standings thead th, .cr-standings tbody td { padding: 13px 10px; }
   .cr-st-dot { width: 20px; height: 20px; font-size: 0.6rem; }
-  .cr-home-tab { padding: 11px 14px; font-size: 0.85rem; }
+  .cr-home-tab { font-size: 0.8rem; }
 }
 
 /* ============================================================
    Home dashboard — high-end color polish (navy + gold palette)
    ============================================================ */
 
-/* Active tab → warm gold pill */
-.cr-home-tab-active {
-  color: var(--cr-black);
-  background: rgba(201, 162, 74, 0.14);
-  border-radius: 10px 10px 0 0;
-}
 
 /* Premium framing on the standings card */
 .cr-standings-wrap {
@@ -4678,10 +4683,6 @@ body { background: #f3f0e9; }
 body.cr-ctx-teams-index { background: var(--cr-navy-page); }
 body.cr-ctx-teams-index .cr-page-title { color: var(--cr-text); }
 body.cr-ctx-teams-index .cr-home-subtitle { color: var(--cr-text-muted); }
-body.cr-ctx-teams-index .cr-home-tabs { border-bottom-color: rgba(10, 22, 40, 0.12); }
-body.cr-ctx-teams-index .cr-home-tab { color: var(--cr-text-muted); }
-body.cr-ctx-teams-index .cr-home-tab:hover { color: var(--cr-text); }
-body.cr-ctx-teams-index .cr-home-tab-active { color: var(--cr-teal-deep); background: var(--cr-teal-tint); }
 body.cr-ctx-teams-index .cr-st-hint { color: var(--cr-text-muted); }
 body.cr-ctx-teams-index .cr-coming-up-empty { color: var(--cr-text-muted); }
 
@@ -5376,3 +5377,24 @@ body.cr-ctx-clubs-new, body.cr-ctx-clubs-edit, body.cr-ctx-clubs-create, body.cr
 .cr-fr-length-opt input:focus-visible + span { outline: 2px solid var(--cr-teal); outline-offset: 2px; }
 .cr-fr-end-time[hidden] { display: none !important; }
 .cr-fr-end-time { margin-top: 8px; }
+
+/* My Teams header buttons on phones: an even 2 × 2 grid, same size. */
+@media (max-width: 720px) {
+  body.cr-ctx-teams-index .cr-page-header-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    width: 100%;
+  }
+  body.cr-ctx-teams-index .cr-page-header-actions .cr-menu { display: block; }
+  body.cr-ctx-teams-index .cr-page-header-actions .cr-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    width: 100%;
+    min-height: 44px;
+    margin: 0;
+    white-space: nowrap;
+  }
+}
