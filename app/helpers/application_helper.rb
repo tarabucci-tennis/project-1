@@ -83,7 +83,6 @@ module ApplicationHelper
   #   📍 Aronimink Golf Club
   #   3600 St Davids Rd
   #   Newtown Square, PA 19073
-  #   Map: maps.google.com/?q=...
   #
   #   Add your name if you can play, and check this link for updates:
   def friendly_invite_text(friendly)
@@ -93,11 +92,11 @@ module ApplicationHelper
     lines.join("\n")
   end
 
-  # 📍 name / street / town / Map lines for a Club or Friendly::Place.
+  # 📍 name / street / town lines for a Club or Friendly::Place (no map link:
+  # Tara wants texts short; people paste the address into Waze or Maps).
   def place_lines(place)
     return [] unless place
-    out = place.name.present? ? [ "📍 #{place.name}", *place.address_lines ] : [ "📍 #{place.address_lines.first}", *place.address_lines.drop(1) ]
-    out << "Map: #{short_map_link(place.address.presence || place.name)}"
+    place.name.present? ? [ "📍 #{place.name}", *place.address_lines ] : [ "📍 #{place.address_lines.first}", *place.address_lines.drop(1) ]
   end
 
   # A friendly's lineup as plain text for a group chat.
@@ -142,7 +141,8 @@ module ApplicationHelper
   end
 
   # Plain-text summary of a match to text a sub: one detail per line, the
-  # address stacked like on the site, short links. Readable without an account.
+  # address stacked like on the site, no map link (too much text). Readable
+  # without an account.
   #
   #   🎾 Advantage Us vs. Frog Hollow Platinum
   #   📅 Mon, Oct 19 · 10:30 am
@@ -152,7 +152,6 @@ module ApplicationHelper
   #   📍 Frog Hollow Racquet Club
   #   2115 Weber Road
   #   Lansdale, PA 19446
-  #   Map: maps.google.com/?q=2115+Weber+Road+Lansdale+PA+19446
   #
   #   Join Court Report free: yourcourtreport.com/signup
   def match_share_text(match)
@@ -166,22 +165,12 @@ module ApplicationHelper
     if (venue = match.venue)
       lines << "" << "📍 #{venue.name}"
       lines.concat(venue.address_lines)
-      map_query = venue.address.presence || venue.name
     elsif (place = match_place(match))
       lines << "" << "📍 #{place}"
-      map_query = place
     end
-    lines << "Map: #{short_map_link(map_query)}" if map_query
 
     lines << "" << "Join Court Report free: #{signup_url.sub(%r{\Ahttps?://(www\.)?}, '')}"
     lines.join("\n")
-  end
-
-  # A short Google Maps search link for an address (no https://, + for spaces),
-  # e.g. maps.google.com/?q=2115+Weber+Road+Lansdale+PA+19446
-  def short_map_link(query)
-    words = query.to_s.gsub(/[^A-Za-z0-9#&\- ]/, " ").split
-    "maps.google.com/?q=#{words.map { |w| ERB::Util.url_encode(w) }.join('+')}"
   end
 
   def google_calendar_url(match)
