@@ -5465,3 +5465,21 @@ button.cr-cal-btn.cr-share-icon:hover { border-color: var(--cr-gold); color: var
   .cr-join-actions { width: 100%; }
   .cr-join-actions .cr-btn { flex: 1; justify-content: center; text-align: center; min-height: 44px; display: inline-flex; align-items: center; }
 }
+
+/* Comfortable reading widths on computers: no wide hollow gaps between a
+   name and its buttons. Lists/forms are narrow; data tables keep 1040px. */
+.cr-rp-page.cr-rp-narrow { max-width: 680px; }
+.cr-rp-page.cr-fr-page { max-width: 760px; }
+/* Friendly roster: the × column always takes the same space so Out lines up. */
+.cr-fr-remove, .cr-fr-remove-spacer { width: 28px; flex-shrink: 0; text-align: center; margin-left: 0; }
+.cr-fr-remove-spacer { display: inline-block; }
+.cr-fr-list li .cr-fr-toggle { margin-left: auto; }
+
+/* Phones: the hero's number box (courts needed / USTA level) moves under the
+   title as a slim pill, so the title gets the full width. */
+@media (max-width: 520px) {
+  .cr-rp-hero { flex-direction: column; align-items: flex-start; gap: 12px; }
+  .cr-rp-hero-level { display: inline-flex; align-items: baseline; gap: 8px; padding: 6px 14px; text-align: left; }
+  .cr-rp-level-val { font-size: 1.25rem; }
+  .cr-rp-level-cap { margin-top: 0; }
+}
