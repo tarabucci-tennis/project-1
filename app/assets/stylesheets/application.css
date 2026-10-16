@@ -4489,6 +4489,7 @@ button.cr-header-pill {
   padding: 4px;
   margin-bottom: 22px;
   background: #e6ebf2;
+  border: 1px solid var(--cr-teal);
   border-radius: 12px;
   max-width: 600px;
 }
@@ -4500,7 +4501,7 @@ button.cr-header-pill {
   font-size: 0.88rem;
   font-weight: 600;
   letter-spacing: 0.1px;
-  color: #475569;
+  color: var(--cr-teal-deep);
   background: transparent;
   border: none;
   border-radius: 9px;
@@ -4511,10 +4512,11 @@ button.cr-header-pill {
   -webkit-tap-highlight-color: transparent;
   transition: background 0.15s, color 0.15s, box-shadow 0.15s;
 }
-.cr-home-tab:hover { color: var(--cr-black); }
+.cr-home-tab:hover { background: rgba(23, 180, 166, 0.10); }
 .cr-home-tab-active,
 .cr-home-tab-active:hover {
-  color: var(--cr-black);
+  color: var(--cr-teal-deep);
+  font-weight: 700;
   background: #fff;
   box-shadow: 0 1px 2px rgba(10, 22, 40, 0.10), 0 1px 6px rgba(10, 22, 40, 0.06);
 }

@@ -123,6 +123,10 @@
                     <% nm = team.next_match %>
                     <% if nm %>
                       <span class="cr-st-next-date"><%= nm.match_date.strftime("%-m/%-d") %></span> vs <%= nm.opponent %>
+                    <% elsif team.start_date && team.start_date > Date.current %>
+                      <span class="cr-st-muted">Starts <%= team.start_date.strftime("%-m/%-d") %></span>
+                    <% elsif team.matches.none? %>
+                      <span class="cr-st-muted">No schedule yet</span>
                     <% else %>
                       <span class="cr-st-muted">Season complete</span>
                     <% end %>
