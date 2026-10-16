@@ -53,6 +53,35 @@
 
     <%# Tiny inline scripts: password eye toggle + join-link copy button %>
     <script>
+      // Match locations: keep each line (club / street / town) on one clean
+      // line by shrinking its text just enough to fit, down to a readable
+      // minimum; only past that does it continue on a second, lined-up line.
+      (function () {
+        var MIN_PX = 11;
+        function fit(line) {
+          line.style.fontSize = '';
+          line.classList.remove('cr-fit-wrap');
+          var avail = line.clientWidth;
+          if (!avail || line.scrollWidth <= avail) return;
+          var base = parseFloat(getComputedStyle(line).fontSize);
+          var size = Math.max(MIN_PX, Math.floor(base * avail / line.scrollWidth * 10) / 10);
+          line.style.fontSize = size + 'px';
+          if (line.scrollWidth > line.clientWidth) line.classList.add('cr-fit-wrap');
+        }
+        function fitBox(box) { box.querySelectorAll('.cr-venue-name, .cr-venue-line').forEach(fit); }
+        var observer = window.ResizeObserver ? new ResizeObserver(function (entries) {
+          entries.forEach(function (e) { fitBox(e.target); });
+        }) : null;
+        function setup() {
+          document.querySelectorAll('.cr-venue-text').forEach(function (box) {
+            fitBox(box);
+            if (observer) observer.observe(box);
+          });
+        }
+        document.addEventListener('DOMContentLoaded', setup);
+        document.addEventListener('turbo:load', setup);
+      })();
+
       // Share a match (or anything with data-share-text): the phone's share
       // sheet (Messages, WhatsApp, email…), or copy to the clipboard on a computer.
       function crShare(btn) {
