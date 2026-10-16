@@ -66,7 +66,7 @@ Rails.application.routes.draw do
   post "create-team", to: "teams#create", as: :create_team
 
   # Core app
-  resources :teams, only: [ :index, :show ] do
+  resources :teams, only: [ :index, :show, :destroy ] do
     resources :events, only: [ :create, :destroy ], controller: "team_events"
     resources :matches, only: [ :index, :new, :create, :show, :edit, :update ] do
       member do

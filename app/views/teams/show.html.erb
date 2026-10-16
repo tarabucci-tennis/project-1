@@ -13,11 +13,20 @@
               class: "cr-chip-btn", form: { style: "display:inline;" } %>
       <% end %>
     </div>
-  <% elsif can_archive %>
+  <% end %>
+  <% can_delete = (current_user.admin? || @team.user_id == current_user.id) && !@team.matches.completed.exists? %>
+  <% if (can_archive && !@team.archived?) || can_delete %>
     <div class="cr-team-archive-action">
-      <%= button_to "📦 Archive team", archive_team_path(@team), method: :post,
-            class: "cr-chip-btn", form: { style: "display:inline;" },
-            data: { turbo_confirm: "Move #{@team.name} to Past Seasons? Its schedule, results, and standings stay saved and viewable — you can restore it any time." } %>
+      <% if can_archive && !@team.archived? %>
+        <%= button_to "📦 Archive team", archive_team_path(@team), method: :post,
+              class: "cr-chip-btn", form: { style: "display:inline;" },
+              data: { turbo_confirm: "Move #{@team.name} to Past Seasons? Its schedule, results, and standings stay saved and viewable — you can restore it any time." } %>
+      <% end %>
+      <% if can_delete %>
+        <%= button_to "🗑️ Delete team", team_path(@team), method: :delete,
+              class: "cr-chip-btn cr-chip-danger", form: { style: "display:inline;" },
+              data: { turbo_confirm: "Delete #{@team.name} for everyone? Its roster, schedule and standings are removed and can't be brought back. (Players' accounts stay.)" } %>
+      <% end %>
     </div>
   <% end %>
 

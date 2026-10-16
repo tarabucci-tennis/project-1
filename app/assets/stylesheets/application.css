@@ -5145,7 +5145,7 @@ body.cr-ctx-lineups-edit .cr-field > span { color: var(--cr-text); }
 .cr-archive-row-name { flex: 1; font-weight: 700; }
 .cr-archive-row-record { font-weight: 700; color: var(--cr-teal-deep); font-variant-numeric: tabular-nums; }
 
-.cr-team-archive-action { text-align: right; margin: -2px 0 10px; }
+.cr-team-archive-action { display: flex; justify-content: flex-end; flex-wrap: wrap; gap: 8px; margin: -2px 0 10px; }
 .cr-archived-banner {
   display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap;
   background: var(--cr-teal-tint); border: 1px solid rgba(23, 180, 166, 0.3); border-radius: 10px;
@@ -5534,3 +5534,23 @@ button.cr-cal-btn.cr-share-icon:hover { border-color: var(--cr-gold); color: var
   .cr-cu-place .cr-venue { margin-top: 0; font-size: 0.8rem; }
   .cr-cu-row > .cr-my-week-right { flex-direction: row; align-items: center; justify-content: flex-end; flex-wrap: wrap; }
 }
+
+/* Delete team: same chip, red so it never looks like a routine action. */
+.cr-chip-btn.cr-chip-danger { color: #b42318; border-color: rgba(180, 35, 24, 0.35); }
+.cr-chip-btn.cr-chip-danger:hover { background: rgba(180, 35, 24, 0.07); border-color: #b42318; color: #b42318; }
+
+/* My Teams: the tab bar and the capped Upcoming / Friendlies lists sit in
+   the middle of the page, not hugging the left edge. */
+.cr-home-tabs { margin-left: auto; margin-right: auto; }
+@media (min-width: 900px) {
+  .cr-my-week-list:has(> .cr-cu-row) { margin-left: auto; margin-right: auto; }
+  .cr-fr-tab-head { max-width: 880px; margin-left: auto; margin-right: auto; }
+  .cr-coming-up-empty { max-width: 880px; margin-left: auto; margin-right: auto; }
+}
+.cr-home-page > .cr-page-header-row {
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 14px;
+}
+.cr-home-page > .cr-page-header-row .cr-page-header-actions { justify-content: center; flex-wrap: wrap; }
