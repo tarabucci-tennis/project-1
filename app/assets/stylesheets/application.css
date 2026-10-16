@@ -5554,3 +5554,26 @@ button.cr-cal-btn.cr-share-icon:hover { border-color: var(--cr-gold); color: var
   gap: 14px;
 }
 .cr-home-page > .cr-page-header-row .cr-page-header-actions { justify-content: center; flex-wrap: wrap; }
+
+/* My Teams standings: a compact, centered table (same 880px column as the
+   Upcoming list) instead of stretching across the page. Numbers sit in
+   narrow fixed columns next to the team; Next gets the leftover room. */
+@media (min-width: 900px) {
+  .cr-standings-wrap, .cr-st-hint { max-width: 880px; margin-left: auto; margin-right: auto; }
+  .cr-standings { table-layout: fixed; }
+  .cr-standings th:nth-child(1) { width: 52px; }
+  .cr-standings th:nth-child(2) { width: 36%; }
+  .cr-standings th:nth-child(3), .cr-standings th:nth-child(4) { width: 44px; }
+  .cr-standings th:nth-child(5) { width: 64px; }
+  .cr-standings th:nth-child(6) { width: 104px; }
+  .cr-standings thead th, .cr-standings tbody td { padding: 12px 10px; }
+  .cr-standings thead th:first-child, .cr-standings tbody td:first-child { padding-left: 18px; }
+  .cr-standings thead th:last-child, .cr-standings tbody td:last-child { padding-right: 18px; }
+  .cr-st-league td { padding-left: 18px; }
+  .cr-st-next { overflow: hidden; text-overflow: ellipsis; }
+  .cr-st-sub { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+}
+/* Phones: the grey league line stays on one line (… if it's too long). */
+@media (max-width: 640px) {
+  .cr-st-sub { max-width: calc(100vw - 250px); min-width: 90px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+}
