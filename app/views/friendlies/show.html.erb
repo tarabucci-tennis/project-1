@@ -143,7 +143,7 @@
 
     <% if @friendly.lineup? %>
       <% if organizer? %>
-        <p class="cr-fr-swap-hint cr-no-print">Tap two names in the same set to swap them.</p>
+        <p class="cr-fr-swap-hint cr-no-print">Tap two names in the same set to swap them (you’ll be asked to confirm).</p>
         <%= form_with url: swap_friendly_lineup_path(@friendly), method: :patch, data: { turbo: false, friendly_swap_target: "form" }, html: { hidden: true } do %>
           <input type="hidden" name="set" data-friendly-swap-target="setField">
           <input type="hidden" name="a" data-friendly-swap-target="aField">
@@ -153,7 +153,9 @@
 
       <div class="cr-fr-sets">
         <% @friendly.lineup_sets.first(@friendly.sets_count).each_with_index do |set, si| %>
-          <% swappable = organizer? && !set["done"] %>
+          <%# Organizer: names are tappable in every set; a played set just says so. %>
+          <% swappable = organizer? %>
+          <% played_attr = set["done"] ? 'data-played="true"' : "" %>
           <div class="cr-fr-set <%= 'cr-fr-set-done' if set['done'] %>" id="set-<%= si + 1 %>">
             <div class="cr-fr-set-head">
               <h3>Set <%= si + 1 %><% if set["done"] %> <span class="cr-fr-played">✓ Played</span><% end %></h3>
@@ -173,7 +175,7 @@
                       <% pair.each do |pi| %>
                         <% if swappable %>
                           <button type="button" class="cr-fr-chip" data-friendly-swap-target="chip"
-                                  data-set="<%= si %>" data-pos="<%= ci %>-<%= pi %>" data-action="click->friendly-swap#pick"><%= court[pi] %></button>
+                                  data-set="<%= si %>" data-pos="<%= ci %>-<%= pi %>" <%== played_attr %> data-action="click->friendly-swap#pick"><%= court[pi] %></button>
                         <% else %>
                           <span class="cr-fr-chip"><%= court[pi] %></span>
                         <% end %>
@@ -189,7 +191,7 @@
                 <% set["sitting"].each_with_index do |name, i| %>
                   <% if swappable %>
                     <button type="button" class="cr-fr-chip cr-fr-chip-sit" data-friendly-swap-target="chip"
-                            data-set="<%= si %>" data-pos="s-<%= i %>" data-action="click->friendly-swap#pick"><%= name %></button>
+                            data-set="<%= si %>" data-pos="s-<%= i %>" <%== played_attr %> data-action="click->friendly-swap#pick"><%= name %></button>
                   <% else %>
                     <span class="cr-fr-chip cr-fr-chip-sit"><%= name %></span>
                   <% end %>
