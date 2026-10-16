@@ -116,6 +116,13 @@ class TennisTeam < ApplicationRecord
     team_memberships.where(user: user, role: %w[captain co_captain]).exists?
   end
 
+  # Only captains, co-captains and admins enter or change match results, so
+  # what's published stays accurate (Tara, Oct 16 2026).
+  def can_enter_results?(user)
+    return false unless user
+    user.admin? || can_set_lineup?(user)
+  end
+
   def co_captains
     team_memberships.where(role: "co_captain").includes(:user).map(&:user)
   end

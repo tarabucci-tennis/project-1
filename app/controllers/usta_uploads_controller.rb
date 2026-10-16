@@ -1,5 +1,5 @@
-# Any player on a USTA team can upload the team's TennisLink "Team Summary"
-# export (Stats & Standings → Send To Excel). We show a preview of what will
+# A captain (or co-captain, admin, or whoever added the team) uploads the team's TennisLink "Team Summary"
+# or "Match Summary" export (Send To Excel). We show a preview of what will
 # change, then save it with UstaTeamSummaryImport. The uploaded file is held
 # in the cache between the preview and the save, keyed by a random token.
 class UstaUploadsController < ApplicationController
@@ -54,8 +54,10 @@ class UstaUploadsController < ApplicationController
     @team = TennisTeam.find_by(id: params[:id])
     return redirect_to(teams_path, alert: "Team not found.") unless @team
 
-    unless @team.team_memberships.exists?(user: current_user) || @team.user_id == current_user.id || current_user.admin?
-      redirect_to teams_path, alert: "You're not a member of that team."
+    # It changes match results, so it's captains (and admins / whoever added
+    # the team) only, like Enter Results.
+    unless @team.can_enter_results?(current_user) || @team.user_id == current_user.id
+      redirect_to team_path(@team), alert: "Only the team's captains can upload USTA results."
     end
   end
 

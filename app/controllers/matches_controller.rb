@@ -2,6 +2,7 @@ class MatchesController < ApplicationController
   before_action :require_login
   before_action :set_team
   before_action :require_membership
+  before_action :require_results_editor, only: [ :edit_results, :update_results ]
 
   def index
     @matches = @team.matches.chronological
@@ -12,6 +13,7 @@ class MatchesController < ApplicationController
     @match = @team.matches.find(params[:id])
     @lineup = @match.lineup
     @is_captain = @team.captain?(current_user) || @team.user_id == current_user.id
+    @can_enter_results = @team.can_enter_results?(current_user)
     @my_availability = @match.availability_for(current_user)
 
     if @lineup&.published?
@@ -202,6 +204,11 @@ class MatchesController < ApplicationController
   def set_team
     @team = TennisTeam.find_by(id: params[:team_id])
     redirect_to teams_path, alert: "Team not found." unless @team
+  end
+
+  def require_results_editor
+    return if @team.can_enter_results?(current_user)
+    redirect_to team_path(@team), alert: "Only the team's captains can enter or change results."
   end
 
   def require_membership
