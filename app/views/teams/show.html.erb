@@ -512,7 +512,8 @@
       <section class="cr-section">
         <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 14px;">
           <h2 class="cr-section-title" style="margin-bottom: 0;">Player Stats</h2>
-          <a href="https://docs.google.com/spreadsheets/d/15tSu5Ytoly4AU_YBrzVHsV0DL4yz2XSlN3Dk3eqe7Ak/edit?gid=0#gid=0"
+          <% if @team.stats_sheet_url.present? %>
+          <a href="<%= @team.stats_sheet_url %>"
              target="_blank"
              rel="noopener"
              class="cr-btn cr-btn-outline"
@@ -520,6 +521,7 @@
             <span style="font-size: 0.95rem;">📊</span>
             <span>Open Full Stats Sheet</span>
           </a>
+          <% end %>
         </div>
 
         <%# Team stat charts — always rendered. Empty/zero bars when

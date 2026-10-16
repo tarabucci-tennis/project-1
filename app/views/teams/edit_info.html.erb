@@ -47,6 +47,11 @@
           <%= f.text_field :team_colors, maxlength: 60, placeholder: "e.g. Any pink & black" %>
         </label>
         <label class="cr-info-field">
+          <span>Stats Sheet (this team's Google Sheet)</span>
+          <%= f.url_field :stats_sheet_url, placeholder: "https://docs.google.com/spreadsheets/..." %>
+          <small style="color: var(--cr-text-light);">Open the sheet, click THIS team's tab, then copy the address. Blank = no stats sheet button.</small>
+        </label>
+        <label class="cr-info-field">
           <span>Season</span>
           <%= f.text_field :season_name, placeholder: "e.g. Spring 2026" %>
         </label>
