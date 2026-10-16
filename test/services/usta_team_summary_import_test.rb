@@ -71,6 +71,35 @@ class UstaTeamSummaryImportTest < ActiveSupport::TestCase
     assert @team.team_memberships.active.joins(:user).exists?(users: { name: "Brand New" })
   end
 
+  # Tri-Level flights rank by Team Wins and publish a different standings table.
+  TEAM_WINS_HTML = <<~HTML.freeze
+    <table>
+      <tr><td>Match Win Criteria: Team Wins</td></tr>
+      <tr><td>Team Name</td><td>Wins*</td><td>Losses</td><td>Indiv. Wins</td><td>Indiv. Losses</td><td>Sets Won</td><td>Sets Lost</td><td>Games Won</td><td>Games Lost</td><td>* Games Won %</td></tr>
+      <tr><td>Test Aces</td><td>6</td><td>0</td><td>15</td><td>3</td><td>30</td><td>7</td><td>201</td><td>136</td><td>59.64%</td></tr>
+      <tr><td>Rival One</td><td>4</td><td>2</td><td>9</td><td>9</td><td>19</td><td>24</td><td>162</td><td>170</td><td>48.80%</td></tr>
+      <tr><td></td></tr>
+      <tr><td>Team Matches</td></tr>
+      <tr><td>Date</td><td></td><td>Opponent</td><td>Result</td></tr>
+      <tr><td>4/14/2026</td><td></td><td>Rival One</td><td>Confirmed by 48 hr rule Won 2-1 Confirmed</td></tr>
+      <tr><td>Players</td></tr>
+      <tr><td>Player Name</td><td>NTRP</td></tr>
+      <tr><td>Already Here</td><td>4</td></tr>
+    </table>
+  HTML
+
+  test "reads Team Wins standings (Tri-Level) and saves wins as points" do
+    parsed = UstaTeamSummaryParser.parse(TEAM_WINS_HTML)
+    assert_equal [ 6, 6, 0 ], parsed.standings.first.to_h.values_at(:points, :wins, :losses)
+    assert_equal "Confirmed by 48 hr rule", parsed.matches.first.status
+
+    UstaTeamSummaryImport.new(@team, parsed).apply!
+    assert_equal 6, @team.reload.usta_points
+    rival = @team.division_teams.find_by(name: "Rival One")
+    assert_equal [ 4, 2, 6, 48.8 ], [ rival.wins, rival.losses, rival.matches_played, rival.games_won_pct.to_f ]
+    assert_equal "2-1", @m1.reload.score_summary
+  end
+
   test "apply! is safe to run twice" do
     2.times { UstaTeamSummaryImport.new(@team, UstaTeamSummaryParser.parse(HTML)).apply! }
     assert_equal 2, @team.matches.count

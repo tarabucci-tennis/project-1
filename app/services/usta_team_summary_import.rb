@@ -80,6 +80,7 @@ class UstaTeamSummaryImport
     (@parsed.standings - [ our ].compact).each do |s|
       dt = @team.division_teams.detect { |d| normalize(d.name) == normalize(s.name) } ||
            @team.division_teams.new(name: s.name)
+      dt.wins, dt.losses = s.wins, s.losses if s.wins
       dt.update!(matches_played: s.matches_played, points: s.points,
                  sets_won: s.sets_won, sets_lost: s.sets_lost,
                  games_won: s.games_won, games_lost: s.games_lost,
