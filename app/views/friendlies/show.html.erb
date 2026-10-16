@@ -5,7 +5,7 @@
 <% courts = @friendly.courts_needed %>
 <% waitlist = @friendly.waitlist %>
 <% out_today = @friendly.spots.reject(&:in_lineup) %>
-<% invite = "🎾 #{@friendly.title}: #{when_text}#{" at #{@friendly.location}" if @friendly.location.present?}. Add your name if you can play: #{share_url}" %>
+<% invite = "🎾 #{@friendly.title}: #{when_text}#{" at #{@friendly.location}" if @friendly.location.present?}. Add your name if you can play, and check this link for updates:" %>
 
 <div class="cr-rp-page cr-fr-page">
   <% if current_user %><%= link_to "← Friendlies", friendlies_path, class: "cr-back-link cr-no-print" %><% end %>
@@ -96,8 +96,9 @@
       <h2 class="cr-fr-lineup-title">Lineup</h2>
       <% if @friendly.lineup? %>
         <div class="cr-fr-lineup-tools cr-no-print">
-          <button type="button" class="cr-chip-btn" data-text="<%= friendly_lineup_text(@friendly) %>"
-                  onclick="var t=this.dataset.text,b=this;if(navigator.clipboard){navigator.clipboard.writeText(t).then(function(){b.textContent='Copied ✓'},function(){if(navigator.share){navigator.share({text:t})}})}else if(navigator.share){navigator.share({text:t})}">📋 Copy as text</button>
+          <button type="button" class="cr-chip-btn"
+                  data-share-text="<%= friendly_lineup_text(@friendly) %>&#10;&#10;Updates &amp; sign-ups:" data-share-url="<%= share_url %>"
+                  onclick="crCopyWithLink(this)"><span class="cr-share-label">📋 Copy as text</span></button>
           <button type="button" class="cr-chip-btn" onclick="window.print()">🖨️ Print</button>
         </div>
       <% end %>
@@ -184,9 +185,9 @@
 
   <%# ── Share + calendar ── %>
   <div class="cr-rp-actions cr-no-print" style="margin-top: 14px;">
-    <button type="button" class="cr-chip-btn" data-invite="<%= invite %>"
-            onclick="var t=this.dataset.invite,b=this;if(navigator.share){navigator.share({text:t}).catch(function(){})}else if(navigator.clipboard){navigator.clipboard.writeText(t).then(function(){b.textContent='Copied ✓'})}">
-      🔗 Share invite
+    <button type="button" class="cr-chip-btn" data-share-text="<%= invite %>" data-share-url="<%= share_url %>"
+            onclick="crShare(this)">
+      <span class="cr-share-label">🔗 Share invite</span>
     </button>
     <%= link_to "📅 Add to Google Calendar", friendly_google_calendar_url(@friendly, share_url: share_url),
           target: "_blank", rel: "noopener", class: "cr-chip-btn" %>

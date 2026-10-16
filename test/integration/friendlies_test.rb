@@ -56,6 +56,8 @@ class FriendliesTest < ActionDispatch::IntegrationTest
     follow_redirect!
     assert_select ".cr-fr-set", 3
     assert_match "Copy as text", response.body
+    # Every share/copy of a friendly carries its link, passed separately so phones keep it.
+    assert_select "button[data-share-url=?]", friendly_url(@friendly), minimum: 2
 
     before = @friendly.lineup_sets[0]
     patch swap_friendly_lineup_path(@friendly), params: { set: 0, a: "0-0", b: "0-3" }
