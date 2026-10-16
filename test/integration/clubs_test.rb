@@ -17,7 +17,8 @@ class ClubsTest < ActionDispatch::IntegrationTest
     sign_in(@player)
     get team_path(@team)
     assert_match "Bux-Mont Club Locations", response.body
-    assert_match "680 Tennis Ave, Ambler, PA 19002", response.body
+    assert_select ".cr-clubs-addr span", text: "680 Tennis Ave"
+    assert_select ".cr-clubs-addr span", text: "Ambler, PA 19002"
     assert_no_match "+ Add a club", response.body
   end
 
