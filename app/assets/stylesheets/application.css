@@ -4892,9 +4892,12 @@ body.cr-ctx-division_teams-show { background: var(--cr-black); }
 .cr-chip-btn:hover { border-color: var(--cr-gold); background: rgba(201,162,74,0.06); }
 
 /* Team page: segmented control reads on the light-blue canvas */
-body.cr-ctx-teams-show .cr-seg { background: var(--cr-white); border-color: var(--cr-border); }
-body.cr-ctx-teams-show .cr-seg-btn { color: var(--cr-text-muted); }
-body.cr-ctx-teams-show .cr-seg-btn-active { background: var(--cr-teal); color: #fff; box-shadow: none; }
+/* Team page Upcoming / Results switch: same clean segmented look as the
+   My Teams tabs (grey track, white pill for the selected one, no icons). */
+body.cr-ctx-teams-show .cr-seg { background: #e6ebf2; border: none; border-radius: 12px; padding: 4px; }
+body.cr-ctx-teams-show .cr-seg-btn { color: #475569; font-weight: 600; font-size: 0.88rem; border-radius: 9px; min-height: 40px; padding: 8px 22px; }
+body.cr-ctx-teams-show .cr-seg-btn:hover { color: var(--cr-black); }
+body.cr-ctx-teams-show .cr-seg-btn-active { background: #fff; color: var(--cr-black); box-shadow: 0 1px 2px rgba(10, 22, 40, 0.10), 0 1px 6px rgba(10, 22, 40, 0.06); }
 
 @media (max-width: 640px) {
   .cr-sched-row { padding: 12px; gap: 10px; }
@@ -5419,3 +5422,9 @@ body.cr-ctx-clubs-new, body.cr-ctx-clubs-edit, body.cr-ctx-clubs-create, body.cr
 @media (max-width: 720px) {
   .cr-sched-row.cr-has-venue { column-gap: 10px; }
 }
+
+/* Share a match */
+.cr-share-btn { display: inline-flex; align-items: center; gap: 6px; cursor: pointer; font-family: inherit; }
+.cr-share-btn svg { flex-shrink: 0; }
+button.cr-cal-btn.cr-share-icon { display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; padding: 0; border: 1px solid var(--cr-border); border-radius: 6px; background: var(--cr-white); color: var(--cr-text-muted); cursor: pointer; font-family: inherit; }
+button.cr-cal-btn.cr-share-icon:hover { border-color: var(--cr-gold); color: var(--cr-gold); }

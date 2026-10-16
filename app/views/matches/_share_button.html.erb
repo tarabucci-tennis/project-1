@@ -1,0 +1,11 @@
+<%# Share a match by text: teams, date/time, home/away, location + directions.
+    Locals: match; icon_only (true = small square icon button). %>
+<% icon_only = local_assigns.fetch(:icon_only, false) %>
+<button type="button" class="<%= icon_only ? 'cr-cal-btn cr-share-icon' : 'cr-chip-btn cr-share-btn' %>"
+        data-share-text="<%= match_share_text(match) %>" title="Share this match" aria-label="Share this match"
+        onclick="event.preventDefault(); event.stopPropagation(); crShare(this);">
+  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <path d="M12 3v12"/><path d="M7 8l5-5 5 5"/><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/>
+  </svg>
+  <% unless icon_only %><span class="cr-share-label">Share match</span><% end %>
+</button>

@@ -131,10 +131,10 @@
 
       <div data-controller="seg">
         <div class="cr-seg">
-          <button class="cr-seg-btn cr-seg-btn-active" data-seg-target="tab" data-action="click->seg#switch">⏭️ Upcoming</button>
-          <button class="cr-seg-btn" data-seg-target="tab" data-action="click->seg#switch">🏆 Results</button>
+          <button class="cr-seg-btn cr-seg-btn-active" data-seg-target="tab" data-action="click->seg#switch">Upcoming</button>
+          <button class="cr-seg-btn" data-seg-target="tab" data-action="click->seg#switch">Results</button>
           <% @playoff_stages.each do |stage| %>
-            <button class="cr-seg-btn" data-seg-target="tab" data-action="click->seg#switch">🏆 <%= stage %></button>
+            <button class="cr-seg-btn" data-seg-target="tab" data-action="click->seg#switch"><%= stage %></button>
           <% end %>
         </div>
 
@@ -166,14 +166,15 @@
                     <%= render "matches/venue", venue: match.venue %>
                   </summary>
                   <div class="cr-sched-detail">
-                    <% if @is_captain %>
-                      <div class="cr-sched-actions">
+                    <div class="cr-sched-actions">
+                      <%= render "matches/share_button", match: match %>
+                      <a href="<%= google_calendar_url(match) %>" target="_blank" rel="noopener" class="cr-chip-btn">📅 Calendar</a>
+                      <% if @is_captain %>
                         <%= link_to edit_team_match_path(@team, match), class: "cr-chip-btn" do %>✏️ Edit Match<% end %>
                         <%= link_to edit_team_match_lineup_path(@team, match), class: "cr-chip-btn" do %>📋 Set Lineup<% end %>
                         <%= link_to edit_results_team_match_path(@team, match), class: "cr-chip-btn" do %>🎾 Enter Results<% end %>
-                        <a href="<%= google_calendar_url(match) %>" target="_blank" rel="noopener" class="cr-chip-btn">📅 Calendar</a>
-                      </div>
-                    <% end %>
+                      <% end %>
+                    </div>
                     <% if lineup&.published? %>
                       <div class="cr-sched-detail-title">Lineup</div>
                       <div class="cr-lineup-preview-slots">
