@@ -5487,3 +5487,18 @@ button.cr-cal-btn.cr-share-icon:hover { border-color: var(--cr-gold); color: var
 /* Friendly page: where it's played (tap for Google Maps) */
 .cr-fr-place { background: var(--cr-white); border: 1px solid var(--cr-border); border-radius: 12px; padding: 10px 16px 12px; margin: 0 0 12px; }
 .cr-fr-place .cr-venue { margin-top: 0; font-size: 0.92rem; }
+.cr-fr-actions { margin: 2px 0 10px; }
+@media (max-width: 520px) {
+  /* Friendly action buttons: an even 2 x 2 grid. */
+  .cr-fr-actions { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 8px; }
+  .cr-fr-actions > *, .cr-fr-actions form, .cr-fr-actions .cr-chip-btn { width: 100%; margin: 0; }
+  .cr-fr-actions .cr-chip-btn { justify-content: center; min-height: 40px; }
+  /* Set header buttons keep their natural size. */
+  .cr-fr-set-head .cr-chip-btn { flex: 0 0 auto; }
+  /* Each court: one pair per line, "vs" between, smaller name chips. */
+  .cr-fr-match { flex-direction: column; align-items: flex-start; gap: 6px; }
+  .cr-fr-match { align-items: stretch; width: 100%; }
+  .cr-fr-pair { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 6px; width: 100%; }
+  .cr-fr-chip { justify-content: center; text-align: center; min-height: 40px; padding: 6px 6px; font-size: 0.84rem; }
+  .cr-fr-vs { padding-left: 4px; }
+}
