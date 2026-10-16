@@ -164,6 +164,41 @@ module ApplicationHelper
   #   Lansdale, PA 19446
   #
   #   Join Court Report free: yourcourtreport.com/signup
+  # A team clinic / friendly (TeamEvent) as a text to share, same layout as
+  # a match.
+  def team_event_share_text(event)
+    lines = [ "🎾 #{event.kind_label}: #{event.title}",
+              "📅 #{[ event.event_date.strftime('%a, %b %-d'), event.start_time.presence ].compact.join(' · ')}",
+              event.tennis_team.name ]
+    if event.location.present?
+      name, rest = event.location.split(/,\s*/, 2)
+      lines << ""
+      lines.concat(place_lines(Friendly::Place.new(name: name, address: rest)))
+    end
+    lines << "" << "Join Court Report free: #{signup_url.sub(%r{\Ahttps?://(www\.)?}, '')}"
+    lines.join("\n")
+  end
+
+  # Google Calendar link for a team clinic / friendly. Its start time is
+  # typed text ("6:00 PM"); when it can't be read the event is all-day.
+  def team_event_google_calendar_url(event)
+    start = (Time.zone.parse("#{event.event_date} #{event.start_time}") if event.start_time.present? rescue nil)
+    dates = if start
+      fmt = "%Y%m%dT%H%M%S"
+      "#{start.strftime(fmt)}/#{(start + 2.hours).strftime(fmt)}"
+    else
+      "#{event.event_date.strftime('%Y%m%d')}/#{(event.event_date + 1).strftime('%Y%m%d')}"
+    end
+    params = {
+      action: "TEMPLATE",
+      text: "🎾 #{event.kind_label}: #{event.title}",
+      dates: dates,
+      location: event.location.to_s,
+      details: [ event.tennis_team.name, event.notes.presence ].compact.join("\n")
+    }
+    "https://calendar.google.com/calendar/render?#{params.to_query}"
+  end
+
   def match_share_text(match)
     team = match.tennis_team
     side = match.home? ? "Home" : ("Away" if match.away?)

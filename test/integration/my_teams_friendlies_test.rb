@@ -25,6 +25,14 @@ class MyTeamsFriendliesTest < ActionDispatch::IntegrationTest
     assert_no_match(/PRACTICE/, body)
   end
 
+  test "every friendly and clinic card has calendar and share buttons" do
+    get teams_path
+    assert_select ".cr-my-week-card-event .cr-my-week-right a.cr-cal-btn[href^='https://calendar.google.com']", 6
+    assert_select ".cr-my-week-card-event .cr-my-week-right button.cr-share-icon[data-share-text]", 6
+    assert_select "button.cr-share-icon[data-share-text*='Clinic: Serve clinic']"
+    assert_select "button.cr-share-icon[data-share-url*='/f/']"
+  end
+
   test "a captain's new calendar event defaults to a friendly" do
     team = TennisTeam.find_by(name: "Test Aces")
     post team_events_path(team), params: { event_date: Date.current + 7 }
