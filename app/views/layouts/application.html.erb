@@ -84,18 +84,38 @@
 
       // Share a match (or anything with data-share-text): the phone's share
       // sheet (Messages, WhatsApp, email…), or copy to the clipboard on a computer.
+      // A link (data-share-url) is handed to the share menu separately from the
+      // text, which is how iPhones reliably keep it in the message.
       function crShare(btn) {
         var text = btn.getAttribute('data-share-text');
+        var url = btn.getAttribute('data-share-url');
         if (navigator.share) {
-          navigator.share({ text: text }).catch(function () {});
+          navigator.share(url ? { text: text, url: url } : { text: text }).catch(function () {});
         } else if (navigator.clipboard) {
-          navigator.clipboard.writeText(text).then(function () {
+          navigator.clipboard.writeText(url ? text + '\n' + url : text).then(function () {
             var label = btn.querySelector('.cr-share-label');
             if (!label) return;
             var original = label.textContent;
             label.textContent = 'Copied ✓';
             setTimeout(function () { label.textContent = original; }, 1800);
           });
+        }
+      }
+
+      // Copy text plus its link to the clipboard (lineup "Copy as text").
+      function crCopyWithLink(btn) {
+        var full = btn.getAttribute('data-share-text') + ' ' + btn.getAttribute('data-share-url');
+        var label = btn.querySelector('.cr-share-label');
+        var done = function () {
+          if (!label) return;
+          var original = label.textContent;
+          label.textContent = 'Copied ✓';
+          setTimeout(function () { label.textContent = original; }, 1800);
+        };
+        if (navigator.clipboard) {
+          navigator.clipboard.writeText(full).then(done, function () { if (navigator.share) navigator.share({ text: full }); });
+        } else if (navigator.share) {
+          navigator.share({ text: full });
         }
       }
 
