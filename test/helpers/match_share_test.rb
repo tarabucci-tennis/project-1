@@ -9,7 +9,7 @@ class MatchShareTest < ActionView::TestCase
     @team = TennisTeam.create!(user: owner, name: "Advantage Us", league_category: "Local", league_name: "Bux-Mont")
   end
 
-  test "share text has both teams, when, home/away, the club address and directions" do
+  test "share text: both teams, when, home/away and the club address, no map link" do
     match = @team.matches.create!(opponent: "Frog Hollow Platinum", home_away: "away",
                                   match_date: Time.zone.local(2026, 10, 19, 10, 30), match_time: "10:30 am")
     text = match_share_text(match)
@@ -21,7 +21,6 @@ class MatchShareTest < ActionView::TestCase
       📍 Frog Hollow Racquet Club
       2115 Weber Road
       Lansdale, PA 19446
-      Map: maps.google.com/?q=2115+Weber+Road+Lansdale+PA+19446
 
       Join Court Report free: test.host/signup
     TEXT
