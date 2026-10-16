@@ -130,9 +130,7 @@ class UstaTeamSummaryParser
     key = @team_name.to_s.downcase.squeeze(" ").strip
     match_summary_rows.filter_map do |r|
       home_team, visitor = r[3], r[5]
-      home = if home_team.to_s.downcase.squeeze(" ").strip == key then true
-             elsif visitor.to_s.downcase.squeeze(" ").strip == key then false
-             end
+      home = [ home_team, visitor ].map { |t| t.to_s.downcase.squeeze(" ").strip }.index(key)&.zero?
       next if home.nil?
 
       d = parse_date(r[1])
