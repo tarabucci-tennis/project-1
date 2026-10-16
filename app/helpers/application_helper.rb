@@ -129,6 +129,7 @@ module ApplicationHelper
       lines << "📍 #{place}"
       lines << "Directions: https://www.google.com/maps/search/?api=1&query=#{ERB::Util.url_encode(place)}"
     end
+    lines << "" << "All your tennis teams in one app. Join Court Report free: #{signup_url}"
     lines.join("\n")
   end
 

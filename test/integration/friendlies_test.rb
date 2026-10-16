@@ -11,6 +11,7 @@ class FriendliesTest < ActionDispatch::IntegrationTest
     get friendly_path(@friendly)
     assert_response :success
     assert_match "Sunday hit", response.body
+    assert_select ".cr-join-card a[href=?]", signup_path, text: "Sign up free"
 
     post claim_friendly_path(@friendly), params: { name: "Guest Player" }
     assert_redirected_to friendly_path(@friendly)

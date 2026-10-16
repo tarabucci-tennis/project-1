@@ -196,6 +196,18 @@
             form: { style: "display:inline;", data: { turbo_confirm: "Cancel this friendly for everyone?" } } %>
     <% end %>
   </div>
+  <% unless current_user %>
+    <section class="cr-join-card cr-no-print">
+      <div class="cr-join-text">
+        <div class="cr-join-title">All your tennis in one place</div>
+        <p>Court Report keeps every team's schedule, scores, lineups and friendlies together. Free to join.</p>
+      </div>
+      <div class="cr-join-actions">
+        <%= link_to "Sign up free", signup_path, class: "cr-btn cr-btn-gold" %>
+        <%= link_to "Sign in", login_path, class: "cr-join-signin" %>
+      </div>
+    </section>
+  <% end %>
   <% if organizer? %>
     <p class="cr-rp-foot cr-no-print" style="padding: 8px 0;">Share invite sends the link by text, WhatsApp or email on your phone (or copies it on a computer).
       Anyone with the link can add their name, no account needed. Court Report counts the courts for you.</p>

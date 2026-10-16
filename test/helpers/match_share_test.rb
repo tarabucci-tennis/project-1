@@ -17,6 +17,7 @@ class MatchShareTest < ActionView::TestCase
     assert_includes text, "Bux-Mont · Mon, Oct 19 · 10:30 am · Away"
     assert_includes text, "📍 Frog Hollow Racquet Club, 2115 Weber Road, Lansdale, PA 19446"
     assert_includes text, "https://www.google.com/maps/search/?api=1&query=Frog%20Hollow"
+    assert_includes text, "Join Court Report free: http://test.host/signup"
   end
 
   test "no location known: no address lines" do
