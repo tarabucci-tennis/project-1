@@ -1,11 +1,16 @@
 # The Ratings pages: every player's USTA match history (partners, opponents,
 # scores). Fed automatically by scores entered on Court Report; captains can
 # also upload TennisLink "Individual Result" files for older matches.
-# Any signed-in player can view. Uploads only ever add lines.
+# Uploads only ever add lines.
+#
+# HIDDEN from everyone but admins until the data is complete (Tara, Oct 16
+# 2026: many USTA matches are missing). Flip PUBLIC to true to open it again.
 class RatingsController < ApplicationController
   MAX_BYTES = 2.megabytes
+  PUBLIC = false
 
   before_action :require_login
+  before_action :require_open
   before_action :require_uploader, only: [ :new, :create ]
   helper_method :can_upload?
 
@@ -54,6 +59,11 @@ class RatingsController < ApplicationController
   end
 
   private
+
+  def require_open
+    return if PUBLIC || current_user&.admin?
+    redirect_to teams_path, alert: "Ratings aren't available yet."
+  end
 
   def require_login
     redirect_to login_path, alert: "Please sign in first." unless current_user
