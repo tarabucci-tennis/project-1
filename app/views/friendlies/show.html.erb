@@ -1,11 +1,10 @@
 <% content_for :title, "#{@friendly.title} · Court Report" %>
 <% share_url = friendly_url(@friendly) %>
-<% when_text = "#{@friendly.starts_at.strftime("%a, %b %-d")} · #{@friendly.time_label}" %>
 <% n_players = @friendly.playing_spots.size %>
 <% courts = @friendly.courts_needed %>
 <% waitlist = @friendly.waitlist %>
 <% out_today = @friendly.spots.reject(&:in_lineup) %>
-<% invite = "🎾 #{@friendly.title}: #{when_text}#{" at #{@friendly.location}" if @friendly.location.present?}. Add your name if you can play, and check this link for updates:" %>
+<% invite = friendly_invite_text(@friendly) %>
 
 <div class="cr-rp-page cr-fr-page">
   <% if current_user %><%= link_to "← Friendlies", friendlies_path, class: "cr-back-link cr-no-print" %><% end %>
@@ -16,7 +15,6 @@
       <h1 class="cr-rp-name"><%= @friendly.title %></h1>
       <div class="cr-rp-sub">
         <%= @friendly.starts_at.strftime("%A, %B %-d") %> · <%= @friendly.time_label %>
-        <% if @friendly.location.present? %> · <%= @friendly.location %><% end %>
       </div>
     </div>
     <div class="cr-rp-hero-level">
@@ -24,6 +22,10 @@
       <div class="cr-rp-level-cap"><%= "court".pluralize(courts) %> needed</div>
     </div>
   </section>
+
+  <% if (place = @friendly.place) %>
+    <div class="cr-fr-place"><%= render "matches/venue", venue: place %></div>
+  <% end %>
 
   <% if @friendly.notes.present? %>
     <p class="cr-fr-note cr-no-print"><%= @friendly.notes %></p>

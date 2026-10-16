@@ -162,4 +162,24 @@ class FriendlyTest < ActiveSupport::TestCase
     add("E", "F", "G", "H")
     assert @friendly.reload.lineup_out_of_date?
   end
+
+  test "location becomes a mappable place: typed address split into lines, or a known club" do
+    @friendly.update!(location: "Aronimink Golf Club, 3600 St Davids Rd, Newtown Square, PA 19073")
+    place = @friendly.place
+    assert_equal "Aronimink Golf Club", place.name
+    assert_equal [ "3600 St Davids Rd", "Newtown Square, PA 19073" ], place.address_lines
+    assert_match "google.com/maps", place.maps_url
+
+    @friendly.update!(location: "10 Weldon Drive, Doylestown, PA 18901")
+    assert_nil @friendly.place.name
+    assert_equal [ "10 Weldon Drive", "Doylestown, PA 18901" ], @friendly.place.address_lines
+
+    Club.create!(league: "Del-Tri", name: "Legacy Tennis", address: "4842 Ridge Ave, Philadelphia, PA 19129", aliases: "Legacy")
+    @friendly.update!(location: "Legacy")
+    assert_equal "Legacy Tennis", @friendly.place.name
+    assert_equal [ "4842 Ridge Ave", "Philadelphia, PA 19129" ], @friendly.place.address_lines
+
+    @friendly.update!(location: "")
+    assert_nil @friendly.place
+  end
 end

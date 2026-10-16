@@ -7,7 +7,7 @@
         **(tag_name == :a ? { href: venue.maps_url, target: "_blank", rel: "noopener", onclick: "event.stopPropagation();" } : {}) do %>
     <span class="cr-venue-pin" aria-hidden="true">📍</span>
     <span class="cr-venue-text">
-      <span class="cr-venue-name"><%= venue.name %></span>
+      <% if venue.name.present? %><span class="cr-venue-name"><%= venue.name %></span><% end %>
       <% venue.address_lines.each do |line| %>
         <span class="cr-venue-line"><%= line %></span>
       <% end %>
