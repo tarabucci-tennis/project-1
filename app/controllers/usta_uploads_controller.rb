@@ -23,10 +23,10 @@ class UstaUploadsController < ApplicationController
     end
 
     html = file.read.to_s.force_encoding("UTF-8").scrub
-    parsed = UstaTeamSummaryParser.parse(html)
-    unless parsed.summary_file?
+    parsed = UstaTeamSummaryParser.parse(html, team_name: @team.name)
+    unless parsed.summary_file? || parsed.match_summary?
       return redirect_to usta_upload_team_path(@team),
-                         alert: "That doesn't look like a TennisLink Team Summary. On TennisLink open your team's Stats & Standings and tap \"Send To Excel\"."
+                         alert: "That doesn't look like a TennisLink Team Summary or Match Summary. On TennisLink open your team's Stats & Standings (or Match Summary) and tap \"Send To Excel\"."
     end
 
     @token = SecureRandom.hex(16)
@@ -43,7 +43,7 @@ class UstaUploadsController < ApplicationController
       return redirect_to usta_upload_team_path(@team), alert: "That upload expired — please choose the file again."
     end
 
-    UstaTeamSummaryImport.new(@team, UstaTeamSummaryParser.parse(html)).apply!
+    UstaTeamSummaryImport.new(@team, UstaTeamSummaryParser.parse(html, team_name: @team.name)).apply!
     Rails.cache.delete(cache_key(params[:token].to_s))
     redirect_to team_path(@team, anchor: "standings"), notice: "USTA standings, scores and ratings updated."
   end

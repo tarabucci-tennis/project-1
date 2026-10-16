@@ -12,11 +12,16 @@ require "date"
 #                  points first) and USTA's confirmation status
 #   * roster     — every player with her official NTRP rating
 #
+# Also reads the "Match Summary by Team" report (TennisLink's other Send To
+# Excel download): one row per match with home and visiting team, lines won
+# by each ("Team Wins") and USTA's status. It has no standings or roster.
+# Pass `team_name:` so each row can be read from our side.
+#
 # Plain string scanning, no gems. Nothing here touches the database.
 class UstaTeamSummaryParser
   Standing = Struct.new(:name, :matches_played, :points, :sets_won, :sets_lost,
                         :games_won, :games_lost, :games_won_pct, keyword_init: true)
-  TeamMatch = Struct.new(:date, :opponent, :our_points, :their_points, :status, keyword_init: true) do
+  TeamMatch = Struct.new(:date, :opponent, :our_points, :their_points, :status, :home, keyword_init: true) do
     def played?
       !our_points.nil?
     end
@@ -37,13 +42,18 @@ class UstaTeamSummaryParser
     def summary_file?
       standings.any? || players.any?
     end
+
+    # A "Match Summary by Team" report: matches only.
+    attr_accessor :match_summary
+    alias_method :match_summary?, :match_summary
   end
 
-  def self.parse(html)
-    new(html).parse
+  def self.parse(html, team_name: nil)
+    new(html, team_name: team_name).parse
   end
 
-  def initialize(html)
+  def initialize(html, team_name: nil)
+    @team_name = team_name
     @rows = html.to_s.scan(/<tr[^>]*>(.*?)<\/tr>/im).map do |(row)|
       row.scan(/<t[dh][^>]*>(.*?)<\/t[dh]>/im).map { |(c)| clean(c) }
     end
@@ -67,9 +77,9 @@ class UstaTeamSummaryParser
       season_end:   parse_date(dates[1]),
       format:       @rows.flatten.join(" ")[/Format:\s*([^;]+?)(?:\s+Captain's Message|\z)/i, 1]&.strip,
       standings:    standings,
-      matches:      matches,
+      matches:      match_summary_rows ? match_summary_matches : matches,
       players:      players
-    )
+    ).tap { |r| r.match_summary = !match_summary_rows.nil? }
   end
 
   private
@@ -105,6 +115,45 @@ class UstaTeamSummaryParser
                       status: status.presence)
       end
     end
+  end
+
+  # Rows of the Match Summary report, or nil if this isn't one:
+  # Match ID, date, time, home team, ID, visiting team, ID,
+  # lines won (home, visitor), match points (home, visitor), status.
+  def match_summary_rows
+    return @match_summary_rows if defined?(@match_summary_rows)
+    start = @rows.index { |r| r.first == "Match ID" && r.include?("Home Team") && r.include?("Visiting Team") }
+    @match_summary_rows = start && @rows[(start + 1)..].select { |r| r.size >= 12 && r[0].to_s.match?(/\A\d+\z/) }
+  end
+
+  def match_summary_matches
+    key = @team_name.to_s.downcase.squeeze(" ").strip
+    match_summary_rows.filter_map do |r|
+      home_team, visitor = r[3], r[5]
+      home = if home_team.to_s.downcase.squeeze(" ").strip == key then true
+             elsif visitor.to_s.downcase.squeeze(" ").strip == key then false
+             end
+      next if home.nil?
+
+      d = parse_date(r[1])
+      next unless d
+
+      home_wins, visitor_wins = r[7].to_i, r[8].to_i
+      status = dedupe_status(r[11])
+      played = (home_wins + visitor_wins).positive? && !status.to_s.match?(/no team reported/i)
+      ours, theirs = home ? [ home_wins, visitor_wins ] : [ visitor_wins, home_wins ]
+      TeamMatch.new(date: d, opponent: home ? visitor : home_team,
+                    our_points: (ours if played), their_points: (theirs if played),
+                    status: status, home: home)
+    end
+  end
+
+  # The report prints each status twice ("Confirmed by 48 hr rule Confirmed by 48 hr rule").
+  def dedupe_status(cell)
+    words = cell.to_s.split
+    half = words.size / 2
+    text = words.size.even? && half.positive? && words.first(half) == words.last(half) ? words.first(half) : words
+    text.join(" ").strip.then { |t| t.empty? ? nil : t }
   end
 
   def players
