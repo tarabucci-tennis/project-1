@@ -47,4 +47,11 @@ class ClubDirectoryTest < ActiveSupport::TestCase
     usta = TennisTeam.create!(user: owner, name: "Some USTA", league_category: "USTA")
     assert_nil usta.matches.create!(opponent: "Frog Hollow", match_date: 2.days.from_now, home_away: "away").venue
   end
+
+  test "an address splits into street and town lines" do
+    club = Club.find_by(name: "HPTA")
+    assert_equal [ "601 Righters Ferry Rd", "Bala Cynwyd, PA 19004" ], club.address_lines
+    club.address = "Neutral site"
+    assert_equal [ "Neutral site" ], club.address_lines
+  end
 end

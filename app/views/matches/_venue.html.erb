@@ -1,10 +1,16 @@
 <%# Bux-Mont / Del-Tri: where the match is played, under the teams.
-    Locals: venue (ClubDirectory::Club), link (false inside a <button>). %>
+    Club name, then street, then town, each on its own line, all lined up.
+    Locals: venue (Club), link (false inside a <button>). %>
 <% if venue %>
-  <% if local_assigns.fetch(:link, true) %>
-    <a class="cr-venue" href="<%= venue.maps_url %>" target="_blank" rel="noopener"
-       onclick="event.stopPropagation();">📍 <strong><%= venue.name %></strong> <span><%= venue.address %></span></a>
-  <% else %>
-    <span class="cr-venue">📍 <strong><%= venue.name %></strong> <span><%= venue.address %></span></span>
+  <% tag_name = local_assigns.fetch(:link, true) ? :a : :span %>
+  <%= content_tag tag_name, class: "cr-venue",
+        **(tag_name == :a ? { href: venue.maps_url, target: "_blank", rel: "noopener", onclick: "event.stopPropagation();" } : {}) do %>
+    <span class="cr-venue-pin" aria-hidden="true">📍</span>
+    <span class="cr-venue-text">
+      <span class="cr-venue-name"><%= venue.name %></span>
+      <% venue.address_lines.each do |line| %>
+        <span class="cr-venue-line"><%= line %></span>
+      <% end %>
+    </span>
   <% end %>
 <% end %>

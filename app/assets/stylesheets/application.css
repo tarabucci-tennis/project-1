@@ -5350,10 +5350,14 @@ span.cr-fr-chip { cursor: default; }
 .cr-fr-check-wait { background: #d97706; }
 
 /* ── Bux-Mont / Del-Tri: where the match is played ── */
-.cr-venue { display: inline-block; margin-top: 4px; font-size: 0.8rem; line-height: 1.35; color: var(--cr-text); text-decoration: none; text-align: left; }
-.cr-venue strong { font-weight: 700; }
-.cr-venue span { color: var(--cr-text-muted); }
-a.cr-venue:hover strong { text-decoration: underline; }
+/* Pin, then club / street / town stacked and left-aligned in one column. */
+.cr-venue { display: grid; grid-template-columns: auto minmax(0, 1fr); column-gap: 6px; align-items: start; margin-top: 6px; max-width: 100%; font-size: 0.8rem; line-height: 1.4; color: var(--cr-text); text-decoration: none; text-align: left; }
+.cr-venue-pin { font-size: 0.75rem; line-height: 1.6; }
+.cr-venue-text { display: flex; flex-direction: column; min-width: 0; }
+.cr-venue-name, .cr-venue-line { overflow-wrap: anywhere; } /* never cut off; a very long name continues on the next line, still lined up */
+.cr-venue-name { font-weight: 700; color: var(--cr-text); }
+.cr-venue-line { color: var(--cr-text-muted); }
+a.cr-venue:hover .cr-venue-name { text-decoration: underline; }
 
 /* ── Bux-Mont / Del-Tri club locations (team Standings tab) ── */
 .cr-clubs-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 10px; }
@@ -5362,6 +5366,7 @@ a.cr-venue:hover strong { text-decoration: underline; }
 .cr-clubs-list li:first-child { border-top: none; }
 .cr-clubs-main { flex: 1 1 auto; min-width: 0; }
 .cr-clubs-name { font-weight: 700; color: var(--cr-text); font-size: 0.92rem; }
+.cr-clubs-addr span { display: block; }
 .cr-clubs-addr { display: block; font-size: 0.84rem; color: var(--cr-text-muted); text-decoration: none; margin-top: 2px; }
 a.cr-clubs-addr:hover { text-decoration: underline; color: var(--cr-text); }
 .cr-clubs-none { font-style: italic; }
@@ -5397,4 +5402,20 @@ body.cr-ctx-clubs-new, body.cr-ctx-clubs-edit, body.cr-ctx-clubs-create, body.cr
     margin: 0;
     white-space: nowrap;
   }
+}
+
+/* Schedule / result rows with a club address: the address gets its own row
+   under the match, from the team-name column to the right edge, so long club
+   names fit on one line. */
+.cr-sched-row.cr-has-venue {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  column-gap: 14px;
+  row-gap: 0;
+  align-items: center;
+}
+.cr-sched-row.cr-has-venue > .cr-sched-date { grid-row: 1 / span 2; align-self: center; }
+.cr-sched-row.cr-has-venue > .cr-venue { grid-column: 2 / -1; }
+@media (max-width: 720px) {
+  .cr-sched-row.cr-has-venue { column-gap: 10px; }
 }
