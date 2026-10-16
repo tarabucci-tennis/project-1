@@ -137,4 +137,29 @@ class FriendlyTest < ActiveSupport::TestCase
     fresh.ends_at = start + 90.minutes
     assert_equal "90", fresh.duration
   end
+
+  test "a sub steps into the exact spots of the player who dropped out" do
+    add("Tara", "B", "C", "D", "E", "F", "G", "H")
+    @friendly.generate_lineup!(rng: Random.new(4))
+    @friendly.mark_set_done!(0, true)
+    before = @friendly.reload.lineup_sets
+
+    @friendly.spots.find_by(name: "Tara").destroy
+    @friendly.spots.create!(name: "Christina")
+
+    after = @friendly.reload.lineup_sets
+    assert_equal before[0], after[0], "a played set never changes"
+    (1..2).each do |i|
+      expected = before[i]["courts"].map { |c| c.map { |n| n == "Tara" ? "Christina" : n } }
+      assert_equal expected, after[i]["courts"]
+    end
+    assert_not @friendly.lineup_out_of_date?
+  end
+
+  test "a new court can't be swapped in, so the organizer is asked to regenerate" do
+    add("A", "B", "C", "D")
+    @friendly.generate_lineup!(rng: Random.new(1))
+    add("E", "F", "G", "H")
+    assert @friendly.reload.lineup_out_of_date?
+  end
 end

@@ -35,6 +35,8 @@ class FriendliesController < ApplicationController
 
   # GET /f/:token
   def show
+    # Catch up a lineup whose names changed before subs were swapped in automatically.
+    @friendly.sync_lineup_names! if @friendly.lineup_out_of_date?
     @my_spot = my_spot
     @suggest_names = organizer? ? teammate_names : []
   end
