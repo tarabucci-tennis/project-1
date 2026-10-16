@@ -146,6 +146,31 @@ class Friendly < ApplicationRecord
     update!(lineup: { "sets" => sets })
   end
 
+  # Someone dropped out and someone else took their place on the playing
+  # list: put the new player into the dropped player's exact spots in every
+  # unplayed set, leaving everyone else where they were. Played sets are
+  # history and never change. If the numbers don't line up (e.g. a court was
+  # added), nothing is swapped and the organizer is asked to regenerate.
+  def sync_lineup_names!
+    return unless lineup?
+    playing = player_names
+    changed = false
+    sets = lineup_sets.deep_dup.map do |set|
+      next set if set["done"]
+      slots = Array(set["courts"]).flatten + Array(set["sitting"])
+      gone  = slots.uniq.reject { |n| playing.include?(n) }
+      fresh = playing.reject { |n| slots.include?(n) }
+      next set if gone.empty? || gone.size != fresh.size
+
+      swap = gone.zip(fresh).to_h
+      set["courts"]  = Array(set["courts"]).map { |court| court.map { |n| swap.fetch(n, n) } }
+      set["sitting"] = Array(set["sitting"]).map { |n| swap.fetch(n, n) }
+      changed = true
+      set
+    end
+    update!(lineup: { "sets" => sets }) if changed
+  end
+
   # Sign-ups changed since the unplayed sets were made?
   def lineup_out_of_date?
     return false unless lineup?
