@@ -5294,7 +5294,7 @@ body.cr-ctx-friendlies-new, body.cr-ctx-friendlies-show, body.cr-ctx-friendlies-
 /* ── Friendlies: list page + round-robin lineup ── */
 body.cr-ctx-friendlies-index, body.cr-ctx-friendlies-edit, body.cr-ctx-friendlies-update { background: var(--cr-navy-page); }
 .cr-fr-index-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; margin: 6px 0 16px; }
-.cr-fr-index-head .cr-rp-name { color: #fff; }
+.cr-fr-index-head .cr-rp-name { color: var(--cr-black); }
 .cr-fr-index { display: grid; gap: 10px; }
 .cr-fr-index-row { display: flex; align-items: center; gap: 12px; padding: 14px 16px; background: var(--cr-white); border: 1px solid var(--cr-border); border-radius: 12px; text-decoration: none; color: var(--cr-text); min-height: 56px; }
 .cr-fr-index-main { flex: 1 1 auto; min-width: 0; }
@@ -5313,13 +5313,13 @@ body.cr-ctx-friendlies-index, body.cr-ctx-friendlies-edit, body.cr-ctx-friendlie
 .cr-fr-add-form { padding: 6px 18px 16px; }
 .cr-fr-lineup { margin-top: 14px; }
 .cr-fr-lineup-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 10px; }
-.cr-fr-lineup-title { font-size: 1.3rem; font-weight: 800; color: #fff; margin: 0; }
+.cr-fr-lineup-title { font-size: 1.3rem; font-weight: 800; color: var(--cr-black); margin: 0; }
 .cr-fr-lineup-tools { display: flex; gap: 8px; flex-wrap: wrap; }
 .cr-fr-generate { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-bottom: 12px; }
-.cr-fr-generate .cr-fr-courts-summary { padding: 0; color: #fff; }
-.cr-fr-sets-link { color: #fff; font-weight: 600; font-size: 0.88rem; }
+.cr-fr-generate .cr-fr-courts-summary { padding: 0; color: var(--cr-text); }
+.cr-fr-sets-link { color: var(--cr-teal-deep); font-weight: 600; font-size: 0.88rem; }
 .cr-fr-warn { flex-basis: 100%; margin: 0; padding: 10px 14px; border-radius: 10px; background: #fef3c7; color: #78350f; font-weight: 600; font-size: 0.9rem; }
-.cr-fr-swap-hint { color: #fff; font-size: 0.88rem; margin: 0 0 10px; }
+.cr-fr-swap-hint { color: var(--cr-text-muted); font-size: 0.88rem; margin: 0 0 10px; }
 .cr-fr-sets { display: grid; gap: 12px; }
 .cr-fr-set { background: var(--cr-white); border: 2px solid var(--cr-border); border-radius: 14px; padding: 12px 14px; }
 .cr-fr-set-done { border-color: #86efac; }
