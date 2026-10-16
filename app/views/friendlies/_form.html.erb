@@ -24,8 +24,8 @@
       <%= f.time_field :end_time, value: friendly.end_time, step: 300 %>
     </label>
   </fieldset>
-  <label>Where <span>(optional)</span>
-    <%= f.text_field :location, placeholder: "e.g. Aronimink Golf Club" %>
+  <label>Where <span>(optional: club, street, town, separated by commas)</span>
+    <%= f.text_field :location, placeholder: "e.g. Aronimink Golf Club, 3600 St Davids Rd, Newtown Square, PA" %>
   </label>
   <label>Sets to plan
     <%= f.select :sets_count, [ [ "1 set", 1 ], [ "2 sets", 2 ], [ "3 sets (if we can squeeze in a third)", 3 ] ] %>

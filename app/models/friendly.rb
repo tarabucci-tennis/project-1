@@ -90,6 +90,39 @@ class Friendly < ApplicationRecord
     end
   end
 
+  # Where it's played, for display and maps: a known Bux-Mont / Del-Tri club
+  # (full saved address) or whatever the organizer typed, split into name /
+  # street / town. Responds like a Club (name, address, address_lines,
+  # full, maps_url) so the same 📍 block can show it.
+  Place = Struct.new(:name, :address, keyword_init: true) do
+    def address_lines
+      street, rest = address.to_s.split(/,\s*/, 2)
+      [ street, rest ].compact_blank
+    end
+
+    def full
+      [ name, address ].compact_blank.join(", ")
+    end
+
+    def maps_url
+      "https://www.google.com/maps/search/?api=1&query=#{ERB::Util.url_encode(full)}"
+    end
+  end
+
+  def place
+    text = location.to_s.squish
+    return nil if text.blank?
+    club = ClubDirectory.leagues.lazy.map { |league| ClubDirectory.find(text, league: league) }.find(&:itself)
+    return club if club && club.address.present? && !text.match?(/\d/)
+
+    first, rest = text.split(/,\s*/, 2)
+    if first.match?(/\A\d/)
+      Place.new(name: nil, address: text)
+    else
+      Place.new(name: first, address: rest)
+    end
+  end
+
   def done?
     starts_at < Time.current.beginning_of_day
   end

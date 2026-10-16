@@ -77,9 +77,33 @@ module ApplicationHelper
     }
   end
 
+  # The friendly invite text (the link itself is shared separately):
+  #   🎾 KMA
+  #   📅 Sat, Oct 17 · 1:00 – 2:30 PM
+  #   📍 Aronimink Golf Club
+  #   3600 St Davids Rd
+  #   Newtown Square, PA 19073
+  #   Map: maps.google.com/?q=...
+  #
+  #   Add your name if you can play, and check this link for updates:
+  def friendly_invite_text(friendly)
+    lines = [ "🎾 #{friendly.title}", "📅 #{friendly.starts_at.strftime('%a, %b %-d')} · #{friendly.time_label}" ]
+    lines.concat(place_lines(friendly.place))
+    lines << "" << "Add your name if you can play, and check this link for updates:"
+    lines.join("\n")
+  end
+
+  # 📍 name / street / town / Map lines for a Club or Friendly::Place.
+  def place_lines(place)
+    return [] unless place
+    out = place.name.present? ? [ "📍 #{place.name}", *place.address_lines ] : [ "📍 #{place.address_lines.first}", *place.address_lines.drop(1) ]
+    out << "Map: #{short_map_link(place.address.presence || place.name)}"
+  end
+
   # A friendly's lineup as plain text for a group chat.
   def friendly_lineup_text(friendly)
     lines = [ "#{friendly.title} — #{friendly.starts_at.strftime('%a, %b %-d')} · #{friendly.time_label}" ]
+    lines.concat(place_lines(friendly.place))
     friendly.lineup_sets.first(friendly.sets_count).each_with_index do |set, i|
       lines << "" << "Set #{i + 1}"
       Array(set["courts"]).each_with_index do |(a, b, c, d), ci|
@@ -101,7 +125,7 @@ module ApplicationHelper
       action: "TEMPLATE",
       text: "🎾 #{friendly.title}",
       dates: "#{start.strftime(fmt)}/#{(friendly.ends_at || start + 2.hours).strftime(fmt)}",
-      location: friendly.location.to_s,
+      location: friendly.place&.full.to_s,
       details: details
     }
     "https://calendar.google.com/calendar/render?#{params.to_query}"

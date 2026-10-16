@@ -5483,3 +5483,7 @@ button.cr-cal-btn.cr-share-icon:hover { border-color: var(--cr-gold); color: var
   .cr-rp-level-val { font-size: 1.25rem; }
   .cr-rp-level-cap { margin-top: 0; }
 }
+
+/* Friendly page: where it's played (tap for Google Maps) */
+.cr-fr-place { background: var(--cr-white); border: 1px solid var(--cr-border); border-radius: 12px; padding: 10px 16px 12px; margin: 0 0 12px; }
+.cr-fr-place .cr-venue { margin-top: 0; font-size: 0.92rem; }
