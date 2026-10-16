@@ -145,7 +145,7 @@
               <% upcoming.each do |match| %>
                 <% lineup = match.lineup %>
                 <details class="cr-sched-item">
-                  <summary class="cr-sched-row">
+                  <summary class="cr-sched-row <%= 'cr-has-venue' if match.venue %>">
                     <div class="cr-sched-date">
                       <div class="cr-sched-date-mon"><%= match.match_date.strftime("%b").upcase %></div>
                       <div class="cr-sched-date-day"><%= match.match_date.strftime("%-d") %></div>
@@ -158,12 +158,12 @@
                         <% if match.location.present? && !match.venue %><span><%= match.location %></span><% end %>
                         <% if match.match_time.present? %><span>· <%= match.match_time %></span><% end %>
                       </div>
-                      <%= render "matches/venue", venue: match.venue %>
                     </div>
                     <div class="cr-sched-right">
                       <% if lineup&.published? %><span class="cr-sched-pill">Lineup set</span><% else %><span class="cr-sched-upcoming">Scheduled</span><% end %>
                       <span class="cr-sched-caret" aria-hidden="true">▾</span>
                     </div>
+                    <%= render "matches/venue", venue: match.venue %>
                   </summary>
                   <div class="cr-sched-detail">
                     <% if @is_captain %>
@@ -223,7 +223,7 @@
                 <% dialog_id = "cr-result-dialog-#{match.id}" %>
                 <% badge_class = match.won? ? 'cr-result-badge-win' : (match.tied? ? 'cr-result-badge-tie' : 'cr-result-badge-loss') %>
                 <div class="cr-sched-item">
-                  <button type="button" class="cr-sched-row cr-sched-row-btn"
+                  <button type="button" class="cr-sched-row cr-sched-row-btn <%= 'cr-has-venue' if match.venue %>"
                           onclick="document.getElementById('<%= dialog_id %>').showModal()">
                     <div class="cr-sched-date">
                       <div class="cr-sched-date-mon"><%= match.match_date.strftime("%b").upcase %></div>
@@ -237,13 +237,13 @@
                         <% if match.home? %><span class="cr-tag cr-tag-home">Home</span><% elsif match.away? %><span class="cr-tag cr-tag-away">Away</span><% end %>
                         <% if match.location.present? && !match.venue %><span><%= match.location %></span><% end %>
                       </div>
-                      <%= render "matches/venue", venue: match.venue, link: false %>
                     </div>
                     <div class="cr-sched-right">
                       <span class="cr-result-badge <%= badge_class %>"><%= match.result_label %></span>
                       <% if match.score_summary.present? %><span class="cr-sched-score"><%= match.score_summary %></span><% end %>
                       <span class="cr-sched-caret" aria-hidden="true">›</span>
                     </div>
+                    <%= render "matches/venue", venue: match.venue, link: false %>
                   </button>
 
                   <dialog id="<%= dialog_id %>" class="cr-result-dialog"
@@ -969,7 +969,7 @@
                   <div class="cr-clubs-main">
                     <div class="cr-clubs-name"><%= club.name %></div>
                     <% if club.address.present? %>
-                      <a class="cr-clubs-addr" href="<%= club.maps_url %>" target="_blank" rel="noopener"><%= club.address %></a>
+                      <a class="cr-clubs-addr" href="<%= club.maps_url %>" target="_blank" rel="noopener"><% club.address_lines.each do |line| %><span><%= line %></span><% end %></a>
                     <% else %>
                       <span class="cr-clubs-addr cr-clubs-none">No address yet</span>
                     <% end %>

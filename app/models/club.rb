@@ -24,6 +24,12 @@ class Club < ApplicationRecord
     aliases.to_s.split(",").map(&:squish).reject(&:blank?).uniq
   end
 
+  # The address as two lines for display: street, then "Town, ST 12345".
+  def address_lines
+    street, rest = address.to_s.split(/,\s*/, 2)
+    [ street, rest ].compact_blank
+  end
+
   def full
     [ name, address ].compact_blank.join(", ")
   end
