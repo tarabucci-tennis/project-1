@@ -20,7 +20,7 @@ require "date"
 # Plain string scanning, no gems. Nothing here touches the database.
 class UstaTeamSummaryParser
   Standing = Struct.new(:name, :matches_played, :points, :sets_won, :sets_lost,
-                        :games_won, :games_lost, :games_won_pct, keyword_init: true)
+                        :games_won, :games_lost, :games_won_pct, :wins, :losses, keyword_init: true)
   TeamMatch = Struct.new(:date, :opponent, :our_points, :their_points, :status, :home, keyword_init: true) do
     def played?
       !our_points.nil?
@@ -85,6 +85,29 @@ class UstaTeamSummaryParser
   private
 
   def standings
+    team_wins_standings || points_standings
+  end
+
+  # Flights ranked by "Team Wins" (e.g. Tri-Level) publish a different table:
+  # Team Name · Wins* · Losses · Indiv. Wins · Indiv. Losses · Sets Won ·
+  # Sets Lost · Games Won · Games Lost · Games Won %. USTA ranks by Wins, so
+  # Wins is stored as the team's points.
+  def team_wins_standings
+    start = @rows.index { |r| r.first == "Team Name" && r[1].to_s.start_with?("Wins") && r.include?("Losses") }
+    return unless start
+
+    @rows[(start + 1)..].take_while { |r| r.size >= 10 && r[1].to_s.match?(/\A\d+\z/) }.map do |r|
+      wins, losses = r[1].to_i, r[2].to_i
+      Standing.new(
+        name: r[0], matches_played: wins + losses, points: wins, wins: wins, losses: losses,
+        sets_won: r[5].to_i, sets_lost: r[6].to_i,
+        games_won: r[7].to_i, games_lost: r[8].to_i,
+        games_won_pct: r[9].to_s.delete("%").to_f
+      )
+    end
+  end
+
+  def points_standings
     start = @rows.index { |r| r.first == "Team Name" && r.include?("Matches Played") }
     return [] unless start
 
@@ -110,7 +133,7 @@ class UstaTeamSummaryParser
 
         score = cell.to_s[/(\d+)\s*-\s*(\d+)/]
         ours, theirs = score&.split("-")&.map { |n| n.strip.to_i }
-        status = cell.to_s.sub(/\d+\s*-\s*\d+.*\z/, "").strip
+        status = cell.to_s.sub(/\d+\s*-\s*\d+.*\z/, "").sub(/\s*\b(Won|Lost|Tied|Not Played)\s*\z/i, "").strip
         TeamMatch.new(date: d, opponent: opponent, our_points: ours, their_points: theirs,
                       status: status.presence)
       end
