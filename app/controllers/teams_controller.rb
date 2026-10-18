@@ -351,17 +351,12 @@ class TeamsController < ApplicationController
     end
   end
 
-  # POST /teams/:team_id/make_captain — hand the captain role to another
-  # rostered player. Whoever manages the team (its current captain, or an
-  # admin) can do this, and the previous captain becomes a player, so there
-  # stays exactly one clear captain — matching how the roster and lineup
-  # permissions read TennisTeam#captain. This is what lets you set up a team
-  # you don't captain (you're a player on all yours) and hand it to the
-  # real captain.
+  # POST /teams/:id/make_captain?user_id= — add another captain. Current
+  # captains stay captains (a team can have several, e.g. Legacy 1).
   def make_captain
-    @team = TennisTeam.find(params[:team_id])
+    @team = TennisTeam.find(params[:id])
     unless @team.can_set_lineup?(current_user) || current_user.admin?
-      return redirect_to team_path(@team), alert: "Only the current captain can change who's captain."
+      return redirect_to team_path(@team), alert: "Only a captain can add a captain."
     end
 
     membership = @team.team_memberships.active.find_by(user_id: params[:user_id])
@@ -370,15 +365,11 @@ class TeamsController < ApplicationController
     end
 
     if membership.captain?
-      return redirect_to team_path(@team), notice: "#{membership.user.name} is already the captain."
+      return redirect_to team_path(@team), notice: "#{membership.user.name} is already a captain."
     end
 
-    ActiveRecord::Base.transaction do
-      @team.team_memberships.active.captains.where.not(id: membership.id).update_all(role: "player")
-      membership.update!(role: "captain")
-    end
-
-    redirect_to team_path(@team), notice: "#{membership.user.name} is now the captain of #{@team.name}."
+    membership.update!(role: "captain")
+    redirect_to team_path(@team, tab: "roster"), notice: "#{membership.user.name} is now a captain of #{@team.name}."
   end
 
   # POST /teams/:id/paste_roster

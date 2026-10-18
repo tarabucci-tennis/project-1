@@ -453,9 +453,9 @@
                 <% if @is_captain && !membership.captain? %>
                   <%= button_to "Make captain",
                                 make_captain_team_path(@team, user_id: membership.user_id),
-                                form: { style: "display: inline; margin: 0;" },
-                                class: "cr-roster-history-link",
-                                data: { turbo_confirm: "Make #{membership.user.name} the captain of #{@team.name}?" } %>
+                                form: { style: "display: inline; margin: 0;",
+                                        data: { turbo_confirm: "Make #{membership.user.name} a captain of #{@team.name}? Current captains stay captains." } },
+                                class: "cr-roster-history-link" %>
                 <% end %>
               </div>
             <% end %>
