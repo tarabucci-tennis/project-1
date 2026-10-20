@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_16_150000) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_20_200000) do
   create_table "availabilities", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.integer "match_id", null: false
@@ -142,6 +142,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_16_150000) do
     t.string "opponent"
     t.string "playoff_level"
     t.string "result"
+    t.string "scorecard_url"
     t.string "score_summary"
     t.integer "tennis_team_id", null: false
     t.datetime "updated_at", null: false

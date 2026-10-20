@@ -6,6 +6,9 @@ class Match < ApplicationRecord
   has_one :lineup, dependent: :destroy
 
   validates :match_date, presence: true
+  # Official scorecard link (TennisLink, Tenniscores…): web links only.
+  validates :scorecard_url, format: { with: %r{\Ahttps?://\S+\z}i, message: "must be a web link (https://…)" }, allow_blank: true
+  normalizes :scorecard_url, with: ->(url) { url.strip.presence }
 
   scope :upcoming, -> { where("match_date >= ?", Time.current).order(match_date: :asc) }
   scope :past, -> { where("match_date < ?", Time.current).order(match_date: :desc) }

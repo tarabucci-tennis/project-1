@@ -5621,3 +5621,4 @@ button.cr-cal-btn.cr-share-icon:hover { border-color: var(--cr-gold); color: var
   .cr-av-row { grid-template-columns: auto minmax(0, 1fr) minmax(0, 360px); padding: 12px 18px; }
   .cr-av-actions { grid-column: auto; }
 }
+.cr-scorecard-actions { margin: 10px 0 4px; }
