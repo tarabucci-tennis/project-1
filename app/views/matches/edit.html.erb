@@ -63,6 +63,17 @@
       </div>
 
       <div class="cr-field">
+        <%= f.label :scorecard_url, "Official scorecard link" %>
+        <%= f.url_field :scorecard_url, placeholder: "Paste the TennisLink (or league site) link for this match" %>
+        <p style="font-size: 0.75rem; color: var(--cr-text-muted); margin-top: 4px;">
+          Players see it in this match's result pop-up and can open or share it (TennisLink asks them to sign in).
+          <% if @team.league_group == "USTA" %>
+            Have the Send To Excel file instead? <%= link_to "⬆️ Upload USTA file", usta_upload_team_path(@team) %>
+          <% end %>
+        </p>
+      </div>
+
+      <div class="cr-field">
         <%= f.label :notes, "Notes" %>
         <%= f.text_area :notes, rows: 3, placeholder: "Any extra info about this match" %>
       </div>

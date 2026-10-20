@@ -338,6 +338,16 @@
                           <span class="cr-tag <%= match.usta_status.match?(/confirmed/i) ? 'cr-tag-home' : 'cr-tag-away' %>"><%= match.usta_status.match?(/confirmed/i) ? "Official ✓" : "Pending USTA" %></span>
                         <% end %>
                       </div>
+                      <% if match.scorecard_url.present? %>
+                        <div class="cr-sched-actions cr-scorecard-actions">
+                          <%= link_to "📄 Official scorecard", match.scorecard_url, target: "_blank", rel: "noopener", class: "cr-chip-btn" %>
+                          <button type="button" class="cr-chip-btn"
+                                  data-share-text="<%= @team.name %> vs. <%= match.opponent %> (<%= match.match_date.strftime('%b %-d') %>) official scorecard:"
+                                  data-share-url="<%= match.scorecard_url %>" onclick="crShare(this)">
+                            <span class="cr-share-label">🔗 Share scorecard</span>
+                          </button>
+                        </div>
+                      <% end %>
                       <div class="cr-sched-detail-title">Line Scores</div>
                       <%= render "matches/scoresheet", match: match, team: @team, is_captain: @is_captain, can_enter_results: @is_captain %>
                       <%# Only captains, co-captains and admins enter or change results. %>
