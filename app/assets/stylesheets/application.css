@@ -5643,3 +5643,4 @@ button.cr-cal-btn.cr-share-icon:hover { border-color: var(--cr-gold); color: var
 .dot-in { background: #22c55e; }
 .dot-out { background: #ef4444; }
 .dot-none { background: #fff; border: 1.5px solid #cbd5e1; }
+.cr-sc-sub { color: var(--cr-text-muted); font-size: 0.9rem; margin: 6px 0 10px; }

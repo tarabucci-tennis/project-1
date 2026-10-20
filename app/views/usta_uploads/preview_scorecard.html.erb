@@ -1,0 +1,51 @@
+<% content_for :title, "Check scorecard · Court Report" %>
+<% plan = @import.plan %>
+
+<div class="cr-page" style="max-width: 760px; margin: 0 auto; padding: 24px;">
+  <%= link_to "← Choose a different file", usta_upload_team_path(@team), class: "cr-back-link" %>
+
+  <h1 class="cr-section-title" style="margin-top: 8px;">Check before saving</h1>
+
+  <% plan.warnings.each do |w| %>
+    <div class="cr-awaiting-alert" style="margin-top: 12px;"><div class="cr-awaiting-alert-text"><%= w %></div></div>
+  <% end %>
+
+  <% if @import.ours? %>
+    <p class="cr-sc-sub">
+      <strong><%= @scorecard.date.strftime("%a, %b %-d, %Y") %></strong> ·
+      <%= @team.name %> vs. <%= plan.opponent %> · <%= plan.home ? "Home" : "Away" %>
+      <% if @scorecard.status.present? %> · <%= @scorecard.status %><% end %>
+    </p>
+    <div class="cr-result-dialog-score" style="margin-bottom: 14px;">
+      <span class="cr-result-badge <%= { 'win' => 'cr-result-badge-win', 'loss' => 'cr-result-badge-loss' }.fetch(plan.result, 'cr-result-badge-tie') %>"><%= plan.result[0].upcase %></span>
+      <span class="cr-sched-score"><%= plan.won %>-<%= plan.lost %></span>
+    </div>
+
+    <div class="cr-sheet">
+      <% plan.lines.each do |l| %>
+        <div class="cr-sheet-line">
+          <div class="cr-sheet-line-head">
+            <span class="cr-sheet-line-label"><%= l.label %></span>
+            <% unless l.won.nil? %><span class="cr-result-badge <%= l.won ? 'cr-result-badge-win' : 'cr-result-badge-loss' %>"><%= l.won ? "W" : "L" %></span><% end %>
+          </div>
+          <div class="cr-sheet-pair <%= 'cr-sheet-pair-win' if l.won %>">
+            <span class="cr-sheet-names"><%= l.our_players.join(" / ") %></span>
+            <span class="cr-sheet-sets"><% l.our_sets.each do |s| %><span class="cr-sheet-set"><%= s.split("-").first %></span><% end %></span>
+          </div>
+          <div class="cr-sheet-pair <%= 'cr-sheet-pair-win' if l.won == false %>">
+            <span class="cr-sheet-names"><%= l.their_players.join(" / ") %></span>
+            <span class="cr-sheet-sets"><% l.our_sets.each do |s| %><span class="cr-sheet-set"><%= s.split("-").last %></span><% end %></span>
+          </div>
+        </div>
+      <% end %>
+    </div>
+
+    <%= form_with url: usta_upload_confirm_team_path(@team), method: :post, data: { turbo: false } do %>
+      <input type="hidden" name="token" value="<%= @token %>">
+      <div style="display: flex; gap: 10px; margin-top: 18px;">
+        <button type="submit" class="cr-btn cr-btn-gold" style="padding: 10px 22px;">Save to <%= @team.name %></button>
+        <%= link_to "Cancel", team_path(@team), class: "cr-chip-btn" %>
+      </div>
+    <% end %>
+  <% end %>
+</div>

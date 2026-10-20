@@ -1,5 +1,5 @@
-# A captain (or co-captain, admin, or whoever added the team) uploads the team's TennisLink "Team Summary"
-# or "Match Summary" export (Send To Excel). We show a preview of what will
+# A captain (or co-captain, admin, or whoever added the team) uploads a TennisLink
+# "Team Summary", "Match Summary" or single-match "Scorecard" export (Send To Excel). We show a preview of what will
 # change, then save it with UstaTeamSummaryImport. The uploaded file is held
 # in the cache between the preview and the save, keyed by a random token.
 class UstaUploadsController < ApplicationController
@@ -23,10 +23,21 @@ class UstaUploadsController < ApplicationController
     end
 
     html = file.read.to_s.force_encoding("UTF-8").scrub
+
+    # A single match's Scorecard: every line's players and scores.
+    scorecard = UstaScorecardParser.parse(html)
+    if scorecard.scorecard?
+      @token = SecureRandom.hex(16)
+      Rails.cache.write(cache_key(@token), html, expires_in: 30.minutes)
+      @scorecard = scorecard
+      @import = UstaScorecardImport.new(@team, scorecard)
+      return render :preview_scorecard
+    end
+
     parsed = UstaTeamSummaryParser.parse(html, team_name: @team.name)
     unless parsed.summary_file? || parsed.match_summary?
       return redirect_to usta_upload_team_path(@team),
-                         alert: "That doesn't look like a TennisLink Team Summary or Match Summary. On TennisLink open your team's Stats & Standings (or Match Summary) and tap \"Send To Excel\"."
+                         alert: "That doesn't look like a TennisLink Team Summary, Match Summary or Scorecard. On TennisLink open the page and tap \"Send To Excel\"."
     end
 
     @token = SecureRandom.hex(16)
@@ -41,6 +52,15 @@ class UstaUploadsController < ApplicationController
     html = Rails.cache.read(cache_key(params[:token].to_s))
     if html.blank?
       return redirect_to usta_upload_team_path(@team), alert: "That upload expired — please choose the file again."
+    end
+
+    scorecard = UstaScorecardParser.parse(html)
+    if scorecard.scorecard?
+      Rails.cache.delete(cache_key(params[:token].to_s))
+      unless UstaScorecardImport.new(@team, scorecard).apply!
+        return redirect_to usta_upload_team_path(@team), alert: "That scorecard isn't for #{@team.name}."
+      end
+      return redirect_to team_path(@team), notice: "Scorecard saved: every line's players and scores are on the match."
     end
 
     UstaTeamSummaryImport.new(@team, UstaTeamSummaryParser.parse(html, team_name: @team.name)).apply!
