@@ -338,6 +338,12 @@
                           <span class="cr-tag <%= match.usta_status.match?(/confirmed/i) ? 'cr-tag-home' : 'cr-tag-away' %>"><%= match.usta_status.match?(/confirmed/i) ? "Official ✓" : "Pending USTA" %></span>
                         <% end %>
                       </div>
+                      <% if match.scorecard_url.blank? && @is_captain %>
+                        <%= form_with model: match, url: team_match_path(@team, match), method: :patch, data: { turbo: false }, class: "cr-scorecard-form" do |f| %>
+                          <%= f.url_field :scorecard_url, placeholder: "Paste the TennisLink scorecard link", required: true, "aria-label": "Scorecard link" %>
+                          <button type="submit" class="cr-btn cr-btn-gold cr-btn-compact">🔗 Add link</button>
+                        <% end %>
+                      <% end %>
                       <% if match.scorecard_url.present? %>
                         <div class="cr-sched-actions cr-scorecard-actions">
                           <%= link_to "📄 Official scorecard", match.scorecard_url, target: "_blank", rel: "noopener", class: "cr-chip-btn" %>
