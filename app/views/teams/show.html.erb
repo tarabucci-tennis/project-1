@@ -143,6 +143,31 @@
 
       <% upcoming = @upcoming_matches.reject(&:playoff?) %>
       <% results  = @past_matches.select(&:played?).reject(&:playoff?) %>
+      <%# Played dates with no score yet (USTA has no automatic feed): keep them
+          visible with a "scores needed" flag instead of letting them vanish. %>
+      <% awaiting = @past_matches.reject(&:played?).reject(&:playoff?) %>
+      <% auto_synced = @team.tenniscores_url.present? %>
+      <% usta_team = @team.league_group == "USTA" %>
+      <% if awaiting.any? %>
+        <div class="cr-awaiting-alert" role="status">
+          <span class="cr-awaiting-alert-icon" aria-hidden="true">⚠️</span>
+          <div class="cr-awaiting-alert-text">
+            <strong><%= pluralize(awaiting.size, "past match") %> still <%= awaiting.size == 1 ? "needs" : "need" %> scores.</strong>
+            <% if auto_synced %>
+              They update automatically from the league site within the hour.
+            <% elsif @is_captain && usta_team %>
+              Upload the latest TennisLink Team Summary to fill them in.
+            <% elsif @is_captain %>
+              Enter the results to fill them in.
+            <% else %>
+              Your captain will add them<%= " from USTA" if usta_team %> soon.
+            <% end %>
+          </div>
+          <% if @is_captain && usta_team && !auto_synced %>
+            <%= link_to "⬆️ Upload USTA file", usta_upload_team_path(@team), class: "cr-chip-btn cr-awaiting-alert-btn" %>
+          <% end %>
+        </div>
+      <% end %>
 
       <div data-controller="seg">
         <div class="cr-seg">
@@ -229,6 +254,37 @@
 
         <%# ── Results (past, played) ── %>
         <div data-seg-target="panel" style="display: none;">
+          <% if awaiting.any? %>
+            <div class="cr-sched-list cr-awaiting-list">
+              <% awaiting.sort_by(&:match_date).reverse_each do |match| %>
+                <div class="cr-sched-item">
+                  <div class="cr-sched-row cr-awaiting-row <%= 'cr-has-venue' if match.venue %>">
+                    <div class="cr-sched-date">
+                      <div class="cr-sched-date-mon"><%= match.match_date.strftime("%b").upcase %></div>
+                      <div class="cr-sched-date-day"><%= match.match_date.strftime("%-d") %></div>
+                    </div>
+                    <div class="cr-sched-main">
+                      <div class="cr-sched-myteam"><%= @team.name %></div>
+                      <div class="cr-sched-opp"><%= render "teams/opponent_name", team: @team, match: match, division_by_name: @division_by_name %></div>
+                      <div class="cr-sched-sub">
+                        <% if match.home? %><span class="cr-tag cr-tag-home">Home</span><% elsif match.away? %><span class="cr-tag cr-tag-away">Away</span><% end %>
+                        <% if match.location.present? && !match.venue %><span><%= match.location %></span><% end %>
+                      </div>
+                    </div>
+                    <div class="cr-sched-right">
+                      <% if @is_captain && !auto_synced %>
+                        <%= link_to (usta_team ? "⬆️ Upload" : "🎾 Enter"), (usta_team ? usta_upload_team_path(@team) : edit_results_team_match_path(@team, match)),
+                              class: "cr-awaiting-badge cr-awaiting-badge-link", title: "Scores needed" %>
+                      <% else %>
+                        <span class="cr-awaiting-badge">Scores needed</span>
+                      <% end %>
+                    </div>
+                    <%= render "matches/venue", venue: match.venue, link: false %>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+          <% end %>
           <% if results.any? %>
             <div class="cr-sched-list">
               <%# Each result opens a pop-up (native <dialog>) with the line
@@ -296,7 +352,7 @@
                 </div>
               <% end %>
             </div>
-          <% else %>
+          <% elsif awaiting.empty? %>
             <div class="cr-empty" style="padding: 40px 20px; text-align: center; color: var(--cr-text-light);">
               🎾 No results yet — they'll appear here after each match.
             </div>
