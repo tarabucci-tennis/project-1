@@ -42,6 +42,13 @@ class UstaMatchSummaryImportTest < ActiveSupport::TestCase
     assert_equal 3, @team.matches.count
   end
 
+  test "team names match loosely (TennisLink 'Tri-Hards' is our 'Tri Hards')" do
+    team = @team.user.tennis_teams.create!(name: "Tri Hards", league_category: "USTA")
+    html = HTML.gsub("Test Aces", "Tri-Hards").gsub("TEST ACES", "TRI-HARDS")
+    parsed = UstaTeamSummaryParser.parse(html, team_name: team.name)
+    assert_equal 3, parsed.matches.size
+  end
+
   test "a report for a different team changes nothing" do
     other = UstaTeamSummaryParser.parse(HTML, team_name: "Someone Else")
     plan = UstaTeamSummaryImport.new(@team, other).plan

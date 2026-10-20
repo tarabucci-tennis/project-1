@@ -1101,6 +1101,14 @@
                         style="padding: 8px 14px; font-size: 0.78rem; font-weight: 700; white-space: nowrap; flex-shrink: 0;">
                   Copy
                 </button>
+                <% join_url = join_team_url(@team.ensure_join_code!, host: request.host) %>
+                <button type="button" class="cr-chip-btn"
+                        data-share-text="Join <%= @team.name %> on Court Report — schedule, lineups and scores in one place:"
+                        data-share-url="<%= join_url %>"
+                        onclick="crShare(this)"
+                        style="white-space: nowrap; flex-shrink: 0;">
+                  <span class="cr-share-label">📤 Send</span>
+                </button>
               </div>
             </div>
 

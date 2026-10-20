@@ -138,7 +138,8 @@ class UstaTeamSummaryImport
     "#{m.our_points}-#{m.their_points}"
   end
 
+  # "Tri-Hards" (TennisLink) and "Tri Hards" (Court Report) are the same team.
   def normalize(str)
-    str.to_s.strip.downcase.gsub(/\s+/, " ")
+    UstaTeamSummaryParser.name_key(str)
   end
 end
