@@ -5,7 +5,7 @@
   <% tag_name = local_assigns.fetch(:link, true) ? :a : :span %>
   <%= content_tag tag_name, class: "cr-venue",
         **(tag_name == :a ? { href: venue.maps_url, target: "_blank", rel: "noopener", onclick: "event.stopPropagation();" } : {}) do %>
-    <span class="cr-venue-pin" aria-hidden="true">📍</span>
+    <span class="cr-venue-pin"><%= icon(:pin, size: 14) %></span>
     <span class="cr-venue-text">
       <% if venue.name.present? %><span class="cr-venue-name"><%= venue.name %></span><% end %>
       <% venue.address_lines.each do |line| %>

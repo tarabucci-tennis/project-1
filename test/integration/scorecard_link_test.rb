@@ -19,6 +19,11 @@ class ScorecardLinkTest < ActionDispatch::IntegrationTest
     assert_select "button[data-share-url=?]", url
   end
 
+  test "captains can paste the link right in the result pop-up" do
+    get team_path(@team)
+    assert_select "form.cr-scorecard-form[action=?] input[name=?]", team_match_path(@team, @match), "match[scorecard_url]"
+  end
+
   test "a non-web link is refused" do
     patch team_match_path(@team, @match), params: { match: { scorecard_url: "javascript:alert(1)" } }
     assert_response :unprocessable_entity

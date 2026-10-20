@@ -487,7 +487,7 @@ class TeamsController < ApplicationController
     level = nil unless TennisTeam::PLAYOFF_LEVELS.include?(level)
     @team.update(playoff_level: level)
 
-    message = level ? "🏆 #{@team.name} is now competing in the #{level}!" : "Back to the regular season."
+    message = level ? "#{@team.name} is now competing in the #{level}!" : "Back to the regular season."
     redirect_to team_path(@team), notice: message
   end
 

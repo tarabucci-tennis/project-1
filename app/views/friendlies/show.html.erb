@@ -100,8 +100,8 @@
         <div class="cr-fr-lineup-tools cr-no-print">
           <button type="button" class="cr-chip-btn"
                   data-share-text="<%= friendly_lineup_text(@friendly) %>&#10;&#10;Updates &amp; sign-ups:" data-share-url="<%= share_url %>"
-                  onclick="crCopyWithLink(this)"><span class="cr-share-label">📋 Copy as text</span></button>
-          <button type="button" class="cr-chip-btn" onclick="window.print()">🖨️ Print</button>
+                  onclick="crCopyWithLink(this)"><span class="cr-share-label">Copy as text</span></button>
+          <button type="button" class="cr-chip-btn" onclick="window.print()">Print</button>
         </div>
       <% end %>
     </div>
@@ -112,7 +112,7 @@
           <p class="cr-fr-warn">The names have changed since this lineup was made. Regenerate to include everyone (sets marked played stay as they are).</p>
         <% end %>
         <% if @friendly.can_generate? %>
-          <%= button_to (@friendly.lineup? ? "🔄 Regenerate unplayed sets" : "🎾 Generate lineup"), friendly_lineup_path(@friendly),
+          <%= button_to (@friendly.lineup? ? "Regenerate unplayed sets" : "Generate lineup"), friendly_lineup_path(@friendly),
                 method: :post, class: "cr-btn cr-btn-gold cr-fr-big-btn",
                 form: { style: "display:inline;", data: (@friendly.lineup? ? { turbo_confirm: "Make a new lineup for every set not marked played?" } : {}) } %>
           <%= link_to "Sets: #{@friendly.sets_count} · change", edit_friendly_path(@friendly), class: "cr-fr-sets-link" %>
@@ -126,12 +126,12 @@
     <div class="cr-rp-actions cr-fr-actions cr-no-print">
       <button type="button" class="cr-chip-btn" data-share-text="<%= invite %>" data-share-url="<%= share_url %>"
               onclick="crShare(this)">
-        <span class="cr-share-label">🔗 Share invite</span>
+        <span class="cr-share-label">Share invite</span>
       </button>
-      <%= link_to "📅 Calendar", friendly_google_calendar_url(@friendly, share_url: share_url),
+      <%= link_to "Calendar", friendly_google_calendar_url(@friendly, share_url: share_url),
             target: "_blank", rel: "noopener", class: "cr-chip-btn", title: "Add to Google Calendar" %>
       <% if organizer? %>
-        <%= link_to "✏️ Edit", edit_friendly_path(@friendly), class: "cr-chip-btn" %>
+        <%= link_to "Edit", edit_friendly_path(@friendly), class: "cr-chip-btn" %>
         <%= button_to "Cancel friendly", friendly_path(@friendly), method: :delete, class: "cr-chip-btn",
               form: { style: "display:inline;", data: { turbo_confirm: "Cancel this friendly for everyone?" } } %>
       <% end %>

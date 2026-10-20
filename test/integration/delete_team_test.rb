@@ -17,7 +17,7 @@ class DeleteTeamTest < ActionDispatch::IntegrationTest
   test "whoever added a team with no scores can delete it; players' accounts stay" do
     sign_in(@owner)
     get team_path(@team)
-    assert_select "button", text: "🗑️ Delete team"
+    assert_select "button", text: "Delete team"
 
     assert_difference -> { TennisTeam.count } => -1, -> { Match.count } => -1, -> { User.count } => 0 do
       delete team_path(@team)
@@ -28,7 +28,7 @@ class DeleteTeamTest < ActionDispatch::IntegrationTest
   test "a plain player can't delete the team" do
     sign_in(@player)
     get team_path(@team)
-    assert_select "button", text: "🗑️ Delete team", count: 0
+    assert_select "button", text: "Delete team", count: 0
     assert_no_difference -> { TennisTeam.count } do
       delete team_path(@team)
     end
@@ -38,7 +38,7 @@ class DeleteTeamTest < ActionDispatch::IntegrationTest
     @team.matches.first.update!(result: "win")
     sign_in(@owner)
     get team_path(@team)
-    assert_select "button", text: "🗑️ Delete team", count: 0
+    assert_select "button", text: "Delete team", count: 0
     assert_no_difference -> { TennisTeam.count } do
       delete team_path(@team)
     end

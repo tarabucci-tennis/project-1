@@ -8,11 +8,11 @@
       <p class="cr-home-subtitle">2026 Season · standings, calendar &amp; upcoming</p>
     </div>
     <div class="cr-page-header-actions">
-      <%= link_to "🔍 Players & Teams", lookup_path, class: "cr-btn cr-btn-outline cr-btn-compact" %>
+      <%= link_to "Players & Teams", lookup_path, class: "cr-btn cr-btn-outline cr-btn-compact" %>
       <% if RatingsController::PUBLIC || current_user.admin? %>
-        <%= link_to "📈 Ratings", ratings_path, class: "cr-btn cr-btn-outline cr-btn-compact" %>
+        <%= link_to "Ratings", ratings_path, class: "cr-btn cr-btn-outline cr-btn-compact" %>
       <% end %>
-      <%= link_to "🎾 Book a friendly", new_friendly_path, class: "cr-btn cr-btn-outline cr-btn-compact" %>
+      <%= link_to "Book a friendly", new_friendly_path, class: "cr-btn cr-btn-outline cr-btn-compact" %>
 
       <div class="cr-menu" data-controller="menu">
         <button type="button" class="cr-btn cr-btn-gold cr-btn-compact cr-menu-trigger"
@@ -22,20 +22,20 @@
         </button>
         <div class="cr-menu-panel" data-menu-target="panel" role="menu">
           <%= link_to new_team_path, class: "cr-menu-item", role: "menuitem" do %>
-            <span class="cr-menu-ico">➕</span> Create a team
+            Create a team
           <% end %>
           <%= link_to find_team_path, class: "cr-menu-item", role: "menuitem" do %>
-            <span class="cr-menu-ico">🔗</span> Join a team
+            Join a team
           <% end %>
           <%= link_to new_usta_team_path, class: "cr-menu-item", role: "menuitem" do %>
-            <span class="cr-menu-ico">📄</span> Add a USTA team (TennisLink file)
+            Add a USTA team (TennisLink file)
           <% end %>
           <% if current_user.admin? %>
             <div class="cr-menu-divider"></div>
             <%= button_to admin_sync_scores_path, method: :post,
                   form: { style: "margin:0;", data: { turbo_confirm: "Update every league now? It runs in the background and takes a few minutes." } },
                   class: "cr-menu-item cr-menu-item-btn", role: "menuitem" do %>
-              <span class="cr-menu-ico">🔄</span> Sync scores
+              Sync scores
             <% end %>
             <% if (sync = NightlySyncJob.status) %>
               <% failed = Array(sync[:steps]).reject { |st| st[:ok] } %>
@@ -49,7 +49,7 @@
               </div>
             <% end %>
             <%= link_to admin_usta_import_path, class: "cr-menu-item", role: "menuitem" do %>
-              <span class="cr-menu-ico">🎾</span> Import USTA results
+              Import USTA results
             <% end %>
           <% end %>
         </div>
@@ -263,7 +263,7 @@
               </div>
 
               <p class="cr-dash-cal-modal-captain-note" data-dashboard-calendar-target="captainNote" style="display: none;">
-                Only captains and co-captains can add friendlies or clinics here. Anyone can use 🎾 Book a friendly.
+                Only captains and co-captains can add friendlies or clinics here. Anyone can use Book a friendly.
               </p>
             </div>
           </div>
@@ -328,7 +328,7 @@
       <div data-home-tabs-target="panel" style="display: none;">
         <div class="cr-fr-tab-head">
           <%= link_to "All my friendlies →", friendlies_path, class: "cr-btn cr-btn-outline cr-btn-compact" %>
-          <%= link_to "🎾 Book a friendly", new_friendly_path, class: "cr-btn cr-btn-gold cr-btn-compact" %>
+          <%= link_to "Book a friendly", new_friendly_path, class: "cr-btn cr-btn-gold cr-btn-compact" %>
         </div>
         <% fc_items = (@upcoming_friendlies.to_a + @upcoming_team_events) %>
         <% fc_items = fc_items.sort_by { |i| i.is_a?(Friendly) ? i.starts_at : i.event_date.in_time_zone } %>
@@ -346,7 +346,7 @@
 
   <% else %>
     <div class="cr-empty" style="padding: 60px 20px; text-align: center;">
-      <div class="cr-bounce" style="font-size: 2.5rem; margin-bottom: 16px;">🎾</div>
+      
       <h2 style="font-size: 1.2rem; margin-bottom: 8px;">You haven't joined any teams yet</h2>
       <p style="color: var(--cr-text-muted); font-size: 0.9rem; margin-bottom: 28px;">
         Find your team, or create a new one.
@@ -362,7 +362,7 @@
        crowd the page; opens to a compact list grouped by league, then season. %>
   <% if @archived_teams.present? %>
     <details class="cr-archive-section">
-      <summary class="cr-archive-toggle">📦 Past Seasons (<%= @archived_teams.size %>)</summary>
+      <summary class="cr-archive-toggle">Past Seasons (<%= @archived_teams.size %>)</summary>
       <% TennisTeam.group_by_league(@archived_teams).each do |league, teams| %>
         <div class="cr-archive-league">
           <div class="cr-archive-league-name"><%= league %></div>

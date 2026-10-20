@@ -103,15 +103,15 @@ export default class extends Controller {
   updateCounts(counts) {
     if (!counts || !this.hasCountsTarget) return
     this.countsTarget.innerHTML =
-      `<span class="cr-count-in">${counts.in} ✅</span>` +
-      `<span class="cr-count-out">${counts.out} ❌</span>` +
+      `<span class="cr-count-in">${counts.in} in</span>` +
+      `<span class="cr-count-out">${counts.out} out</span>` +
       `<span class="cr-count-pending">${counts.no_response} ?</span>`
   }
 
   showSaved() {
     if (!this.hasSavedIndicatorTarget) return
     const el = this.savedIndicatorTarget
-    el.textContent = "Saved! 🎾"
+    el.textContent = "Saved"
     el.classList.add("cr-saved-visible")
     clearTimeout(this._savedTimer)
     this._savedTimer = setTimeout(() => {
@@ -129,7 +129,6 @@ export default class extends Controller {
     overlay.className = "cr-popup-overlay"
     overlay.innerHTML = `
       <div class="cr-popup">
-        <div class="cr-popup-ball">🎾</div>
         <div class="cr-popup-title">${title}</div>
         <div class="cr-popup-sub">${subtitle}</div>
         <div class="cr-popup-buttons">

@@ -4,7 +4,7 @@
   <%= link_to "← Back", back_path, class: "cr-back-link" %>
   <section class="cr-rp-card">
     <div class="cr-rp-card-head">
-      <h2 class="cr-rp-card-title">📍 Edit <%= @club.name %></h2>
+      <h2 class="cr-rp-card-title">Edit <%= @club.name %></h2>
       <span class="cr-rp-card-note"><%= @club.league %></span>
     </div>
     <%= render "form", club: @club, url: club_path(@club), method: :patch %>

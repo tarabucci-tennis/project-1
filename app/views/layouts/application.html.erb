@@ -125,11 +125,11 @@
         if (!field) return;
         if (field.type === 'password') {
           field.type = 'text';
-          btn.textContent = '🙈';
+          btn.textContent = 'Hide';
           btn.setAttribute('aria-label', 'Hide password');
         } else {
           field.type = 'password';
-          btn.textContent = '👁';
+          btn.textContent = 'Show';
           btn.setAttribute('aria-label', 'Show password');
         }
       }
@@ -162,44 +162,44 @@
         <div class="cr-bottom-nav-inner">
       <% if in_team_context %>
           <%= link_to teams_path, class: "cr-bnav-btn #{'cr-bnav-active' if controller_name == 'teams' && action_name == 'index'}" do %>
-            <span class="cr-bnav-icon">🏠</span>
+            <span class="cr-bnav-icon"><%= icon(:home, size: 22) %></span>
             <span class="cr-bnav-label">Home</span>
           <% end %>
           <%= link_to lineups_dashboard_path, class: "cr-bnav-btn #{'cr-bnav-active' if controller_name == 'lineups'}" do %>
-            <span class="cr-bnav-icon">📝</span>
+            <span class="cr-bnav-icon"><%= icon(:lineups, size: 22) %></span>
             <span class="cr-bnav-label">Lineups</span>
           <% end %>
           <a href="/teams" data-bnav-tab="standings" class="cr-bnav-btn">
-            <span class="cr-bnav-icon">🏆</span>
+            <span class="cr-bnav-icon"><%= icon(:trophy, size: 22) %></span>
             <span class="cr-bnav-label">Standings</span>
           </a>
           <a href="/teams" data-bnav-tab="roster" class="cr-bnav-btn">
-            <span class="cr-bnav-icon">👥</span>
+            <span class="cr-bnav-icon"><%= icon(:users, size: 22) %></span>
             <span class="cr-bnav-label">Roster</span>
           </a>
           <a href="https://chat.whatsapp.com/" target="_blank" rel="noopener" class="cr-bnav-btn">
-            <span class="cr-bnav-icon">💬</span>
+            <span class="cr-bnav-icon"><%= icon(:chat, size: 22) %></span>
             <span class="cr-bnav-label">WhatsApp</span>
           </a>
       <% else %>
           <%= link_to teams_path, class: "cr-bnav-btn #{'cr-bnav-active' if controller_name == 'teams' && action_name == 'index'}" do %>
-            <span class="cr-bnav-icon">🏠</span>
+            <span class="cr-bnav-icon"><%= icon(:home, size: 22) %></span>
             <span class="cr-bnav-label">Home</span>
           <% end %>
           <%= link_to lineups_dashboard_path, class: "cr-bnav-btn #{'cr-bnav-active' if controller_name == 'lineups'}" do %>
-            <span class="cr-bnav-icon">📝</span>
+            <span class="cr-bnav-icon"><%= icon(:lineups, size: 22) %></span>
             <span class="cr-bnav-label">Lineups</span>
           <% end %>
           <%= link_to find_team_path, class: "cr-bnav-btn #{'cr-bnav-active' if controller_name == 'teams' && action_name == 'search'}" do %>
-            <span class="cr-bnav-icon">🔍</span>
+            <span class="cr-bnav-icon"><%= icon(:search, size: 22) %></span>
             <span class="cr-bnav-label">Find Team</span>
           <% end %>
           <%= link_to profile_path, class: "cr-bnav-btn #{'cr-bnav-active' if controller_name == 'profiles' && action_name == 'show'}" do %>
-            <span class="cr-bnav-icon">👤</span>
+            <span class="cr-bnav-icon"><%= icon(:user, size: 22) %></span>
             <span class="cr-bnav-label">Profile</span>
           <% end %>
           <a href="https://chat.whatsapp.com/" target="_blank" rel="noopener" class="cr-bnav-btn">
-            <span class="cr-bnav-icon">💬</span>
+            <span class="cr-bnav-icon"><%= icon(:chat, size: 22) %></span>
             <span class="cr-bnav-label">WhatsApp</span>
           </a>
       <% end %>

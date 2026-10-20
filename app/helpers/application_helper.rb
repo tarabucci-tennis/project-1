@@ -1,4 +1,25 @@
 module ApplicationHelper
+  # Small line icons (stroke = currentColor) used instead of emoji, so the UI
+  # reads as one clean, professional set. icon(:home), icon(:pin, size: 14)…
+  ICON_PATHS = {
+    home:    '<path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/>',
+    lineups: '<rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4h6v3H9z"/><path d="M9 11h6M9 15h6"/>',
+    trophy:  '<path d="M8 4h8v5a4 4 0 0 1-8 0z"/><path d="M8 6H5a3 3 0 0 0 3 4M16 6h3a3 3 0 0 1-3 4"/><path d="M12 13v4M9 20h6"/>',
+    users:   '<circle cx="9" cy="8" r="3"/><path d="M3 20a6 6 0 0 1 12 0"/><path d="M16 5.5a3 3 0 0 1 0 5.5M18 20a6 6 0 0 0-3-5.2"/>',
+    chat:    '<path d="M4 5h16v11H9l-5 4z"/>',
+    search:  '<circle cx="11" cy="11" r="6"/><path d="M20 20l-4.5-4.5"/>',
+    user:    '<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>',
+    pin:     '<path d="M12 21s-6-5.6-6-11a6 6 0 0 1 12 0c0 5.4-6 11-6 11z"/><circle cx="12" cy="10" r="2.2"/>',
+    chart:   '<path d="M5 20V10M12 20V4M19 20v-7"/>',
+    alert:   '<path d="M12 4l9 16H3z"/><path d="M12 10v4M12 17.5v.01"/>'
+  }.freeze
+
+  def icon(name, size: 18, css: nil)
+    content_tag(:svg, ICON_PATHS.fetch(name).html_safe, width: size, height: size, viewBox: "0 0 24 24",
+                fill: "none", stroke: "currentColor", "stroke-width": 1.8, "stroke-linecap": "round",
+                "stroke-linejoin": "round", "aria-hidden": "true", class: [ "cr-icon", css ].compact.join(" "))
+  end
+
   # Returns the current user's teams grouped by league category.
   # Used by the shared league nav partial. Returns an empty hash when
   # there's no logged-in user.
