@@ -48,6 +48,11 @@ class UstaTeamSummaryParser
     alias_method :match_summary?, :match_summary
   end
 
+  # Team names compared loosely: "Tri-Hards" == "Tri Hards" == "TRI HARDS".
+  def self.name_key(name)
+    name.to_s.downcase.gsub(/[^a-z0-9]+/, "")
+  end
+
   def self.parse(html, team_name: nil)
     new(html, team_name: team_name).parse
   end
@@ -150,10 +155,10 @@ class UstaTeamSummaryParser
   end
 
   def match_summary_matches
-    key = @team_name.to_s.downcase.squeeze(" ").strip
+    key = self.class.name_key(@team_name)
     match_summary_rows.filter_map do |r|
       home_team, visitor = r[3], r[5]
-      home = [ home_team, visitor ].map { |t| t.to_s.downcase.squeeze(" ").strip }.index(key)&.zero?
+      home = [ home_team, visitor ].map { |t| self.class.name_key(t) }.index(key)&.zero?
       next if home.nil?
 
       d = parse_date(r[1])
