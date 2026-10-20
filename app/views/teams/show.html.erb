@@ -412,50 +412,40 @@
           Let your captain know if you can play each match.
         </p>
         <% if @upcoming_matches.any? %>
-          <div class="cr-match-list">
+          <%# One tidy row per match: date | opponent + place | In / Out / note. %>
+          <div class="cr-av-list">
             <% @upcoming_matches.each do |match| %>
               <% avail = @my_availabilities[match.id] %>
               <% current_status = avail&.status || "no_response" %>
               <% current_message = avail&.message || "" %>
-
-              <div class="cr-match-card"
+              <div class="cr-av-row"
                    data-controller="availability"
                    data-availability-match-id-value="<%= match.id %>"
                    data-availability-status-value="<%= current_status %>"
                    data-availability-message-value="<%= current_message %>">
-
-                <div class="cr-match-row">
-                  <div class="cr-match-date">
-                    <div class="cr-match-date-month"><%= match.match_date.strftime("%b").upcase %></div>
-                    <div class="cr-match-date-day"><%= match.match_date.strftime("%-d") %></div>
-                  </div>
-                  <div class="cr-match-info">
-                    <div class="cr-match-opponent">vs. <%= match.opponent %></div>
-                    <div class="cr-match-location"><%= match.location %></div>
-                  </div>
-                  <% if match.notes&.include?("Home") || match.location&.include?(@team.home_court.to_s.split(",").first.to_s) %>
-                    <div class="cr-match-badge cr-match-home">Home</div>
-                  <% elsif match.notes&.include?("Away") %>
-                    <div class="cr-match-badge cr-match-away">Away</div>
-                  <% end %>
+                <div class="cr-sched-date">
+                  <div class="cr-sched-date-mon"><%= match.match_date.strftime("%b").upcase %></div>
+                  <div class="cr-sched-date-day"><%= match.match_date.strftime("%-d") %></div>
                 </div>
-
-                <div class="cr-avail-row">
+                <div class="cr-av-info">
+                  <div class="cr-av-opp">vs. <%= match.opponent %></div>
+                  <div class="cr-sched-sub">
+                    <% if match.home? %><span class="cr-tag cr-tag-home">Home</span><% elsif match.away? %><span class="cr-tag cr-tag-away">Away</span><% end %>
+                    <% if (place = match.venue&.name.presence || match.location.to_s.split(",").first.presence) %><span class="cr-av-place"><%= place %></span><% end %>
+                  </div>
+                </div>
+                <div class="cr-av-actions">
                   <button type="button"
                           class="cr-avail-btn cr-avail-in <%= 'avail-btn-active avail-btn-locked' if current_status == 'in' %>"
                           data-availability-target="btnIn"
-                          data-action="click->availability#markIn">
-                    ✅ I'm In
-                  </button>
+                          data-action="click->availability#markIn">✅ In</button>
                   <button type="button"
                           class="cr-avail-btn cr-avail-out <%= 'avail-btn-active avail-btn-locked' if current_status == 'out' %>"
                           data-availability-target="btnOut"
-                          data-action="click->availability#markOut">
-                    ❌ I'm Out
-                  </button>
+                          data-action="click->availability#markOut">❌ Out</button>
                   <input type="text"
                          class="cr-avail-message"
-                         placeholder="Add a message..."
+                         placeholder="Add a note…"
                          value="<%= current_message %>"
                          data-availability-target="messageField"
                          data-action="keydown->availability#saveMessage blur->availability#saveMessage">

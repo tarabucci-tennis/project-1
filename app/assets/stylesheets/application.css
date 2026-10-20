@@ -5598,3 +5598,26 @@ button.cr-cal-btn.cr-share-icon:hover { border-color: var(--cr-gold); color: var
   font-size: 0.74rem; font-weight: 700; text-decoration: none;
 }
 .cr-awaiting-badge-link:hover { background: #f9dfa6; }
+
+/* My Availability: compact rows, one per match (date | match | In / Out / note).
+   Same 880px column as the rest of the team page; no big empty card space. */
+.cr-av-list {
+  background: var(--cr-white); border: 1px solid var(--cr-border); border-radius: 14px; overflow: hidden;
+}
+.cr-av-row {
+  display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 10px 14px; align-items: center;
+  padding: 12px 14px; border-bottom: 1px solid var(--cr-border);
+}
+.cr-av-row:last-child { border-bottom: none; }
+.cr-av-info { min-width: 0; }
+.cr-av-opp { font-weight: 700; font-size: 0.95rem; color: var(--cr-text); line-height: 1.25; }
+.cr-av-place { color: var(--cr-text-muted); font-size: 0.8rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+.cr-av-row .cr-sched-sub { display: flex; align-items: center; gap: 6px; margin-top: 3px; min-width: 0; }
+.cr-av-actions { grid-column: 1 / -1; display: grid; grid-template-columns: auto auto minmax(0, 1fr) auto; gap: 8px; align-items: center; }
+.cr-av-actions .cr-avail-btn { padding: 7px 14px; }
+.cr-av-actions .cr-avail-message { min-width: 0; width: 100%; padding: 7px 12px; }
+.cr-av-actions .cr-saved:empty { display: none; }
+@media (min-width: 900px) {
+  .cr-av-row { grid-template-columns: auto minmax(0, 1fr) minmax(0, 360px); padding: 12px 18px; }
+  .cr-av-actions { grid-column: auto; }
+}
