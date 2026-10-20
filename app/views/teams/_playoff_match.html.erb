@@ -9,7 +9,7 @@
     <div class="cr-sched-main">
       <div class="cr-sched-opp">vs. <%= match.opponent %></div>
       <div class="cr-sched-sub">
-        <span class="cr-tag cr-tag-playoff">🏆 <%= match.playoff_level %></span>
+        <span class="cr-tag cr-tag-playoff"><%= match.playoff_level %></span>
         <% if match.home? %><span class="cr-tag cr-tag-home">Home</span><% elsif match.away? %><span class="cr-tag cr-tag-away">Away</span><% end %>
         <% if match.location.present? %><span><%= match.location %></span><% end %>
       </div>
@@ -27,9 +27,9 @@
   <div class="cr-sched-detail">
     <% if @is_captain %>
       <div class="cr-sched-actions">
-        <%= link_to edit_results_team_match_path(@team, match), class: "cr-chip-btn" do %>🎾 Enter Results<% end %>
-        <%= link_to edit_team_match_lineup_path(@team, match), class: "cr-chip-btn" do %>📋 Set Lineup<% end %>
-        <%= link_to edit_team_match_path(@team, match), class: "cr-chip-btn" do %>✏️ Edit Match<% end %>
+        <%= link_to edit_results_team_match_path(@team, match), class: "cr-chip-btn" do %>Enter Results<% end %>
+        <%= link_to edit_team_match_lineup_path(@team, match), class: "cr-chip-btn" do %>Set Lineup<% end %>
+        <%= link_to edit_team_match_path(@team, match), class: "cr-chip-btn" do %>Edit Match<% end %>
       </div>
     <% end %>
     <% if has_lines %>

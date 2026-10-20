@@ -21,8 +21,8 @@
                 <div><%= match.match_date.strftime("%-m/%-d") %></div>
                 <% counts = match.availability_counts %>
                 <div class="captain-grid-counts">
-                  <span class="count-in"><%= counts[:in] %> ✅</span> ·
-                  <span class="count-out"><%= counts[:out] %> ❌</span> ·
+                  <span class="count-in"><%= counts[:in] %> in</span> ·
+                  <span class="count-out"><%= counts[:out] %> out</span> ·
                   <span class="count-pending"><%= counts[:no_response] %> ?</span>
                 </div>
               </th>
@@ -38,11 +38,11 @@
                 <% status = avail&.status || "no_response" %>
                 <td class="captain-grid-cell">
                   <% if status == "in" %>
-                    <span class="dot dot-in" title="<%= avail&.message.presence || 'Available' %>">🟢</span>
+                    <span class="dot dot-in" title="<%= avail&.message.presence || 'Available' %>"></span>
                   <% elsif status == "out" %>
-                    <span class="dot dot-out" title="<%= avail&.message.presence || 'Unavailable' %>">🔴</span>
+                    <span class="dot dot-out" title="<%= avail&.message.presence || 'Unavailable' %>"></span>
                   <% else %>
-                    <span class="dot dot-none" title="No response">⚪</span>
+                    <span class="dot dot-none" title="No response"></span>
                   <% end %>
                   <% if avail&.message.present? %>
                     <div class="dot-message"><%= avail.message %></div>

@@ -12,7 +12,7 @@ export default class extends Controller {
   connect() {
     // If the URL has ?tab=something, try to match it to a tab by name.
     // We match on the tab's text content (lowercased, substring match),
-    // so ?tab=roster → "👥 Roster" → index 2, etc.
+    // so ?tab=roster → "Roster" → index 2, etc.
     const wanted = new URL(window.location).searchParams.get("tab")
     if (wanted) {
       const needle = wanted.toLowerCase()

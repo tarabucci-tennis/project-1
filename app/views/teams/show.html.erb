@@ -7,7 +7,7 @@
   <% can_archive = @is_captain || @team.user_id == current_user.id %>
   <% if @team.archived? %>
     <div class="cr-archived-banner">
-      <span>📦 This team is in <strong>Past Seasons</strong> — you're viewing its archived results.</span>
+      <span>This team is in <strong>Past Seasons</strong> — you're viewing its archived results.</span>
       <% if can_archive %>
         <%= button_to "Restore to active", unarchive_team_path(@team), method: :post,
               class: "cr-chip-btn", form: { style: "display:inline;" } %>
@@ -18,12 +18,12 @@
   <% if (can_archive && !@team.archived?) || can_delete %>
     <div class="cr-team-archive-action">
       <% if can_archive && !@team.archived? %>
-        <%= button_to "📦 Archive team", archive_team_path(@team), method: :post,
+        <%= button_to "Archive team", archive_team_path(@team), method: :post,
               class: "cr-chip-btn", form: { style: "display:inline;" },
               data: { turbo_confirm: "Move #{@team.name} to Past Seasons? Its schedule, results, and standings stay saved and viewable — you can restore it any time." } %>
       <% end %>
       <% if can_delete %>
-        <%= button_to "🗑️ Delete team", team_path(@team), method: :delete,
+        <%= button_to "Delete team", team_path(@team), method: :delete,
               class: "cr-chip-btn cr-chip-danger", form: { style: "display:inline;" },
               data: { turbo_confirm: "Delete #{@team.name} for everyone? Its roster, schedule and standings are removed and can't be brought back. (Players' accounts stay.)" } %>
       <% end %>
@@ -87,10 +87,10 @@
   <%# ── Playoff banner ───────────────────────────────── %>
   <% if @team.in_playoffs? %>
     <div class="cr-playoff-banner">
-      <span class="cr-playoff-trophy" aria-hidden="true">🏆</span>
+      <span class="cr-playoff-trophy"><%= icon(:trophy, size: 26) %></span>
       <div>
         <div class="cr-playoff-banner-title"><%= @team.name %> — <%= @team.playoff_level %></div>
-        <div class="cr-playoff-banner-sub">Through to the <%= @team.playoff_level %>. Let's go! 🎾</div>
+        <div class="cr-playoff-banner-sub">Through to the <%= @team.playoff_level %>. Let's go!</div>
       </div>
     </div>
   <% end %>
@@ -118,13 +118,13 @@
   <%# ── Sub-tabs ─────────────────────────────────────── %>
   <div data-controller="team-tabs">
     <div class="cr-subtabs">
-      <button class="cr-subtab cr-subtab-active" data-team-tabs-target="tab" data-action="click->team-tabs#switch">📅 Schedule</button>
-      <button class="cr-subtab" data-team-tabs-target="tab" data-action="click->team-tabs#switch">✋ Availability</button>
-      <button class="cr-subtab" data-team-tabs-target="tab" data-action="click->team-tabs#switch">👥 Roster</button>
-      <button class="cr-subtab" data-team-tabs-target="tab" data-action="click->team-tabs#switch">📊 Player Stats</button>
-      <button class="cr-subtab" data-team-tabs-target="tab" data-action="click->team-tabs#switch">🏆 Standings</button>
+      <button class="cr-subtab cr-subtab-active" data-team-tabs-target="tab" data-action="click->team-tabs#switch">Schedule</button>
+      <button class="cr-subtab" data-team-tabs-target="tab" data-action="click->team-tabs#switch">Availability</button>
+      <button class="cr-subtab" data-team-tabs-target="tab" data-action="click->team-tabs#switch">Roster</button>
+      <button class="cr-subtab" data-team-tabs-target="tab" data-action="click->team-tabs#switch">Player Stats</button>
+      <button class="cr-subtab" data-team-tabs-target="tab" data-action="click->team-tabs#switch">Standings</button>
       <% if @is_captain %>
-        <button class="cr-subtab" data-team-tabs-target="tab" data-action="click->team-tabs#switch">👑 Captain</button>
+        <button class="cr-subtab" data-team-tabs-target="tab" data-action="click->team-tabs#switch">Captain</button>
       <% end %>
     </div>
 
@@ -150,7 +150,7 @@
       <% usta_team = @team.league_group == "USTA" %>
       <% if awaiting.any? %>
         <div class="cr-awaiting-alert" role="status">
-          <span class="cr-awaiting-alert-icon" aria-hidden="true">⚠️</span>
+          <span class="cr-awaiting-alert-icon"><%= icon(:alert, size: 18) %></span>
           <div class="cr-awaiting-alert-text">
             <strong><%= pluralize(awaiting.size, "past match") %> still <%= awaiting.size == 1 ? "needs" : "need" %> scores.</strong>
             <% if auto_synced %>
@@ -164,7 +164,7 @@
             <% end %>
           </div>
           <% if @is_captain && usta_team && !auto_synced %>
-            <%= link_to "⬆️ Upload USTA file", usta_upload_team_path(@team), class: "cr-chip-btn cr-awaiting-alert-btn" %>
+            <%= link_to "Upload USTA file", usta_upload_team_path(@team), class: "cr-chip-btn cr-awaiting-alert-btn" %>
           <% end %>
         </div>
       <% end %>
@@ -193,7 +193,7 @@
                     <div class="cr-sched-main">
                       <div class="cr-sched-opp"><%= render "teams/opponent_name", team: @team, match: match, division_by_name: @division_by_name %></div>
                       <div class="cr-sched-sub">
-                        <% if match.playoff? %><span class="cr-tag cr-tag-playoff">🏆 <%= match.playoff_level %></span><% end %>
+                        <% if match.playoff? %><span class="cr-tag cr-tag-playoff"><%= match.playoff_level %></span><% end %>
                         <% if match.home? %><span class="cr-tag cr-tag-home">Home</span><% elsif match.away? %><span class="cr-tag cr-tag-away">Away</span><% end %>
                         <% if match.location.present? && !match.venue %><span><%= match.location %></span><% end %>
                         <% if match.match_time.present? %><span>· <%= match.match_time %></span><% end %>
@@ -208,11 +208,11 @@
                   <div class="cr-sched-detail">
                     <div class="cr-sched-actions">
                       <%= render "matches/share_button", match: match %>
-                      <a href="<%= google_calendar_url(match) %>" target="_blank" rel="noopener" class="cr-chip-btn">📅 Calendar</a>
+                      <a href="<%= google_calendar_url(match) %>" target="_blank" rel="noopener" class="cr-chip-btn">Calendar</a>
                       <% if @is_captain %>
-                        <%= link_to edit_team_match_path(@team, match), class: "cr-chip-btn" do %>✏️ Edit Match<% end %>
-                        <%= link_to edit_team_match_lineup_path(@team, match), class: "cr-chip-btn" do %>📋 Set Lineup<% end %>
-                        <%= link_to edit_results_team_match_path(@team, match), class: "cr-chip-btn" do %>🎾 Enter Results<% end %>
+                        <%= link_to edit_team_match_path(@team, match), class: "cr-chip-btn" do %>Edit Match<% end %>
+                        <%= link_to edit_team_match_lineup_path(@team, match), class: "cr-chip-btn" do %>Set Lineup<% end %>
+                        <%= link_to edit_results_team_match_path(@team, match), class: "cr-chip-btn" do %>Enter Results<% end %>
                       <% end %>
                     </div>
                     <% if lineup&.published? %>
@@ -247,7 +247,7 @@
             </div>
           <% else %>
             <div class="cr-empty" style="padding: 40px 20px; text-align: center; color: var(--cr-text-light);">
-              🎾 No upcoming matches<% if @team.next_match %> — next up <%= @team.next_match.match_date.strftime("%B %-d") %><% end %>.
+              No upcoming matches<% if @team.next_match %> — next up <%= @team.next_match.match_date.strftime("%B %-d") %><% end %>.
             </div>
           <% end %>
         </div>
@@ -273,7 +273,7 @@
                     </div>
                     <div class="cr-sched-right">
                       <% if @is_captain && !auto_synced %>
-                        <%= link_to (usta_team ? "⬆️ Upload" : "🎾 Enter"), (usta_team ? usta_upload_team_path(@team) : edit_results_team_match_path(@team, match)),
+                        <%= link_to (usta_team ? "Upload" : "Enter"), (usta_team ? usta_upload_team_path(@team) : edit_results_team_match_path(@team, match)),
                               class: "cr-awaiting-badge cr-awaiting-badge-link", title: "Scores needed" %>
                       <% else %>
                         <span class="cr-awaiting-badge">Scores needed</span>
@@ -305,7 +305,7 @@
                       <div class="cr-sched-myteam"><%= @team.name %></div>
                       <div class="cr-sched-opp"><%= render "teams/opponent_name", team: @team, match: match, division_by_name: @division_by_name %></div>
                       <div class="cr-sched-sub">
-                        <% if match.playoff? %><span class="cr-tag cr-tag-playoff">🏆 <%= match.playoff_level %></span><% end %>
+                        <% if match.playoff? %><span class="cr-tag cr-tag-playoff"><%= match.playoff_level %></span><% end %>
                         <% if match.home? %><span class="cr-tag cr-tag-home">Home</span><% elsif match.away? %><span class="cr-tag cr-tag-away">Away</span><% end %>
                         <% if match.location.present? && !match.venue %><span><%= match.location %></span><% end %>
                       </div>
@@ -326,7 +326,7 @@
                       <div class="cr-result-dialog-date"><%= match.match_date.strftime("%a, %b %-d, %Y") %></div>
                       <h3 class="cr-result-dialog-title"><%= @team.name %> <span class="cr-result-dialog-vs">vs.</span> <%= match.opponent %></h3>
                       <div class="cr-sched-sub">
-                        <% if match.playoff? %><span class="cr-tag cr-tag-playoff">🏆 <%= match.playoff_level %></span><% end %>
+                        <% if match.playoff? %><span class="cr-tag cr-tag-playoff"><%= match.playoff_level %></span><% end %>
                         <% if match.home? %><span class="cr-tag cr-tag-home">Home</span><% elsif match.away? %><span class="cr-tag cr-tag-away">Away</span><% end %>
                         <% if match.location.present? && !match.venue %><span><%= match.location %></span><% end %>
                       </div>
@@ -341,16 +341,16 @@
                       <% if match.scorecard_url.blank? && @is_captain %>
                         <%= form_with model: match, url: team_match_path(@team, match), method: :patch, data: { turbo: false }, class: "cr-scorecard-form" do |f| %>
                           <%= f.url_field :scorecard_url, placeholder: "Paste the TennisLink scorecard link", required: true, "aria-label": "Scorecard link" %>
-                          <button type="submit" class="cr-btn cr-btn-gold cr-btn-compact">🔗 Add link</button>
+                          <button type="submit" class="cr-btn cr-btn-gold cr-btn-compact">Add link</button>
                         <% end %>
                       <% end %>
                       <% if match.scorecard_url.present? %>
                         <div class="cr-sched-actions cr-scorecard-actions">
-                          <%= link_to "📄 Official scorecard", match.scorecard_url, target: "_blank", rel: "noopener", class: "cr-chip-btn" %>
+                          <%= link_to "Official scorecard", match.scorecard_url, target: "_blank", rel: "noopener", class: "cr-chip-btn" %>
                           <button type="button" class="cr-chip-btn"
                                   data-share-text="<%= @team.name %> vs. <%= match.opponent %> (<%= match.match_date.strftime('%b %-d') %>) official scorecard:"
                                   data-share-url="<%= match.scorecard_url %>" onclick="crShare(this)">
-                            <span class="cr-share-label">🔗 Share scorecard</span>
+                            <span class="cr-share-label">Share scorecard</span>
                           </button>
                         </div>
                       <% end %>
@@ -359,8 +359,8 @@
                       <%# Only captains, co-captains and admins enter or change results. %>
                       <% if @is_captain %>
                         <div class="cr-sched-actions" style="margin-top: 14px;">
-                          <%= link_to edit_results_team_match_path(@team, match), class: "cr-chip-btn" do %>🏆 <%= match.match_lines.any? ? "Edit Results" : "Enter Results" %><% end %>
-                          <%= link_to edit_team_match_path(@team, match), class: "cr-chip-btn" do %>✏️ Edit Match<% end %>
+                          <%= link_to edit_results_team_match_path(@team, match), class: "cr-chip-btn" do %><%= match.match_lines.any? ? "Edit Results" : "Enter Results" %><% end %>
+                          <%= link_to edit_team_match_path(@team, match), class: "cr-chip-btn" do %>Edit Match<% end %>
                         </div>
                       <% end %>
                     </div>
@@ -370,12 +370,12 @@
             </div>
           <% elsif awaiting.empty? %>
             <div class="cr-empty" style="padding: 40px 20px; text-align: center; color: var(--cr-text-light);">
-              🎾 No results yet — they'll appear here after each match.
+              No results yet — they'll appear here after each match.
             </div>
           <% end %>
         </div>
 
-        <%# One shared pop-up for opponent rosters (opened from any "vs. Team 👥"). %>
+        <%# One shared pop-up for opponent rosters (opened from any "vs. Team"). %>
         <dialog id="cr-roster-dialog" class="cr-result-dialog" onclick="if (event.target === this) this.close()">
           <div class="cr-result-dialog-panel">
             <button type="button" class="cr-result-dialog-close" aria-label="Close"
@@ -412,7 +412,7 @@
               </div>
             <% else %>
               <div class="cr-empty" style="padding: 40px 20px; text-align: center; color: var(--cr-text-light);">
-                🏆 No <%= stage %> matches added yet.<% if @is_captain %><br>Tap <strong>+ Add Match</strong> and set the <strong>Stage</strong> to <strong><%= stage %></strong>.<% end %>
+                No <%= stage %> matches added yet.<% if @is_captain %><br>Tap <strong>+ Add Match</strong> and set the <strong>Stage</strong> to <strong><%= stage %></strong>.<% end %>
               </div>
             <% end %>
           </div>
@@ -454,11 +454,11 @@
                   <button type="button"
                           class="cr-avail-btn cr-avail-in <%= 'avail-btn-active avail-btn-locked' if current_status == 'in' %>"
                           data-availability-target="btnIn"
-                          data-action="click->availability#markIn">✅ In</button>
+                          data-action="click->availability#markIn">In</button>
                   <button type="button"
                           class="cr-avail-btn cr-avail-out <%= 'avail-btn-active avail-btn-locked' if current_status == 'out' %>"
                           data-availability-target="btnOut"
-                          data-action="click->availability#markOut">❌ Out</button>
+                          data-action="click->availability#markOut">Out</button>
                   <input type="text"
                          class="cr-avail-message"
                          placeholder="Add a note…"
@@ -507,7 +507,7 @@
                 <% if membership.captain? %>
                   <div class="cr-roster-role cr-roster-role-captain">Captain</div>
                 <% end %>
-                <%= link_to "📊 Matches",
+                <%= link_to "Matches",
                             tennis_record_match_history_url(membership.user),
                             target: "_blank", rel: "noopener",
                             class: "cr-roster-history-link",
@@ -555,7 +555,7 @@
                       <div class="cr-roster-role cr-roster-role-captain">Captain</div>
                     <% end %>
                     <% season_year = season.to_s[/\d{4}/]&.to_i || Date.current.year %>
-                    <%= link_to "📊 Matches",
+                    <%= link_to "Matches",
                                 tennis_record_match_history_url(membership.user, year: season_year),
                                 target: "_blank", rel: "noopener",
                                 class: "cr-roster-history-link",
@@ -580,8 +580,7 @@
              rel="noopener"
              class="cr-btn cr-btn-outline"
              style="padding: 8px 14px; font-size: 0.78rem; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; white-space: nowrap;">
-            <span style="font-size: 0.95rem;">📊</span>
-            <span>Open Full Stats Sheet</span>
+                        <span>Open Full Stats Sheet</span>
           </a>
           <% end %>
         </div>
@@ -593,7 +592,7 @@
 
         <% if charts[:is_empty] %>
           <p class="cr-chart-empty-note">
-            🎾 No match results yet. Bars below will fill in as results are entered after each match.
+            No match results yet. Bars below will fill in as results are entered after each match.
           </p>
         <% end %>
 
@@ -847,7 +846,7 @@
 
         <% if @is_captain %>
           <p style="margin: 10px 0 0;">
-            <%= link_to "✏️ Edit team info", edit_info_team_path(@team), class: "cr-chip-btn" %>
+            <%= link_to "Edit team info", edit_info_team_path(@team), class: "cr-chip-btn" %>
           </p>
         <% end %>
 
@@ -861,8 +860,8 @@
             * Calculation of game-winning percentage does not include defaulted matches.
           </p>
           <p style="margin: 4px 0 14px; display: flex; gap: 8px; flex-wrap: wrap; align-items: center;">
-            <%= link_to "⬆️ Upload USTA file", usta_upload_team_path(@team), class: "cr-chip-btn" %>
-            <% if @is_captain %><%= link_to "✏️ Edit opponent standings", edit_standings_team_path(@team), class: "cr-chip-btn" %><% end %>
+            <%= link_to "Upload USTA file", usta_upload_team_path(@team), class: "cr-chip-btn" %>
+            <% if @is_captain %><%= link_to "Edit opponent standings", edit_standings_team_path(@team), class: "cr-chip-btn" %><% end %>
             <span style="font-size: 0.75rem; color: var(--cr-text-light);">
               <% if @team.usta_synced_at %>USTA's numbers as of <%= @team.usta_synced_at.in_time_zone("Eastern Time (US & Canada)").strftime("%-m/%-d %-l:%M %p") %>.<% else %>Upload TennisLink's Team Summary (Send To Excel) to fill in the flight.<% end %>
             </span>
@@ -1028,7 +1027,7 @@
 
         <% if @wins == 0 && @losses == 0 && @division_teams.none? { |dt| dt.wins > 0 || dt.losses > 0 } %>
           <div style="text-align: center; padding: 16px 8px; color: var(--cr-text-light); font-size: 0.82rem;">
-            🎾 Standings will fill in here as match results are entered.
+            Standings will fill in here as match results are entered.
           </div>
         <% end %>
       </section>
@@ -1038,7 +1037,7 @@
         <% can_edit_clubs = Club.editable_by?(current_user, @team.league_label) %>
         <section class="cr-section" id="clubs">
           <div class="cr-clubs-head">
-            <h2 class="cr-section-title">📍 <%= @team.league_label %> Club Locations</h2>
+            <h2 class="cr-section-title"><%= @team.league_label %> Club Locations</h2>
             <% if can_edit_clubs %>
               <%= link_to "+ Add a club", new_club_path(league: @team.league_label, team_id: @team.id), class: "cr-chip-btn" %>
             <% end %>
@@ -1056,7 +1055,7 @@
                     <% end %>
                   </div>
                   <% if can_edit_clubs %>
-                    <%= link_to "✏️ Edit", edit_club_path(club, team_id: @team.id), class: "cr-chip-btn" %>
+                    <%= link_to "Edit", edit_club_path(club, team_id: @team.id), class: "cr-chip-btn" %>
                   <% end %>
                 </li>
               <% end %>
@@ -1080,7 +1079,7 @@
 
           <%# ── Playoff Path ── %>
           <div style="background: var(--cr-white); border: 1px solid var(--cr-border); border-radius: 10px; padding: 16px; margin-bottom: 28px;">
-            <div style="font-size: 0.75rem; font-weight: 700; color: var(--cr-text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">🏆 Playoff Path</div>
+            <div style="font-size: 0.75rem; font-weight: 700; color: var(--cr-text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">Playoff Path</div>
             <p style="font-size: 0.8rem; color: var(--cr-text-light); margin-bottom: 10px;">
               Won your flight? Move the team up. This shows a banner everyone sees, and new matches default to this stage.
               <% if @team.in_playoffs? %><br><strong>Currently: <%= @team.playoff_level %>.</strong><% else %><br>Currently: Regular Season.<% end %>
@@ -1123,7 +1122,7 @@
                         data-share-url="<%= join_url %>"
                         onclick="crShare(this)"
                         style="white-space: nowrap; flex-shrink: 0;">
-                  <span class="cr-share-label">📤 Send</span>
+                  <span class="cr-share-label">Send</span>
                 </button>
               </div>
             </div>
@@ -1280,7 +1279,7 @@
             <% end %>
           <% else %>
             <div style="text-align: center; padding: 30px 20px; color: var(--cr-text-light); font-size: 0.85rem; margin-top: 24px; background: var(--cr-white); border-radius: 10px; border: 1px solid var(--cr-border);">
-              📊 Player analytics will appear here after match results are entered.
+              Player analytics will appear here after match results are entered.
               <div style="margin-top: 6px;">Use "Enter Results" after each match to track who played where.</div>
             </div>
           <% end %>

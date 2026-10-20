@@ -5626,3 +5626,20 @@ button.cr-cal-btn.cr-share-icon:hover { border-color: var(--cr-gold); color: var
 .cr-scorecard-form { display: flex; gap: 8px; margin: 10px 0 4px; }
 .cr-scorecard-form input { flex: 1 1 auto; min-width: 0; padding: 8px 12px; border: 1px solid var(--cr-border); border-radius: 8px; font: inherit; font-size: 0.85rem; }
 .cr-scorecard-form .cr-btn { flex-shrink: 0; white-space: nowrap; }
+
+/* ── Line icons (replaced emoji, Oct 2026) ── */
+.cr-icon { display: inline-block; vertical-align: -0.15em; flex-shrink: 0; }
+.cr-bnav-icon { display: inline-flex; color: rgba(255, 255, 255, 0.72); filter: none; }
+.cr-bnav-active .cr-bnav-icon { color: var(--cr-gold); transform: none; }
+.cr-venue-pin { color: var(--cr-teal-deep); line-height: 1.2; }
+.cr-sheet-tr-link { color: var(--cr-text-light); margin-left: 3px; }
+.cr-sheet-tr-link:hover { color: var(--cr-teal-deep); }
+.cr-opp-link-icon { color: var(--cr-text-light); margin-left: 2px; }
+.cr-awaiting-alert-icon { color: #b7791f; display: inline-flex; }
+.cr-playoff-trophy { color: var(--cr-gold); display: inline-flex; }
+.cr-password-toggle { font-size: 0.75rem; font-weight: 600; color: var(--cr-text-muted); }
+/* Availability dots on the captain view (were emoji). */
+.dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; vertical-align: middle; }
+.dot-in { background: #22c55e; }
+.dot-out { background: #ef4444; }
+.dot-none { background: #fff; border: 1.5px solid #cbd5e1; }

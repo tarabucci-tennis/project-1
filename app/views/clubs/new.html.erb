@@ -4,7 +4,7 @@
   <%= link_to "← Back", back_path, class: "cr-back-link" %>
   <section class="cr-rp-card">
     <div class="cr-rp-card-head">
-      <h2 class="cr-rp-card-title">📍 Add a <%= @club.league %> club</h2>
+      <h2 class="cr-rp-card-title">Add a <%= @club.league %> club</h2>
     </div>
     <%= render "form", club: @club, url: clubs_path, method: :post %>
   </section>

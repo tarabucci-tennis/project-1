@@ -17,7 +17,7 @@ class RatingsHiddenTest < ActionDispatch::IntegrationTest
     get ratings_upload_path
     assert_redirected_to teams_path
     get teams_path
-    assert_no_match "📈 Ratings", response.body
+    assert_select "a[href=?]", ratings_path, count: 0
   end
 
   test "admins still can" do

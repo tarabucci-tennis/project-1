@@ -46,8 +46,8 @@
               <% end %>
             </div>
             <div class="match-card-counts" data-availability-target="counts">
-              <span class="count-in"><%= counts[:in] %> ✅</span> ·
-              <span class="count-out"><%= counts[:out] %> ❌</span> ·
+              <span class="count-in"><%= counts[:in] %> in</span> ·
+              <span class="count-out"><%= counts[:out] %> out</span> ·
               <span class="count-pending"><%= counts[:no_response] %> ?</span>
             </div>
           </div>
@@ -57,13 +57,13 @@
                     class="avail-btn avail-btn-in <%= 'avail-btn-active' if current_status == 'in' %>"
                     data-availability-target="btnIn"
                     data-action="click->availability#markIn">
-              ✅ I'm In
+              I'm In
             </button>
             <button type="button"
                     class="avail-btn avail-btn-out <%= 'avail-btn-active' if current_status == 'out' %>"
                     data-availability-target="btnOut"
                     data-action="click->availability#markOut">
-              ❌ I'm Out
+              I'm Out
             </button>
             <div class="avail-message-wrap">
               <input type="text"
