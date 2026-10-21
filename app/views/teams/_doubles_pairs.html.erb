@@ -1,0 +1,49 @@
+<%# Doubles Pairs: every pair that has played together for this team (from
+    scored lines), and on USTA teams the strongest pairs that haven't yet.
+    Local: dp (DoublesPairs). %>
+<% pairs = dp.pairs %>
+<div class="cr-dp">
+  <div class="cr-dp-head">
+    <h3 class="cr-chart-section-title">Doubles Pairs</h3>
+    <p class="cr-dp-note">
+      <% if dp.fixed_partners? %>
+        Partners stay together all season; a <strong>Sub</strong> pairing is a one-off when someone filled in.
+      <% else %>
+        Every pair that has played together for this team, most matches first. "All teams" counts every Court Report team they've partnered on.
+      <% end %>
+    </p>
+  </div>
+
+  <% if pairs.empty? %>
+    <p class="cr-dp-empty">No doubles results with both partners yet. Pairs appear here as line scores are entered or imported.</p>
+  <% else %>
+    <% shown = 8 %>
+    <div class="cr-dp-list">
+      <%= render partial: "teams/doubles_pair_row", collection: pairs.first(shown), as: :p, locals: { dp: dp } %>
+    </div>
+    <% if pairs.size > shown %>
+      <details class="cr-dp-more">
+        <summary>See all <%= pairs.size %> pairs · <%= pairs.size - shown %> more</summary>
+        <div class="cr-dp-list"><%= render partial: "teams/doubles_pair_row", collection: pairs.drop(shown), as: :p, locals: { dp: dp } %></div>
+      </details>
+    <% end %>
+  <% end %>
+
+  <% if dp.ideas.any? %>
+    <div class="cr-dp-head" style="margin-top: 22px;">
+      <h3 class="cr-chart-section-title">Haven't Paired Yet</h3>
+      <p class="cr-dp-note">The strongest roster pairs with no matches together, by combined USTA rating. On paper only.</p>
+    </div>
+    <div class="cr-dp-list cr-dp-list-ideas">
+      <% dp.ideas.each do |idea| %>
+        <div class="cr-dp-row">
+          <div class="cr-dp-main">
+            <div class="cr-dp-names"><% idea.players.each_with_index do |u, i| %><%= link_to u.name, player_path(u), class: "cr-dp-name" %><%= " & " if i.zero? %><% end %></div>
+            <div class="cr-dp-sub"><%= idea.players.map { |u| format("%.1f", u.ntrp_rating) }.join(" + ") %></div>
+          </div>
+          <div class="cr-dp-stats"><div class="cr-dp-record"><%= format("%.1f", idea.combined) %></div><div class="cr-dp-count">combined</div></div>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+</div>

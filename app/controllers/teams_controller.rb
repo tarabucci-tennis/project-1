@@ -131,6 +131,7 @@ class TeamsController < ApplicationController
     @wins             = @team.matches.where(result: "win").count
     @losses           = @team.matches.where(result: "loss").count
     @division_teams   = @team.division_teams.ranked
+    @doubles_pairs    = DoublesPairs.new(@team)
     # Opponent name => its standings row, so schedule/results can open that
     # team's roster pop-up (only teams whose league site we can read).
     @division_by_name = @division_teams.select { |dt| dt.source_url.present? }

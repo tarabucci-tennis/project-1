@@ -5644,3 +5644,29 @@ button.cr-cal-btn.cr-share-icon:hover { border-color: var(--cr-gold); color: var
 .dot-out { background: #ef4444; }
 .dot-none { background: #fff; border: 1.5px solid #cbd5e1; }
 .cr-sc-sub { color: var(--cr-text-muted); font-size: 0.9rem; margin: 6px 0 10px; }
+
+/* ── Doubles Pairs (team page, Player Stats tab) ── */
+.cr-dp { margin-top: 28px; }
+.cr-dp-head { margin-bottom: 10px; }
+.cr-dp-note { color: var(--cr-text-muted); font-size: 0.84rem; line-height: 1.45; margin-top: 4px; }
+.cr-dp-empty { color: var(--cr-text-muted); font-size: 0.88rem; padding: 14px 16px; background: var(--cr-white); border: 1px dashed var(--cr-border); border-radius: 12px; }
+.cr-dp-list { background: var(--cr-white); border: 1px solid var(--cr-border); border-radius: 14px; overflow: hidden; }
+.cr-dp-list-ideas { border-style: dashed; }
+.cr-dp-row { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 13px 16px; border-bottom: 1px solid var(--cr-border); }
+.cr-dp-row:last-child { border-bottom: none; }
+.cr-dp-main { min-width: 0; }
+.cr-dp-names { font-weight: 700; font-size: 0.95rem; color: var(--cr-text); line-height: 1.35; }
+.cr-dp-name { color: var(--cr-text); text-decoration: none; }
+.cr-dp-name:hover { color: var(--cr-teal-deep); text-decoration: underline; }
+.cr-dp-sub { color: var(--cr-text-muted); font-size: 0.8rem; margin-top: 3px; }
+.cr-dp-stats { text-align: right; flex-shrink: 0; }
+.cr-dp-record { font-size: 1.25rem; font-weight: 800; color: var(--cr-text); line-height: 1.1; font-variant-numeric: tabular-nums; }
+.cr-dp-count { color: var(--cr-text-muted); font-size: 0.74rem; margin-top: 2px; white-space: nowrap; }
+.cr-dp-tag { display: inline-block; margin-left: 6px; padding: 1px 8px; border-radius: 999px; font-size: 0.66rem; font-weight: 700; letter-spacing: 0.4px; text-transform: uppercase; vertical-align: 2px; }
+.cr-dp-tag-regular { background: var(--cr-teal-tint); color: var(--cr-teal-deep); }
+.cr-dp-tag-sub { background: #fdecc8; color: #7a4b00; }
+.cr-dp-more { margin-top: 8px; }
+.cr-dp-more > summary { cursor: pointer; color: var(--cr-teal-deep); font-weight: 600; font-size: 0.86rem; padding: 6px 2px; list-style: none; }
+.cr-dp-more[open] > summary { margin-bottom: 8px; }
+@media (min-width: 900px) { .cr-dp { max-width: 720px; } }
+.cr-nowrap { white-space: nowrap; }

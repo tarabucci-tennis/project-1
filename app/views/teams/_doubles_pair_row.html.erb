@@ -1,0 +1,22 @@
+<%# One pair row. Locals: p (DoublesPairs::Pair), dp (DoublesPairs). %>
+<% court, court_n = p.usual_court %>
+<div class="cr-dp-row">
+  <div class="cr-dp-main">
+    <div class="cr-dp-names">
+      <% p.players.each_with_index do |u, i| %><%= link_to u.name, player_path(u), class: "cr-dp-name" %><%= " & " if i.zero? %><% end %>
+      <% if dp.fixed_partners? %>
+        <% if dp.regular?(p) %><span class="cr-dp-tag cr-dp-tag-regular">Regular</span><% else %><span class="cr-dp-tag cr-dp-tag-sub">Sub</span><% end %>
+      <% end %>
+    </div>
+    <div class="cr-dp-sub">
+      <%= court_n == p.together ? court : "usually #{court}" %> · <span class="cr-nowrap">last <%= p.last_played.strftime("%b %-d") %></span>
+    </div>
+  </div>
+  <div class="cr-dp-stats">
+    <div class="cr-dp-record"><%= p.wins %>–<%= p.losses %></div>
+    <div class="cr-dp-count"><%= pluralize(p.together, "match") %> together</div>
+    <% if p.all_together > p.together %>
+      <div class="cr-dp-count">all teams <%= p.all_wins %>–<%= p.all_losses %></div>
+    <% end %>
+  </div>
+</div>
