@@ -89,6 +89,7 @@ body{
 }
 .cr-logo-name span{color:var(--accent);}
 .cr-logo-name{line-height:1;}
+.cr-ball-svg{display:block;}
 .cr-logo-your{display:block;font-size:max(.36em,9px);letter-spacing:.5em;color:rgba(255,255,255,.7);margin:0 0 2px 1px;}
 .cr-header-actions{
   display:flex;
@@ -318,7 +319,7 @@ body{
 <header class="cr-header">
   <div class="cr-header-inner">
     <a href="/" class="cr-logo">
-      <div class="cr-logo-mark"><span class="cr-logo-ball">🎾</span></div>
+      <div class="cr-logo-mark"><span class="cr-logo-ball"><svg class="cr-ball-svg" viewBox="0 0 100 100" width="1em" height="1em" aria-hidden="true"><defs><radialGradient id="crBall" cx=".38" cy=".32" r=".75"><stop offset="0" stop-color="#eaff70"/><stop offset="1" stop-color="#a6c832"/></radialGradient></defs><circle cx="50" cy="50" r="46" fill="url(#crBall)"/><path d="M14 22 Q42 50 14 78" stroke="#fff" stroke-width="5" fill="none" stroke-linecap="round"/><path d="M86 22 Q58 50 86 78" stroke="#fff" stroke-width="5" fill="none" stroke-linecap="round"/></svg></span></div>
       <div class="cr-logo-name"><small class="cr-logo-your">YOUR</small>COURT <span>REPORT</span></div>
     </a>
   </div>
