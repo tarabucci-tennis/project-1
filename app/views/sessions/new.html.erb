@@ -16,40 +16,6 @@
     </div>
   </div>
 
-  <%# ── Features ── %>
-  <div class="cr-landing-features">
-    <div class="cr-landing-feature">
-      <div class="cr-landing-feature-icon">📅</div>
-      <div class="cr-landing-feature-title">See Your Week</div>
-      <div class="cr-landing-feature-text">All your matches across every team and league, at a glance</div>
-    </div>
-    <div class="cr-landing-feature">
-      <div class="cr-landing-feature-icon">✋</div>
-      <div class="cr-landing-feature-title">Set Availability</div>
-      <div class="cr-landing-feature-text">Tell your captain if you're in or out, instantly</div>
-    </div>
-    <div class="cr-landing-feature">
-      <div class="cr-landing-feature-icon">🎾</div>
-      <div class="cr-landing-feature-title">Book Friendlies</div>
-      <div class="cr-landing-feature-text">Share one link, friends add their names, and Court Report makes a fair lineup</div>
-    </div>
-    <div class="cr-landing-feature">
-      <div class="cr-landing-feature-icon">📈</div>
-      <div class="cr-landing-feature-title">Player Ratings</div>
-      <div class="cr-landing-feature-text">USTA match history: partners, opponents and scores</div>
-    </div>
-    <div class="cr-landing-feature">
-      <div class="cr-landing-feature-icon">📊</div>
-      <div class="cr-landing-feature-title">Track Your Stats</div>
-      <div class="cr-landing-feature-text">Win %, doubles partners, line history — all automatic</div>
-    </div>
-    <div class="cr-landing-feature">
-      <div class="cr-landing-feature-icon">👑</div>
-      <div class="cr-landing-feature-title">Captain Tools</div>
-      <div class="cr-landing-feature-text">Set lineups, track who's available, enter results</div>
-    </div>
-  </div>
-
   <%# ── Sign in card ── %>
   <div class="cr-landing-signin">
     <div class="cr-login-card">
@@ -90,6 +56,52 @@
         New here?
         <%= link_to "Create an account", signup_path, style: "color: var(--cr-gold); font-weight: 600;" %>
       </p>
+    </div>
+  </div>
+
+  <%# ── Features ── %>
+  <div class="cr-landing-features">
+    <div class="cr-landing-feature">
+      <div class="cr-landing-feature-head">
+        <span class="cr-landing-feature-icon"><%= icon(:calendar, size: 20) %></span>
+        <span class="cr-landing-feature-title">See Your Week</span>
+      </div>
+      <div class="cr-landing-feature-text">All your matches across every team and league, at a glance</div>
+    </div>
+    <div class="cr-landing-feature">
+      <div class="cr-landing-feature-head">
+        <span class="cr-landing-feature-icon"><%= icon(:check, size: 20) %></span>
+        <span class="cr-landing-feature-title">Set Availability</span>
+      </div>
+      <div class="cr-landing-feature-text">Tell your captain if you're in or out, instantly</div>
+    </div>
+    <div class="cr-landing-feature">
+      <div class="cr-landing-feature-head">
+        <span class="cr-landing-feature-icon"><%= icon(:ball, size: 20) %></span>
+        <span class="cr-landing-feature-title">Book Friendlies</span>
+      </div>
+      <div class="cr-landing-feature-text">Share one link, friends add their names, and Court Report makes a fair lineup</div>
+    </div>
+    <div class="cr-landing-feature">
+      <div class="cr-landing-feature-head">
+        <span class="cr-landing-feature-icon"><%= icon(:trend, size: 20) %></span>
+        <span class="cr-landing-feature-title">Player Ratings</span>
+      </div>
+      <div class="cr-landing-feature-text">USTA match history: partners, opponents and scores</div>
+    </div>
+    <div class="cr-landing-feature">
+      <div class="cr-landing-feature-head">
+        <span class="cr-landing-feature-icon"><%= icon(:chart, size: 20) %></span>
+        <span class="cr-landing-feature-title">Track Your Stats</span>
+      </div>
+      <div class="cr-landing-feature-text">Win %, doubles partners, line history — all automatic</div>
+    </div>
+    <div class="cr-landing-feature">
+      <div class="cr-landing-feature-head">
+        <span class="cr-landing-feature-icon"><%= icon(:lineups, size: 20) %></span>
+        <span class="cr-landing-feature-title">Captain Tools</span>
+      </div>
+      <div class="cr-landing-feature-text">Set lineups, track who's available, enter results</div>
     </div>
   </div>
 

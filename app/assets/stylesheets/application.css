@@ -2590,34 +2590,36 @@ button.cr-header-pill {
 .cr-landing-features {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 16px;
-  margin-bottom: 48px;
+  gap: 12px;
+  max-width: 880px;
+  margin: 0 auto 40px;
 }
 
 .cr-landing-feature {
-  text-align: center;
-  padding: 24px 16px;
+  text-align: left;
+  padding: 14px 16px;
   background: var(--cr-white);
   border: 1px solid var(--cr-border);
   border-radius: 12px;
-  transition: border-color 0.2s, box-shadow 0.2s;
 }
 
-.cr-landing-feature:hover {
-  border-color: var(--cr-gold);
-  box-shadow: 0 4px 12px rgba(201, 162, 74, 0.1);
+.cr-landing-feature-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
 }
 
 .cr-landing-feature-icon {
-  font-size: 1.8rem;
-  margin-bottom: 10px;
+  display: inline-flex;
+  flex-shrink: 0;
+  color: var(--cr-gold);
 }
 
 .cr-landing-feature-title {
   font-size: 0.9rem;
   font-weight: 700;
   color: var(--cr-text);
-  margin-bottom: 6px;
 }
 
 .cr-landing-feature-text {
@@ -2629,7 +2631,7 @@ button.cr-header-pill {
 .cr-landing-signin {
   display: flex;
   justify-content: center;
-  margin-bottom: 48px;
+  margin-bottom: 32px;
 }
 
 .cr-landing-signin .cr-login-card {
@@ -2646,8 +2648,14 @@ button.cr-header-pill {
 }
 
 @media (max-width: 720px) {
+  .cr-landing { padding: 0 16px; }
+  .cr-landing-hero { padding: 28px 4px 20px; }
   .cr-landing-headline { font-size: 2rem; }
-  .cr-landing-features { grid-template-columns: repeat(2, 1fr); }
+  .cr-landing-tagline { font-size: 0.92rem; margin-top: 10px; }
+  .cr-landing-signin { margin-bottom: 24px; }
+  .cr-landing-features { grid-template-columns: 1fr; gap: 8px; margin-bottom: 28px; }
+  .cr-landing-feature { padding: 12px 14px; }
+  .cr-landing-signin .cr-login-card { padding: 24px 20px; }
 }
 
 /* ========================================================
@@ -4936,8 +4944,7 @@ body.cr-ctx-lineups-edit { background: var(--cr-navy-page); }
 
 /* Sign-in landing */
 body.cr-ctx-sessions-new .cr-landing-headline { color: var(--cr-white); }
-body.cr-ctx-sessions-new .cr-landing-tagline,
-body.cr-ctx-sessions-new .cr-login-sub { color: rgba(255, 255, 255, 0.65); }
+body.cr-ctx-sessions-new .cr-landing-tagline { color: rgba(255, 255, 255, 0.65); }
 /* The feature cards have a white background, so their title/text must keep
    their dark default colors — an earlier white override made them invisible. */
 body.cr-ctx-sessions-new .cr-landing-footer,
