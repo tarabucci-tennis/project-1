@@ -239,6 +239,15 @@ a { color: inherit; text-decoration: none; }
 
 .cr-brand-gold { color: var(--cr-gold); }
 
+/* Small "YOUR" sitting above COURT REPORT (matches yourcourtreport.com). */
+.cr-brand-your {
+  display: block;
+  font-size: max(0.36em, 9px);
+  letter-spacing: 0.5em;
+  color: rgba(255, 255, 255, 0.7);
+  margin: 0 0 2px 1px;
+}
+
 .cr-header-right {
   display: flex;
   align-items: center;
