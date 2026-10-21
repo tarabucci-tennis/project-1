@@ -8,12 +8,9 @@
     <h1 class="cr-auth-title">Sign Up</h1>
     <p class="cr-auth-sub">Create your free Court Report account</p>
     <ul class="cr-auth-perks" aria-label="What you get">
-      <li>All your teams' schedules</li>
-      <li>Availability</li>
-      <li>Lineups</li>
-      <li>Book friendlies</li>
-      <li>Player ratings</li>
-      <li>Stats</li>
+      <% [ "Schedules", "Availability", "Lineups", "Friendlies", "Ratings", "Stats" ].each do |perk| %>
+        <li><%= icon(:check, size: 16) %><%= perk %></li>
+      <% end %>
     </ul>
 
     <%= form_with url: signup_path, method: :post do |f| %>

@@ -4966,8 +4966,6 @@ body.cr-ctx-sessions-new .cr-landing-footer,
 body.cr-ctx-sessions-new .cr-admin-reset-label,
 body.cr-ctx-sessions-new .cr-admin-reset-note { color: rgba(255, 255, 255, 0.5); }
 
-/* Sign-up: just the on-canvas switch link (card stays light) */
-body.cr-ctx-registrations-new .cr-auth-switch { color: rgba(255, 255, 255, 0.7); }
 
 /* Players admin */
 body.cr-ctx-users-index .cr-page-title { color: var(--cr-text); }
@@ -5319,8 +5317,13 @@ body.cr-ctx-friendlies-new, body.cr-ctx-friendlies-show, body.cr-ctx-friendlies-
 .cr-fr-remove:hover { color: var(--cr-red); }
 .cr-dash-cal-item-friendly-link { text-decoration: none; display: block; }
 
-.cr-auth-perks { list-style: none; display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; margin: 0 0 18px; padding: 0; }
-.cr-auth-perks li { font-size: 0.74rem; font-weight: 600; color: var(--cr-text-muted); background: var(--cr-bg); border-radius: 999px; padding: 4px 10px; }
+/* Sign-up "what you get": an even 2 x 3 checklist with gold checks. */
+.cr-auth-perks {
+  list-style: none; display: grid; grid-template-columns: repeat(2, max-content);
+  justify-content: center; column-gap: 28px; row-gap: 8px; margin: 0 0 22px; padding: 0; text-align: left;
+}
+.cr-auth-perks li { display: flex; align-items: center; gap: 7px; font-size: 0.85rem; font-weight: 600; color: var(--cr-text); }
+.cr-auth-perks .cr-icon { color: var(--cr-gold); flex-shrink: 0; }
 .cr-fr-form input[type="number"] { padding: 10px 12px; border: 1px solid var(--cr-border); border-radius: 8px; font-size: 0.95rem; width: 120px; }
 .cr-fr-court-controls { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 10px; padding: 14px 18px; margin-bottom: 12px; color: var(--cr-text); }
 .cr-fr-court-btns { display: flex; gap: 8px; flex-wrap: wrap; }
