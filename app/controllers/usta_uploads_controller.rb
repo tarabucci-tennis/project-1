@@ -1,9 +1,11 @@
-# A captain (or co-captain, admin, or whoever added the team) uploads a TennisLink
-# "Team Summary", "Match Summary" or single-match "Scorecard" export (Send To Excel). We show a preview of what will
+# Any teammate uploads one match's TennisLink "Scorecard" export (Send To Excel);
+# captains (and co-captains, admins, whoever added the team) can also upload the
+# team-wide "Team Summary" / "Match Summary". We show a preview of what will
 # change, then save it with UstaTeamSummaryImport. The uploaded file is held
 # in the cache between the preview and the save, keyed by a random token.
 class UstaUploadsController < ApplicationController
   MAX_BYTES = 2.megabytes
+  CAPTAINS_ONLY = "Only captains can upload the Team Summary or Match Summary. Players can upload a match's Scorecard.".freeze
 
   before_action :require_login
   before_action :load_team
@@ -31,8 +33,11 @@ class UstaUploadsController < ApplicationController
       Rails.cache.write(cache_key(@token), html, expires_in: 30.minutes)
       @scorecard = scorecard
       @import = UstaScorecardImport.new(@team, scorecard)
+      @replaces_lines = scored?(@import.plan.match)
       return render :preview_scorecard
     end
+
+    return redirect_to(usta_upload_team_path(@team), alert: CAPTAINS_ONLY) unless captain_uploader?
 
     parsed = UstaTeamSummaryParser.parse(html, team_name: @team.name)
     unless parsed.summary_file? || parsed.match_summary?
@@ -63,6 +68,8 @@ class UstaUploadsController < ApplicationController
       return redirect_to team_path(@team), notice: "Scorecard saved: every line's players and scores are on the match."
     end
 
+    return redirect_to(usta_upload_team_path(@team), alert: CAPTAINS_ONLY) unless captain_uploader?
+
     UstaTeamSummaryImport.new(@team, UstaTeamSummaryParser.parse(html, team_name: @team.name)).apply!
     Rails.cache.delete(cache_key(params[:token].to_s))
     redirect_to team_path(@team, anchor: "standings"), notice: "USTA standings, scores and ratings updated."
@@ -74,11 +81,20 @@ class UstaUploadsController < ApplicationController
     @team = TennisTeam.find_by(id: params[:id])
     return redirect_to(teams_path, alert: "Team not found.") unless @team
 
-    # It changes match results, so it's captains (and admins / whoever added
-    # the team) only, like Enter Results.
-    unless @team.can_enter_results?(current_user) || @team.user_id == current_user.id
-      redirect_to team_path(@team), alert: "Only the team's captains can upload USTA results."
+    @captain_uploader = captain_uploader?
+    unless @captain_uploader || @team.team_memberships.exists?(user: current_user)
+      redirect_to teams_path, alert: "You're not a member of that team."
     end
+  end
+
+  # Anyone on the team can re-upload (e.g. to fix a wrong file); the preview
+  # warns when the match already has line scores.
+  def scored?(match)
+    match.present? && match.match_lines.where.not(result: [ nil, "" ]).exists?
+  end
+
+  def captain_uploader?
+    @team.can_enter_results?(current_user) || @team.user_id == current_user.id
   end
 
   def cache_key(token)

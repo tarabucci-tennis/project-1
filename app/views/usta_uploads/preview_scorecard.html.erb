@@ -6,6 +6,9 @@
 
   <h1 class="cr-section-title" style="margin-top: 8px;">Check before saving</h1>
 
+  <% if @replaces_lines %>
+    <div class="cr-awaiting-alert" style="margin-top: 12px;"><div class="cr-awaiting-alert-text"><strong>Scores are already added for this match.</strong> Are you sure you want to replace them with this scorecard?</div></div>
+  <% end %>
   <% plan.warnings.each do |w| %>
     <div class="cr-awaiting-alert" style="margin-top: 12px;"><div class="cr-awaiting-alert-text"><%= w %></div></div>
   <% end %>
@@ -43,7 +46,10 @@
     <%= form_with url: usta_upload_confirm_team_path(@team), method: :post, data: { turbo: false } do %>
       <input type="hidden" name="token" value="<%= @token %>">
       <div style="display: flex; gap: 10px; margin-top: 18px;">
-        <button type="submit" class="cr-btn cr-btn-gold" style="padding: 10px 22px;">Save to <%= @team.name %></button>
+        <button type="submit" class="cr-btn cr-btn-gold" style="padding: 10px 22px;"
+                <% if @replaces_lines %>onclick="return confirm('Scores are already added for this match. Are you sure you want to replace them?')"<% end %>>
+          <%= @replaces_lines ? "Replace scores" : "Save to #{@team.name}" %>
+        </button>
         <%= link_to "Cancel", team_path(@team), class: "cr-chip-btn" %>
       </div>
     <% end %>
