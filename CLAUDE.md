@@ -10,7 +10,9 @@
 - **Product name:** Court Report
 - **Production URL:** https://yourcourtreport.com (SSL via Thruster + Let's Encrypt)
 - **Droplet IP:** 146.190.112.29 (still works, but use the domain)
-- **Who it's for:** All racket sport players, captains, and coaches. Not just tennis — also pickleball, squash, padel, etc. (future). Not just USTA — any league.
+- **Who it's for:** Tennis players, captains, and coaches, in any league (not just USTA).
+- **Tennis first (Tara, Oct 21 2026):** focus on tennis only for now. Other racket sports (pickleball, squash,
+  padel) may come later, but the site must NOT mention them or say "every racket sport" until Tara decides.
 - **End goal:** Tara is building this for herself first, but wants to turn it into a real product that other people pay for.
 
 **Key people:**
