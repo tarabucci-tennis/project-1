@@ -5392,6 +5392,14 @@ body.cr-ctx-friendlies-index, body.cr-ctx-friendlies-edit, body.cr-ctx-friendlie
 .cr-fr-chip { display: inline-flex; align-items: center; min-height: 44px; padding: 8px 14px; border-radius: 10px; border: 2px solid var(--cr-black); background: #fff; color: var(--cr-black); font: inherit; font-size: 1rem; font-weight: 700; cursor: pointer; touch-action: manipulation; }
 span.cr-fr-chip { cursor: default; }
 .cr-fr-chip.is-picked { background: var(--cr-gold); border-color: var(--cr-gold); color: var(--cr-black); }
+/* Friendly lineup: partners match, each pair on the court in its own colour. */
+.cr-fr-pair-tone-0 .cr-fr-chip { border-color: #3b6fd8; background: #e8effc; color: #1e3a8a; }
+.cr-fr-pair-tone-1 .cr-fr-chip { border-color: #e5484d; background: #fdecec; color: #8f1d21; }
+.cr-fr-pair-tone-2 .cr-fr-chip { border-color: #2e9d5b; background: #e6f6ec; color: #14532d; }
+.cr-fr-pair-tone-3 .cr-fr-chip { border-color: #7c4dce; background: #f1ebfb; color: #4c1d95; }
+.cr-fr-pair-tone-4 .cr-fr-chip { border-color: #d97706; background: #fdf1e1; color: #7c3a03; }
+.cr-fr-pair-tone-5 .cr-fr-chip { border-color: #0f8f8f; background: #e0f5f5; color: #0b4f4f; }
+.cr-fr-pair .cr-fr-chip.is-picked { background: var(--cr-gold); border-color: var(--cr-gold); color: var(--cr-black); }
 .cr-fr-sitting { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding-top: 10px; border-top: 1px dashed var(--cr-border); }
 .cr-fr-sitting .cr-fr-court-label { flex-basis: 100%; margin-bottom: 0; }
 .cr-fr-chip-sit { border-style: dashed; }
