@@ -197,6 +197,42 @@ small to read precisely; everything else is captured.
 
 ---
 
+## Current Status (as of Oct 21, 2026 — PRs #219–#244)
+
+All squash-merged after green CI. Visual changes were checked in Playwright mocks at 360/390/1280px; Tara confirmed
+the live site looks right at the end of the session.
+
+**Shipped (recent highlights):**
+- **Scorecard uploads (#229, #242):** TennisLink match "Scorecard" (Send To Excel) fills every line. The result
+  pop-up shows "Upload Send To Excel file" when a USTA match has no lines. **Any teammate** can upload a match
+  Scorecard; Team/Match Summary uploads stay captain-only. Re-uploading over existing line scores warns
+  "Scores are already added… Are you sure you want to replace them?" (Tara chose warn, not block). The pasted
+  TennisLink scorecard-link feature was REMOVED (links can't be read: USTA login). `matches.scorecard_url` column remains.
+- **Doubles Pairs (#230)**, ROADMAP.md (investigation doc).
+- **Branding (#231–#241):** logo reads small "YOUR" above "COURT REPORT"; logo tile keeps the 🎾 emoji with its slow
+  bounce (Tara rejected a drawn SVG ball). Sign-in page: six small square feature tiles above the form; home page:
+  same short square tiles; both use coloured line icons on soft circles (`cr-tone-*`). Sign-up perks = 2×3 checklist.
+  Feature-card hover lift only with a mouse. "Tennis first" wording (no "every racket sport").
+- **Profiles (#235, #239):** city sits beside the name, never split; each player can add/edit/clear their own city
+  (`POST /profile/city`), optional.
+- **Friendlies (#243):** each pair's name chips share a colour (by court/side).
+- **Google Analytics (#244):** GA4 `G-0MP1TBSLQM`, production only, via `app/views/shared/_google_analytics.html.erb`
+  in the shared layout AND the standalone public home page. A script before Google's tag sets page_title
+  "Court Report" and a cleaned page_location (ids → `:id`, `/f|join|reset-password/…` → `:token`, no query) so no
+  names/emails reach Google; Turbo navigations send page_view on `turbo:load`. Tara turned off Enhanced measurement.
+
+**Decisions / open items:**
+- **Trademark:** "COURT REPORT" is a LIVE registered mark of The Tennis Channel (class 41, TV programs). Tara has a
+  "Name and Trademark Plan" doc and should consult a trademark lawyer before printing or filing. No rename yet;
+  backup names listed in that doc. Logo files (icon + light/dark full logo) were made in a session scratchpad, not
+  committed.
+- **Standings FORM column (pending Tara's pick A/B/C):** on computers the 104px Form column is too narrow for 5
+  dots and they overlap Next; on phones they're clipped. A = 3 dots phone/5 computer; B = one Record column with
+  W n / L n pills replacing W, L, Form; C = like A with soft rounded squares. Recommended B.
+- Tara's email: tara@yourcourtreport.com (text-only signature suggested).
+
+---
+
 ## Current Status (as of Oct 8, 2026 — PRs #173–#182)
 
 All squash-merged after green CI. **None viewed in a browser by Claude.**
