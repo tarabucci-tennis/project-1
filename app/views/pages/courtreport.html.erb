@@ -169,9 +169,12 @@ body{
   text-align:center;
   transition:transform .2s, box-shadow .2s;
 }
-.cr-feature:hover{
-  transform:translateY(-6px);
-  box-shadow:0 16px 40px rgba(6,15,30,.08);
+/* Lift only with a mouse: on phones a touch while scrolling leaves the card stuck raised. */
+@media (hover:hover) and (pointer:fine){
+  .cr-feature:hover{
+    transform:translateY(-6px);
+    box-shadow:0 16px 40px rgba(6,15,30,.08);
+  }
 }
 .cr-feature-icon{
   font-size:2.4rem;
