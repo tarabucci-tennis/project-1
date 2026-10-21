@@ -11,7 +11,11 @@ module ApplicationHelper
     user:    '<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>',
     pin:     '<path d="M12 21s-6-5.6-6-11a6 6 0 0 1 12 0c0 5.4-6 11-6 11z"/><circle cx="12" cy="10" r="2.2"/>',
     chart:   '<path d="M5 20V10M12 20V4M19 20v-7"/>',
-    alert:   '<path d="M12 4l9 16H3z"/><path d="M12 10v4M12 17.5v.01"/>'
+    alert:   '<path d="M12 4l9 16H3z"/><path d="M12 10v4M12 17.5v.01"/>',
+    calendar: '<rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 10h16M9 3v4M15 3v4"/>',
+    check:   '<circle cx="12" cy="12" r="8"/><path d="M8.5 12.5l2.5 2.5 4.5-5"/>',
+    ball:    '<circle cx="12" cy="12" r="8"/><path d="M7 5.8c2.4 3.4 2.4 9 0 12.4M17 5.8c-2.4 3.4-2.4 9 0 12.4"/>',
+    trend:   '<path d="M4 17l5-5 4 3 7-8"/><path d="M15 7h5v5"/>'
   }.freeze
 
   def icon(name, size: 18, css: nil)
