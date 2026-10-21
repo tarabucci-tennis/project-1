@@ -47,12 +47,16 @@
   </div>
 <% else %>
   <%# Only captains, co-captains and admins enter results (matches#update_results checks too). %>
-  <p class="cr-result-detail-empty">
-    <% if team.league_group == "USTA" %>
-      USTA's team files only include the team score, so each line's players and scores are added by hand.
-    <% else %>
+  <% if team.league_group == "USTA" %>
+    <%# Any teammate can upload the match's TennisLink scorecard (Send To Excel). %>
+    <div class="cr-result-detail-empty cr-upload-card">
+      <p>No line scores yet. Open this match's scorecard on TennisLink, tap <strong>Send To Excel</strong>, then upload the file here.</p>
+      <%= link_to "Upload Send To Excel file", usta_upload_team_path(team), class: "cr-btn cr-btn-gold cr-btn-compact" %>
+    </div>
+  <% else %>
+    <p class="cr-result-detail-empty">
       Line-by-line results haven't been entered yet.
-    <% end %>
-    <% if local_assigns[:can_enter_results] %><%= link_to "Enter them now →", edit_results_team_match_path(team, match), class: "cr-enter-results-link" %><% end %>
-  </p>
+      <% if local_assigns[:can_enter_results] %><%= link_to "Enter them now →", edit_results_team_match_path(team, match), class: "cr-enter-results-link" %><% end %>
+    </p>
+  <% end %>
 <% end %>

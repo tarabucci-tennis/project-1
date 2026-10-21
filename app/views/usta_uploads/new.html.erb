@@ -5,7 +5,11 @@
 
   <h1 class="cr-section-title" style="margin-top: 8px;">Upload USTA file</h1>
   <ol style="color: var(--cr-text-muted); font-size: 0.9rem; line-height: 1.6; margin: 0 0 18px 18px;">
-    <li>On <strong>tennislink.usta.com</strong>, sign in and open <strong><%= @team.name %></strong>'s <strong>Stats &amp; Standings</strong>, or one match's <strong>Scorecard</strong> (Match Summary → click the Match ID).</li>
+    <% if @captain_uploader %>
+      <li>On <strong>tennislink.usta.com</strong>, sign in and open <strong><%= @team.name %></strong>'s <strong>Stats &amp; Standings</strong>, or one match's <strong>Scorecard</strong> (Match Summary → click the Match ID).</li>
+    <% else %>
+      <li>On <strong>tennislink.usta.com</strong>, sign in and open the match's <strong>Scorecard</strong> (Match Summary → click the Match ID).</li>
+    <% end %>
     <li>Tap <strong>Send To Excel</strong> and save the file.</li>
     <li>Choose that file below. You'll see what will change <strong>before anything is saved</strong>.</li>
   </ol>
@@ -19,7 +23,9 @@
 
   <p style="font-size: 0.8rem; color: var(--cr-text-light); margin-top: 12px;">
     <strong>Scorecard</strong> fills in one match completely: every line's players, opponents, set scores and W/L.
+    <% if @captain_uploader %>
     <strong>Team Summary</strong> updates the flight standings, every match's team score and status, and players' official
     USTA ratings. <strong>Match Summary</strong> updates every match's team score and status.
+    <% end %>
   </p>
 </div>

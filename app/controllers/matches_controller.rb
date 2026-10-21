@@ -221,7 +221,7 @@ class MatchesController < ApplicationController
   end
 
   def match_params
-    params.require(:match).permit(:match_date, :match_time, :location, :opponent, :notes, :home_away, :playoff_level, :scorecard_url)
+    params.require(:match).permit(:match_date, :match_time, :location, :opponent, :notes, :home_away, :playoff_level)
   end
 
   def build_availability_map

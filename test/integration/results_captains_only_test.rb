@@ -15,7 +15,7 @@ class ResultsCaptainsOnlyTest < ActionDispatch::IntegrationTest
     post session_path, params: { email: user.email, password: "tennis-123" }
   end
 
-  test "a player can't open or save Enter Results, or upload USTA files" do
+  test "a player can't open or save Enter Results (but can open the scorecard upload)" do
     sign_in(@player)
     get edit_results_team_match_path(@team, @match)
     assert_redirected_to team_path(@team)
@@ -24,7 +24,7 @@ class ResultsCaptainsOnlyTest < ActionDispatch::IntegrationTest
     assert_nil @match.reload.result
 
     get usta_upload_team_path(@team)
-    assert_redirected_to team_path(@team)
+    assert_response :success
 
     get team_path(@team)
     assert_no_match "Enter them now", response.body

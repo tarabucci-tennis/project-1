@@ -5677,11 +5677,7 @@ button.cr-cal-btn.cr-share-icon:hover { border-color: var(--cr-gold); color: var
   .cr-av-row { grid-template-columns: auto minmax(0, 1fr) minmax(0, 360px); padding: 12px 18px; }
   .cr-av-actions { grid-column: auto; }
 }
-.cr-scorecard-actions { margin: 10px 0 4px; }
 /* Paste a match's official scorecard link right in the result pop-up. */
-.cr-scorecard-form { display: flex; gap: 8px; margin: 10px 0 4px; }
-.cr-scorecard-form input { flex: 1 1 auto; min-width: 0; padding: 8px 12px; border: 1px solid var(--cr-border); border-radius: 8px; font: inherit; font-size: 0.85rem; }
-.cr-scorecard-form .cr-btn { flex-shrink: 0; white-space: nowrap; }
 
 /* ── Line icons (replaced emoji, Oct 2026) ── */
 .cr-icon { display: inline-block; vertical-align: -0.15em; flex-shrink: 0; }
@@ -5726,3 +5722,8 @@ button.cr-cal-btn.cr-share-icon:hover { border-color: var(--cr-gold); color: var
 .cr-dp-more[open] > summary { margin-bottom: 8px; }
 @media (min-width: 900px) { .cr-dp { max-width: 720px; } }
 .cr-nowrap { white-space: nowrap; }
+
+/* Result pop-up: no line scores yet → upload the TennisLink scorecard file. */
+.cr-upload-card { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; }
+.cr-upload-card p { margin: 0; flex: 1 1 260px; }
+.cr-upload-card .cr-btn { flex-shrink: 0; white-space: nowrap; }
