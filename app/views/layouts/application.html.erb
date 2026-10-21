@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title><%= content_for(:title) || "Court Report" %></title>
+    <title><%= content_for(:title) || "Your Court Report" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="application-name" content="Court Report">
+    <meta name="application-name" content="Your Court Report">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
@@ -24,7 +24,7 @@
       <div class="cr-header-inner">
         <%= link_to (current_user ? teams_path : root_path), class: "cr-brand" do %>
           <span class="cr-brand-ball"><span class="cr-brand-ball-inner">🎾</span></span>
-          <span class="cr-brand-text">COURT <span class="cr-brand-gold">REPORT</span></span>
+          <span class="cr-brand-text"><span class="cr-brand-your">YOUR</span>COURT <span class="cr-brand-gold">REPORT</span></span>
         <% end %>
 
         <div class="cr-header-right">

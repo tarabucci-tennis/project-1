@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#060f1e">
-<title>Court Report · All Your Teams. One App.</title>
+<title>Your Court Report · All Your Teams. One App.</title>
 <%= csrf_meta_tags %>
 <%= csp_meta_tag %>
 <link rel="icon" href="/icon.png?v=3" type="image/png">
@@ -88,6 +88,8 @@ body{
   white-space:nowrap;
 }
 .cr-logo-name span{color:var(--accent);}
+.cr-logo-name{line-height:1;}
+.cr-logo-your{display:block;font-size:max(.36em,9px);letter-spacing:.5em;color:rgba(255,255,255,.7);margin:0 0 2px 1px;}
 .cr-header-actions{
   display:flex;
   align-items:center;
@@ -317,7 +319,7 @@ body{
   <div class="cr-header-inner">
     <a href="/" class="cr-logo">
       <div class="cr-logo-mark"><span class="cr-logo-ball">🎾</span></div>
-      <div class="cr-logo-name">COURT <span>REPORT</span></div>
+      <div class="cr-logo-name"><small class="cr-logo-your">YOUR</small>COURT <span>REPORT</span></div>
     </a>
   </div>
 </header>
@@ -399,7 +401,7 @@ body{
 </section>
 
 <footer class="cr-footer">
-  <strong>Court Report</strong> &nbsp;·&nbsp; Spring 2026 &nbsp;·&nbsp; Built for Players
+  <strong>Your Court Report</strong> &nbsp;·&nbsp; Spring 2026 &nbsp;·&nbsp; Built for Players
 </footer>
 
 </body>
