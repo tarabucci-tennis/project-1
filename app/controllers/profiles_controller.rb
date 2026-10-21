@@ -33,6 +33,14 @@ class ProfilesController < ApplicationController
     end
   end
 
+  # POST /profile/city — optional: the city shown next to your name.
+  # Blank removes it. Only ever your own (current_user).
+  def update_city
+    city = params[:city].to_s.squish.first(60)
+    current_user.update(location: city.presence)
+    redirect_to profile_path, notice: city.present? ? "Saved your city." : "Removed your city."
+  end
+
   # GET /players/:id — teammate's profile
   def player
     @user = User.find_by(id: params[:id])

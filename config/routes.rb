@@ -108,6 +108,7 @@ Rails.application.routes.draw do
 
   get "profile",      to: "profiles#show", as: :profile
   post "profile/deltri", to: "profiles#connect_deltri", as: :connect_deltri
+  post "profile/city",   to: "profiles#update_city",    as: :profile_city
   get "players/:id",  to: "profiles#player", as: :player
 
   # Stats test page (pulls from Google Sheets)
