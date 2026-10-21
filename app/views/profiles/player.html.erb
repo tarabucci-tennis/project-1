@@ -39,6 +39,18 @@
             </div>
           </div>
         </div>
+        <% if @is_self %>
+          <%# Optional: each player decides whether their city shows. %>
+          <details class="cr-pp-city-edit">
+            <summary><%= @user.location.present? ? "Edit city" : "Add your city (optional)" %></summary>
+            <%= form_with url: profile_city_path, method: :post, local: true, class: "cr-pp-city-form" do %>
+              <input type="text" name="city" value="<%= @user.location %>" maxlength="60"
+                     placeholder="e.g. Villanova, PA" class="cr-deltri-input" aria-label="Your city">
+              <button type="submit" class="cr-btn cr-btn-gold cr-deltri-btn">Save</button>
+            <% end %>
+            <p class="cr-pp-city-note">Leave it empty and save to hide your city.</p>
+          </details>
+        <% end %>
 
         <% if User::SHOW_COURT_REPORT_RATING %>
         <div class="cr-pp-row">
