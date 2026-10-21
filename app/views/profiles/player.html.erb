@@ -22,11 +22,15 @@
       <div class="cr-pp-left">
         <div class="cr-pp-row">
           <div>
+            <%# Name and city sit on one line; the city never splits ("Villanova, / PA"),
+                it moves under the name as a whole when the name is long. %>
             <div class="cr-pp-name">
-              <%= @user.name %><% if @user.location.present? %> <span class="cr-pp-loc">(<%= @user.location %>)</span><% end %>
-              <% if @is_self %><span class="cr-pp-you">(you)</span><% end %>
+              <span class="cr-pp-name-text"><%= @user.name %></span>
+              <% if @user.location.present? %><span class="cr-pp-loc"><%= @user.location %></span><% end %>
             </div>
-            <div class="cr-pp-sub"><%= [ gender, section ].compact.join(" · ").presence || "USTA" %></div>
+            <div class="cr-pp-sub">
+              <% if @is_self %><span class="cr-pp-you">You</span> · <% end %><%= [ gender, section ].compact.join(" · ").presence || "USTA" %>
+            </div>
           </div>
           <div class="cr-pp-metric">
             <div class="cr-pp-metric-val"><%= @user.ntrp_rating.present? ? @user.ntrp_rating : "—" %></div>
