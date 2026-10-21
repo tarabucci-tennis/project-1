@@ -171,7 +171,8 @@
                 <div class="cr-fr-match">
                   <% [ [ 0, 1 ], [ 2, 3 ] ].each_with_index do |pair, side| %>
                     <% if side == 1 %><span class="cr-fr-vs">vs</span><% end %>
-                    <div class="cr-fr-pair">
+                    <%# Partners share a colour; each pair on a set's courts gets its own. %>
+                    <div class="cr-fr-pair cr-fr-pair-tone-<%= (ci * 2 + side) % 6 %>">
                       <% pair.each do |pi| %>
                         <% if swappable %>
                           <button type="button" class="cr-fr-chip" data-friendly-swap-target="chip"
