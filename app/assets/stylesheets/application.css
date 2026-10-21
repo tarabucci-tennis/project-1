@@ -2591,7 +2591,7 @@ button.cr-header-pill {
   grid-template-columns: repeat(3, 1fr);
   gap: 12px;
   max-width: 880px;
-  margin: 0 auto 40px;
+  margin: 0 auto 32px;
 }
 
 .cr-landing-feature {
@@ -2648,12 +2648,16 @@ button.cr-header-pill {
 
 @media (max-width: 720px) {
   .cr-landing { padding: 0 16px; }
-  .cr-landing-hero { padding: 28px 4px 20px; }
+  .cr-landing-hero { padding: 4px 4px 18px; }
   .cr-landing-headline { font-size: 2rem; }
   .cr-landing-tagline { font-size: 0.92rem; margin-top: 10px; }
   .cr-landing-signin { margin-bottom: 24px; }
-  .cr-landing-features { grid-template-columns: 1fr; gap: 8px; margin-bottom: 28px; }
-  .cr-landing-feature { padding: 12px 14px; }
+  /* Phones: six small tiles (icon + title) so the sign-in box stays on screen. */
+  .cr-landing-features { grid-template-columns: repeat(2, 1fr); gap: 8px; margin-bottom: 20px; }
+  .cr-landing-feature { padding: 10px 8px; }
+  .cr-landing-feature-head { justify-content: center; gap: 6px; margin-bottom: 0; }
+  .cr-landing-feature-title { font-size: 0.82rem; white-space: nowrap; }
+  .cr-landing-feature-text { display: none; }
   .cr-landing-signin .cr-login-card { padding: 24px 20px; }
 }
 
