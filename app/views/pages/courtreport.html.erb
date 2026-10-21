@@ -152,47 +152,38 @@ body{
 }
 .cr-cta-row .cr-btn-pill{padding:14px 32px;font-size:.88rem;}
 
-/* Features */
+/* Features: six square tiles with gold line icons (matches the sign-in page). */
 .cr-features{
-  max-width:1200px;
+  max-width:1000px;
   margin:0 auto;
-  padding:20px 24px 80px;
+  padding:10px 24px 70px;
   display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:18px;
+  grid-template-columns:repeat(6,1fr);
+  gap:12px;
 }
 .cr-feature{
+  aspect-ratio:1/1;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  text-align:center;
+  padding:20px 10px 12px;
   background:var(--surface);
   border:1px solid var(--border);
-  border-radius:18px;
-  padding:32px 24px;
-  text-align:center;
-  transition:transform .2s, box-shadow .2s;
+  border-radius:14px;
+  min-width:0;
 }
-/* Lift only with a mouse: on phones a touch while scrolling leaves the card stuck raised. */
-@media (hover:hover) and (pointer:fine){
-  .cr-feature:hover{
-    transform:translateY(-6px);
-    box-shadow:0 16px 40px rgba(6,15,30,.08);
-  }
-}
-.cr-feature-icon{
-  font-size:2.4rem;
-  margin-bottom:14px;
-  display:block;
-}
+.cr-feature-icon{color:var(--accent);display:inline-flex;margin-bottom:8px;}
+.cr-feature-icon svg{width:26px;height:26px;}
 .cr-feature h3{
   font-family:'Bebas Neue',sans-serif;
-  font-size:1.3rem;
-  letter-spacing:2px;
+  font-size:1.05rem;
+  letter-spacing:1.2px;
+  line-height:1.1;
   color:var(--text);
-  margin-bottom:8px;
+  margin:0 0 6px;
 }
-.cr-feature p{
-  font-size:.85rem;
-  line-height:1.5;
-  color:var(--sub);
-}
+.cr-feature p{font-size:.72rem;line-height:1.35;color:var(--sub);margin:0;}
 
 /* How it works */
 .cr-how{
@@ -298,11 +289,12 @@ body{
   .cr-hero h1{font-size:2.6rem;letter-spacing:1.5px;}
   .cr-hero p{font-size:.95rem;margin:20px auto 28px;}
   .cr-cta-row .cr-btn-pill{padding:12px 22px;font-size:.8rem;}
-  .cr-features{grid-template-columns:repeat(2,1fr);gap:12px;padding:10px 16px 60px;}
-  .cr-feature{padding:24px 16px;}
-  .cr-feature-icon{font-size:2rem;}
-  .cr-feature h3{font-size:1.1rem;}
-  .cr-feature p{font-size:.78rem;}
+  /* Phones: 3 x 2 short tiles, icon + one-line name. */
+  .cr-features{grid-template-columns:repeat(3,1fr);gap:8px;padding:6px 16px 44px;}
+  .cr-feature{aspect-ratio:auto;height:96px;justify-content:center;padding:8px 6px;}
+  .cr-feature-icon svg{width:24px;height:24px;}
+  .cr-feature h3{font-size:.95rem;letter-spacing:1px;white-space:nowrap;}
+  .cr-feature p{display:none;}
   .cr-how{padding:50px 20px;}
   .cr-how h2{font-size:1.8rem;}
   .cr-steps{grid-template-columns:1fr;gap:20px;text-align:center;}
@@ -310,6 +302,7 @@ body{
   .cr-final-cta h2{font-size:1.9rem;}
 }
 @media(max-width:380px){
+  .cr-feature h3{font-size:.85rem;letter-spacing:.6px;}
   .cr-logo-name{font-size:1.2rem;}
   .cr-hero h1{font-size:2.2rem;}
   .cr-btn-pill{font-size:.62rem;padding:5px 10px;}
@@ -341,34 +334,34 @@ body{
 
 <section class="cr-features">
   <div class="cr-feature">
-    <span class="cr-feature-icon">📅</span>
+    <span class="cr-feature-icon"><%= icon(:calendar, size: 26) %></span>
     <h3>See Your Week</h3>
-    <p>Every match from every team, in one calendar. Know where to be and when.</p>
+    <p>Every match from every team, in one calendar.</p>
   </div>
   <div class="cr-feature">
-    <span class="cr-feature-icon">✋</span>
+    <span class="cr-feature-icon"><%= icon(:check, size: 26) %></span>
     <h3>Set Availability</h3>
-    <p>Tell your captain you're in or out with one tap. No more lost texts.</p>
+    <p>Tell your captain you're in or out with one tap.</p>
   </div>
   <div class="cr-feature">
-    <span class="cr-feature-icon">📝</span>
-    <h3>Lineup Confirmations</h3>
-    <p>Captains post the lineup. Players get an email and confirm in one click.</p>
+    <span class="cr-feature-icon"><%= icon(:lineups, size: 26) %></span>
+    <h3>Lineups</h3>
+    <p>Captains post the lineup; players confirm in one click.</p>
   </div>
   <div class="cr-feature">
-    <span class="cr-feature-icon">🎾</span>
+    <span class="cr-feature-icon"><%= icon(:ball, size: 26) %></span>
     <h3>Book Friendlies</h3>
-    <p>Pick a time and share one link. Friends add their names, Court Report works out the courts and makes a fair round-robin lineup, and it lands on your calendar.</p>
+    <p>Share one link and get a fair round-robin lineup.</p>
   </div>
   <div class="cr-feature">
-    <span class="cr-feature-icon">📈</span>
+    <span class="cr-feature-icon"><%= icon(:trend, size: 26) %></span>
     <h3>Player Ratings</h3>
-    <p>Every player's USTA match history (partners, opponents, scores) in one clean page.</p>
+    <p>Every player's USTA match history in one page.</p>
   </div>
   <div class="cr-feature">
-    <span class="cr-feature-icon">📊</span>
+    <span class="cr-feature-icon"><%= icon(:chart, size: 26) %></span>
     <h3>Track Your Stats</h3>
-    <p>Win %, doubles partners, line history — tracked automatically as you play.</p>
+    <p>Win %, doubles partners and line history, automatic.</p>
   </div>
 </section>
 
