@@ -2586,45 +2586,55 @@ button.cr-header-pill {
   line-height: 1.6;
 }
 
+/* Six square tiles: icon on top, name, short description (computers). */
 .cr-landing-features {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(6, 1fr);
   gap: 12px;
-  max-width: 880px;
+  max-width: 960px;
   margin: 0 auto 32px;
 }
 
 .cr-landing-feature {
-  text-align: left;
-  padding: 14px 16px;
+  aspect-ratio: 1 / 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  text-align: center;
+  padding: 20px 10px 12px;
   background: var(--cr-white);
   border: 1px solid var(--cr-border);
   border-radius: 12px;
+  min-width: 0;
 }
 
 .cr-landing-feature-head {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 8px;
-  margin-bottom: 4px;
+  gap: 6px;
+  margin-bottom: 6px;
 }
 
 .cr-landing-feature-icon {
   display: inline-flex;
-  flex-shrink: 0;
   color: var(--cr-gold);
 }
 
+.cr-landing-feature-icon svg { width: 26px; height: 26px; }
+
 .cr-landing-feature-title {
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   font-weight: 700;
+  line-height: 1.2;
   color: var(--cr-text);
 }
 
 .cr-landing-feature-text {
-  font-size: 0.8rem;
+  font-size: 0.72rem;
   color: var(--cr-text-muted);
-  line-height: 1.4;
+  line-height: 1.35;
 }
 
 .cr-landing-signin {
@@ -2652,11 +2662,13 @@ button.cr-header-pill {
   .cr-landing-headline { font-size: 2rem; }
   .cr-landing-tagline { font-size: 0.92rem; margin-top: 10px; }
   .cr-landing-signin { margin-bottom: 24px; }
-  /* Phones: six small tiles (icon + title) so the sign-in box stays on screen. */
-  .cr-landing-features { grid-template-columns: repeat(2, 1fr); gap: 8px; margin-bottom: 20px; }
-  .cr-landing-feature { padding: 10px 8px; }
-  .cr-landing-feature-head { justify-content: center; gap: 6px; margin-bottom: 0; }
-  .cr-landing-feature-title { font-size: 0.82rem; white-space: nowrap; }
+  /* Phones: 3 x 2 small squares (icon + name) so the sign-in box stays on screen. */
+  .cr-landing-features { grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 20px; }
+  .cr-landing-feature { padding: 18px 6px 8px; }
+  .cr-landing-feature-head { margin-bottom: 0; }
+  .cr-landing-feature-icon svg { width: 24px; height: 24px; }
+  /* Every name on two lines so the six tiles look the same. */
+  .cr-landing-feature-title { font-size: 0.8rem; max-width: 6em; }
   .cr-landing-feature-text { display: none; }
   .cr-landing-signin .cr-login-card { padding: 24px 20px; }
 }
