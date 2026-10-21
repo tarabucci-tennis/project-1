@@ -1,0 +1,37 @@
+<%# Google Analytics (GA4), production only. The privacy script runs first so
+    Google never receives names, emails or private codes: every page is
+    reported as "Court Report" with a cleaned path (/players/12 -> /players/:id,
+    no ?query). Turbo page changes are counted on turbo:load. The Google tag
+    below it is exactly as copied from Google Analytics. %>
+<% if Rails.env.production? %>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function crGaPath(url) {
+    var path = new URL(url, location.origin).pathname
+      .replace(/\/(f|join|reset-password)\/[^\/]+/g, "/$1/:token")
+      .replace(/\/\d+(?=\/|$)/g, "/:id");
+    return location.origin + path;
+  }
+  (function () {
+    function gtag(){dataLayer.push(arguments);}
+    gtag("set", { page_title: "Court Report", page_location: crGaPath(location.href),
+                  page_referrer: document.referrer ? crGaPath(document.referrer) : "",
+                  allow_google_signals: false, allow_ad_personalization_signals: false });
+    var first = true;
+    document.addEventListener("turbo:load", function () {
+      if (first) { first = false; return; }
+      gtag("set", { page_title: "Court Report", page_location: crGaPath(location.href) });
+      gtag("event", "page_view");
+    });
+  })();
+</script>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-0MP1TBSLQM"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-0MP1TBSLQM');
+</script>
+<% end %>
