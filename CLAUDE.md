@@ -1013,7 +1013,8 @@ Reconstructed from git log. Tara has built this app over ~6 sessions.
 | Droplet Name | `project-1` |
 | Public IP | `146.190.112.29` |
 | Region | `sfo3` |
-| Size | `s-1vcpu-1gb` |
+| Size | 4 GB / 2 vCPUs / 80 GB (resized from `s-1vcpu-1gb`; ~$24/mo) |
+| Backups | DigitalOcean automated **daily** backups, kept 7 days, $7.20/mo (enabled Oct 22 2026; window 00:00–04:00 UTC) |
 | Image | `docker-20-04` (Ubuntu 22.04 + Docker pre-installed) |
 | Firewall ID | `b6a72fad-0194-438c-9603-589490137155` |
 | Firewall | Ports 22 (SSH), 80 (HTTP), and 443 (HTTPS) open |
@@ -1084,6 +1085,9 @@ cd /root/app && git fetch origin && git checkout main && git reset --hard origin
 
 SQLite databases are persisted via a Docker volume at `/root/storage`.
 Thruster SSL certs are persisted via a Docker volume at `/root/thruster-storage`.
+
+**No PHP on the droplet** (checked Oct 22 2026 via Web Console: `php -v` → not found; only container is `project-1`).
+DigitalOcean's PHP CVE emails (e.g. CVE-2026-109618/109619) don't apply. Never run the `apt install php…` lines the shell suggests.
 
 **Note:** After merging the Session 6 branch, you will also need to run database updates on the server: `docker exec project-1 bin/rails db:migrate db:seed`
 
