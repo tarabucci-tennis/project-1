@@ -1,0 +1,90 @@
+<% content_for :title, (@query.present? ? "Search: #{@query} · Court Report" : "Search · Court Report") %>
+
+<div class="cr-page">
+  <h1 class="cr-page-title">Search</h1>
+
+  <%= form_with url: search_path, method: :get, class: "cr-search-page-form", data: { turbo: false } do %>
+    <input type="search" name="q" value="<%= @query %>" class="cr-search-page-input"
+           placeholder="Players, teams, opponents, clubs, friendlies, pages…" aria-label="Search" autofocus>
+    <button type="submit" class="cr-btn cr-btn-gold">Search</button>
+  <% end %>
+
+  <% if @query.blank? %>
+    <p class="cr-search-hint">Search for a player, a team, an opponent or club you play, a friendly, or a page like Standings or Calendar.</p>
+  <% elsif @total.zero? %>
+    <p class="cr-search-hint">Nothing matches “<%= @query %>”. Try part of a name, like a first name or one word of a team.</p>
+  <% else %>
+    <% section = ->(title, count) { "<h2 class=\"cr-search-head\">#{ERB::Util.h(title)} <span>#{count}</span></h2>".html_safe } %>
+
+    <% if @pages.any? %>
+      <%= section.("Pages", @pages.size) %>
+      <div class="cr-search-list">
+        <% @pages.each do |p| %>
+          <%= link_to p[:url], class: "cr-search-row" do %>
+            <span class="cr-search-main"><%= p[:title] %></span><span class="cr-search-sub"><%= p[:note] %></span>
+          <% end %>
+        <% end %>
+      </div>
+    <% end %>
+
+    <% if @my_teams.any? %>
+      <%= section.("Your teams", @my_teams.size) %>
+      <div class="cr-search-list">
+        <% @my_teams.each do |t| %>
+          <div class="cr-search-row cr-search-row-split">
+            <%= link_to team_path(t), class: "cr-search-rowlink" do %>
+              <span class="cr-search-main"><%= t.name %></span><span class="cr-search-sub"><%= t.league_label %> · <%= t.record_label %></span>
+            <% end %>
+            <%= link_to "Standings", team_path(t, tab: "standings"), class: "cr-search-chip" %>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+
+    <% if @players.any? %>
+      <%= section.("Players", @players.size) %>
+      <div class="cr-search-list">
+        <% @players.each do |u| %>
+          <%= link_to player_path(u), class: "cr-search-row" do %>
+            <span class="cr-search-main"><%= u.name %></span><% if u.ntrp_rating %><span class="cr-search-sub">NTRP <%= u.ntrp_rating %></span><% end %>
+          <% end %>
+        <% end %>
+      </div>
+    <% end %>
+
+    <% if @matches.any? %>
+      <%= section.("Matches", @matches.size) %>
+      <div class="cr-search-list">
+        <% @matches.each do |m| %>
+          <%= link_to team_match_path(m.tennis_team, m), class: "cr-search-row" do %>
+            <span class="cr-search-main"><%= m.tennis_team.name %> vs. <%= m.opponent %></span>
+            <span class="cr-search-sub"><%= m.match_date.strftime("%a %b %-d, %Y") %><% if m.location.present? %> · <%= m.location %><% end %></span>
+          <% end %>
+        <% end %>
+      </div>
+    <% end %>
+
+    <% if @friendlies.any? %>
+      <%= section.("Friendlies", @friendlies.size) %>
+      <div class="cr-search-list">
+        <% @friendlies.each do |f| %>
+          <%= link_to friendly_path(f), class: "cr-search-row" do %>
+            <span class="cr-search-main"><%= f.title.presence || "Friendly" %></span>
+            <span class="cr-search-sub"><%= f.starts_at.strftime("%a %b %-d") %> · <%= f.time_label %><% if f.location.present? %> · <%= f.location %><% end %></span>
+          <% end %>
+        <% end %>
+      </div>
+    <% end %>
+
+    <% if @other_teams.any? %>
+      <%= section.("Other teams in your leagues", @other_teams.size) %>
+      <div class="cr-search-list">
+        <% @other_teams.each do |t| %>
+          <%= link_to lookup_path(q: t.name), class: "cr-search-row" do %>
+            <span class="cr-search-main"><%= t.name %></span><span class="cr-search-sub"><%= t.league_label %></span>
+          <% end %>
+        <% end %>
+      </div>
+    <% end %>
+  <% end %>
+</div>

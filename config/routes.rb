@@ -120,6 +120,7 @@ Rails.application.routes.draw do
 
   # Players & Teams lookup — search/browse everyone in YOUR leagues
   get "lookup", to: "lookups#index", as: :lookup
+  get "search", to: "searches#index", as: :search
 
   # Root: sends logged-in users to My Teams; logged-out users to login
   root "pages#home"

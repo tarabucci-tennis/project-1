@@ -44,4 +44,24 @@ class LineupCarryoverTest < ActionDispatch::IntegrationTest
     assert_select "option[selected][value=?]", @players[2].id.to_s
     assert_match "Last week: Ann Player", response.body
   end
+
+  test "a captain can write in a sub who isn't on the roster, and pick them again later" do
+    get edit_team_match_lineup_path(@team, @next)
+    assert_match "+ Write in a sub…", response.body
+    slot = @next.reload.lineup.lineup_slots.order(:id).second
+    patch team_match_lineup_path(@team, @next), params: { publish: "false", slots: {
+      slot.id => { user_id: "sub", sub_name: "  Sally   Sub ", confirmed: "1" }
+    } }
+    sub = slot.reload.user
+    assert_equal "Sally Sub", sub.name
+    assert_not @team.members.include?(sub), "subs aren't added to the roster"
+
+    patch team_match_lineup_path(@team, @next), params: { publish: "false", slots: {
+      slot.id => { user_id: "sub", sub_name: "sally sub", confirmed: "1" }
+    } }
+    assert_equal sub, slot.reload.user, "the same name reuses the same person"
+
+    get edit_team_match_lineup_path(@team, @next)
+    assert_select "optgroup[label=Subs] option[value=?]", sub.id.to_s, text: "Sally Sub (sub)"
+  end
 end

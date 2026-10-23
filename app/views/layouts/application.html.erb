@@ -30,7 +30,14 @@
 
         <div class="cr-header-right">
           <% if current_user %>
-            <%= link_to "My Teams", teams_path, class: "cr-header-pill cr-header-my-teams" %>
+            <%# Search anything on the site (players, teams, matches, friendlies, pages).
+                Phones get a 🔍 button that opens the search page instead. %>
+            <%= form_with url: search_path, method: :get, class: "cr-header-search", data: { turbo: false } do %>
+              <input type="search" name="q" placeholder="Search…" aria-label="Search the site" value="<%= params[:q] if controller_name == "searches" %>">
+            <% end %>
+            <%= link_to search_path, class: "cr-header-search-icon", "aria-label": "Search" do %>
+              <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M16.5 16.5 21 21" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
+            <% end %>
             <% if current_user.admin? %>
               <%# Founder menu: hover (mouse) or tap your name. %>
               <div class="cr-menu cr-hover-menu cr-user-menu" data-controller="menu" data-menu-hover-value="true">
