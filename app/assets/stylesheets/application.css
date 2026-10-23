@@ -4665,7 +4665,14 @@ button.cr-header-pill {
 .cr-dash-cal-hover-body { display: flex; flex-direction: column; gap: 6px; }
 .cr-dash-cal-hover .cr-dash-cal-item { padding: 7px 10px; }
 .cr-dash-cal-hover .cr-dash-cal-item-title { font-size: 0.84rem; }
-.cr-dash-cal-hover .cr-dash-cal-item-view { display: none; }
+.cr-dash-cal-hover .cr-dash-cal-item-view { margin-top: 3px; }
+/* Calendar items: the whole card opens the match (a stretched link); the
+   team name on top is its own link to the team page. */
+.cr-dash-cal-item { position: relative; }
+a.cr-dash-cal-item-title { display: block; color: var(--cr-text); text-decoration: none; }
+.cr-dash-cal-item-stretch::after { content: ""; position: absolute; inset: 0; border-radius: 8px; }
+.cr-dash-cal-item-teamlink { position: relative; z-index: 1; text-decoration: none; }
+.cr-dash-cal-item-teamlink:hover { color: var(--cr-teal-deep); text-decoration: underline; }
 
 @media (max-width: 640px) {
   .cr-dash-cal-full { padding: 10px 6px 12px; }

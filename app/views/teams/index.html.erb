@@ -190,10 +190,10 @@
                      date: day.strftime("%Y-%m-%d"),
                      label: day.strftime("%A, %B %-d, %Y"),
                      matches: matches_today.map { |m|
-                       { opponent: m.opponent, time: m.match_time, location: m.location, team: m.tennis_team.name, url: team_match_path(m.tennis_team, m) }
+                       { opponent: m.opponent, time: m.match_time, location: m.location, team: m.tennis_team.name, team_url: team_path(m.tennis_team), url: team_match_path(m.tennis_team, m) }
                      },
                      events: events_today.map { |e|
-                       { title: e.title, kind: e.display_kind, kind_label: e.kind_label, time: e.start_time, location: e.location, team: e.tennis_team.name, id: e.id, team_id: e.tennis_team_id }
+                       { title: e.title, kind: e.display_kind, kind_label: e.kind_label, time: e.start_time, location: e.location, team: e.tennis_team.name, team_url: team_path(e.tennis_team), id: e.id, team_id: e.tennis_team_id }
                      },
                      friendlies: friendlies_today.map { |f|
                        { title: f.title, time: f.time_label, location: f.location,

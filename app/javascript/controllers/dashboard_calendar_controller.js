@@ -69,7 +69,9 @@ export default class extends Controller {
     const btn = event.currentTarget
     const payload = this._payload(btn)
     const count = (payload.matches || []).length + (payload.events || []).length + (payload.friendlies || []).length
-    if (count === 0) return this._hideHover()
+    // An empty day only starts the normal close delay, so brushing past it on
+    // the way into the pop-up doesn't snap the pop-up shut.
+    if (count === 0) return this.hoverOut()
     clearTimeout(this._showTimer)
     this._showTimer = setTimeout(() => this._showHover(btn, payload), 150)
   }
@@ -89,12 +91,14 @@ export default class extends Controller {
     this.hoverTitleTarget.textContent = payload.label || ""
     this.hoverBodyTarget.innerHTML = this._renderItems(payload)
     box.hidden = false
-    // Place it beside the day (right side, or left if there's no room), inside the calendar.
+    // Place it beside the day (right side, or left if there's no room), inside the
+    // calendar. It slightly overlaps the day so the mouse goes straight into it
+    // without crossing a neighbouring day.
     const wrap = box.offsetParent.getBoundingClientRect()
     const cell = btn.getBoundingClientRect()
-    const gap = 8
-    let left = cell.right - wrap.left + gap
-    if (cell.right + gap + box.offsetWidth > window.innerWidth - 8) left = cell.left - wrap.left - gap - box.offsetWidth
+    const overlap = 6
+    let left = cell.right - wrap.left - overlap
+    if (cell.right - overlap + box.offsetWidth > window.innerWidth - 8) left = cell.left - wrap.left + overlap - box.offsetWidth
     left = Math.max(0, left)
     let top = cell.top - wrap.top
     const maxTop = window.innerHeight - wrap.top - box.offsetHeight - 8
@@ -170,17 +174,18 @@ export default class extends Controller {
     matches.forEach((m) => {
       const time = m.time ? `<div class="cr-dash-cal-item-meta">${escapeHtml(m.time)}</div>` : ""
       const loc  = m.location ? `<div class="cr-dash-cal-item-meta">${escapeHtml(m.location)}</div>` : ""
+      // The whole card opens the match; the team name is its own link.
       parts.push(`
-        <a class="cr-dash-cal-item cr-dash-cal-item-match" href="${escapeHtml(m.url)}">
+        <div class="cr-dash-cal-item cr-dash-cal-item-match">
           <div class="cr-dash-cal-item-row">
             <span class="cr-dash-cal-item-kind">Match</span>
-            <span class="cr-dash-cal-item-team">${escapeHtml(m.team || "")}</span>
+            ${teamLink(m)}
           </div>
-          <div class="cr-dash-cal-item-title">vs. ${escapeHtml(m.opponent || "TBD")}</div>
+          <a class="cr-dash-cal-item-title cr-dash-cal-item-stretch" href="${escapeHtml(m.url)}">vs. ${escapeHtml(m.opponent || "TBD")}</a>
           ${time}
           ${loc}
           <div class="cr-dash-cal-item-view">View match details →</div>
-        </a>
+        </div>
       `)
     })
 
@@ -191,7 +196,7 @@ export default class extends Controller {
         <div class="cr-dash-cal-item cr-dash-cal-item-${escapeHtml(e.kind || "event")}">
           <div class="cr-dash-cal-item-row">
             <span class="cr-dash-cal-item-kind">${escapeHtml(e.kind_label || "Event")}</span>
-            <span class="cr-dash-cal-item-team">${escapeHtml(e.team || "")}</span>
+            ${teamLink(e)}
           </div>
           <div class="cr-dash-cal-item-title">${escapeHtml(e.title || "")}</div>
           ${time}
@@ -218,6 +223,13 @@ export default class extends Controller {
 
     return parts.join("")
   }
+}
+
+// The team name in a calendar item, linking to the team page when known.
+function teamLink(item) {
+  if (!item.team) return ""
+  if (!item.team_url) return `<span class="cr-dash-cal-item-team">${escapeHtml(item.team)}</span>`
+  return `<a class="cr-dash-cal-item-team cr-dash-cal-item-teamlink" href="${escapeHtml(item.team_url)}">${escapeHtml(item.team)}</a>`
 }
 
 function escapeHtml(str) {
