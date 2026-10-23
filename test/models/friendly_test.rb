@@ -118,6 +118,16 @@ class FriendlyTest < ActiveSupport::TestCase
     assert_equal "9:00 AM", @friendly.time_label
   end
 
+  test "date and start time from the form become starts_at" do
+    @friendly.update!(start_date: "2026-11-07", start_time: "07:45", end_time: "09:15")
+    assert_equal Time.zone.local(2026, 11, 7, 7, 45), @friendly.reload.starts_at
+    assert_equal Time.zone.local(2026, 11, 7, 9, 15), @friendly.ends_at
+    assert_equal "2026-11-07", @friendly.start_date
+    assert_equal "07:45", @friendly.start_time
+
+    assert_not @friendly.update(start_date: "", start_time: "07:45"), "a date is required"
+  end
+
   test "court length: 1½ hours, 2 hours, other or not sure" do
     start = Time.zone.local(2026, 11, 7, 9, 0)
     @friendly.update!(starts_at: start, duration: "90")

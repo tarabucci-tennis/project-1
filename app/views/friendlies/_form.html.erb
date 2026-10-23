@@ -6,29 +6,33 @@
   <label>Name <span>(optional)</span>
     <%= f.text_field :title, placeholder: "e.g. Saturday morning mixer" %>
   </label>
-  <label>Date &amp; start time
-    <%= f.datetime_local_field :starts_at, required: true %>
-  </label>
-  <fieldset class="cr-fr-length">
-    <legend>How long is the court booked?</legend>
-    <div class="cr-fr-length-opts">
-      <% [ [ "90", "1½ hours" ], [ "120", "2 hours" ], [ "custom", "Other" ], [ "none", "Not sure" ] ].each do |val, label| %>
-        <label class="cr-fr-length-opt">
-          <%= f.radio_button :duration, val, checked: friendly.duration == val,
-                onchange: "this.form.querySelector('.cr-fr-end-time').hidden = this.value !== 'custom'" %>
-          <span><%= label %></span>
-        </label>
-      <% end %>
-    </div>
-    <label class="cr-fr-end-time" <%= "hidden" unless friendly.duration == "custom" %>>End time
-      <%= f.time_field :end_time, value: friendly.end_time, step: 300 %>
+  <div class="cr-fr-when" data-controller="friendly-time">
+    <label class="cr-fr-date">Date
+      <%= f.date_field :start_date, value: friendly.start_date, required: true %>
     </label>
-  </fieldset>
+    <label>Start time
+      <%= f.select :start_time, friendly_time_options(friendly.start_time), {},
+            required: true, data: { friendly_time_target: "start", action: "friendly-time#startChanged" } %>
+    </label>
+    <label>End time
+      <%= f.select :end_time, friendly_time_options(friendly.end_time), { include_blank: "Not sure" },
+            data: { friendly_time_target: "end", action: "friendly-time#refresh" } %>
+    </label>
+    <div class="cr-fr-length">
+      <span class="cr-fr-length-title">How long is the court booked?</span>
+      <div class="cr-fr-length-opts">
+        <% [ [ 90, "90 min" ], [ 120, "2 hr" ], [ 0, "Not sure" ] ].each do |mins, label| %>
+          <button type="button" class="cr-fr-length-chip" data-friendly-time-target="chip"
+                  data-minutes="<%= mins %>" data-action="friendly-time#pick"><%= label %></button>
+        <% end %>
+      </div>
+    </div>
+  </div>
   <label>Where <span>(optional: club, street, town, separated by commas)</span>
     <%= f.text_field :location, placeholder: "e.g. Aronimink Golf Club, 3600 St Davids Rd, Newtown Square, PA" %>
   </label>
   <label>Sets to plan
-    <%= f.select :sets_count, [ [ "1 set", 1 ], [ "2 sets", 2 ], [ "3 sets (if we can squeeze in a third)", 3 ] ] %>
+    <%= f.select :sets_count, [ [ "1 set", 1 ], [ "2 sets", 2 ], [ "3 sets (if time allows)", 3 ] ] %>
   </label>
   <label>Note <span>(optional)</span>
     <%= f.text_area :notes, rows: 2, placeholder: "e.g. 4.0 level, bring a can of balls" %>
