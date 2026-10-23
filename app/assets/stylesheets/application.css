@@ -5644,11 +5644,14 @@ button.cr-cal-btn.cr-share-icon:hover { border-color: var(--cr-gold); color: var
    list (date | opponent & time | location | status) instead of leaving a
    wide empty gap before the status. Phones keep the stacked layout. */
 @media (min-width: 900px) {
-  .cr-team-page { max-width: 880px; }
+  .cr-team-page { max-width: 760px; }
+  /* Fixed address and status columns: the opponent sits right next to the
+     address, every row's address and status line up, and no wide gap opens. */
   .cr-sched-row.cr-has-venue {
-    grid-template-columns: auto minmax(0, 1.15fr) minmax(0, 1fr) auto;
-    column-gap: 20px;
+    grid-template-columns: 50px minmax(0, 1fr) 220px 132px;
+    column-gap: 18px;
   }
+  .cr-sched-row.cr-has-venue > .cr-sched-right { justify-content: flex-end; }
   .cr-sched-row.cr-has-venue > .cr-sched-date { grid-row: 1; }
   .cr-sched-row.cr-has-venue > .cr-sched-main { grid-column: 2; grid-row: 1; }
   .cr-sched-row.cr-has-venue > .cr-venue { grid-column: 3; grid-row: 1; margin-top: 0; }
