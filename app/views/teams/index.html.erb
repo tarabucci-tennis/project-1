@@ -14,6 +14,35 @@
       <% end %>
       <%= link_to "Book a friendly", new_friendly_path, class: "cr-btn cr-btn-outline cr-btn-compact" %>
 
+      <div class="cr-menu cr-fr-menu" data-controller="menu">
+        <button type="button" class="cr-btn cr-btn-outline cr-btn-compact cr-menu-trigger"
+                data-action="menu#toggle" data-menu-target="trigger"
+                aria-haspopup="true" aria-expanded="false">
+          My friendlies <span class="cr-menu-caret" aria-hidden="true">▾</span>
+        </button>
+        <div class="cr-menu-panel" data-menu-target="panel" role="menu">
+          <% menu_friendlies = @upcoming_friendlies.first(8) %>
+          <% if menu_friendlies.any? %>
+            <% menu_friendlies.each do |f| %>
+              <div class="cr-fr-menu-row">
+                <%= link_to friendly_path(f), class: "cr-menu-item cr-fr-menu-open", role: "menuitem" do %>
+                  <span class="cr-fr-menu-when"><%= f.starts_at.strftime("%a %-m/%-d") %> · <%= f.time_label %></span>
+                  <span class="cr-fr-menu-name"><%= f.title.presence || "Friendly" %></span>
+                <% end %>
+                <% if f.organizer_id == current_user.id || current_user.admin? %>
+                  <%= link_to "Edit", edit_friendly_path(f), class: "cr-fr-menu-edit", role: "menuitem",
+                        "aria-label": "Edit #{f.title.presence || 'friendly'}" %>
+                <% end %>
+              </div>
+            <% end %>
+          <% else %>
+            <div class="cr-menu-note cr-fr-menu-empty">No upcoming friendlies.</div>
+          <% end %>
+          <div class="cr-menu-divider"></div>
+          <%= link_to "All my friendlies →", friendlies_path, class: "cr-menu-item", role: "menuitem" %>
+        </div>
+      </div>
+
       <div class="cr-menu" data-controller="menu">
         <button type="button" class="cr-btn cr-btn-gold cr-btn-compact cr-menu-trigger"
                 data-action="menu#toggle" data-menu-target="trigger"
