@@ -1356,7 +1356,7 @@ button.cr-header-pill {
    ======================================================== */
 
 .cr-admin-page {
-  max-width: 1000px;
+  max-width: 880px;
   margin: 0 auto;
 }
 
@@ -3299,6 +3299,11 @@ button.cr-header-pill {
   margin-top: 8px;
 }
 
+/* Single-column pages (forms, Set Lineup, Enter Results, uploads...) use a
+   readable width instead of stretching across a wide screen (Tara: no
+   hollow areas). */
+.cr-page { max-width: 760px; margin: 0 auto; }
+
 /* Lineup builder (captain page) */
 .cr-lineup-grid {
   display: flex;
@@ -3318,6 +3323,16 @@ button.cr-header-pill {
   font-weight: 700;
   color: var(--cr-text);
   margin-bottom: 10px;
+}
+/* Each player slot: the dropdown with "Already confirmed" beside it (stacked
+   on phones), and last week's player for that line underneath. */
+.cr-lineup-slot-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 12px; align-items: center; margin-bottom: 10px; }
+.cr-lineup-slot-row .cr-select { width: 100%; }
+.cr-lineup-confirmed-toggle { display: inline-flex; align-items: center; gap: 6px; font-size: 0.82rem; color: var(--cr-text-muted); white-space: nowrap; }
+.cr-lineup-last-week { grid-column: 1 / -1; font-size: 0.74rem; color: var(--cr-text-light); }
+.cr-lineup-carry { font-size: 0.85rem; color: var(--cr-text); margin: 0 0 14px; padding: 10px 14px; background: rgba(23, 180, 166, 0.10); border-left: 3px solid var(--cr-teal); border-radius: 6px; }
+@media (max-width: 480px) {
+  .cr-lineup-slot-row { grid-template-columns: 1fr; }
 }
 
 /* ========================================================

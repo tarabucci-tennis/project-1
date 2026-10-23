@@ -31,6 +31,13 @@
     Pick a player for each line. Leave <strong>Already confirmed</strong> checked if you've already gotten a yes via text or in person — those players won't get an email asking them to confirm again. Uncheck it only if you want the app to email the player and ask.
   </p>
 
+  <% if @prefill.any? %>
+    <p class="cr-lineup-carry">
+      Filled in from last week's lineup (vs. <%= @prefill_from.opponent %>, <%= @prefill_from.match_date.strftime("%b %-d") %>).
+      To put in a sub, pick a different player on that line. Nothing is saved until you press Save or Send.
+    </p>
+  <% end %>
+
   <%= form_tag team_match_lineup_path(@team, @match), method: :patch do %>
 
     <div class="cr-lineup-grid">
@@ -51,7 +58,8 @@
                   <option value="">-- Select player <%= i + 1 %> --</option>
                 <% end %>
                 <% @members.each do |m| %>
-                  <option value="<%= m.id %>" <%= "selected" if slot.user_id == m.id %>><%= m.name %></option>
+                  <% picked = slot.user_id ? slot.user_id == m.id : @prefill[slot.id] == m.id %>
+                  <option value="<%= m.id %>" <%= "selected" if picked %>><%= m.name %></option>
                 <% end %>
               </select>
               <label class="cr-lineup-confirmed-toggle">
@@ -59,6 +67,9 @@
                 <input type="checkbox" name="slots[<%= slot.id %>][confirmed]" value="1" <%= "checked" unless slot.declined? %>>
                 <span>Already confirmed</span>
               </label>
+              <% if (was = @last_week[slot.id]) %>
+                <span class="cr-lineup-last-week">Last week: <%= was %></span>
+              <% end %>
             </div>
           <% end %>
         </div>

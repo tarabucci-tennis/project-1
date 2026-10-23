@@ -45,6 +45,7 @@ class LineupsController < ApplicationController
     ensure_default_slots(@lineup)
 
     @slots = @lineup.lineup_slots.includes(:user).order(position: :asc)
+    load_last_week
   end
 
   # PATCH /teams/:team_id/matches/:match_id/lineup — captain saves lineup
@@ -149,6 +150,35 @@ class LineupsController < ApplicationController
   # user_id=NULL so the unique (lineup_id, user_id) index doesn't
   # clash when multiple default slots need to coexist for the same
   # doubles line. Captain fills them in from the dropdowns.
+  # Lineups barely change week to week, so a new (empty) lineup starts from the
+  # team's most recent earlier lineup: @prefill maps slot id => player, shown as
+  # the dropdown's pick until the captain saves. Changing a line is how a sub
+  # goes in. Players no longer on the team aren't carried over.
+  def load_last_week
+    @prefill = {}
+    @last_week = {}
+    previous = Lineup.joins(:match)
+                     .where(matches: { tennis_team_id: @team.id })
+                     .where("matches.match_date < ?", @match.match_date)
+                     .where(id: LineupSlot.where.not(user_id: nil).select(:lineup_id))
+                     .order("matches.match_date DESC").first
+    return unless previous
+
+    @prefill_from = previous.match
+    member_ids = @members.map(&:id).to_set
+    before = previous.lineup_slots.includes(:user).order(:id).group_by { |s| [ s.line_type, s.position ] }
+    now = @slots.sort_by(&:id).group_by { |s| [ s.line_type, s.position ] }
+    fill = @slots.all? { |s| s.user_id.nil? }
+    now.each do |key, slots|
+      slots.zip(before[key] || []).each do |slot, old|
+        next unless old&.user
+        @last_week[slot.id] = old.user.name
+        @prefill[slot.id] = old.user_id if fill && member_ids.include?(old.user_id)
+      end
+    end
+    @prefill_from = nil if @prefill.empty? && @last_week.empty?
+  end
+
   def ensure_default_slots(lineup)
     needed = @team.lineup_slot_plan
     have = lineup.lineup_slots.group(:line_type, :position).count
