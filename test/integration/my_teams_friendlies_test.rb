@@ -36,6 +36,7 @@ class MyTeamsFriendliesTest < ActionDispatch::IntegrationTest
     assert_select ".cr-fr-menu a.cr-fr-menu-head[href=?]", friendlies_path, text: /My friendlies/
     assert_select ".cr-page-header-actions > a", text: "Book a friendly", count: 0
     assert_select ".cr-page-header-actions .cr-fr-menu", count: 0
+    assert_select ".cr-fr-tab-head", { count: 0 }, "no separate Book a friendly / All my friendlies buttons in the panel"
     assert_select ".cr-page-header-actions [data-controller=menu][data-menu-hover-value=true]", 1, "+ New Team opens on hover"
     assert_select ".cr-fr-menu a.cr-fr-menu-open[href=?]", friendly_path(mine), text: /Thursday hit/
     assert_select ".cr-fr-menu a.cr-fr-menu-edit[href=?]", edit_friendly_path(mine), text: "Edit"
