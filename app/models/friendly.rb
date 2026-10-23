@@ -18,9 +18,18 @@ class Friendly < ApplicationRecord
   validates :starts_at, presence: true
   validate :ends_after_start
 
-  # The form asks for an end TIME only (friendlies end the same day). Blank
-  # means no end time.
-  attr_writer :end_time
+  # The form asks for a date plus start/end times picked from a list (friendlies
+  # end the same day). Blank end time means no end time.
+  attr_writer :start_date, :start_time, :end_time
+
+  def start_date
+    defined?(@start_date) ? @start_date : starts_at&.to_date&.iso8601
+  end
+
+  def start_time
+    defined?(@start_time) ? @start_time : starts_at&.strftime("%H:%M")
+  end
+
 
   def end_time
     defined?(@end_time) ? @end_time : ends_at&.strftime("%H:%M")
@@ -38,7 +47,7 @@ class Friendly < ApplicationRecord
     DURATIONS.key(mins) || "custom"
   end
 
-  before_validation :apply_end_time
+  before_validation :apply_start_time, :apply_end_time
   validates :sets_count, numericality: { only_integer: true, greater_than_or_equal_to: 1, less_than_or_equal_to: 3 }
 
   before_create { self.token ||= SecureRandom.urlsafe_base64(9) }
@@ -221,6 +230,13 @@ class Friendly < ApplicationRecord
   end
 
   private
+
+  def apply_start_time
+    return unless defined?(@start_date) || defined?(@start_time)
+    date = Date.iso8601(start_date.to_s) rescue nil
+    hh, mm = start_time.to_s.strip.split(":").map { |x| Integer(x, 10, exception: false) }
+    self.starts_at = (date && hh) ? Time.zone.local(date.year, date.month, date.day, hh, mm.to_i) : nil
+  end
 
   def apply_end_time
     if defined?(@duration)
