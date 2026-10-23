@@ -62,13 +62,22 @@ export default class extends Controller {
     if (this.hasTriggerTarget) this.triggerTarget.setAttribute("aria-expanded", "true")
   }
 
+  // For a menu hung off a tab: a mouse already opened it by hovering, so a
+  // click closes it to reveal the tab's panel; on a phone a tap toggles it.
+  tabTap(event) {
+    if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) return this.close()
+    event.stopPropagation()
+    this.element.classList.contains("cr-menu-open") ? this.close() : this.open()
+  }
+
   // Menus open to the right of their button; near the right edge of the
   // screen, slide the menu left just enough to stay fully visible.
   keepOnScreen() {
     if (!this.hasPanelTarget) return
     const panel = this.panelTarget
     panel.style.left = ""
-    const overflow = panel.getBoundingClientRect().right - (window.innerWidth - 8)
+    const screenWidth = Math.min(window.innerWidth, document.documentElement.clientWidth)
+    const overflow = panel.getBoundingClientRect().right - (screenWidth - 8)
     if (overflow > 0) panel.style.left = `${panel.offsetLeft - overflow}px`
   }
 

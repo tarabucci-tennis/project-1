@@ -5302,6 +5302,11 @@ body.cr-ctx-lineups-edit .cr-field > span { color: var(--cr-text); }
 /* My Teams tab bar: the "Book a friendly" tab carries the friendlies menu. */
 .cr-home-tab-menu { display: block; min-width: 0; }
 .cr-home-tab-menu > .cr-home-tab { width: 100%; height: 100%; }
+@media (max-width: 640px) {
+  /* Phones: the tab is the last column, so its menu lines up with the tab's
+     right edge and stays on screen. */
+  .cr-home-tab-menu .cr-menu-panel { left: auto !important; right: 0; }
+}
 @media (max-width: 480px) {
   /* "Book a friendly" doesn't fit one line in a quarter of a phone; let tab
      labels wrap instead of being cut off. */
