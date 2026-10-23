@@ -39,6 +39,13 @@ class MyTeamsFriendliesTest < ActionDispatch::IntegrationTest
     assert_select "a", text: "Book a friendly"
   end
 
+  test "calendar days show each event's name and link it" do
+    today = Friendly.create!(organizer: @user, starts_at: Time.zone.now.beginning_of_day + 12.hours, title: "Noon hit")
+    get teams_path
+    assert_select ".cr-dash-cal-day .cr-dash-cal-chip-friendly[data-url=?]", friendly_path(today), text: "Noon hit"
+    assert_select ".cr-dash-cal-hover[hidden]"
+  end
+
   test "every friendly and clinic card has calendar and share buttons" do
     get teams_path
     assert_select ".cr-my-week-card-event .cr-my-week-right a.cr-cal-btn[href^='https://calendar.google.com']", 6

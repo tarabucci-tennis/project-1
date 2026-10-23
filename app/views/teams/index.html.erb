@@ -212,26 +212,30 @@
                      }
                    }.to_json %>
 
+                <% chips = matches_today.map { |m| { kind: "match", label: m.opponent.presence || "TBD", url: team_match_path(m.tennis_team, m) } } +
+                           events_today.map { |e| { kind: e.display_kind, label: e.title.presence || e.kind_label, url: nil } } +
+                           friendlies_today.map { |f| { kind: "friendly", label: f.title.presence || "Friendly", url: friendly_path(f) } } %>
                 <button type="button"
-                        class="cr-dash-cal-day <%= 'cr-dash-cal-day-match'  if matches_today.any? %> <%= 'cr-dash-cal-day-event'  if (events_today.any? || friendlies_today.any?) && matches_today.empty? %> <%= 'cr-dash-cal-day-today' if is_today %>"
-                        data-action="click->dashboard-calendar#open"
+                        class="cr-dash-cal-day <%= 'cr-dash-cal-day-has' if has_items %> <%= 'cr-dash-cal-day-today' if is_today %>"
+                        aria-label="<%= day.strftime('%A, %B %-d') %><%= ": #{pluralize(chips.size, 'item')}" if has_items %>"
+                        data-action="click->dashboard-calendar#open mouseenter->dashboard-calendar#hoverIn mouseleave->dashboard-calendar#hoverOut"
                         data-dashboard-calendar-payload-param='<%= payload %>'>
                   <span class="cr-dash-cal-day-num"><%= day.day %></span>
-                  <% if has_items %>
-                    <span class="cr-dash-cal-day-dots">
-                      <% matches_today.each do |_| %>
-                        <span class="cr-dash-cal-dot cr-dash-cal-dot-match"></span>
-                      <% end %>
-                      <% events_today.each do |e| %>
-                        <span class="cr-dash-cal-dot cr-dash-cal-dot-<%= e.display_kind %>"></span>
-                      <% end %>
-                      <% friendlies_today.each do |_| %>
-                        <span class="cr-dash-cal-dot cr-dash-cal-dot-friendly"></span>
-                      <% end %>
-                    </span>
+                  <% chips.first(3).each do |c| %>
+                    <span class="cr-dash-cal-chip cr-dash-cal-chip-<%= c[:kind] %>"<% if c[:url] %> data-url="<%= c[:url] %>"<% end %>><%= c[:label] %></span>
+                  <% end %>
+                  <% if chips.size > 3 %>
+                    <span class="cr-dash-cal-more">+<%= chips.size - 3 %> more</span>
                   <% end %>
                 </button>
               <% end %>
+            </div>
+
+            <%# Hover preview (mouse only): the day's schedule; click an item to open it. %>
+            <div class="cr-dash-cal-hover" data-dashboard-calendar-target="hover" role="tooltip" hidden
+                 data-action="mouseenter->dashboard-calendar#hoverKeep mouseleave->dashboard-calendar#hoverOut">
+              <div class="cr-dash-cal-hover-title" data-dashboard-calendar-target="hoverTitle"></div>
+              <div class="cr-dash-cal-hover-body" data-dashboard-calendar-target="hoverBody"></div>
             </div>
 
             <div class="cr-dash-cal-legend">

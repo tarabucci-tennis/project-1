@@ -4618,7 +4618,57 @@ button.cr-header-pill {
 .cr-st-hint { color: var(--cr-text-light); font-size: 0.78rem; margin-top: 12px; text-align: center; }
 
 /* Center the calendar within its tab (it used to share a 2-col row) */
-.cr-dash-cal-full { max-width: 520px; margin: 0 auto; }
+.cr-dash-cal-full { max-width: 880px; margin: 0 auto; position: relative; }
+
+/* Month calendar with each day's events written in the day (like a phone
+   calendar app). Mouse: hover a day for its schedule, click a name to open it.
+   Touch: tap a day for the full list. */
+.cr-dash-cal-full .cr-dash-cal-grid { gap: 3px; }
+.cr-dash-cal-full .cr-dash-cal-day {
+  height: auto; min-height: 96px; padding: 4px 4px 5px; gap: 2px;
+  align-items: stretch; overflow: hidden; background: var(--cr-white); color: var(--cr-text); border-color: var(--cr-border);
+}
+.cr-dash-cal-full .cr-dash-cal-day-blank { background: transparent; }
+.cr-dash-cal-full .cr-dash-cal-day-num {
+  align-self: flex-end; display: inline-flex; align-items: center; justify-content: center;
+  min-width: 20px; height: 20px; padding: 0 3px; border-radius: 999px; font-size: 0.74rem; color: var(--cr-text);
+}
+.cr-dash-cal-full .cr-dash-cal-day-today { border: 2px solid var(--cr-gold); background: #fffdf5; }
+.cr-dash-cal-full .cr-dash-cal-day-today .cr-dash-cal-day-num { background: var(--cr-gold); color: var(--cr-black); }
+.cr-dash-cal-chip {
+  display: block; width: 100%; min-width: 0; padding: 2px 5px; border-left: 3px solid var(--cr-text-muted); border-radius: 4px;
+  font-size: 0.7rem; font-weight: 600; line-height: 1.3; text-align: left;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.cr-dash-cal-chip-match    { background: var(--cr-black); color: var(--cr-gold-bright); border-left-color: var(--cr-gold); }
+.cr-dash-cal-chip-practice { background: #eff4ff; color: #1e3a8a; border-left-color: #2563eb; }
+.cr-dash-cal-chip-clinic   { background: #ecfdf5; color: #065f46; border-left-color: #059669; }
+.cr-dash-cal-chip-friendly { background: #fff7ed; color: #9a3412; border-left-color: #d97706; }
+@media (hover: hover) and (pointer: fine) {
+  .cr-dash-cal-chip[data-url]:hover { text-decoration: underline; }
+}
+.cr-dash-cal-more { font-size: 0.64rem; font-weight: 700; color: var(--cr-text-muted); text-align: left; padding-left: 4px; }
+
+.cr-dash-cal-hover {
+  position: absolute; z-index: 300; width: 290px; max-height: 380px; overflow-y: auto;
+  padding: 12px; background: var(--cr-white); border: 1px solid var(--cr-border); border-top: 4px solid var(--cr-gold);
+  border-radius: 12px; box-shadow: 0 12px 34px rgba(24, 39, 64, 0.22);
+}
+.cr-dash-cal-hover[hidden] { display: none; }
+.cr-dash-cal-hover-title { font-size: 0.86rem; font-weight: 800; color: var(--cr-text); margin: 0 0 8px; }
+.cr-dash-cal-hover-body { display: flex; flex-direction: column; gap: 6px; }
+.cr-dash-cal-hover .cr-dash-cal-item { padding: 7px 10px; }
+.cr-dash-cal-hover .cr-dash-cal-item-title { font-size: 0.84rem; }
+.cr-dash-cal-hover .cr-dash-cal-item-view { display: none; }
+
+@media (max-width: 640px) {
+  .cr-dash-cal-full { padding: 10px 6px 12px; }
+  .cr-dash-cal-full .cr-dash-cal-grid { gap: 2px; }
+  .cr-dash-cal-full .cr-dash-cal-day { min-height: 76px; padding: 2px 1px 3px; gap: 2px; border-radius: 4px; }
+  .cr-dash-cal-full .cr-dash-cal-day-num { font-size: 0.68rem; min-width: 18px; height: 18px; }
+  .cr-dash-cal-chip { padding: 1px 2px; border-left-width: 2px; border-radius: 2px; font-size: 0.56rem; text-overflow: clip; }
+  .cr-dash-cal-more { font-size: 0.55rem; padding-left: 1px; }
+}
 
 /* Mobile: trim lower-priority columns so the table stays clean & readable */
 @media (max-width: 640px) {
