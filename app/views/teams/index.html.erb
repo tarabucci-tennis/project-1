@@ -390,21 +390,27 @@
   <% end %>
 
   <%# ── Past Seasons (archived teams) — collapsed by default so it doesn't
-       crowd the page; opens to a compact list grouped by league, then season. %>
+       crowd the page; opens to each league, then each year, then the teams. %>
   <% if @archived_teams.present? %>
     <details class="cr-archive-section">
       <summary class="cr-archive-toggle">Past Seasons (<%= @archived_teams.size %>)</summary>
+      <%# League ▸ year ▸ teams: each level opens on a click. %>
       <% TennisTeam.group_by_league(@archived_teams).each do |league, teams| %>
-        <div class="cr-archive-league">
-          <div class="cr-archive-league-name"><%= league %></div>
-          <% teams.each do |team| %>
-            <%= link_to team_path(team), class: "cr-archive-row" do %>
-              <span class="cr-archive-row-season"><%= team.season_name.to_s.sub(/\s*\(completed\)\s*/i, "").presence || team.start_date&.year %></span>
-              <span class="cr-archive-row-name"><%= team.name %></span>
-              <span class="cr-archive-row-record"><%= team.record_label %></span>
-            <% end %>
+        <details class="cr-archive-league">
+          <summary class="cr-archive-league-name"><%= league %> <span class="cr-archive-count">(<%= teams.size %>)</span></summary>
+          <% archive_by_year(teams).each do |year, year_teams| %>
+            <details class="cr-archive-year">
+              <summary class="cr-archive-year-name"><%= year %> <span class="cr-archive-count">(<%= year_teams.size %>)</span></summary>
+              <% year_teams.each do |team| %>
+                <%= link_to team_path(team), class: "cr-archive-row" do %>
+                  <span class="cr-archive-row-season"><%= archive_season_part(team) %></span>
+                  <span class="cr-archive-row-name"><%= team.name %></span>
+                  <span class="cr-archive-row-record"><%= team.record_label %></span>
+                <% end %>
+              <% end %>
+            </details>
           <% end %>
-        </div>
+        </details>
       <% end %>
     </details>
   <% end %>

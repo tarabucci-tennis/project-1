@@ -5240,6 +5240,17 @@ body.cr-ctx-lineups-edit .cr-field > span { color: var(--cr-text); }
   font-size: 0.68rem; font-weight: 800; letter-spacing: 1.4px; text-transform: uppercase;
   color: var(--cr-gold); border-bottom: 1px solid rgba(201, 162, 74, 0.35); padding-bottom: 3px; margin-bottom: 2px;
 }
+/* League and year rows open on a click (▸ closed, ▾ open). */
+.cr-archive-league-name, .cr-archive-year-name { cursor: pointer; list-style: none; display: block; padding-top: 6px; }
+.cr-archive-league-name::-webkit-details-marker, .cr-archive-year-name::-webkit-details-marker { display: none; }
+.cr-archive-league-name::after, .cr-archive-year-name::after { content: " \25B8"; }
+.cr-archive-league[open] > .cr-archive-league-name::after, .cr-archive-year[open] > .cr-archive-year-name::after { content: " \25BE"; }
+.cr-archive-count { font-weight: 600; letter-spacing: 0; opacity: 0.8; }
+.cr-archive-year { margin-left: 4px; }
+.cr-archive-year-name { font-size: 0.82rem; font-weight: 700; color: var(--cr-text); padding: 7px 2px; border-bottom: 1px solid var(--cr-border); }
+.cr-archive-year-name:hover, .cr-archive-league-name:hover { color: var(--cr-teal-deep); }
+.cr-archive-year .cr-archive-row { padding-left: 14px; }
+.cr-archive-year .cr-archive-row-season { min-width: 84px; }
 .cr-archive-row {
   display: flex; gap: 10px; align-items: baseline; padding: 6px 2px;
   text-decoration: none; font-size: 0.85rem; color: var(--cr-text);
