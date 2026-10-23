@@ -25,6 +25,20 @@ class MyTeamsFriendliesTest < ActionDispatch::IntegrationTest
     assert_no_match(/PRACTICE/, body)
   end
 
+  test "My friendlies menu lists upcoming friendlies with Open and Edit" do
+    mine = Friendly.find_by(title: "Thursday hit")
+    other = User.create!(name: "Other Org", email: "other-org-fr@example.com")
+    theirs = Friendly.create!(organizer: other, starts_at: 4.days.from_now, title: "Their hit")
+    theirs.spots.create!(user: @user, name: @user.name)
+    get teams_path
+    assert_select ".cr-fr-menu .cr-menu-trigger", text: /My friendlies/
+    assert_select ".cr-fr-menu a.cr-fr-menu-open[href=?]", friendly_path(mine), text: /Thursday hit/
+    assert_select ".cr-fr-menu a.cr-fr-menu-edit[href=?]", edit_friendly_path(mine), text: "Edit"
+    assert_select ".cr-fr-menu a.cr-fr-menu-open[href=?]", friendly_path(theirs)
+    assert_select ".cr-fr-menu a.cr-fr-menu-edit[href=?]", edit_friendly_path(theirs), count: 0
+    assert_select "a", text: "Book a friendly"
+  end
+
   test "every friendly and clinic card has calendar and share buttons" do
     get teams_path
     assert_select ".cr-my-week-card-event .cr-my-week-right a.cr-cal-btn[href^='https://calendar.google.com']", 6

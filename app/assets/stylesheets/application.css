@@ -5230,6 +5230,19 @@ body.cr-ctx-lineups-edit .cr-field > span { color: var(--cr-text); }
 .cr-menu-divider { height: 1px; background: var(--cr-border); margin: 5px 4px; }
 @media (max-width: 640px) { .cr-menu-panel { right: 0; left: auto; } }
 
+/* My Teams header — "My friendlies" dropdown: open a friendly or edit it. */
+.cr-fr-menu .cr-menu-panel { width: 300px; max-width: calc(100vw - 32px); }
+.cr-fr-menu-row { display: flex; align-items: center; gap: 4px; }
+.cr-fr-menu-open { flex: 1 1 auto; min-width: 0; flex-direction: column; align-items: flex-start; gap: 1px; }
+.cr-fr-menu-when { font-size: 0.74rem; font-weight: 600; color: var(--cr-text-light); white-space: nowrap; }
+.cr-fr-menu-name { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.cr-fr-menu-edit {
+  flex: 0 0 auto; padding: 6px 12px; border: 1px solid var(--cr-border); border-radius: 7px;
+  font-size: 0.78rem; font-weight: 700; color: var(--cr-teal-deep); text-decoration: none; background: #fff;
+}
+.cr-fr-menu-edit:hover { background: var(--cr-teal-tint); }
+.cr-fr-menu-empty { padding: 10px 12px 6px; font-size: 0.85rem; }
+
 /* ============================================================
    Player Ratings (/ratings) — navy hero, stat tiles, history table.
    ============================================================ */
@@ -5476,7 +5489,12 @@ body.cr-ctx-clubs-new, body.cr-ctx-clubs-edit, body.cr-ctx-clubs-create, body.cr
     gap: 8px;
     width: 100%;
   }
-  body.cr-ctx-teams-index .cr-page-header-actions .cr-menu { display: block; }
+  body.cr-ctx-teams-index .cr-page-header-actions { position: relative; }
+  body.cr-ctx-teams-index .cr-page-header-actions .cr-menu { display: block; position: static; }
+  /* Odd number of buttons: the last one (+ New Team) takes the full row. */
+  body.cr-ctx-teams-index .cr-page-header-actions > :last-child:nth-child(odd) { grid-column: 1 / -1; }
+  /* Menus open under the whole button grid, full width, so none runs off-screen. */
+  body.cr-ctx-teams-index .cr-page-header-actions .cr-menu-panel { left: 0; right: 0; width: auto; max-width: none; }
   body.cr-ctx-teams-index .cr-page-header-actions .cr-btn {
     display: flex;
     align-items: center;
