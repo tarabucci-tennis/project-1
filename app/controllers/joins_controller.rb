@@ -96,6 +96,7 @@ class JoinsController < ApplicationController
       end
 
       session[:user_id] = placeholder.id
+      placeholder.record_sign_in!
     end
   end
 end

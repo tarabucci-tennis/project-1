@@ -68,6 +68,7 @@ class RegistrationsController < ApplicationController
 
     if user.save
       session[:user_id] = user.id
+      user.record_sign_in!
 
       if session[:pending_join_code].present?
         team = TennisTeam.find_by(join_code: session.delete(:pending_join_code))

@@ -8,6 +8,24 @@ class AdminController < ApplicationController
   TENNISLINK_PATH = "/teamtennis/main/IndividualPlayerRecord.aspx".freeze
   FETCH_TIMEOUT_SECONDS = 15
 
+  # GET /admin/members(.csv) — everyone who made an account: when they joined,
+  # how often they sign in and on how many days they've used the site.
+  # Founder/admin only. The .csv version opens in Excel or Google Sheets.
+  def members
+    @members = User.registered.includes(:member_teams).to_a
+                   .sort_by { |u| [ -(u.created_at&.to_i || 0), u.name.to_s.downcase ] }
+    week_ago = 7.days.ago
+    @active_this_week = @members.count { |u| u.last_seen_at && u.last_seen_at >= week_ago }
+
+    respond_to do |format|
+      format.html
+      format.csv do
+        send_data members_csv(@members), type: "text/csv; charset=utf-8",
+                  filename: "court-report-members-#{Date.current.iso8601}.csv"
+      end
+    end
+  end
+
   def tennislink_test
     @person_id = params[:person_id].to_s.strip
     @year = params[:year].presence || Date.current.year.to_s
@@ -83,5 +101,31 @@ class AdminController < ApplicationController
     end
   rescue StandardError => e
     @error = "Couldn't read that file (#{e.message})."
+  end
+
+  private
+
+  MEMBER_CSV_HEADERS = [ "Name", "Email", "Joined", "Last visit", "Days visited", "Sign-ins", "Last sign-in", "Teams" ].freeze
+
+  def members_csv(members)
+    zone = User::ACTIVITY_ZONE
+    rows = members.map do |u|
+      [ u.name, u.email,
+        u.created_at&.in_time_zone(zone)&.to_date&.iso8601,
+        u.last_seen_at&.in_time_zone(zone)&.to_date&.iso8601,
+        u.days_visited, u.sign_in_count,
+        u.last_sign_in_at&.in_time_zone(zone)&.strftime("%Y-%m-%d %H:%M"),
+        u.member_teams.map(&:name).uniq.sort.join("; ") ]
+    end
+    # The leading BOM makes Excel read names with accents correctly.
+    "\uFEFF" + ([ MEMBER_CSV_HEADERS ] + rows).map { |row| row.map { |v| csv_cell(v) }.join(",") }.join("\r\n") + "\r\n"
+  end
+
+  # Quote every cell; a leading = + - @ is neutralised so a name can't run as
+  # a spreadsheet formula.
+  def csv_cell(value)
+    text = value.to_s
+    text = "'#{text}" if text.match?(/\A[=+\-@]/)
+    "\"#{text.gsub('"', '""')}\""
   end
 end

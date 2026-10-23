@@ -4,6 +4,13 @@
 
   <%= link_to "← Back", :back, class: "cr-back-link" %>
 
+  <% if @is_self && current_user&.admin? %>
+    <%# Phones hide the header name menu, so the founder link lives here too. %>
+    <div class="cr-founder-links">
+      <%= link_to "Site members →", admin_members_path, class: "cr-btn cr-btn-outline cr-btn-compact" %>
+    </div>
+  <% end %>
+
   <%# ── Player Profile card — clean, Court Report's own rating (no TennisRecord) ── %>
   <%
     gender  = @teams.map { |t| t.gender.presence }.compact.first

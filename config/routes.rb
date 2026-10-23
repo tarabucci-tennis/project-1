@@ -20,6 +20,7 @@ Rails.application.routes.draw do
   resources :users, only: [ :index, :new, :create, :edit, :update, :destroy ]
 
   # Admin: TennisLink fetch POC (Session 15)
+  get "admin/members", to: "admin#members", as: :admin_members
   get "admin/tennislink_test", to: "admin#tennislink_test", as: :admin_tennislink_test
   get "admin/usta_import", to: "admin#usta_import", as: :admin_usta_import
   post "admin/usta_import", to: "admin#usta_import"
