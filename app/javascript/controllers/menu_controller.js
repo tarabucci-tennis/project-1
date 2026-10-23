@@ -58,7 +58,18 @@ export default class extends Controller {
       }
     })
     this.element.classList.add("cr-menu-open")
+    this.keepOnScreen()
     if (this.hasTriggerTarget) this.triggerTarget.setAttribute("aria-expanded", "true")
+  }
+
+  // Menus open to the right of their button; near the right edge of the
+  // screen, slide the menu left just enough to stay fully visible.
+  keepOnScreen() {
+    if (!this.hasPanelTarget) return
+    const panel = this.panelTarget
+    panel.style.left = ""
+    const overflow = panel.getBoundingClientRect().right - (window.innerWidth - 8)
+    if (overflow > 0) panel.style.left = `${panel.offsetLeft - overflow}px`
   }
 
   close() {

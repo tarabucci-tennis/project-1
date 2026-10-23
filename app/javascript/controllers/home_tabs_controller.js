@@ -9,8 +9,9 @@ export default class extends Controller {
   connect() {
     const wanted = new URL(window.location).searchParams.get("tab")
     if (wanted) {
+      const key = wanted.toLowerCase()
       const idx = this.tabTargets.findIndex((el) =>
-        el.textContent.trim().toLowerCase().includes(wanted.toLowerCase())
+        (el.dataset.tabKey || el.textContent.trim().toLowerCase()).includes(key)
       )
       if (idx >= 0) { this.showTab(idx); return }
     }

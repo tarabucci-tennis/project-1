@@ -5263,14 +5263,17 @@ body.cr-ctx-lineups-edit .cr-field > span { color: var(--cr-text); }
 .cr-menu-caret { font-size: 0.7rem; transition: transform 0.15s; }
 .cr-menu.cr-menu-open .cr-menu-caret { transform: rotate(180deg); }
 .cr-menu-panel {
-  position: absolute; top: calc(100% + 6px); right: 0; z-index: 200;
+  position: absolute; top: calc(100% + 6px); left: 0; right: auto; z-index: 200;
   min-width: 194px; padding: 6px;
   background: var(--cr-white); border: 1px solid var(--cr-border); border-radius: 12px;
   box-shadow: 0 6px 26px rgba(24, 39, 64, 0.16);
-  opacity: 0; transform: translateY(-6px); pointer-events: none;
+  /* Closed menus take no space (display: none), so a menu that opens to the
+     right can't make the page wider than a phone screen. */
+  display: none; opacity: 0; transform: translateY(-6px); pointer-events: none;
   transition: opacity 0.14s ease, transform 0.14s ease;
 }
-.cr-menu.cr-menu-open .cr-menu-panel { opacity: 1; transform: translateY(0); pointer-events: auto; }
+.cr-menu.cr-menu-open .cr-menu-panel { display: block; opacity: 1; transform: translateY(0); pointer-events: auto; }
+@starting-style { .cr-menu.cr-menu-open .cr-menu-panel { opacity: 0; transform: translateY(-6px); } }
 .cr-menu-item {
   display: flex; align-items: center; gap: 10px; width: 100%;
   padding: 10px 12px; border-radius: 8px;
@@ -5282,7 +5285,6 @@ body.cr-ctx-lineups-edit .cr-field > span { color: var(--cr-text); }
 .cr-menu-note { padding: 2px 14px 8px 40px; font-size: 0.72rem; color: var(--cr-text-light); line-height: 1.35; }
 .cr-menu-ico { font-size: 0.95rem; width: 18px; text-align: center; }
 .cr-menu-divider { height: 1px; background: var(--cr-border); margin: 5px 4px; }
-@media (max-width: 640px) { .cr-menu-panel { right: 0; left: auto; } }
 
 /* My Teams header — "My friendlies" dropdown: open a friendly or edit it. */
 .cr-fr-menu .cr-menu-panel { width: 300px; max-width: calc(100vw - 32px); }
@@ -5297,6 +5299,14 @@ body.cr-ctx-lineups-edit .cr-field > span { color: var(--cr-text); }
 .cr-fr-menu-edit:hover { background: var(--cr-teal-tint); }
 .cr-fr-menu-empty { padding: 10px 12px 6px; font-size: 0.85rem; }
 .cr-fr-menu-head { justify-content: space-between; font-weight: 800; }
+/* My Teams tab bar: the "Book a friendly" tab carries the friendlies menu. */
+.cr-home-tab-menu { display: block; min-width: 0; }
+.cr-home-tab-menu > .cr-home-tab { width: 100%; height: 100%; }
+@media (max-width: 480px) {
+  /* "Book a friendly" doesn't fit one line in a quarter of a phone; let tab
+     labels wrap instead of being cut off. */
+  .cr-home-tab { white-space: normal; line-height: 1.15; overflow: visible; }
+}
 /* Mouse: an invisible bridge so the menu stays open while moving down to it. */
 .cr-fr-menu.cr-menu-open .cr-menu-panel::before, .cr-hover-menu.cr-menu-open .cr-menu-panel::before { content: ""; position: absolute; left: 0; right: 0; top: -8px; height: 8px; }
 
