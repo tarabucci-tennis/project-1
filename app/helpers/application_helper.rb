@@ -268,4 +268,25 @@ module ApplicationHelper
 
     "https://calendar.google.com/calendar/render?#{params.to_query}"
   end
+
+  # Past Seasons: a season's year, "2026" from "Spring 2026" or "2025-26"
+  # from "Fall/Winter 2025-26"; falls back to the team's start year.
+  def archive_year(team)
+    label = team.season_name.to_s
+    m = label.match(/(\d{4})(?:\s*[-–\/]\s*(\d{2,4}))?/)
+    return m[2] ? "#{m[1]}-#{m[2][-2..]}" : m[1] if m
+    team.start_date&.year&.to_s || "Other"
+  end
+
+  # Teams grouped by year, newest year first.
+  def archive_by_year(teams)
+    teams.group_by { |t| archive_year(t) }.sort_by { |year, _| year == "Other" ? "" : year }.reverse
+  end
+
+  # The season without its year ("Spring", "Fall/Winter"), for rows under a year.
+  def archive_season_part(team)
+    part = team.season_name.to_s.sub(/\s*\(completed\)\s*/i, "")
+                .sub(/\s*\d{4}(?:\s*[-–\/]\s*\d{2,4})?\s*/, " ").squish
+    part.presence || "Season"
+  end
 end
