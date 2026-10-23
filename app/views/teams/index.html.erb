@@ -111,10 +111,9 @@
               <tr>
                 <th class="cr-st-n">#</th>
                 <th>Team</th>
-                <th class="cr-st-n">W</th>
-                <th class="cr-st-n">L</th>
+                <th class="cr-st-n"><span class="cr-st-dot cr-st-dot-w" title="Wins">W</span></th>
+                <th class="cr-st-n"><span class="cr-st-dot cr-st-dot-l" title="Losses">L</span></th>
                 <th class="cr-st-n">Win%</th>
-                <th>Form</th>
                 <th>Next</th>
               </tr>
             </thead>
@@ -122,7 +121,7 @@
               <%# One section per league (USTA, Del-Tri, Bux-Mont, Cup) — records
                   from different leagues aren't comparable, so each ranks on its own. %>
               <% @teams_by_league.each do |league, league_teams| %>
-              <tr class="cr-st-league"><td colspan="7"><%= league %></td></tr>
+              <tr class="cr-st-league"><td colspan="6"><%= league %></td></tr>
               <% standings = league_teams.sort_by { |t| [ (t.wins_count + t.losses_count).positive? ? 0 : 1, -(t.win_pct || 0), -t.wins_count, t.name.to_s.downcase ] } %>
               <% standings.each_with_index do |team, i| %>
                 <tr class="cr-st-row" onclick="if (!event.target.closest('a')) window.location='<%= team_path(team) %>'">
@@ -139,18 +138,6 @@
                     <% if team.win_pct %>
                       <span class="<%= team.win_pct >= 50 ? "cr-st-pct-good" : "cr-st-pct-bad" %>"><%= team.win_pct %>%</span>
                     <% else %>—<% end %>
-                  </td>
-                  <td>
-                    <% form = team.recent_form %>
-                    <% if form.any? %>
-                      <div class="cr-st-form">
-                        <% form.each do |r| %>
-                          <span class="cr-st-dot cr-st-dot-<%= r.downcase %>"><%= r %></span>
-                        <% end %>
-                      </div>
-                    <% else %>
-                      <span class="cr-st-muted">—</span>
-                    <% end %>
                   </td>
                   <td class="cr-st-next">
                     <% nm = team.next_match %>

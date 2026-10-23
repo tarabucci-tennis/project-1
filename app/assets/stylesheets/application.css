@@ -4599,6 +4599,8 @@ button.cr-header-pill {
 .cr-st-row:hover td { background: rgba(201, 162, 74, 0.06); }
 
 .cr-st-n { text-align: center; white-space: nowrap; }
+/* W and L column headings are a green and a red circle. */
+.cr-standings thead th .cr-st-dot { margin: 0 auto; }
 .cr-st-rank { color: var(--cr-text-light); font-weight: 800; width: 40px; }
 .cr-st-team { color: var(--cr-text); font-weight: 700; font-size: 0.98rem; text-decoration: none; }
 .cr-st-team:hover { color: var(--cr-gold); }
@@ -4677,7 +4679,7 @@ button.cr-header-pill {
 /* Mobile: trim lower-priority columns so the table stays clean & readable */
 @media (max-width: 640px) {
   .cr-standings thead th:nth-child(5), .cr-standings tbody td:nth-child(5),  /* Win% */
-  .cr-standings thead th:nth-child(7), .cr-standings tbody td:nth-child(7) { /* Next */
+  .cr-standings thead th:nth-child(6), .cr-standings tbody td:nth-child(6) { /* Next */
     display: none;
   }
   .cr-standings thead th, .cr-standings tbody td { padding: 13px 10px; }
@@ -5781,7 +5783,6 @@ body.cr-ctx-admin-members { background: var(--cr-navy-page); }
   .cr-standings th:nth-child(2) { width: 36%; }
   .cr-standings th:nth-child(3), .cr-standings th:nth-child(4) { width: 44px; }
   .cr-standings th:nth-child(5) { width: 64px; }
-  .cr-standings th:nth-child(6) { width: 104px; }
   .cr-standings thead th, .cr-standings tbody td { padding: 12px 10px; }
   .cr-standings thead th:first-child, .cr-standings tbody td:first-child { padding-left: 18px; }
   .cr-standings thead th:last-child, .cr-standings tbody td:last-child { padding-right: 18px; }
