@@ -288,11 +288,10 @@ a { color: inherit; text-decoration: none; }
   flex-shrink: 0;
 }
 
-.cr-header-signout form,
-.cr-header-signout {
-  padding: 0;
-  margin: 0;
-}
+/* The Sign Out form wrapper has no spacing of its own; the button keeps the
+   normal pill padding (it used to be zeroed, so the outline hugged the words). */
+.cr-header-signout form { padding: 0; margin: 0; }
+.cr-header-signout { margin: 0; }
 
 button.cr-header-pill {
   font-family: inherit;
@@ -3657,6 +3656,7 @@ button.cr-header-pill {
      via the logo click (which goes to /teams when logged in) or the bottom
      nav bar. Keeps the header uncluttered on narrow viewports. */
   .cr-header-user,
+  .cr-user-menu,
   .cr-header-my-teams { display: none !important; }
   .cr-main { padding: 24px 16px 110px; }
   .cr-page-title { font-size: 1.6rem; }
@@ -5624,6 +5624,44 @@ button.cr-cal-btn.cr-share-icon:hover { border-color: var(--cr-gold); color: var
    name and its buttons. Lists/forms are narrow; data tables keep 1040px. */
 .cr-rp-page.cr-rp-narrow { max-width: 680px; }
 .cr-rp-page.cr-fr-page { max-width: 760px; }
+
+/* Admin: Site members (/admin/members) */
+.cr-user-menu .cr-header-user { font: inherit; font-size: 0.82rem; background: transparent; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
+.cr-user-menu .cr-header-user:hover, .cr-user-menu.cr-menu-open .cr-header-user { background: rgba(244, 180, 49, 0.12); }
+.cr-user-menu .cr-menu-panel { right: 0; left: auto; min-width: 250px; }
+.cr-founder-links { display: flex; justify-content: flex-end; margin: -4px 0 10px; }
+body.cr-ctx-admin-members { background: var(--cr-navy-page); }
+.cr-rp-page.cr-mem-page { max-width: 880px; }
+.cr-mem-stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; padding: 14px 18px 0; }
+.cr-mem-stat { display: grid; gap: 2px; padding: 10px 12px; border: 1px solid var(--cr-border); border-radius: 10px; background: #fbfaf6; text-align: center; }
+.cr-mem-stat strong { font-size: 1.35rem; color: var(--cr-text); line-height: 1.1; }
+.cr-mem-stat span { font-size: 0.74rem; color: var(--cr-text-light); font-weight: 600; }
+.cr-mem-note { margin: 10px 18px 4px; font-size: 0.78rem; color: var(--cr-text-light); }
+.cr-mem-list { padding: 4px 0 8px; }
+.cr-mem-row {
+  display: grid; grid-template-columns: minmax(0, 1fr) 110px 90px 90px 70px; gap: 10px; align-items: center;
+  padding: 10px 18px; border-top: 1px solid var(--cr-border);
+}
+.cr-mem-headrow { font-size: 0.68rem; font-weight: 800; letter-spacing: 0.6px; text-transform: uppercase; color: var(--cr-text-light); border-top: none; padding-top: 12px; padding-bottom: 6px; }
+.cr-mem-headrow span:nth-child(n+4) { text-align: right; }
+.cr-mem-who { display: grid; gap: 1px; min-width: 0; }
+.cr-mem-name { font-weight: 700; color: var(--cr-text); text-decoration: none; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.cr-mem-name:hover { color: var(--cr-teal-deep); }
+.cr-mem-email, .cr-mem-teams { font-size: 0.76rem; color: var(--cr-text-light); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.cr-mem-cell { font-size: 0.86rem; color: var(--cr-text); white-space: nowrap; }
+.cr-mem-num { text-align: right; font-weight: 700; font-variant-numeric: tabular-nums; }
+@media (max-width: 640px) {
+  .cr-mem-stats { gap: 6px; padding: 12px 12px 0; }
+  .cr-mem-stat { padding: 8px 4px; }
+  .cr-mem-stat strong { font-size: 1.1rem; }
+  .cr-mem-stat span { font-size: 0.66rem; }
+  .cr-mem-note { margin: 10px 12px 4px; }
+  .cr-mem-headrow { display: none; }
+  .cr-mem-row { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px 12px; padding: 10px 12px; }
+  .cr-mem-who { grid-column: 1 / -1; }
+  .cr-mem-cell { display: grid; font-size: 0.82rem; text-align: left; }
+  .cr-mem-cell::before { content: attr(data-label); font-size: 0.64rem; font-weight: 700; color: var(--cr-text-light); text-transform: uppercase; letter-spacing: 0.3px; }
+}
 /* Friendly roster: the × column always takes the same space so Out lines up. */
 .cr-fr-remove, .cr-fr-remove-spacer { width: 28px; flex-shrink: 0; text-align: center; margin-left: 0; }
 .cr-fr-remove-spacer { display: inline-block; }

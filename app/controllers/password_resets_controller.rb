@@ -69,6 +69,7 @@ class PasswordResetsController < ApplicationController
     if @user.save
       @user.clear_reset_token!
       session[:user_id] = @user.id
+      @user.record_sign_in!
       redirect_to root_path, notice: "Password updated! You're signed in."
     else
       flash.now[:alert] = @user.errors.full_messages.join(", ")

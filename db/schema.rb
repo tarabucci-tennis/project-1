@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_20_200000) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_23_150000) do
   create_table "availabilities", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.integer "match_id", null: false
@@ -302,10 +302,14 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_20_200000) do
     t.decimal "court_report_rating", precision: 4, scale: 2
     t.integer "court_report_rating_lines", default: 0, null: false
     t.datetime "created_at", null: false
+    t.integer "days_visited", default: 0, null: false
     t.string "deltri_player_url"
     t.decimal "dynamic_rating"
     t.date "dynamic_rating_date"
     t.string "email"
+    t.datetime "last_seen_at"
+    t.date "last_seen_on"
+    t.datetime "last_sign_in_at"
     t.string "location"
     t.string "name"
     t.decimal "ntrp_rating"
@@ -314,6 +318,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_20_200000) do
     t.string "phone"
     t.datetime "reset_password_sent_at"
     t.string "reset_password_token"
+    t.integer "sign_in_count", default: 0, null: false
     t.string "tennislink_person_id"
     t.datetime "updated_at", null: false
     t.index ["email"], name: "index_users_on_email", unique: true

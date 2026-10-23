@@ -32,6 +32,28 @@ class User < ApplicationRecord
     password_digest.present?
   end
 
+  # ── Member activity (admin-only Site members page) ──────────────────────
+  # Days are counted on Eastern time. Writes skip validations/callbacks and
+  # leave updated_at alone, and happen at most once per day per person.
+  ACTIVITY_ZONE = "Eastern Time (US & Canada)".freeze
+
+  # People who actually made an account (roster-only placeholders have no
+  # password and have never signed in).
+  scope :registered, -> { where.not(password_digest: [ nil, "" ]).or(where("sign_in_count > 0")) }
+
+  def record_sign_in!
+    now = Time.current
+    update_columns(sign_in_count: sign_in_count + 1, last_sign_in_at: now)
+    record_visit!(now)
+  end
+
+  # Counts one visit per day the person opens any page while signed in.
+  def record_visit!(now = Time.current)
+    today = now.in_time_zone(ACTIVITY_ZONE).to_date
+    return if last_seen_on == today
+    update_columns(days_visited: days_visited + 1, last_seen_on: today, last_seen_at: now)
+  end
+
   # Generate a short-lived password reset token. Token is URL-safe and stored
   # in the DB; we compare against params[:token] in the reset flow. Returns
   # the plaintext token (so the controller can build the reset link).

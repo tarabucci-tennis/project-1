@@ -8,10 +8,17 @@ class ApplicationController < ActionController::Base
 
   helper_method :current_user
 
+  before_action :record_member_visit
+
   private
 
   def current_user
     @current_user ||= User.find_by(id: session[:user_id])
+  end
+
+  # One "day visited" per signed-in person per day (see User#record_visit!).
+  def record_member_visit
+    current_user&.record_visit!
   end
 
   def require_admin

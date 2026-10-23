@@ -1,0 +1,45 @@
+<% content_for :title, "Site members · Court Report" %>
+<% zone = User::ACTIVITY_ZONE %>
+
+<div class="cr-rp-page cr-mem-page">
+  <section class="cr-rp-card">
+    <div class="cr-rp-card-head">
+      <div>
+        <h2 class="cr-rp-card-title">Site members</h2>
+        <span class="cr-rp-card-note">Only you can see this page.</span>
+      </div>
+      <%= link_to "Download spreadsheet", admin_members_path(format: :csv), class: "cr-btn cr-btn-gold cr-btn-compact" %>
+    </div>
+
+    <div class="cr-mem-stats">
+      <div class="cr-mem-stat"><strong><%= @members.size %></strong><span>members</span></div>
+      <div class="cr-mem-stat"><strong><%= @active_this_week %></strong><span>visited this week</span></div>
+      <div class="cr-mem-stat"><strong><%= @members.count { |u| u.created_at && u.created_at >= 30.days.ago } %></strong><span>joined in 30 days</span></div>
+    </div>
+
+    <p class="cr-mem-note">Visits and sign-ins are counted from Oct 23, 2026. A visit is any day someone opens the site while signed in.</p>
+
+    <div class="cr-mem-list">
+      <div class="cr-mem-row cr-mem-headrow" aria-hidden="true">
+        <span>Member</span><span>Joined</span><span>Last visit</span><span>Days visited</span><span>Sign-ins</span>
+      </div>
+      <% @members.each do |u| %>
+        <div class="cr-mem-row">
+          <div class="cr-mem-who">
+            <%= link_to u.name, player_path(u), class: "cr-mem-name" %>
+            <span class="cr-mem-email"><%= u.email %></span>
+            <% teams = u.member_teams.map(&:name).uniq.sort %>
+            <% if teams.any? %><span class="cr-mem-teams"><%= teams.join(" · ") %></span><% end %>
+          </div>
+          <span class="cr-mem-cell" data-label="Joined"><%= u.created_at&.in_time_zone(zone)&.strftime("%b %-d, %Y") %></span>
+          <span class="cr-mem-cell" data-label="Last visit"><%= u.last_seen_at ? u.last_seen_at.in_time_zone(zone).strftime("%b %-d") : "—" %></span>
+          <span class="cr-mem-cell cr-mem-num" data-label="Days visited"><%= u.days_visited %></span>
+          <span class="cr-mem-cell cr-mem-num" data-label="Sign-ins"><%= u.sign_in_count %></span>
+        </div>
+      <% end %>
+      <% if @members.empty? %>
+        <p class="cr-mem-note">No one has made an account yet.</p>
+      <% end %>
+    </div>
+  </section>
+</div>
