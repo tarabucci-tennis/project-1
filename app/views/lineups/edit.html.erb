@@ -28,7 +28,7 @@
   </div>
 
   <p class="cr-lineup-help" style="font-size: 0.85rem; color: var(--cr-text-muted); margin-bottom: 16px; padding: 12px 14px; background: rgba(201, 162, 74, 0.08); border-left: 3px solid var(--cr-gold); border-radius: 6px;">
-    Pick a player for each line. Leave <strong>Already confirmed</strong> checked if you've already gotten a yes via text or in person — those players won't get an email asking them to confirm again. Uncheck it only if you want the app to email the player and ask.
+    Pick a player for each line. For a sub who isn't on the team, choose <strong>+ Write in a sub…</strong> at the bottom of the list and type their name. Leave <strong>Already confirmed</strong> checked if you've already gotten a yes via text or in person — those players won't get an email asking them to confirm again. Uncheck it only if you want the app to email the player and ask.
   </p>
 
   <% if @prefill.any? %>
@@ -51,7 +51,8 @@
           <% slots_for_line = @slots.select { |s| s.line_type == line_type && s.position == position } %>
           <% slots_for_line.each_with_index do |slot, i| %>
             <div class="cr-lineup-slot-row">
-              <select name="slots[<%= slot.id %>][user_id]" class="cr-select" style="max-width: 100%;">
+              <select name="slots[<%= slot.id %>][user_id]" class="cr-select" style="max-width: 100%;"
+                      onchange="var n = this.parentNode.querySelector('.cr-lineup-sub-name'); n.hidden = this.value !== 'sub'; if (!n.hidden) n.focus()">
                 <% if line_type == "singles" %>
                   <option value="">-- Select player --</option>
                 <% else %>
@@ -61,7 +62,16 @@
                   <% picked = slot.user_id ? slot.user_id == m.id : @prefill[slot.id] == m.id %>
                   <option value="<%= m.id %>" <%= "selected" if picked %>><%= m.name %></option>
                 <% end %>
+                <% if @subs.any? %>
+                  <optgroup label="Subs">
+                    <% @subs.each do |u| %>
+                      <option value="<%= u.id %>" <%= "selected" if slot.user_id == u.id %>><%= u.name %> (sub)</option>
+                    <% end %>
+                  </optgroup>
+                <% end %>
+                <option value="sub">+ Write in a sub…</option>
               </select>
+              <input type="text" name="slots[<%= slot.id %>][sub_name]" class="cr-lineup-sub-name" placeholder="Sub's name" maxlength="60" hidden aria-label="Sub's name">
               <label class="cr-lineup-confirmed-toggle">
                 <input type="hidden" name="slots[<%= slot.id %>][confirmed]" value="0">
                 <input type="checkbox" name="slots[<%= slot.id %>][confirmed]" value="1" <%= "checked" unless slot.declined? %>>

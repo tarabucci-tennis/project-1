@@ -3330,6 +3330,8 @@ button.cr-header-pill {
 .cr-lineup-slot-row .cr-select { width: 100%; }
 .cr-lineup-confirmed-toggle { display: inline-flex; align-items: center; gap: 6px; font-size: 0.82rem; color: var(--cr-text-muted); white-space: nowrap; }
 .cr-lineup-last-week { grid-column: 1 / -1; font-size: 0.74rem; color: var(--cr-text-light); }
+.cr-lineup-sub-name { grid-column: 1 / -1; padding: 9px 12px; border: 1px solid var(--cr-gold); border-radius: 8px; font: inherit; font-size: 0.92rem; }
+.cr-lineup-sub-name[hidden] { display: none; }
 .cr-lineup-carry { font-size: 0.85rem; color: var(--cr-text); margin: 0 0 14px; padding: 10px 14px; background: rgba(23, 180, 166, 0.10); border-left: 3px solid var(--cr-teal); border-radius: 6px; }
 @media (max-width: 480px) {
   .cr-lineup-slot-row { grid-template-columns: 1fr; }
@@ -3672,7 +3674,9 @@ button.cr-header-pill {
      nav bar. Keeps the header uncluttered on narrow viewports. */
   .cr-header-user,
   .cr-user-menu,
+  .cr-header-search,
   .cr-header-my-teams { display: none !important; }
+  .cr-header-search-icon { display: inline-flex !important; }
   .cr-main { padding: 24px 16px 110px; }
   .cr-page-title { font-size: 1.6rem; }
   .cr-team-hero { padding: 24px; }
@@ -5674,6 +5678,36 @@ button.cr-cal-btn.cr-share-icon:hover { border-color: var(--cr-gold); color: var
    name and its buttons. Lists/forms are narrow; data tables keep 1040px. */
 .cr-rp-page.cr-rp-narrow { max-width: 680px; }
 .cr-rp-page.cr-fr-page { max-width: 760px; }
+
+/* Top-bar search (computers); phones get the 🔍 button. */
+.cr-header-search { display: flex; margin: 0; }
+.cr-header-search input {
+  width: 220px; padding: 7px 14px 7px 32px; border-radius: 999px; font: inherit; font-size: 0.82rem;
+  color: #fff; background: rgba(255, 255, 255, 0.08) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24'%3E%3Ccircle cx='11' cy='11' r='7' fill='none' stroke='%23c9d2e0' stroke-width='2.4'/%3E%3Cpath d='M16.5 16.5 21 21' stroke='%23c9d2e0' stroke-width='2.4' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat 12px center;
+  border: 1px solid rgba(255, 255, 255, 0.25); outline: none; transition: width 0.15s, border-color 0.15s;
+}
+.cr-header-search input::placeholder { color: rgba(255, 255, 255, 0.6); }
+.cr-header-search input:focus { width: 280px; border-color: var(--cr-gold); background-color: rgba(255, 255, 255, 0.12); }
+.cr-header-search-icon {
+  display: none; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: 999px;
+  color: rgba(255, 255, 255, 0.9); border: 1px solid rgba(255, 255, 255, 0.25);
+}
+/* Search results page */
+.cr-search-page-form { display: flex; gap: 8px; margin: 4px 0 18px; }
+.cr-search-page-input { flex: 1; min-width: 0; padding: 11px 14px; border: 1px solid var(--cr-border); border-radius: 10px; font: inherit; font-size: 1rem; background: #fff; }
+.cr-search-hint { color: var(--cr-text-muted); font-size: 0.9rem; }
+.cr-search-head { margin: 20px 0 6px; font-size: 0.72rem; font-weight: 800; letter-spacing: 1.2px; text-transform: uppercase; color: var(--cr-gold); }
+.cr-search-head span { color: var(--cr-text-light); letter-spacing: 0; }
+.cr-search-list { background: var(--cr-white); border: 1px solid var(--cr-border); border-radius: 12px; overflow: hidden; }
+.cr-search-row, .cr-search-rowlink { display: grid; gap: 1px; padding: 11px 14px; text-decoration: none; color: var(--cr-text); min-width: 0; }
+.cr-search-row + .cr-search-row { border-top: 1px solid var(--cr-border); }
+a.cr-search-row:hover, .cr-search-rowlink:hover { background: var(--cr-teal-tint); }
+.cr-search-row-split { display: flex; align-items: center; gap: 8px; padding: 0 14px 0 0; }
+.cr-search-row-split .cr-search-rowlink { flex: 1; }
+.cr-search-main { font-weight: 700; overflow: hidden; text-overflow: ellipsis; }
+.cr-search-sub { font-size: 0.8rem; color: var(--cr-text-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.cr-search-chip { flex: 0 0 auto; padding: 6px 12px; border: 1px solid var(--cr-border); border-radius: 999px; font-size: 0.78rem; font-weight: 700; color: var(--cr-teal-deep); text-decoration: none; }
+.cr-search-chip:hover { background: var(--cr-teal-tint); }
 
 /* Admin: Site members (/admin/members) */
 .cr-user-menu .cr-header-user { font: inherit; font-size: 0.82rem; background: transparent; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }

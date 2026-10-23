@@ -46,6 +46,7 @@ class LineupsController < ApplicationController
 
     @slots = @lineup.lineup_slots.includes(:user).order(position: :asc)
     load_last_week
+    load_subs
   end
 
   # PATCH /teams/:team_id/matches/:match_id/lineup — captain saves lineup
@@ -66,6 +67,13 @@ class LineupsController < ApplicationController
           update_attrs = {}
 
           new_user_id = slot_data[:user_id].presence
+          # "Write in a sub": a player who isn't on the roster. Reuse the person
+          # if the name is already known (any capitalisation), otherwise add
+          # them as a name-only player. Subs are not added to the roster.
+          if new_user_id == SUB_OPTION
+            name = slot_data[:sub_name].to_s.squish.first(60)
+            new_user_id = name.present? ? sub_user_for(name).id : nil
+          end
           if new_user_id && slot.user_id.to_s != new_user_id.to_s
             update_attrs[:user_id] = new_user_id
           end
@@ -177,6 +185,21 @@ class LineupsController < ApplicationController
       end
     end
     @prefill_from = nil if @prefill.empty? && @last_week.empty?
+  end
+
+  SUB_OPTION = "sub".freeze
+
+  # Subs this team has used before (players in its past lineups who aren't on
+  # the roster), so a regular sub can be picked again instead of re-typed.
+  def load_subs
+    member_ids = @members.map(&:id)
+    team_lineups = Lineup.joins(:match).where(matches: { tennis_team_id: @team.id }).select(:id)
+    @subs = User.where(id: LineupSlot.where(lineup_id: team_lineups).where.not(user_id: nil).select(:user_id))
+                .where.not(id: member_ids).order(:name).to_a
+  end
+
+  def sub_user_for(name)
+    User.where("LOWER(name) = ?", name.downcase).first || User.create!(name: name)
   end
 
   def ensure_default_slots(lineup)
