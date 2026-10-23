@@ -8,7 +8,7 @@ export default class extends Controller {
   static targets = [
     "modal", "title", "body",
     "addWrap", "form", "formDate", "formTeam",
-    "captainNote"
+    "captainNote", "hover", "hoverTitle", "hoverBody"
   ]
   static values  = { teams: Array }
 
@@ -24,6 +24,10 @@ export default class extends Controller {
   open(event) {
     event.preventDefault()
     const btn = event.currentTarget
+    // With a mouse, clicking an event's name inside the day opens that event.
+    const chip = event.target.closest("[data-url]")
+    if (chip && this._canHover()) return this._visit(chip.dataset.url)
+    this._hideHover()
     let payload = {}
     try {
       const raw = btn.getAttribute("data-dashboard-calendar-payload-param") || "{}"
@@ -56,6 +60,68 @@ export default class extends Controller {
 
     this.modalTarget.classList.add("cr-dash-cal-modal-open")
     document.body.style.overflow = "hidden"
+  }
+
+  // Mouse only: hovering a day with events shows its schedule beside it.
+  hoverIn(event) {
+    if (!this._canHover() || !this.hasHoverTarget) return
+    clearTimeout(this._hideTimer)
+    const btn = event.currentTarget
+    const payload = this._payload(btn)
+    const count = (payload.matches || []).length + (payload.events || []).length + (payload.friendlies || []).length
+    if (count === 0) return this._hideHover()
+    clearTimeout(this._showTimer)
+    this._showTimer = setTimeout(() => this._showHover(btn, payload), 150)
+  }
+
+  hoverKeep() {
+    clearTimeout(this._hideTimer)
+  }
+
+  hoverOut() {
+    clearTimeout(this._showTimer)
+    clearTimeout(this._hideTimer)
+    this._hideTimer = setTimeout(() => this._hideHover(), 200)
+  }
+
+  _showHover(btn, payload) {
+    const box = this.hoverTarget
+    this.hoverTitleTarget.textContent = payload.label || ""
+    this.hoverBodyTarget.innerHTML = this._renderItems(payload)
+    box.hidden = false
+    // Place it beside the day (right side, or left if there's no room), inside the calendar.
+    const wrap = box.offsetParent.getBoundingClientRect()
+    const cell = btn.getBoundingClientRect()
+    const gap = 8
+    let left = cell.right - wrap.left + gap
+    if (cell.right + gap + box.offsetWidth > window.innerWidth - 8) left = cell.left - wrap.left - gap - box.offsetWidth
+    left = Math.max(0, left)
+    let top = cell.top - wrap.top
+    const maxTop = window.innerHeight - wrap.top - box.offsetHeight - 8
+    top = Math.max(0, Math.min(top, maxTop))
+    box.style.left = `${left}px`
+    box.style.top = `${top}px`
+  }
+
+  _hideHover() {
+    if (this.hasHoverTarget) this.hoverTarget.hidden = true
+  }
+
+  _canHover() {
+    return window.matchMedia("(hover: hover) and (pointer: fine)").matches
+  }
+
+  _visit(url) {
+    if (window.Turbo) window.Turbo.visit(url)
+    else window.location.href = url
+  }
+
+  _payload(btn) {
+    try {
+      return JSON.parse(btn.getAttribute("data-dashboard-calendar-payload-param") || "{}")
+    } catch (_e) {
+      return {}
+    }
   }
 
   close() {
