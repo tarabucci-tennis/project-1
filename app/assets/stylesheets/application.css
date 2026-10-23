@@ -4556,7 +4556,7 @@ button.cr-header-pill {
   background: #e6ebf2;
   border: 1px solid var(--cr-teal);
   border-radius: 12px;
-  max-width: 600px;
+  max-width: 760px;
 }
 .cr-home-tab {
   min-width: 0;
@@ -5254,7 +5254,7 @@ body.cr-ctx-lineups-edit .cr-field > span { color: var(--cr-text); }
 .cr-info-field input:disabled { background: var(--cr-bg); color: var(--cr-text-light); }
 
 /* ── Teams archive (Past Seasons) ── */
-.cr-archive-section { margin: 28px 0 0; }
+.cr-archive-section { max-width: 760px; margin: 28px auto 0; }
 .cr-archive-toggle {
   cursor: pointer; display: inline-block; list-style: none;
   font-size: 0.85rem; font-weight: 700; color: var(--cr-text-muted);
@@ -5263,7 +5263,7 @@ body.cr-ctx-lineups-edit .cr-field > span { color: var(--cr-text); }
 .cr-archive-toggle::after { content: " ▸"; }
 .cr-archive-section[open] > .cr-archive-toggle::after { content: " ▾"; }
 .cr-archive-toggle:hover { color: var(--cr-teal-deep); }
-.cr-archive-league { margin-top: 12px; max-width: 520px; }
+.cr-archive-league { margin-top: 12px; }
 .cr-archive-league-name {
   font-size: 0.68rem; font-weight: 800; letter-spacing: 1.4px; text-transform: uppercase;
   color: var(--cr-gold); border-bottom: 1px solid rgba(201, 162, 74, 0.35); padding-bottom: 3px; margin-bottom: 2px;
@@ -5833,10 +5833,10 @@ body.cr-ctx-admin-members { background: var(--cr-navy-page); }
    Upcoming list) instead of stretching across the page. Numbers sit in
    narrow fixed columns next to the team; Next gets the leftover room. */
 @media (min-width: 900px) {
-  .cr-standings-wrap, .cr-st-hint { max-width: 880px; margin-left: auto; margin-right: auto; }
+  .cr-standings-wrap, .cr-st-hint { max-width: 760px; margin-left: auto; margin-right: auto; }
   .cr-standings { table-layout: fixed; }
   .cr-standings th:nth-child(1) { width: 52px; }
-  .cr-standings th:nth-child(2) { width: 36%; }
+  .cr-standings th:nth-child(2) { width: 40%; }
   .cr-standings th:nth-child(3), .cr-standings th:nth-child(4) { width: 44px; }
   .cr-standings th:nth-child(5) { width: 64px; }
   .cr-standings thead th, .cr-standings tbody td { padding: 12px 10px; }

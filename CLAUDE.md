@@ -55,6 +55,11 @@
   across a wide empty gap. Cap widths for single-column pages (lists/forms ~680px via `.cr-rp-narrow`, friendly page
   760px, team page 880px) and use the width for content (e.g. the schedule's date | opponent | location | status row).
   Keep buttons in rows aligned (reserve space for a missing button). Check at 1280px, not just phones.
+- **One centered column per page** (Tara, Oct 23 2026): every page and every new piece sits in one centered
+  column with matching left/right edges, never stretched across a wide screen. Single-column pages and My Teams
+  (tab bar, Standings, Past Seasons) use 760px (`.cr-page` is 760px); only grids that fill the space (calendar,
+  Upcoming rows, team page) use 880px. Ship each visual change with a 1280px screenshot that shows no empty side
+  space inside the content.
 - **Database update dates:** a migration's timestamp must not be more than ~1 day in the future, or Rails refuses to
   load the schema and every test fails (hit on PR #196).
 
