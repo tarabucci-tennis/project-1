@@ -245,6 +245,29 @@ module ApplicationHelper
     lines.join("\n")
   end
 
+  # A match's lineup as text for the team chat: the match details, then one
+  # line per court ("1D: Alison Vachris & Tara Bucci"). Open lines show "—".
+  def lineup_share_text(match)
+    team = match.tennis_team
+    side = match.home? ? "Home" : ("Away" if match.away?)
+    lines = [ "🎾 #{team.name} vs. #{match.opponent}",
+              "📅 #{[ match.match_date.strftime('%a, %b %-d'), match.match_time.presence, side ].compact.join(' · ')}" ]
+    if (venue = match.venue)
+      lines << "📍 #{venue.name}"
+      lines.concat(venue.address_lines)
+    elsif (place = match_place(match))
+      lines << "📍 #{place}"
+    end
+
+    lines << "" << "Lineup"
+    slots = match.lineup ? match.lineup.lineup_slots.includes(:user).sort_by { |s| [ s.line_type == "singles" ? 0 : 1, s.position.to_i, s.id ] } : []
+    slots.group_by(&:line_label).each do |label, group|
+      names = group.map { |s| s.user&.name }.compact
+      lines << "#{label}: #{names.any? ? names.join(' & ') : '—'}"
+    end
+    lines.join("\n")
+  end
+
   def google_calendar_url(match)
     team_name = match.tennis_team.name
     title = "#{team_name} vs. #{match.opponent}"

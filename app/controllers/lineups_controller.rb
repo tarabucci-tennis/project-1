@@ -95,23 +95,32 @@ class LineupsController < ApplicationController
       end
 
       # Publish if requested
+      @emailed = 0
       if params[:publish] == "true" && !@lineup.published?
         @lineup.update!(published: true, published_at: Time.current)
 
         # Only email players who are NOT already confirmed by the captain
-        # AND have a real user assigned. If the captain checked "Already
-        # confirmed" for a slot, we skip the email — the captain already
-        # got a verbal yes via text / in person. Unfilled slots (user_id
-        # is nil) are also skipped.
-        @lineup.lineup_slots.includes(:user).where(confirmation: "pending").each do |slot|
-          next if slot.user.nil?
-          next unless slot.user.email.present?
-          LineupMailer.lineup_posted(slot).deliver_later
+        # AND have a real user assigned, and only when the server can send
+        # email (SMTP set up). Pre-confirmed and empty slots are skipped.
+        if email_ready?
+          @lineup.lineup_slots.includes(:user).where(confirmation: "pending").each do |slot|
+            next if slot.user.nil?
+            next unless slot.user.email.present?
+            LineupMailer.lineup_posted(slot).deliver_later
+            @emailed += 1
+          end
         end
       end
     end
 
-    redirect_to team_path(@team), notice: @lineup.published? ? "Lineup sent to team!" : "Lineup saved (not sent yet)."
+    # Say only what really happened; texting the lineup is the Share lineup button.
+    if params[:publish] == "true"
+      notice = "Lineup posted. Tap Share lineup to text it to your team."
+      notice += " We also emailed #{@emailed} #{'player'.pluralize(@emailed)} to confirm." if @emailed.positive?
+      redirect_to team_match_path(@team, @match), notice: notice
+    else
+      redirect_to team_path(@team), notice: @lineup.published? ? "Lineup saved. Players see the changes in Court Report." : "Lineup saved as a draft (not posted yet)."
+    end
   rescue ActiveRecord::RecordInvalid => e
     redirect_to edit_team_match_lineup_path(@team, @match), alert: "Error: #{e.message}"
   end
@@ -137,6 +146,11 @@ class LineupsController < ApplicationController
   end
 
   private
+
+  # Email goes out only once the server has a Gmail login (SMTP_USERNAME / SMTP_PASSWORD).
+  def email_ready?
+    ENV["SMTP_USERNAME"].present? && ENV["SMTP_PASSWORD"].present?
+  end
 
   def set_team_and_match
     @team = TennisTeam.find(params[:team_id])

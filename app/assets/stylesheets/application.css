@@ -5547,6 +5547,8 @@ span.cr-fr-chip { cursor: default; }
 .cr-fr-pair-tone-3 .cr-fr-chip { border-color: #7c4dce; background: #f1ebfb; color: #4c1d95; }
 .cr-fr-pair-tone-4 .cr-fr-chip { border-color: #d97706; background: #fdf1e1; color: #7c3a03; }
 .cr-fr-pair-tone-5 .cr-fr-chip { border-color: #0f8f8f; background: #e0f5f5; color: #0b4f4f; }
+.cr-lineup-share-row { display: flex; justify-content: flex-end; margin: 14px 0 8px; }
+
 /* Optional court score under each match on a friendly */
 .cr-fr-score { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 12px; margin-top: 8px; }
 .cr-fr-score-val { display: inline-flex; align-items: baseline; gap: 6px; font-size: 1.05rem; font-weight: 600; }

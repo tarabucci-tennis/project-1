@@ -208,6 +208,7 @@
                   <div class="cr-sched-detail">
                     <div class="cr-sched-actions">
                       <%= render "matches/share_button", match: match %>
+                      <% if lineup&.published? %><%= render "matches/lineup_share_button", match: match %><% end %>
                       <a href="<%= google_calendar_url(match) %>" target="_blank" rel="noopener" class="cr-chip-btn">Calendar</a>
                       <% if @is_captain %>
                         <%= link_to edit_team_match_path(@team, match), class: "cr-chip-btn" do %>Edit Match<% end %>
