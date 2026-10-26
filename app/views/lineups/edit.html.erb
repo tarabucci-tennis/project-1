@@ -34,7 +34,7 @@
   <% if @prefill.any? %>
     <p class="cr-lineup-carry">
       Filled in from last week's lineup (vs. <%= @prefill_from.opponent %>, <%= @prefill_from.match_date.strftime("%b %-d") %>).
-      To put in a sub, pick a different player on that line. Nothing is saved until you press Save or Send.
+      To put in a sub, pick a different player on that line. Nothing is saved until you press Save Draft or Post Lineup.
     </p>
   <% end %>
 
@@ -88,7 +88,7 @@
 
     <div class="cr-form-actions" style="margin-top: 24px;">
       <%= button_tag "Save Draft", type: :submit, name: "publish", value: "false", class: "cr-btn cr-btn-outline" %>
-      <%= button_tag "Send to Team", type: :submit, name: "publish", value: "true", class: "cr-btn cr-btn-gold" %>
+      <%= button_tag "Post Lineup", type: :submit, name: "publish", value: "true", class: "cr-btn cr-btn-gold" %>
       <%= link_to "Cancel", team_path(@team), class: "cr-btn cr-btn-outline" %>
     </div>
   <% end %>

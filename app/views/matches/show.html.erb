@@ -54,6 +54,9 @@
 
   <%# ── Lineup table ── %>
   <% if @lineup&.published? && @slots&.any? %>
+    <div class="cr-lineup-share-row">
+      <%= render "matches/lineup_share_button", match: @match %>
+    </div>
     <div class="cr-lineup-table">
       <div class="cr-lineup-table-header">
         <span class="cr-lineup-col-time">Time</span>
