@@ -224,25 +224,39 @@ class Friendly < ApplicationRecord
   # unplayed set, leaving everyone else where they were. Played sets are
   # history and never change. If the numbers don't line up (e.g. a court was
   # added), nothing is swapped and the organizer is asked to regenerate.
+  #
+  # One mapping is used for every set, so a sub always takes the SAME
+  # person's place in each set. (Mapping set by set could hand a sub one
+  # player's spot in Set 1 and another's in Set 2, repeating partners.)
   def sync_lineup_names!
     return unless lineup?
     playing = player_names
-    changed = false
-    sets = lineup_sets.deep_dup.map do |set|
-      next set if set["done"]
-      slots = Array(set["courts"]).flatten + Array(set["sitting"])
-      gone  = slots.uniq.reject { |n| playing.include?(n) }
-      fresh = playing.reject { |n| slots.include?(n) }
-      next set if gone.empty? || gone.size != fresh.size
+    sets = lineup_sets.deep_dup
+    unplayed = sets.reject { |set| set["done"] }
+    slots = unplayed.flat_map { |set| Array(set["courts"]).flatten + Array(set["sitting"]) }.uniq
+    gone  = slots.reject { |n| playing.include?(n) }
+    fresh = playing.reject { |n| slots.include?(n) }
+    return if gone.empty? || gone.size != fresh.size
 
-      swap = gone.zip(fresh).to_h
+    swap = gone.zip(fresh).to_h
+    unplayed.each do |set|
       set["courts"]  = Array(set["courts"]).map { |court| court.map { |n| swap.fetch(n, n) } }
       set["sitting"] = Array(set["sitting"]).map { |n| swap.fetch(n, n) }
       set.delete("scores")
-      changed = true
-      set
     end
-    update!(lineup: { "sets" => sets }) if changed
+    update!(lineup: { "sets" => sets })
+  end
+
+  # Partnerships that appear in more than one set, e.g. after a swap:
+  # [ [ ["Ann", "Bea"], [1, 2] ], ... ] (names, set numbers).
+  def repeated_partnerships
+    seen = Hash.new { |h, k| h[k] = [] }
+    lineup_sets.first(sets_count).each_with_index do |set, si|
+      Array(set["courts"]).each do |a, b, c, d|
+        [ [ a, b ], [ c, d ] ].each { |pair| seen[pair.compact.sort] << si + 1 if pair.compact.size == 2 }
+      end
+    end
+    seen.select { |_, sets| sets.size > 1 }.to_a
   end
 
   # Sign-ups changed since the unplayed sets were made?

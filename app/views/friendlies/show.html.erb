@@ -111,6 +111,12 @@
         <% if @friendly.lineup_out_of_date? %>
           <p class="cr-fr-warn">The names have changed since this lineup was made. Regenerate to include everyone (sets marked played stay as they are).</p>
         <% end %>
+        <% repeats = @friendly.repeated_partnerships %>
+        <% if repeats.any? %>
+          <p class="cr-fr-warn">Same partners in more than one set:
+            <%= repeats.map { |(names, sets)| "#{names.join(' & ')} (Sets #{sets.to_sentence(two_words_connector: ' and ', last_word_connector: ' and ')})" }.join("; ") %>.
+            Fine if you meant it. If not, swap two names or regenerate the sets not played yet.</p>
+        <% end %>
         <% if @friendly.can_generate? %>
           <%= button_to (@friendly.lineup? ? "Regenerate unplayed sets" : "Generate lineup"), friendly_lineup_path(@friendly),
                 method: :post, class: "cr-btn cr-btn-gold cr-fr-big-btn",
