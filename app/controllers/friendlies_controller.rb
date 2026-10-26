@@ -125,6 +125,14 @@ class FriendliesController < ApplicationController
                 **(ok ? { notice: "Swapped." } : { alert: "Couldn't swap those two." })
   end
 
+  # PATCH /f/:token/lineup/sets/:set/courts/:court/score — optional games for
+  # each pair. Anyone with the link can add one, like adding a name.
+  def score
+    ok = @friendly.set_court_score!(params[:set], params[:court], params[:a], params[:b])
+    redirect_to friendly_path(@friendly, anchor: "set-#{params[:set].to_i + 1}"),
+                **(ok ? { notice: "Score saved." } : { alert: "Scores must be whole numbers (or leave both blank)." })
+  end
+
   # PATCH /f/:token/lineup/sets/:set/done?done=1|0
   def set_done
     @friendly.mark_set_done!(params[:set], params[:done] == "1")

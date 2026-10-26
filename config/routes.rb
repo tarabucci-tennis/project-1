@@ -43,6 +43,7 @@ Rails.application.routes.draw do
   post   "f/:token/lineup", to: "friendlies#generate", as: :friendly_lineup
   patch  "f/:token/lineup/swap", to: "friendlies#swap", as: :swap_friendly_lineup
   patch  "f/:token/lineup/sets/:set/done", to: "friendlies#set_done", as: :friendly_set_done
+  patch  "f/:token/lineup/sets/:set/courts/:court/score", to: "friendlies#score", as: :friendly_court_score
 
   # Add a whole USTA team from its TennisLink Team Summary file
   get  "usta-teams/new", to: "usta_teams#new", as: :new_usta_team

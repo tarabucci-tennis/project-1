@@ -184,6 +184,30 @@
                     </div>
                   <% end %>
                 </div>
+                <%# Optional score: games for each pair, coloured like the pair. %>
+                <% score = @friendly.court_score(set, ci) %>
+                <div class="cr-fr-score">
+                  <% if score %>
+                    <span class="cr-fr-score-val" aria-label="Score <%= score[0] %> to <%= score[1] %>">
+                      <span class="cr-fr-score-tone-<%= (ci * 2) % 6 %> <%= 'cr-fr-score-win' if score[0] > score[1] %>"><%= score[0] %></span>
+                      <span class="cr-fr-score-dash">–</span>
+                      <span class="cr-fr-score-tone-<%= (ci * 2 + 1) % 6 %> <%= 'cr-fr-score-win' if score[1] > score[0] %>"><%= score[1] %></span>
+                    </span>
+                  <% end %>
+                  <details class="cr-fr-score-edit cr-no-print">
+                    <summary><%= score ? "Edit score" : "+ Add score" %></summary>
+                    <%= form_with url: friendly_court_score_path(@friendly, set: si, court: ci), method: :patch,
+                          data: { turbo: false }, class: "cr-fr-score-form" do %>
+                      <input type="number" name="a" min="0" max="99" inputmode="numeric" value="<%= score&.first %>"
+                             aria-label="Games for <%= court.values_at(0, 1).compact.join(' & ') %>">
+                      <span class="cr-fr-score-dash">–</span>
+                      <input type="number" name="b" min="0" max="99" inputmode="numeric" value="<%= score&.last %>"
+                             aria-label="Games for <%= court.values_at(2, 3).compact.join(' & ') %>">
+                      <button type="submit" class="cr-chip-btn">Save</button>
+                      <span class="cr-fr-score-hint">Optional. Leave both blank to clear.</span>
+                    <% end %>
+                  </details>
+                </div>
               </div>
             <% end %>
             <% if Array(set["sitting"]).any? %>
