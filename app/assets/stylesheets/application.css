@@ -5442,6 +5442,18 @@ body.cr-ctx-friendlies-new, body.cr-ctx-friendlies-show, body.cr-ctx-friendlies-
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%236b7280' stroke-width='2'/%3E%3C/svg%3E");
   background-repeat: no-repeat; background-position: right 12px center;
 }
+/* "Where" suggestions under the box (place_suggest_controller) */
+.cr-place { position: relative; }
+.cr-place-list {
+  position: absolute; left: 0; right: 0; top: calc(100% + 4px); z-index: 30; margin: 0; padding: 4px; list-style: none;
+  background: #fff; border: 1px solid var(--cr-border); border-radius: 10px; box-shadow: 0 10px 24px rgba(10,22,40,0.14);
+  max-height: 300px; overflow-y: auto;
+}
+.cr-place-list[hidden] { display: none; }
+.cr-place-opt { display: grid; gap: 1px; padding: 9px 12px; border-radius: 7px; cursor: pointer; font-size: 0.9rem; }
+.cr-place-opt-active, .cr-place-opt:hover { background: rgba(201,162,74,0.14); }
+.cr-place .cr-place-name { font-weight: 700; color: var(--cr-text); }
+.cr-place .cr-place-addr { font-weight: 400; font-size: 0.8rem; color: var(--cr-text-muted); }
 .cr-fr-when { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px 12px; }
 .cr-fr-when .cr-fr-date, .cr-fr-when .cr-fr-length { grid-column: 1 / -1; }
 @media (min-width: 640px) {
