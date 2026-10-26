@@ -132,7 +132,7 @@
     <div class="cr-rp-actions cr-fr-actions cr-no-print">
       <button type="button" class="cr-chip-btn" data-share-text="<%= invite %>" data-share-url="<%= share_url %>"
               onclick="crShare(this)">
-        <span class="cr-share-label">Share invite</span>
+        <span class="cr-share-label">Invite players</span>
       </button>
       <%= link_to "Calendar", friendly_google_calendar_url(@friendly, share_url: share_url),
             target: "_blank", rel: "noopener", class: "cr-chip-btn", title: "Add to Google Calendar" %>
@@ -143,8 +143,8 @@
       <% end %>
     </div>
     <% if organizer? %>
-      <p class="cr-rp-foot cr-no-print" style="padding: 0 0 12px;">Share invite sends the link by text, WhatsApp or email on your phone (or copies it on a computer).
-        Anyone with the link can add their name, no account needed. Court Report counts the courts for you.</p>
+      <p class="cr-rp-foot cr-no-print" style="padding: 0 0 12px;">Invite players sends the link by text, WhatsApp or email (or copies it on a computer). Send it once:
+        the same link always shows the latest names, courts and lineup. No account needed to add a name.</p>
     <% end %>
 
     <% if @friendly.lineup? %>

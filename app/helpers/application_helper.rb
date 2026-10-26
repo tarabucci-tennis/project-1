@@ -109,11 +109,13 @@ module ApplicationHelper
   #   3600 St Davids Rd
   #   Newtown Square, PA 19073
   #
-  #   Add your name if you can play, and check this link for updates:
+  #   Can you play? Add your name here. Every 4 names = 1 court, so we'll add
+  #   courts if more people join. This link always shows who's playing and the lineup:
   def friendly_invite_text(friendly)
     lines = [ "🎾 #{friendly.title}", "📅 #{friendly.starts_at.strftime('%a, %b %-d')} · #{friendly.time_label}" ]
     lines.concat(place_lines(friendly.place))
-    lines << "" << "Add your name if you can play, and check this link for updates:"
+    lines << "" << "Can you play? Add your name here. Every 4 names = 1 court, so we'll add courts " \
+                   "if more people join. This link always shows who's playing and the lineup:"
     lines.join("\n")
   end
 
