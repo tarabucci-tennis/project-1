@@ -5547,6 +5547,23 @@ span.cr-fr-chip { cursor: default; }
 .cr-fr-pair-tone-3 .cr-fr-chip { border-color: #7c4dce; background: #f1ebfb; color: #4c1d95; }
 .cr-fr-pair-tone-4 .cr-fr-chip { border-color: #d97706; background: #fdf1e1; color: #7c3a03; }
 .cr-fr-pair-tone-5 .cr-fr-chip { border-color: #0f8f8f; background: #e0f5f5; color: #0b4f4f; }
+/* Optional court score under each match on a friendly */
+.cr-fr-score { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 12px; margin-top: 8px; }
+.cr-fr-score-val { display: inline-flex; align-items: baseline; gap: 6px; font-size: 1.05rem; font-weight: 600; }
+.cr-fr-score-win { font-weight: 900; }
+.cr-fr-score-dash { color: var(--cr-text-muted); font-weight: 600; }
+.cr-fr-score-tone-0 { color: #1e3a8a; } .cr-fr-score-tone-1 { color: #8f1d21; } .cr-fr-score-tone-2 { color: #14532d; }
+.cr-fr-score-tone-3 { color: #4c1d95; } .cr-fr-score-tone-4 { color: #7c3a03; } .cr-fr-score-tone-5 { color: #0b4f4f; }
+.cr-fr-score-edit summary { cursor: pointer; list-style: none; font-size: 0.85rem; font-weight: 700; color: var(--cr-teal-deep); }
+.cr-fr-score-edit summary::-webkit-details-marker { display: none; }
+.cr-fr-score-edit[open] { flex-basis: 100%; }
+.cr-fr-score-form { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 8px; }
+.cr-fr-score-form input[type="number"] {
+  width: 58px; min-height: 44px; padding: 8px; text-align: center; font: inherit; font-size: 1rem; font-weight: 700;
+  border: 1px solid var(--cr-border); border-radius: 8px; color: var(--cr-text); background: #fff;
+}
+.cr-fr-score-form .cr-chip-btn { flex: 0 0 auto; min-height: 44px; padding-left: 18px; padding-right: 18px; }
+.cr-fr-score-hint { flex-basis: 100%; font-size: 0.78rem; color: var(--cr-text-muted); }
 .cr-fr-pair .cr-fr-chip.is-picked { background: var(--cr-gold); border-color: var(--cr-gold); color: var(--cr-black); }
 .cr-fr-sitting { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding-top: 10px; border-top: 1px dashed var(--cr-border); }
 .cr-fr-sitting .cr-fr-court-label { flex-basis: 100%; margin-bottom: 0; }

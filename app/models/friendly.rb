@@ -137,7 +137,8 @@ class Friendly < ApplicationRecord
   end
 
   # ── Lineup ──────────────────────────────────────────────────────────
-  # lineup = { "sets" => [ { "courts" => [[a, b, c, d], ...], "sitting" => [...], "done" => bool } ] }
+  # lineup = { "sets" => [ { "courts" => [[a, b, c, d], ...], "sitting" => [...], "done" => bool,
+  #                          "scores" => [[6, 4], nil, ...] (optional, one per court) } ] }
 
   def lineup_sets
     Array((lineup || {})["sets"])
@@ -178,7 +179,37 @@ class Friendly < ApplicationRecord
     vb = b[0][b[1]]
     a[0][a[1]] = vb
     b[0][b[1]] = va
+    set.delete("scores") # the pairs changed, so any scores no longer fit
     update!(lineup: { "sets" => sets })
+  end
+
+  # Optional score for one court in a set: games for the first pair (left) and
+  # the second pair (right). Both blank clears it. Kept in set["scores"], one
+  # entry per court ([a, b] or nil).
+  def set_court_score!(set_index, court_index, a, b)
+    sets = lineup_sets.deep_dup
+    set = sets[set_index.to_i]
+    ci = court_index.to_i
+    return false if set.nil? || ci.negative? || ci >= Array(set["courts"]).size
+
+    a = a.to_s.strip
+    b = b.to_s.strip
+    scores = Array(set["scores"]).dup
+    scores.fill(nil, scores.size...Array(set["courts"]).size)
+    if a.empty? && b.empty?
+      scores[ci] = nil
+    else
+      ga = Integer(a, 10, exception: false)
+      gb = Integer(b, 10, exception: false)
+      return false unless ga && gb && ga.between?(0, 99) && gb.between?(0, 99)
+      scores[ci] = [ ga, gb ]
+    end
+    set["scores"] = scores
+    update!(lineup: { "sets" => sets })
+  end
+
+  def court_score(set, court_index)
+    Array(set["scores"])[court_index]
   end
 
   def mark_set_done!(set_index, done)
@@ -207,6 +238,7 @@ class Friendly < ApplicationRecord
       swap = gone.zip(fresh).to_h
       set["courts"]  = Array(set["courts"]).map { |court| court.map { |n| swap.fetch(n, n) } }
       set["sitting"] = Array(set["sitting"]).map { |n| swap.fetch(n, n) }
+      set.delete("scores")
       changed = true
       set
     end
