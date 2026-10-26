@@ -28,8 +28,15 @@
       </div>
     </div>
   </div>
-  <label>Where <span>(optional: club, street, town, separated by commas)</span>
-    <%= f.text_field :location, placeholder: "e.g. Aronimink Golf Club, 3600 St Davids Rd, Newtown Square, PA" %>
+  <label>Where <span>(optional: start typing a club, or type club, street, town)</span>
+    <div class="cr-place" data-controller="place-suggest"
+         data-place-suggest-places-value="<%= friendly_place_suggestions(current_user).to_json %>">
+      <%= f.text_field :location, placeholder: "e.g. Aronimink Golf Club, 3600 St Davids Rd, Newtown Square, PA",
+            autocomplete: "off", role: "combobox", "aria-controls": "cr-place-list",
+            data: { place_suggest_target: "input",
+                    action: "input->place-suggest#search keydown->place-suggest#key blur->place-suggest#blur" } %>
+      <ul id="cr-place-list" class="cr-place-list" role="listbox" hidden data-place-suggest-target="list"></ul>
+    </div>
   </label>
   <label>Sets to plan
     <%= f.select :sets_count, [ [ "1 set", 1 ], [ "2 sets", 2 ], [ "3 sets (if time allows)", 3 ] ] %>
