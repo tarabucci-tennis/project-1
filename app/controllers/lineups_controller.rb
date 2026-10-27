@@ -62,35 +62,47 @@ class LineupsController < ApplicationController
 
     ActiveRecord::Base.transaction do
       if params[:slots].present?
+        # Who goes where. A blank pick removes the player from that line.
+        wanted = {}
         params[:slots].each do |slot_id, slot_data|
-          slot = @lineup.lineup_slots.find(slot_id)
-          update_attrs = {}
-
+          next unless slot_data.key?(:user_id)
           new_user_id = slot_data[:user_id].presence
           # "Write in a sub": a player who isn't on the roster. Reuse the person
           # if the name is already known (any capitalisation), otherwise add
           # them as a name-only player. Subs are not added to the roster.
+          # No name typed = leave that line as it was.
           if new_user_id == SUB_OPTION
             name = slot_data[:sub_name].to_s.squish.first(60)
-            new_user_id = name.present? ? sub_user_for(name).id : nil
+            next if name.blank?
+            new_user_id = sub_user_for(name).id
           end
-          if new_user_id && slot.user_id.to_s != new_user_id.to_s
-            update_attrs[:user_id] = new_user_id
-          end
+          wanted[slot_id.to_s] = new_user_id&.to_i
+        end
+
+        twice = wanted.values.compact.tally.select { |_, n| n > 1 }.keys
+        if twice.any?
+          names = User.where(id: twice).pluck(:name).to_sentence
+          return redirect_to edit_team_match_lineup_path(@team, @match),
+                             alert: "#{names} can only be on one line. Nothing was saved, please fix and save again."
+        end
+
+        # Take everyone who's moving off their old line first, so a player can
+        # move from one line to another in the same save.
+        moving = @lineup.lineup_slots.where(id: wanted.keys).select { |slot| slot.user_id != wanted[slot.id.to_s] }
+        moving.each { |slot| slot.update!(user_id: nil) if slot.user_id }
+        moving.each { |slot| slot.update!(user_id: wanted[slot.id.to_s]) if wanted[slot.id.to_s] }
+
+        params[:slots].each do |slot_id, slot_data|
+          slot = @lineup.lineup_slots.find(slot_id)
+          next unless slot_data.key?(:confirmed)
 
           # Captain override: "Already confirmed" checkbox
-          if slot_data.key?(:confirmed)
-            if slot_data[:confirmed] == "1"
-              update_attrs[:confirmation] = "confirmed"
-              update_attrs[:confirmed_at] = Time.current
-            else
-              # Unchecked — reset to pending so the player still gets emailed
-              update_attrs[:confirmation] = "pending"
-              update_attrs[:confirmed_at] = nil
-            end
+          if slot_data[:confirmed] == "1"
+            slot.update!(confirmation: "confirmed", confirmed_at: slot.confirmed_at || Time.current) unless slot.confirmed?
+          else
+            # Unchecked — reset to pending so the player can be asked
+            slot.update!(confirmation: "pending", confirmed_at: nil) unless slot.pending?
           end
-
-          slot.update!(update_attrs) if update_attrs.any?
         end
       end
 

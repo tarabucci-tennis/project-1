@@ -3337,6 +3337,18 @@ button.cr-header-pill {
   .cr-lineup-slot-row { grid-template-columns: 1fr; }
 }
 
+/* Set Lineup: the dropdown with an × to take the player off the line */
+.cr-lineup-pickrow { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.cr-lineup-pickrow .cr-select { flex: 1 1 auto; min-width: 0; }
+.cr-lineup-clear { flex: 0 0 auto; width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--cr-border); background: #fff; font-size: 1.25rem; line-height: 1; color: var(--cr-text-muted); cursor: pointer; }
+.cr-lineup-clear:hover { color: #b91c1c; border-color: #e5484d; }
+.cr-lineup-actions { flex-wrap: wrap; align-items: center; }
+.cr-lineup-actions .cr-btn { white-space: nowrap; }
+@media (max-width: 480px) {
+  .cr-lineup-actions .cr-btn { flex: 1 1 0; min-width: 0; padding-left: 8px; padding-right: 8px; font-size: 0.85rem; text-align: center; justify-content: center; }
+  .cr-lineup-actions .cr-lineup-clear-all { flex-basis: 100%; margin-left: 0; text-align: center; }
+}
+.cr-lineup-clear-all { margin-left: auto; background: none; border: none; font: inherit; font-size: 0.88rem; font-weight: 700; color: #b91c1c; text-decoration: underline; cursor: pointer; padding: 10px 4px; }
 /* Set Lineup: tap a name, then "Put … here" (lineup_pick_controller) */
 .cr-lp-panel { background: var(--cr-white); border: 1px solid var(--cr-border); border-radius: 10px; padding: 14px 16px; margin-bottom: 12px; }
 .cr-lp-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; margin-bottom: 10px; }

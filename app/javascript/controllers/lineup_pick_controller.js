@@ -29,6 +29,20 @@ export default class extends Controller {
     this.refresh()
   }
 
+  // × next to a spot: take that player off this line.
+  clear(event) {
+    this._set(event.currentTarget.closest(".cr-lineup-slot-row").querySelector("select"), "")
+    this.refresh()
+  }
+
+  // Clear lineup: empty every spot (saved only when the captain saves).
+  clearAll() {
+    if (!window.confirm("Take every player off this lineup? Nothing is saved until you press Save Draft or Post Lineup.")) return
+    this.selectTargets.forEach((s) => this._set(s, ""))
+    this.picked = null
+    this.refresh()
+  }
+
   // A dropdown changed by hand: keep the names' line tags in step.
   changed() {
     this.refresh()

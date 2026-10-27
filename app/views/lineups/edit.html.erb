@@ -35,7 +35,7 @@
   <% end %>
 
   <p class="cr-lineup-help" style="font-size: 0.85rem; color: var(--cr-text-muted); margin-bottom: 16px; padding: 12px 14px; background: rgba(201, 162, 74, 0.08); border-left: 3px solid var(--cr-gold); border-radius: 6px;">
-    Tap a name and then the line, or pick from each line's list. For a sub who isn't on the team, choose <strong>+ Write in a sub…</strong> at the bottom of the list and type their name. Leave <strong>Already confirmed</strong> checked if you've already gotten a yes via text or in person — those players won't get an email asking them to confirm again. Uncheck it only if you want the app to email the player and ask.
+    Tap a name and then the line, or pick from each line's list. Tap <strong>&times;</strong> to take a player off a line, or <strong>Clear lineup</strong> to start over (nothing changes until you save). For a sub who isn't on the team, choose <strong>+ Write in a sub…</strong> at the bottom of the list and type their name. Leave <strong>Already confirmed</strong> checked if you've already gotten a yes via text or in person — those players won't get an email asking them to confirm again. Uncheck it only if you want the app to email the player and ask.
   </p>
 
   <% if @prefill.any? %>
@@ -81,28 +81,32 @@
           <% slots_for_line.each_with_index do |slot, i| %>
             <div class="cr-lineup-slot-row">
               <button type="button" class="cr-lineup-spot" data-lineup-pick-target="spot" data-action="lineup-pick#place" hidden></button>
-              <select name="slots[<%= slot.id %>][user_id]" class="cr-select" style="max-width: 100%;"
-                      data-lineup-pick-target="select" data-line="<%= line_type == 'singles' ? "#{position}S" : (tri || "#{position}D") %>"
-                      data-action="change->lineup-pick#changed"
-                      onchange="var n = this.parentNode.querySelector('.cr-lineup-sub-name'); n.hidden = this.value !== 'sub'; if (!n.hidden) n.focus()">
-                <% if line_type == "singles" %>
-                  <option value="">-- Select player --</option>
-                <% else %>
-                  <option value="">-- Select player <%= i + 1 %> --</option>
-                <% end %>
-                <% @members.each do |m| %>
-                  <% picked = slot.user_id ? slot.user_id == m.id : @prefill[slot.id] == m.id %>
-                  <option value="<%= m.id %>" <%= "selected" if picked %>><%= m.name %></option>
-                <% end %>
-                <% if @subs.any? %>
-                  <optgroup label="Subs">
-                    <% @subs.each do |u| %>
-                      <option value="<%= u.id %>" <%= "selected" if slot.user_id == u.id %>><%= u.name %> (sub)</option>
-                    <% end %>
-                  </optgroup>
-                <% end %>
-                <option value="sub">+ Write in a sub…</option>
-              </select>
+              <div class="cr-lineup-pickrow">
+                <select name="slots[<%= slot.id %>][user_id]" class="cr-select" style="max-width: 100%;"
+                        data-lineup-pick-target="select" data-line="<%= line_type == 'singles' ? "#{position}S" : (tri || "#{position}D") %>"
+                        data-action="change->lineup-pick#changed"
+                        onchange="var n = this.closest('.cr-lineup-slot-row').querySelector('.cr-lineup-sub-name'); n.hidden = this.value !== 'sub'; if (!n.hidden) n.focus()">
+                  <% if line_type == "singles" %>
+                    <option value="">-- Select player --</option>
+                  <% else %>
+                    <option value="">-- Select player <%= i + 1 %> --</option>
+                  <% end %>
+                  <% @members.each do |m| %>
+                    <% picked = slot.user_id ? slot.user_id == m.id : @prefill[slot.id] == m.id %>
+                    <option value="<%= m.id %>" <%= "selected" if picked %>><%= m.name %></option>
+                  <% end %>
+                  <% if @subs.any? %>
+                    <optgroup label="Subs">
+                      <% @subs.each do |u| %>
+                        <option value="<%= u.id %>" <%= "selected" if slot.user_id == u.id %>><%= u.name %> (sub)</option>
+                      <% end %>
+                    </optgroup>
+                  <% end %>
+                  <option value="sub">+ Write in a sub…</option>
+                </select>
+                <button type="button" class="cr-lineup-clear" data-action="lineup-pick#clear"
+                        aria-label="Remove the player from this spot" title="Remove from this spot">&times;</button>
+              </div>
               <input type="text" name="slots[<%= slot.id %>][sub_name]" class="cr-lineup-sub-name" placeholder="Sub's name" maxlength="60" hidden aria-label="Sub's name">
               <label class="cr-lineup-confirmed-toggle">
                 <input type="hidden" name="slots[<%= slot.id %>][confirmed]" value="0">
@@ -118,10 +122,11 @@
       <% end %>
     </div>
 
-    <div class="cr-form-actions" style="margin-top: 24px;">
+    <div class="cr-form-actions cr-lineup-actions" style="margin-top: 24px;">
       <%= button_tag "Save Draft", type: :submit, name: "publish", value: "false", class: "cr-btn cr-btn-outline" %>
       <%= button_tag "Post Lineup", type: :submit, name: "publish", value: "true", class: "cr-btn cr-btn-gold" %>
       <%= link_to "Cancel", team_path(@team), class: "cr-btn cr-btn-outline" %>
+      <button type="button" class="cr-lineup-clear-all" data-action="lineup-pick#clearAll">Clear lineup</button>
     </div>
   <% end %>
 </div>
