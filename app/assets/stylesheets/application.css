@@ -5565,8 +5565,9 @@ span.cr-fr-chip { cursor: default; }
 .cr-poll-btns { display: flex; gap: 8px; flex-shrink: 0; }
 .cr-poll-form { margin: 0; }
 .cr-poll-btn { min-width: 64px; min-height: 44px; padding: 0 14px; border-radius: 999px; border: 1.5px solid var(--cr-border); background: #fff; font: inherit; font-weight: 800; font-size: 0.9rem; color: var(--cr-text-muted); cursor: pointer; }
-.cr-poll-btn-yes.is-on { background: #16a34a; border-color: #16a34a; color: #fff; }
-.cr-poll-btn-no.is-on { background: #dc2626; border-color: #dc2626; color: #fff; }
+/* Picked answer: the same light green / light red as the friendly name chips */
+.cr-poll-btn-yes.is-on { background: #e6f6ec; border-color: #2e9d5b; color: #14532d; }
+.cr-poll-btn-no.is-on { background: #fdecec; border-color: #e5484d; color: #8f1d21; }
 .cr-lineup-said { display: grid; gap: 4px; margin: 0 0 14px; font-size: 0.85rem; color: var(--cr-text); }
 .cr-lineup-said-yes { color: #15803d; } .cr-lineup-said-no { color: #b91c1c; }
 
