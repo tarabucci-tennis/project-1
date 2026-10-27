@@ -3337,6 +3337,25 @@ button.cr-header-pill {
   .cr-lineup-slot-row { grid-template-columns: 1fr; }
 }
 
+/* Set Lineup: tap a name, then "Put … here" (lineup_pick_controller) */
+.cr-lp-panel { background: var(--cr-white); border: 1px solid var(--cr-border); border-radius: 10px; padding: 14px 16px; margin-bottom: 12px; }
+.cr-lp-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; margin-bottom: 10px; }
+.cr-lp-title { font-size: 0.85rem; font-weight: 800; color: var(--cr-text); }
+.cr-lp-hint { font-size: 0.8rem; color: var(--cr-text-muted); }
+.cr-lp-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.cr-lp-chip { display: inline-flex; align-items: center; gap: 6px; min-height: 40px; padding: 6px 12px; border-radius: 999px; border: 1.5px solid var(--cr-border); background: #fff; font: inherit; font-size: 0.88rem; font-weight: 700; color: var(--cr-text); cursor: pointer; }
+.cr-lp-chip.is-yes { background: #e6f6ec; border-color: #2e9d5b; color: #14532d; }
+.cr-lp-chip.is-no { background: #fdecec; border-color: #e5484d; color: #8f1d21; }
+.cr-lp-chip.is-picked { background: var(--cr-gold); border-color: var(--cr-gold); color: var(--cr-black); box-shadow: 0 0 0 3px rgba(201,162,74,0.3); }
+.cr-lp-line { font-size: 0.66rem; font-weight: 800; padding: 2px 6px; border-radius: 999px; background: var(--cr-black); color: var(--cr-white); }
+.cr-lp-line[hidden] { display: none; }
+.cr-lp-key { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; margin-top: 10px; font-size: 0.74rem; color: var(--cr-text-muted); }
+.cr-lp-dot { width: 10px; height: 10px; border-radius: 50%; border: 1.5px solid var(--cr-border); background: #fff; margin-left: 4px; }
+.cr-lp-dot.is-yes { background: #e6f6ec; border-color: #2e9d5b; } .cr-lp-dot.is-no { background: #fdecec; border-color: #e5484d; }
+.cr-lineup-spot { grid-column: 1 / -1; min-height: 40px; border: 1.5px dashed var(--cr-gold); border-radius: 8px; background: rgba(201,162,74,0.10); font: inherit; font-size: 0.86rem; font-weight: 700; color: #8a6d1f; cursor: pointer; }
+.cr-lineup-spot[hidden] { display: none; }
+
+
 /* ========================================================
    My Week (upcoming matches on home page)
    ======================================================== */
