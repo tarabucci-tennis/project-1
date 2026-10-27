@@ -1,0 +1,6 @@
+<%# Captains: text the team a "Can you play?" link for this match. Locals: match. %>
+<button type="button" class="cr-chip-btn cr-share-btn" data-share-text="<%= match_poll_text(match) %>"
+        data-share-url="<%= match_poll_url(match.availability_token!) %>"
+        title="Text the team a link to say if they can play" onclick="event.preventDefault(); event.stopPropagation(); crShare(this);">
+  <span class="cr-share-label">Ask who can play</span>
+</button>

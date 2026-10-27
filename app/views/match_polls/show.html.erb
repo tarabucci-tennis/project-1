@@ -1,0 +1,47 @@
+<% content_for :title, "Can you play? · #{@team.name} vs. #{@match.opponent}" %>
+<% token = @match.availability_token %>
+<% counts = { in: @answers.values.count { |a| a.status == "in" }, out: @answers.values.count { |a| a.status == "out" } } %>
+<% waiting = @players.size - counts[:in] - counts[:out] %>
+<% me = @players.find { |u| u.id == @me_id } %>
+
+<div class="cr-rp-page cr-rp-narrow cr-poll-page">
+  <section class="cr-rp-card">
+    <div class="cr-rp-card-head cr-poll-head">
+      <div>
+        <div class="cr-poll-team"><%= @team.name %></div>
+        <h2 class="cr-rp-card-title">vs. <%= @match.opponent %></h2>
+        <div class="cr-poll-when">
+          <%= @match.match_date.strftime("%a, %b %-d") %><%= " · #{@match.match_time}" if @match.match_time.present? %>
+          <% if @match.home? %><span class="cr-tag cr-tag-home">Home</span><% elsif @match.away? %><span class="cr-tag cr-tag-away">Away</span><% end %>
+        </div>
+        <% if (place = match_place_block(@match)) %>
+          <div class="cr-poll-place"><%= render "matches/venue", venue: place %></div>
+        <% end %>
+      </div>
+    </div>
+
+    <div class="cr-poll-ask">
+      <strong>Can you play?</strong> Find your name and tap Yes or No. No account needed.
+      <div class="cr-poll-counts"><span class="cr-poll-yes-count"><%= counts[:in] %> yes</span> · <span class="cr-poll-no-count"><%= counts[:out] %> no</span> · <%= waiting %> waiting</div>
+    </div>
+
+    <ul class="cr-poll-list">
+      <% ordered = me ? [ me ] + (@players - [ me ]) : @players %>
+      <% ordered.each do |player| %>
+        <% status = @answers[player.id]&.status %>
+        <li class="cr-poll-row <%= 'cr-poll-row-me' if player == me %>" id="p<%= player.id %>">
+          <span class="cr-poll-name"><%= player.name %><% if player == me %> <span class="cr-poll-you">You</span><% end %></span>
+          <span class="cr-poll-btns">
+            <%= button_to "Yes", match_poll_answer_path(token), params: { user_id: player.id, status: "in" },
+                  class: "cr-poll-btn cr-poll-btn-yes #{'is-on' if status == 'in'}", form: { class: "cr-poll-form" },
+                  "aria-pressed": status == "in", "aria-label": "#{player.name} can play" %>
+            <%= button_to "No", match_poll_answer_path(token), params: { user_id: player.id, status: "out" },
+                  class: "cr-poll-btn cr-poll-btn-no #{'is-on' if status == 'out'}", form: { class: "cr-poll-form" },
+                  "aria-pressed": status == "out", "aria-label": "#{player.name} can't play" %>
+          </span>
+        </li>
+      <% end %>
+    </ul>
+    <p class="cr-rp-foot">Changed your mind? Just tap the other button. Your captain sees every answer.</p>
+  </section>
+</div>
