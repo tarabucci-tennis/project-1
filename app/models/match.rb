@@ -15,6 +15,14 @@ class Match < ApplicationRecord
   scope :chronological, -> { order(match_date: :asc) }
   scope :completed, -> { where.not(result: nil) }
 
+  # The code in this match's "Can you play?" link (/a/:token), made the first
+  # time a captain shares it.
+  def availability_token!
+    return availability_token if availability_token.present?
+    update_column(:availability_token, SecureRandom.urlsafe_base64(9))
+    availability_token
+  end
+
   def availability_for(user)
     availabilities.find_by(user: user)
   end

@@ -26,6 +26,13 @@
       <span><%= counts[:no_response] %> ?</span>
     </div>
   </div>
+  <% said = @match.availabilities.includes(:user).where(status: %w[in out]).group_by(&:status) %>
+  <% if said.any? %>
+    <div class="cr-lineup-said">
+      <% if said["in"] %><div><strong class="cr-lineup-said-yes">Can play:</strong> <%= said["in"].map { |a| a.user.name }.sort.join(", ") %></div><% end %>
+      <% if said["out"] %><div><strong class="cr-lineup-said-no">Can't play:</strong> <%= said["out"].map { |a| a.user.name }.sort.join(", ") %></div><% end %>
+    </div>
+  <% end %>
 
   <p class="cr-lineup-help" style="font-size: 0.85rem; color: var(--cr-text-muted); margin-bottom: 16px; padding: 12px 14px; background: rgba(201, 162, 74, 0.08); border-left: 3px solid var(--cr-gold); border-radius: 6px;">
     Pick a player for each line. For a sub who isn't on the team, choose <strong>+ Write in a sub…</strong> at the bottom of the list and type their name. Leave <strong>Already confirmed</strong> checked if you've already gotten a yes via text or in person — those players won't get an email asking them to confirm again. Uncheck it only if you want the app to email the player and ask.

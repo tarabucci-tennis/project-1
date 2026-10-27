@@ -211,6 +211,7 @@
                       <% if lineup&.published? %><%= render "matches/lineup_share_button", match: match %><% end %>
                       <a href="<%= google_calendar_url(match) %>" target="_blank" rel="noopener" class="cr-chip-btn">Calendar</a>
                       <% if @is_captain %>
+                        <%= render "matches/poll_share_button", match: match %>
                         <%= link_to edit_team_match_path(@team, match), class: "cr-chip-btn" do %>Edit Match<% end %>
                         <%= link_to edit_team_match_lineup_path(@team, match), class: "cr-chip-btn" do %>Set Lineup<% end %>
                         <%= link_to edit_results_team_match_path(@team, match), class: "cr-chip-btn" do %>Enter Results<% end %>

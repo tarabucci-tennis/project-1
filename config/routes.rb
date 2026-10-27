@@ -32,6 +32,9 @@ Rails.application.routes.draw do
   get    "friendlies", to: "friendlies#index", as: :friendlies
   get    "friendlies/new", to: "friendlies#new", as: :new_friendly
   post   "friendlies", to: "friendlies#create"
+  # "Can you play?" link for one match: players answer Yes / No, no account needed.
+  get  "a/:token", to: "match_polls#show", as: :match_poll
+  post "a/:token", to: "match_polls#answer", as: :match_poll_answer
   get    "f/:token", to: "friendlies#show", as: :friendly
   patch  "f/:token", to: "friendlies#update"
   delete "f/:token", to: "friendlies#destroy"

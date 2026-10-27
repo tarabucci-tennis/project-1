@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_23_150000) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_27_120000) do
   create_table "availabilities", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.integer "match_id", null: false
@@ -133,6 +133,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_23_150000) do
   end
 
   create_table "matches", force: :cascade do |t|
+    t.string "availability_token"
     t.datetime "created_at", null: false
     t.string "home_away"
     t.string "location"
@@ -147,6 +148,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_23_150000) do
     t.integer "tennis_team_id", null: false
     t.datetime "updated_at", null: false
     t.string "usta_status"
+    t.index ["availability_token"], name: "index_matches_on_availability_token", unique: true
     t.index ["tennis_team_id", "match_date"], name: "index_matches_on_tennis_team_id_and_match_date"
     t.index ["tennis_team_id"], name: "index_matches_on_tennis_team_id"
   end

@@ -245,6 +245,21 @@ module ApplicationHelper
     lines.join("\n")
   end
 
+  # The "Can you play?" text a captain sends for one match (the link is shared separately).
+  def match_poll_text(match)
+    team = match.tennis_team
+    side = match.home? ? "Home" : ("Away" if match.away?)
+    lines = [ "🎾 #{team.name} vs. #{match.opponent}",
+              "📅 #{[ match.match_date.strftime('%a, %b %-d'), match.match_time.presence, side ].compact.join(' · ')}" ]
+    if (venue = match.venue)
+      lines << "📍 #{venue.name}"
+    elsif (place = match_place(match))
+      lines << "📍 #{place}"
+    end
+    lines << "" << "Can you play? Tap your name, then Yes or No (no account needed):"
+    lines.join("\n")
+  end
+
   # A match's lineup as text for the team chat: the match details, then one
   # line per court ("1D: Alison Vachris & Tara Bucci"). Open lines show "—".
   def lineup_share_text(match)

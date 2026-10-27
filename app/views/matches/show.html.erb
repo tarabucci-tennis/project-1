@@ -38,6 +38,10 @@
     <div style="margin-top: 8px;"><%= render "matches/venue", venue: @match.venue %></div>
   <% end %>
 
+  <% if @is_captain && @match.match_date >= Date.current.beginning_of_day %>
+    <div class="cr-lineup-share-row"><%= render "matches/poll_share_button", match: @match %></div>
+  <% end %>
+
   <%# ── Final scores (played match) ── %>
   <% if @match.match_lines.any?(&:scored?) %>
     <div class="cr-sched-detail" style="margin-top: 14px;">

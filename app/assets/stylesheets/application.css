@@ -5549,6 +5549,27 @@ span.cr-fr-chip { cursor: default; }
 .cr-fr-pair-tone-5 .cr-fr-chip { border-color: #0f8f8f; background: #e0f5f5; color: #0b4f4f; }
 .cr-lineup-share-row { display: flex; justify-content: flex-end; margin: 14px 0 8px; }
 
+/* "Can you play?" page (/a/:token) */
+.cr-poll-head { display: block; }
+.cr-poll-team { font-size: 0.72rem; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; color: var(--cr-gold); }
+.cr-poll-when { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 4px; font-size: 0.9rem; color: var(--cr-text); }
+.cr-poll-place { margin-top: 2px; }
+.cr-poll-ask { padding: 14px 18px 4px; font-size: 0.95rem; color: var(--cr-text); }
+.cr-poll-counts { margin-top: 4px; font-size: 0.82rem; color: var(--cr-text-muted); }
+.cr-poll-yes-count { color: #15803d; font-weight: 700; } .cr-poll-no-count { color: #b91c1c; font-weight: 700; }
+.cr-poll-list { list-style: none; margin: 8px 0 0; padding: 0 18px; }
+.cr-poll-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 0; border-top: 1px solid var(--cr-border); }
+.cr-poll-row-me { background: rgba(201,162,74,0.08); margin: 0 -18px; padding: 10px 18px; }
+.cr-poll-name { font-weight: 700; color: var(--cr-text); min-width: 0; overflow-wrap: anywhere; }
+.cr-poll-you { font-size: 0.66rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; color: #8a6d1f; background: rgba(201,162,74,0.2); padding: 2px 7px; border-radius: 999px; margin-left: 4px; }
+.cr-poll-btns { display: flex; gap: 8px; flex-shrink: 0; }
+.cr-poll-form { margin: 0; }
+.cr-poll-btn { min-width: 64px; min-height: 44px; padding: 0 14px; border-radius: 999px; border: 1.5px solid var(--cr-border); background: #fff; font: inherit; font-weight: 800; font-size: 0.9rem; color: var(--cr-text-muted); cursor: pointer; }
+.cr-poll-btn-yes.is-on { background: #16a34a; border-color: #16a34a; color: #fff; }
+.cr-poll-btn-no.is-on { background: #dc2626; border-color: #dc2626; color: #fff; }
+.cr-lineup-said { display: grid; gap: 4px; margin: 0 0 14px; font-size: 0.85rem; color: var(--cr-text); }
+.cr-lineup-said-yes { color: #15803d; } .cr-lineup-said-no { color: #b91c1c; }
+
 /* Optional court score under each match on a friendly */
 .cr-fr-score { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 12px; margin-top: 8px; }
 .cr-fr-score-val { display: inline-flex; align-items: baseline; gap: 6px; font-size: 1.05rem; font-weight: 600; }
