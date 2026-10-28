@@ -47,26 +47,33 @@
 
   <%= form_tag team_match_lineup_path(@team, @match), method: :patch, data: { controller: "lineup-pick" } do %>
 
-    <%# Tap a name, then "Put … here" on a line. Green = said she can play,
-        red = can't, plain = hasn't answered. %>
+    <%# Tap a name, then "Put … here" on a line. Players who said they can
+        play come first, then no answer, then can't play; a dot shows which. %>
     <% answered = @match.availabilities.pluck(:user_id, :status).to_h %>
+    <% order = { "in" => 0, nil => 1, "no_response" => 1, "out" => 2 } %>
     <div class="cr-lp-panel">
       <div class="cr-lp-head">
         <span class="cr-lp-title">Players</span>
-        <span class="cr-lp-hint">Tap a name, then tap <strong>Put … here</strong> on the line you want her on.</span>
+        <span class="cr-lp-hint">Tap a name, then <strong>Put … here</strong> on a line.</span>
       </div>
-      <div class="cr-lp-chips">
-        <% @members.each do |m| %>
+      <div class="cr-lp-grid">
+        <% @members.sort_by { |m| [ order.fetch(answered[m.id], 1), m.name.to_s.downcase ] }.each do |m| %>
           <% state = { "in" => "is-yes", "out" => "is-no" }[answered[m.id]] %>
           <button type="button" class="cr-lp-chip <%= state %>" data-lineup-pick-target="chip"
                   data-user-id="<%= m.id %>" data-first="<%= m.name.to_s.split.first %>"
                   data-action="lineup-pick#pick" aria-pressed="false"
-                  title="<%= { 'is-yes' => 'Said she can play', 'is-no' => "Said she can't play" }[state] || 'No answer yet' %>">
-            <span><%= m.name %></span><span class="cr-lp-line" hidden></span>
+                  title="<%= m.name %>: <%= { 'is-yes' => 'can play', 'is-no' => "can't play" }[state] || 'no answer yet' %>">
+            <span class="cr-lp-dot" aria-hidden="true"></span>
+            <span class="cr-lp-name"><%= m.name %></span>
+            <span class="cr-lp-line" hidden></span>
           </button>
         <% end %>
       </div>
-      <div class="cr-lp-key"><span class="cr-lp-dot is-yes"></span> Can play <span class="cr-lp-dot is-no"></span> Can't play <span class="cr-lp-dot"></span> No answer</div>
+      <div class="cr-lp-key">
+        <span><span class="cr-lp-dot is-yes"></span>Can play</span>
+        <span><span class="cr-lp-dot"></span>No answer</span>
+        <span><span class="cr-lp-dot is-no"></span>Can't play</span>
+      </div>
     </div>
 
     <div class="cr-lineup-grid">
