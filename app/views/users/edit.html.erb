@@ -4,7 +4,7 @@
   <div class="cr-login-card">
     <h1>Edit <%= @user.name %></h1>
 
-    <%= form_with model: @user do |f| %>
+    <%= form_with model: @user, url: user_path(@user, return_to: params[:return_to]) do |f| %>
       <% if @user.errors.any? %>
         <div class="cr-flash cr-flash-alert" style="margin-bottom: 16px;">
           <%= @user.errors.full_messages.join(", ") %>
@@ -18,6 +18,14 @@
       <div class="cr-field">
         <%= f.label :email, "Email (used to sign in)" %>
         <%= f.email_field :email, placeholder: "email@example.com" %>
+      </div>
+      <div class="cr-field">
+        <%= f.label :ntrp_rating, "USTA rating" %>
+        <%= f.select :ntrp_rating, User::USTA_RATINGS.map { |r| [ format("%.1f", r), r ] },
+              { include_blank: "Not known", selected: @user.ntrp_rating&.to_f } %>
+        <div style="font-size: 12px; color: #666; margin-top: 4px;">
+          Their real USTA (NTRP) rating only, never a Bux-Mont, Del-Tri or club number.
+        </div>
       </div>
       <div class="cr-field">
         <label>
@@ -35,7 +43,7 @@
       </div>
       <%= f.submit "Save Changes" %>
       <div style="margin-top: 12px;">
-        <%= link_to "Cancel", users_path, class: "cr-btn cr-btn-secondary" %>
+        <%= link_to "Cancel", params[:return_to] == "members" ? admin_members_path : users_path, class: "cr-btn cr-btn-secondary" %>
       </div>
     <% end %>
   </div>

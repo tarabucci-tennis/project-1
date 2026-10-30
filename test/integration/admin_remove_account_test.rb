@@ -29,6 +29,17 @@ class AdminRemoveAccountTest < ActionDispatch::IntegrationTest
     assert_select "form.cr-mem-remove-form[action=?]", user_path(@admin, return_to: "members"), count: 0
   end
 
+  test "an admin can set a player's USTA rating from Site members" do
+    post session_path, params: { email: @admin.email, password: "tennis-123" }
+    get edit_user_path(@player, return_to: "members")
+    assert_select "select[name=?]", "user[ntrp_rating]"
+    patch user_path(@player, return_to: "members"), params: { user: { name: @player.name, ntrp_rating: "4.0" } }
+    assert_redirected_to admin_members_path
+    assert_equal 4.0, @player.reload.ntrp_rating.to_f
+    patch user_path(@player), params: { user: { name: @player.name, ntrp_rating: "" } }
+    assert_nil @player.reload.ntrp_rating
+  end
+
   test "a regular player never sees it" do
     post session_path, params: { email: @player.email, password: "tennis-123" }
     get player_path(@spam)

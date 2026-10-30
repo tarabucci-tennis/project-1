@@ -1383,7 +1383,7 @@ button.cr-header-pill {
    ======================================================== */
 
 .cr-admin-page {
-  max-width: 880px;
+  max-width: 760px;
   margin: 0 auto;
 }
 
@@ -5435,7 +5435,8 @@ body.cr-ctx-lineups-edit .cr-field > span { color: var(--cr-text); }
    Player Ratings (/ratings) — navy hero, stat tiles, history table.
    ============================================================ */
 body.cr-ctx-ratings-index, body.cr-ctx-ratings-show, body.cr-ctx-ratings-new { background: var(--cr-navy-page); }
-.cr-rp-page { max-width: 1040px; margin: 0 auto; padding: 16px 16px 96px; }
+/* One centered 760px column, like the team page (Tara's rule). */
+.cr-rp-page { max-width: 760px; margin: 0 auto; padding: 16px 16px 96px; }
 .cr-rp-hero {
   display: flex; justify-content: space-between; align-items: center; gap: 16px;
   background: linear-gradient(135deg, var(--cr-header-bg) 0%, var(--cr-black-soft) 100%);
@@ -5848,7 +5849,7 @@ a.cr-search-row:hover, .cr-search-rowlink:hover { background: var(--cr-teal-tint
 .cr-user-menu .cr-menu-panel { right: 0; left: auto; min-width: 250px; }
 .cr-founder-links { display: flex; justify-content: flex-end; margin: -4px 0 10px; }
 body.cr-ctx-admin-members { background: var(--cr-navy-page); }
-.cr-rp-page.cr-mem-page { max-width: 880px; }
+.cr-rp-page.cr-mem-page { max-width: 760px; }
 .cr-mem-stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; padding: 14px 18px 0; }
 .cr-mem-stat { display: grid; gap: 2px; padding: 10px 12px; border: 1px solid var(--cr-border); border-radius: 10px; background: #fbfaf6; text-align: center; }
 .cr-mem-stat strong { font-size: 1.35rem; color: var(--cr-text); line-height: 1.1; }
@@ -5868,6 +5869,8 @@ body.cr-ctx-admin-members { background: var(--cr-navy-page); }
 .cr-mem-nameline { display: flex; align-items: center; gap: 10px; min-width: 0; }
 .cr-mem-nameline .cr-mem-name { flex: 0 1 auto; min-width: 0; }
 .cr-mem-remove-form { flex: none; margin: 0; }
+.cr-mem-edit { flex: none; font-size: 0.72rem; font-weight: 700; color: var(--cr-text-muted); text-decoration: none; border: 1px solid var(--cr-border); border-radius: 999px; padding: 2px 10px; }
+.cr-mem-edit:hover { color: var(--cr-text); border-color: var(--cr-text-light); }
 .cr-mem-remove { font: inherit; font-size: 0.72rem; font-weight: 700; color: #b42318; background: transparent; border: 1px solid rgba(180, 35, 24, 0.35); border-radius: 999px; padding: 2px 10px; cursor: pointer; }
 .cr-mem-remove:hover { background: rgba(180, 35, 24, 0.06); }
 .cr-mem-email, .cr-mem-teams { font-size: 0.76rem; color: var(--cr-text-light); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
@@ -6088,3 +6091,11 @@ body.cr-ctx-admin-members { background: var(--cr-navy-page); }
 /* Sign-up bot trap: off-screen, never seen or tabbed to by people. */
 .cr-hp { position: absolute; left: -10000px; top: auto; width: 1px; height: 1px; overflow: hidden; }
 .cr-btn-danger-text { color: #b42318; border-color: rgba(180, 35, 24, 0.35); }
+
+/* Player Ratings list: names, level, record and win % sit together; only the
+   last column takes the leftover width, so no gap opens after the names. */
+@media (min-width: 601px) {
+  .cr-rp-tbl-compact th, .cr-rp-tbl-compact td { width: 1%; white-space: nowrap; }
+  .cr-rp-tbl-compact th:last-child, .cr-rp-tbl-compact td:last-child { width: auto; }
+  .cr-rp-tbl-compact td:first-child, .cr-rp-tbl-compact th:first-child { padding-right: 28px; }
+}
