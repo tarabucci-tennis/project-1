@@ -14,6 +14,13 @@
     </ul>
 
     <%= form_with url: signup_path, method: :post do |f| %>
+      <%# Bot checks (see RegistrationsController): when the form was opened,
+          and a box hidden from people that only bots fill in. %>
+      <%= hidden_field_tag :form_started, Rails.application.message_verifier(:signup_form).generate(Time.current.to_i, expires_in: 1.day) %>
+      <div class="cr-hp" aria-hidden="true">
+        <label for="cr_contact_me">Leave this empty</label>
+        <input type="text" id="cr_contact_me" name="cr_contact_me" tabindex="-1" autocomplete="off">
+      </div>
       <div class="cr-field">
         <%= f.label :name, "Your name" %>
         <%= f.text_field :name, placeholder: "Jane Smith", autofocus: true, value: params[:name] %>
