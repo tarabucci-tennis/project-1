@@ -1,0 +1,93 @@
+<%# Left column (signed in): your name and its menu at the top, search, the
+    My Teams views, Explore, your teams, and + New Team. On computers it sits
+    beside every page; on phones the ☰ button slides it in. %>
+<% on_home = controller_name == "teams" && action_name == "index" %>
+<% home_tab = on_home ? (params[:tab].presence || "standings") : nil %>
+<aside class="cr-sb" id="cr-sidebar" aria-label="Menu">
+  <div class="cr-menu cr-sb-menu" data-controller="menu">
+    <button type="button" class="cr-sb-user" data-action="menu#toggle" data-menu-target="trigger"
+            aria-haspopup="true" aria-expanded="false">
+      <span class="cr-sb-avatar" aria-hidden="true"><%= current_user.name.to_s.split.map { |w| w[0] }.first(2).join.upcase %></span>
+      <span class="cr-sb-who">
+        <span class="cr-sb-name"><%= current_user.name %></span>
+        <span class="cr-sb-meta"><%= pluralize(sidebar_teams.size, "team") %></span>
+      </span>
+      <span class="cr-sb-caret" aria-hidden="true">▾</span>
+    </button>
+    <div class="cr-menu-panel" data-menu-target="panel" role="menu">
+      <%= link_to profile_path, class: "cr-menu-item", role: "menuitem" do %>My profile<small>Your rating, stats and city</small><% end %>
+      <% if current_user.admin? %>
+        <div class="cr-menu-divider"></div>
+        <%= link_to admin_members_path, class: "cr-menu-item", role: "menuitem" do %>Site members<small>Only you see this</small><% end %>
+        <%= link_to "Download members spreadsheet", admin_members_path(format: :csv), class: "cr-menu-item", role: "menuitem" %>
+      <% end %>
+      <div class="cr-menu-divider"></div>
+      <%= button_to "Sign out", session_path, method: :delete, class: "cr-menu-item cr-sb-signout", form: { class: "cr-sb-signout-form" } %>
+    </div>
+  </div>
+
+  <%= form_with url: search_path, method: :get, class: "cr-sb-search", data: { turbo: false } do %>
+    <%= icon(:search, size: 15) %>
+    <input type="search" name="q" placeholder="Search players, teams…" aria-label="Search the site" value="<%= params[:q] if controller_name == "searches" %>">
+  <% end %>
+
+  <div class="cr-sb-h">My Teams</div>
+  <% [ [ "standings", "Standings", :trophy ], [ "calendar", "Calendar", :calendar ],
+       [ "upcoming", "Upcoming", :clock ], [ "friendlies", "Friendlies", :users ] ].each do |key, label, ic| %>
+    <%= link_to teams_path(tab: key), class: [ "cr-sb-link", ("is-on" if home_tab == key) ].compact.join(" ") do %>
+      <%= icon(ic, size: 17) %><span><%= label %></span>
+    <% end %>
+  <% end %>
+  <%= link_to lineups_dashboard_path, class: [ "cr-sb-link", ("is-on" if controller_name == "lineups" && action_name == "dashboard") ].compact.join(" ") do %>
+    <%= icon(:lineups, size: 17) %><span>Lineups</span>
+  <% end %>
+
+  <div class="cr-sb-h">Explore</div>
+  <%= link_to lookup_path, class: [ "cr-sb-link", ("is-on" if controller_name == "lookups") ].compact.join(" ") do %>
+    <%= icon(:search, size: 17) %><span>Players &amp; Teams</span>
+  <% end %>
+  <% if RatingsController::PUBLIC || current_user.admin? %>
+    <%= link_to ratings_path, class: [ "cr-sb-link", ("is-on" if controller_name == "ratings") ].compact.join(" ") do %>
+      <%= icon(:star, size: 17) %><span>Ratings</span>
+    <% end %>
+  <% end %>
+
+  <% if sidebar_teams.any? %>
+    <div class="cr-sb-h">Teams</div>
+    <% sidebar_teams.each do |t| %>
+      <%= link_to team_path(t), class: [ "cr-sb-link cr-sb-team", ("is-on" if request.path.match?(%r{\A/teams/#{t.id}(/|\z)})) ].compact.join(" "), title: t.name do %>
+        <span class="cr-sb-dot" style="background: <%= sidebar_league_dot(t) %>"></span>
+        <span class="cr-sb-team-name"><%= t.name %></span>
+        <small><%= t.league_group %></small>
+      <% end %>
+    <% end %>
+  <% end %>
+
+  <div class="cr-menu cr-sb-menu cr-sb-new" data-controller="menu">
+    <button type="button" class="cr-sb-newbtn" data-action="menu#toggle" data-menu-target="trigger"
+            aria-haspopup="true" aria-expanded="false">+ New Team <span aria-hidden="true">▾</span></button>
+    <div class="cr-menu-panel" data-menu-target="panel" role="menu">
+      <%= link_to new_team_path, class: "cr-menu-item", role: "menuitem" do %>Create a team<small>Start one and invite players</small><% end %>
+      <%= link_to find_team_path, class: "cr-menu-item", role: "menuitem" do %>Join a team<small>Find your team by name</small><% end %>
+      <%= link_to new_usta_team_path, class: "cr-menu-item", role: "menuitem" do %>Add a USTA team<small>From a TennisLink file</small><% end %>
+      <% if current_user.admin? %>
+        <div class="cr-menu-divider"></div>
+        <%= button_to admin_sync_scores_path, method: :post, class: "cr-menu-item",
+              form: { style: "margin:0;", data: { turbo_confirm: "Update every league now? It runs in the background and takes a few minutes." } } do %>Sync scores<small>Update every league now</small><% end %>
+        <% if (sync = NightlySyncJob.status) %>
+          <% failed = Array(sync[:steps]).reject { |st| st[:ok] } %>
+          <div class="cr-menu-note">
+            <% if sync[:state] == "running" %>
+              Sync running (started <%= sync[:started_at]&.to_time&.in_time_zone("Eastern Time (US & Canada)")&.strftime("%-l:%M %p") %>)
+            <% else %>
+              Last sync <%= sync[:finished_at]&.to_time&.in_time_zone("Eastern Time (US & Canada)")&.strftime("%b %-d, %-l:%M %p") %>
+              · <%= failed.any? ? "failed: #{failed.map { |st| st[:label] }.join(', ')}" : "all OK" %>
+            <% end %>
+          </div>
+        <% end %>
+        <%= link_to admin_usta_import_path, class: "cr-menu-item", role: "menuitem" do %>Import USTA results<% end %>
+      <% end %>
+    </div>
+  </div>
+</aside>
+<div class="cr-sb-scrim" data-action="click->sidebar#close" aria-hidden="true"></div>

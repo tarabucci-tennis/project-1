@@ -19,9 +19,9 @@ class SiteSearchTest < ActionDispatch::IntegrationTest
     post session_path, params: { email: @me.email, password: "tennis-123" }
   end
 
-  test "the top bar has a search box instead of My Teams" do
+  test "the left column has a search box, and the top bar has no My Teams" do
     get teams_path
-    assert_select "form.cr-header-search[action=?] input[name=q]", search_path
+    assert_select "form.cr-sb-search[action=?] input[name=q]", search_path
     assert_select ".cr-header-my-teams", count: 0
   end
 
