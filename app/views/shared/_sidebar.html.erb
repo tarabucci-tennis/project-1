@@ -1,4 +1,4 @@
-<%# Left column (signed in): your name and its menu at the top, search, the
+<%# Left column (signed in): your name and its menu at the top, the
     My Teams views, Explore, your teams, and + New Team. On computers it sits
     beside every page; on phones the ☰ button slides it in. %>
 <% on_home = controller_name == "teams" && action_name == "index" %>
@@ -26,10 +26,6 @@
     </div>
   </div>
 
-  <%= form_with url: search_path, method: :get, class: "cr-sb-search", data: { turbo: false } do %>
-    <%= icon(:search, size: 15) %>
-    <input type="search" name="q" placeholder="Search players, teams…" aria-label="Search the site" value="<%= params[:q] if controller_name == "searches" %>">
-  <% end %>
 
   <div class="cr-sb-h">My Teams</div>
   <% [ [ "standings", "Standings", :trophy ], [ "calendar", "Calendar", :calendar ],
