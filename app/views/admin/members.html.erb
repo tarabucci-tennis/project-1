@@ -28,6 +28,8 @@
           <div class="cr-mem-who">
             <div class="cr-mem-nameline">
               <%= link_to u.name, player_path(u), class: "cr-mem-name" %>
+              <%= link_to "Edit", edit_user_path(u, return_to: "members"), class: "cr-mem-edit",
+                    "aria-label": "Edit #{u.name.truncate(40)}" %>
               <% unless u == current_user %>
                 <%= button_to "Remove", user_path(u, return_to: "members"), method: :delete,
                       class: "cr-mem-remove", "aria-label": "Remove account #{u.name.truncate(40)}",

@@ -25,7 +25,8 @@ class UsersController < ApplicationController
   def update
     @user = User.find(params[:id])
     if @user.update(user_params)
-      redirect_to users_path, notice: "#{@user.name} was updated."
+      back = params[:return_to] == "members" ? admin_members_path : users_path
+      redirect_to back, notice: "#{@user.name.truncate(40)} was updated."
     else
       render :edit, status: :unprocessable_entity
     end
@@ -41,6 +42,6 @@ class UsersController < ApplicationController
   private
 
   def user_params
-    params.expect(user: [ :name, :email, :admin, :tennislink_person_id ])
+    params.expect(user: [ :name, :email, :admin, :tennislink_person_id, :ntrp_rating ])
   end
 end
