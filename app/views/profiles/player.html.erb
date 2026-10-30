@@ -11,6 +11,15 @@
     </div>
   <% end %>
 
+  <% if current_user&.admin? && !@is_self %>
+    <%# Admin only: remove a junk or spam account from the site. %>
+    <div class="cr-founder-links">
+      <%= button_to "Remove this account", user_path(@user, return_to: "members"), method: :delete,
+            class: "cr-btn cr-btn-outline cr-btn-compact cr-btn-danger-text",
+            form: { data: { turbo_confirm: "Remove this account from Court Report? Their team spots and any lineup or score entries with their name are removed too. This can't be undone." } } %>
+    </div>
+  <% end %>
+
   <%# ── Player Profile card — clean, Court Report's own rating (no TennisRecord) ── %>
   <%
     gender  = @teams.map { |t| t.gender.presence }.compact.first

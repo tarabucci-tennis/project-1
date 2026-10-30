@@ -6081,3 +6081,4 @@ body.cr-ctx-admin-members { background: var(--cr-navy-page); }
 
 /* Sign-up bot trap: off-screen, never seen or tabbed to by people. */
 .cr-hp { position: absolute; left: -10000px; top: auto; width: 1px; height: 1px; overflow: hidden; }
+.cr-btn-danger-text { color: #b42318; border-color: rgba(180, 35, 24, 0.35); }

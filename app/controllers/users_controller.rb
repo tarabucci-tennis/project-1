@@ -34,7 +34,8 @@ class UsersController < ApplicationController
   def destroy
     user = User.find(params[:id])
     user.destroy
-    redirect_to users_path, notice: "#{user.name} was removed."
+    back = params[:return_to] == "members" ? admin_members_path : users_path
+    redirect_to back, notice: "#{user.name.truncate(40)} was removed."
   end
 
   private
