@@ -477,6 +477,16 @@
           <% end %>
         </div>
 
+        <% mins = @minimums if @minimums&.show? %>
+        <% if mins %>
+          <p class="cr-mins-note">
+            <%= mins.rule_text %>
+            <% if mins.uncounted.positive? %>
+              <span class="cr-mins-note-sub"><%= mins.uncounted %> played <%= "match".pluralize(mins.uncounted) %> <%= mins.uncounted == 1 ? "has" : "have" %> no line scores yet, so <%= mins.uncounted == 1 ? "it isn't" : "they aren't" %> counted.</span>
+            <% end %>
+          </p>
+        <% end %>
+
         <% if @roster.any? %>
           <div class="cr-roster">
             <% @roster.each do |membership| %>
@@ -489,6 +499,14 @@
                             title: "View #{membership.user.name} on TennisRecord" %>
                 <% if membership.user.ntrp_rating.present? %>
                   <div class="cr-roster-rating"><%= membership.user.ntrp_rating %></div>
+                <% end %>
+                <% if mins %>
+                  <% c = mins.for_player(membership.user_id) %>
+                  <% if c.met? %>
+                    <span class="cr-mins cr-mins-ok" title="<%= c.played %> of <%= c.needed %> matches played">&#10003; <%= c.played %> played</span>
+                  <% else %>
+                    <span class="cr-mins cr-mins-short" title="<%= c.played %> of <%= c.needed %> matches played"><%= c.played %> of <%= c.needed %> · <%= c.short %> to go</span>
+                  <% end %>
                 <% end %>
                 <% if membership.captain? %>
                   <div class="cr-roster-role cr-roster-role-captain">Captain</div>
