@@ -6078,3 +6078,6 @@ body.cr-ctx-admin-members { background: var(--cr-navy-page); }
 .cr-upload-card { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; }
 .cr-upload-card p { margin: 0; flex: 1 1 260px; }
 .cr-upload-card .cr-btn { flex-shrink: 0; white-space: nowrap; }
+
+/* Sign-up bot trap: off-screen, never seen or tabbed to by people. */
+.cr-hp { position: absolute; left: -10000px; top: auto; width: 1px; height: 1px; overflow: hidden; }
