@@ -38,7 +38,12 @@
     Tap a name and then the line, or pick from each line's list. Tap <strong>&times;</strong> to take a player off a line, or <strong>Clear lineup</strong> to start over (nothing changes until you save). For a sub who isn't on the team, choose <strong>+ Write in a sub…</strong> at the bottom of the list and type their name. Leave <strong>Already confirmed</strong> checked if you've already gotten a yes via text or in person — those players won't get an email asking them to confirm again. Uncheck it only if you want the app to email the player and ask.
   </p>
 
-  <% if @prefill.any? %>
+  <% if @prefill_kind == :usual %>
+    <p class="cr-lineup-carry">
+      Filled in with who has played each line most this season (from <%= pluralize(@usual.matches_counted, "match") %> with line scores). Players who said they can't play are left out.
+      Change any line you like. Nothing is saved until you press Save Draft or Post Lineup.
+    </p>
+  <% elsif @prefill.any? %>
     <p class="cr-lineup-carry">
       Filled in from last week's lineup (vs. <%= @prefill_from.opponent %>, <%= @prefill_from.match_date.strftime("%b %-d") %>).
       To put in a sub, pick a different player on that line. Nothing is saved until you press Save Draft or Post Lineup.
@@ -84,6 +89,12 @@
         <% line_label = line_type == "singles" ? "#{position}S — Singles" : (tri ? "#{tri} — Doubles" : "#{position}D — Doubles #{position}") %>
         <div class="cr-lineup-line-card">
           <div class="cr-lineup-line-label"><%= line_label %></div>
+          <% usual = @usual.for_line([ line_type, position ]).first(line_type == "singles" ? 2 : 3) %>
+          <% if usual.any? %>
+            <p class="cr-lineup-usual">Most often here:
+              <% usual.each_with_index do |u, ui| %><%= " · " if ui > 0 %><span class="cr-lineup-usual-who"><%= u.user.name %> <strong><%= u.times %> of <%= u.of %></strong></span><% end %>
+            </p>
+          <% end %>
           <% slots_for_line = @slots.select { |s| s.line_type == line_type && s.position == position } %>
           <% slots_for_line.each_with_index do |slot, i| %>
             <div class="cr-lineup-slot-row">
