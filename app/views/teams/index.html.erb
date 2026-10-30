@@ -261,10 +261,16 @@
                   </label>
                   <label class="cr-dash-cal-form-row">
                     <span>Type</span>
-                    <select name="kind">
+                    <select name="kind"
+                            onchange="var r = this.form.querySelector('.cr-dash-cal-form-other'); r.hidden = this.value !== 'other'; var i = r.querySelector('input'); i.required = !r.hidden; if (!r.hidden) i.focus()">
                       <option value="friendly">Friendly</option>
                       <option value="clinic">Clinic</option>
+                      <option value="other">Something else…</option>
                     </select>
+                  </label>
+                  <label class="cr-dash-cal-form-row cr-dash-cal-form-other" hidden>
+                    <span>What is it?</span>
+                    <input type="text" name="kind_other" maxlength="30" placeholder="e.g. Lesson, Tournament, Team dinner">
                   </label>
                   <label class="cr-dash-cal-form-row">
                     <span>Title</span>

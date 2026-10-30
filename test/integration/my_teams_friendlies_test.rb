@@ -64,4 +64,22 @@ class MyTeamsFriendliesTest < ActionDispatch::IntegrationTest
     post team_events_path(team), params: { event_date: Date.current + 7 }
     assert_equal "friendly", team.team_events.order(:id).last.kind
   end
+
+  test "a captain can type her own kind of event" do
+    team = TennisTeam.find_by(name: "Test Aces")
+    get teams_path
+    assert_select "select[name=kind] option[value=other]", text: "Something else…"
+
+    post team_events_path(team), params: { event_date: Date.current + 7, kind: "other", kind_other: "  Team   dinner " }
+    event = team.team_events.order(:id).last
+    assert_equal "Team dinner", event.kind
+    assert_equal "Team dinner", event.kind_label
+    assert_equal "Team dinner", event.title, "the typed kind is the title when none is given"
+    assert_equal "other", event.display_kind
+
+    assert_no_difference "TeamEvent.count" do
+      post team_events_path(team), params: { event_date: Date.current + 7, kind: "other", kind_other: " " }
+    end
+    assert_match "Type what it is", flash[:alert]
+  end
 end

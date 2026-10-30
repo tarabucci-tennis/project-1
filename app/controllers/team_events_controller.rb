@@ -8,12 +8,21 @@ class TeamEventsController < ApplicationController
                            alert: "Only captains and co-captains can add team events."
     end
 
+    kind = params[:kind].to_s.strip.presence || "friendly"
+    if kind == "other"
+      kind = params[:kind_other].to_s.squish.presence
+      unless kind
+        return redirect_back fallback_location: teams_path,
+                             alert: "Type what it is (e.g. Lesson) next to \"Something else\"."
+      end
+    end
+
     event = @team.team_events.new(
-      title:      params[:title].to_s.strip.presence || default_title_for(params[:kind]),
+      title:      params[:title].to_s.strip.presence || default_title_for(kind),
       event_date: params[:event_date],
       start_time: params[:start_time].to_s.strip.presence,
       location:   params[:location].to_s.strip.presence,
-      kind:       params[:kind].to_s.strip.presence || "friendly",
+      kind:       kind,
       notes:      params[:notes].to_s.strip.presence
     )
 
@@ -50,7 +59,8 @@ class TeamEventsController < ApplicationController
   def default_title_for(kind)
     case kind.to_s
     when "clinic" then "Team Clinic"
-    else "Friendly Match"
+    when "friendly", "practice" then "Friendly Match"
+    else kind.to_s
     end
   end
 end
