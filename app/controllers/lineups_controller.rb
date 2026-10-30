@@ -46,6 +46,7 @@ class LineupsController < ApplicationController
 
     @slots = @lineup.lineup_slots.includes(:user).order(position: :asc)
     load_last_week
+    load_usual
     load_subs
   end
 
@@ -211,6 +212,28 @@ class LineupsController < ApplicationController
       end
     end
     @prefill_from = nil if @prefill.empty? && @last_week.empty?
+  end
+
+  # Once a team has a few matches with line scores, an empty lineup is filled
+  # with who has played each line most (instead of just last week's), and each
+  # line shows its most frequent players with a count ("6 of 8").
+  # Players who said they can't play this match are left out of the fill.
+  def load_usual
+    @usual = UsualLineup.new(@team, before: @match.match_date)
+    @prefill_kind = :last_week if @prefill.any?
+    return unless @usual.enough? && @slots.all? { |s| s.user_id.nil? }
+
+    out = @match.availabilities.where(status: "out").pluck(:user_id)
+    allowed = @members.map(&:id).to_set - out
+    by_line = @slots.sort_by(&:id).group_by { |s| [ s.line_type, s.position ] }
+    picks = @usual.suggest(by_line.transform_values(&:size), allowed)
+    return if picks.empty?
+
+    @prefill = {}
+    by_line.each do |key, slots|
+      slots.zip(picks[key]).each { |slot, uid| @prefill[slot.id] = uid if uid }
+    end
+    @prefill_kind = :usual
   end
 
   SUB_OPTION = "sub".freeze
