@@ -30,14 +30,6 @@
 
         <div class="cr-header-right">
           <% if current_user %>
-            <%# Search anything on the site (players, teams, matches, friendlies, pages).
-                Phones get a 🔍 button that opens the search page instead. %>
-            <%= form_with url: search_path, method: :get, class: "cr-header-search", data: { turbo: false } do %>
-              <input type="search" name="q" placeholder="Search…" aria-label="Search the site" value="<%= params[:q] if controller_name == "searches" %>">
-            <% end %>
-            <%= link_to search_path, class: "cr-header-search-icon", "aria-label": "Search" do %>
-              <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M16.5 16.5 21 21" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
-            <% end %>
             <% if current_user.admin? %>
               <%# Founder menu: hover (mouse) or tap your name. %>
               <div class="cr-menu cr-hover-menu cr-user-menu" data-controller="menu" data-menu-hover-value="true">
@@ -57,6 +49,16 @@
               <%= link_to current_user.name, profile_path, class: "cr-header-user" %>
             <% end %>
             <%= button_to "Sign Out", session_path, method: :delete, class: "cr-header-pill cr-header-signout", form: { style: "display:inline-flex; margin:0;" } %>
+            <%# Search anything on the site (players, teams, matches, friendlies, pages).
+                Sits after Sign Out as a small 🔍 circle that opens into a box when
+                tapped (and stays open while there is text). Phones get a 🔍 button
+                that opens the search page instead. %>
+            <%= form_with url: search_path, method: :get, class: "cr-header-search", data: { turbo: false } do %>
+              <input type="search" name="q" placeholder="Search…" aria-label="Search the site" value="<%= params[:q] if controller_name == "searches" %>">
+            <% end %>
+            <%= link_to search_path, class: "cr-header-search-icon", "aria-label": "Search" do %>
+              <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M16.5 16.5 21 21" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
+            <% end %>
           <% elsif !%w[sessions registrations].include?(controller_name) %>
             <%= link_to "Sign In", login_path, class: "cr-header-pill" %>
             <%= link_to "Sign Up", signup_path, class: "cr-header-pill cr-header-signup" %>
