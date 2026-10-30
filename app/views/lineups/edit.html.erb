@@ -50,7 +50,7 @@
     </p>
   <% end %>
 
-  <%= form_tag team_match_lineup_path(@team, @match), method: :patch, data: { controller: "lineup-pick" } do %>
+  <%= form_tag team_match_lineup_path(@team, @match), method: :patch, data: { controller: "lineup-pick", lineup_pick_pairs_value: @pair_records.to_json } do %>
 
     <%# Tap a name, then "Put … here" on a line. Players who said they can
         play come first, then no answer, then can't play; a dot shows which. %>
@@ -88,7 +88,12 @@
         <% tri = line_type == "doubles" && @team.doubles_line_level(position) %>
         <% line_label = line_type == "singles" ? "#{position}S — Singles" : (tri ? "#{tri} — Doubles" : "#{position}D — Doubles #{position}") %>
         <div class="cr-lineup-line-card">
-          <div class="cr-lineup-line-label"><%= line_label %></div>
+          <div class="cr-lineup-line-head">
+            <div class="cr-lineup-line-label"><%= line_label %></div>
+            <% if line_type == "doubles" && @pair_records.any? %>
+              <span class="cr-lineup-pair" data-lineup-pick-target="pair" hidden></span>
+            <% end %>
+          </div>
           <% usual = @usual.for_line([ line_type, position ]).first(line_type == "singles" ? 2 : 3) %>
           <% if usual.any? %>
             <p class="cr-lineup-usual">Most often here:

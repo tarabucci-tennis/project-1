@@ -3349,8 +3349,13 @@ button.cr-header-pill {
   font-size: 0.85rem;
   font-weight: 700;
   color: var(--cr-text);
-  margin-bottom: 10px;
 }
+/* Line name with the picked pair's record right beside it (wraps under it on
+   narrow phones). */
+.cr-lineup-line-head { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; margin-bottom: 10px; }
+.cr-lineup-pair { font-size: 0.74rem; font-weight: 600; color: #0f6b5c; background: rgba(23, 180, 166, 0.10); border-radius: 999px; padding: 2px 10px; white-space: nowrap; }
+.cr-lineup-pair.is-new { color: var(--cr-text-muted); background: var(--cr-bg); }
+.cr-lineup-pair[hidden] { display: none; }
 /* Each player slot: the dropdown with "Already confirmed" beside it (stacked
    on phones), and last week's player for that line underneath. */
 .cr-lineup-slot-row { display: grid; grid-template-columns: minmax(0, 340px) auto; justify-content: start; gap: 4px 16px; align-items: center; margin-bottom: 10px; }
