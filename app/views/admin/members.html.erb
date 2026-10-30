@@ -26,7 +26,15 @@
       <% @members.each do |u| %>
         <div class="cr-mem-row">
           <div class="cr-mem-who">
-            <%= link_to u.name, player_path(u), class: "cr-mem-name" %>
+            <div class="cr-mem-nameline">
+              <%= link_to u.name, player_path(u), class: "cr-mem-name" %>
+              <% unless u == current_user %>
+                <%= button_to "Remove", user_path(u, return_to: "members"), method: :delete,
+                      class: "cr-mem-remove", "aria-label": "Remove account #{u.name.truncate(40)}",
+                      form: { class: "cr-mem-remove-form",
+                              data: { turbo_confirm: "Remove the account \"#{u.name.truncate(40)}\" from Court Report? Their team spots and any lineup or score entries are removed too. This can't be undone." } } %>
+              <% end %>
+            </div>
             <span class="cr-mem-email"><%= u.email %></span>
             <% teams = u.member_teams.map(&:name).uniq.sort %>
             <% if teams.any? %><span class="cr-mem-teams"><%= teams.join(" · ") %></span><% end %>

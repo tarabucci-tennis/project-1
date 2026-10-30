@@ -21,6 +21,14 @@ class AdminRemoveAccountTest < ActionDispatch::IntegrationTest
     assert_redirected_to admin_members_path
   end
 
+  test "Site members has Remove next to every name except the admin's own" do
+    post session_path, params: { email: @admin.email, password: "tennis-123" }
+    get admin_members_path
+    assert_response :success
+    assert_select "form.cr-mem-remove-form[action=?]", user_path(@player, return_to: "members")
+    assert_select "form.cr-mem-remove-form[action=?]", user_path(@admin, return_to: "members"), count: 0
+  end
+
   test "a regular player never sees it" do
     post session_path, params: { email: @player.email, password: "tennis-123" }
     get player_path(@spam)
