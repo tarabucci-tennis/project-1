@@ -55,12 +55,17 @@
   across a wide empty gap. Cap widths for single-column pages (lists/forms ~680px via `.cr-rp-narrow`, friendly page
   760px, team page 760px) and use the width for content (e.g. the schedule's date | opponent | location | status row).
   Keep buttons in rows aligned (reserve space for a missing button). Check at 1280px, not just phones.
-- **One centered column per page** (Tara, Oct 23 2026): every page and every new piece sits in one centered
-  column with matching left/right edges, never stretched across a wide screen. Single-column pages and My Teams
-  (tab bar, Standings, Past Seasons) use 760px (`.cr-page` is 760px); only the full calendar uses 880px. Rows with
-  several columns use FIXED widths for the side columns (e.g. team page schedule: 220px address, 132px status) so
-  nothing floats in the middle and columns line up row to row. Ship each visual change with a 1280px screenshot that shows no empty side
-  space inside the content.
+- **One centered column per page** (Tara, Oct 23 2026; repeated Oct 30 2026 — she has had to ask about this
+  MANY times, so treat it as a hard rule): every page and every new piece sits in one centered column with matching
+  left/right edges, never stretched across a wide screen. Single-column pages, My Teams (tab bar, Standings,
+  Upcoming, Past Seasons) and the team page all use **760px**; only the full calendar uses 880px.
+  **Before shipping ANY visual change, check the 1280px screenshot against this list:**
+  1. Is the content as wide as (not wider than) the tab bar / header above it? Same left and right edges?
+  2. Does any row have a name or title at the far left and its details/tags far away? → Put details right after
+     the name: cap the name/info column (e.g. `minmax(0, 230px)`) and let the LAST column before the buttons flex.
+  3. Do the columns line up from row to row? → Use fixed widths for tag/button columns (grid), never `auto` per row.
+  4. Only action buttons may sit at the right edge, and they line up with each other.
+  Examples that follow this: team page schedule rows, roster table (#271), My Teams Upcoming rows (#272).
 - **Database update dates:** a migration's timestamp must not be more than ~1 day in the future, or Rails refuses to
   load the schema and every test fails (hit on PR #196).
 
