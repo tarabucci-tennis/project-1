@@ -5830,7 +5830,14 @@ button.cr-cal-btn.cr-share-icon:hover { border-color: var(--cr-gold); color: var
   border: 1px solid rgba(255, 255, 255, 0.25); outline: none; transition: width 0.15s, border-color 0.15s;
 }
 .cr-header-search input::placeholder { color: rgba(255, 255, 255, 0.6); }
-.cr-header-search input:focus { width: 280px; border-color: var(--cr-gold); background-color: rgba(255, 255, 255, 0.12); }
+.cr-header-search input:focus { width: 240px; border-color: var(--cr-gold); background-color: rgba(255, 255, 255, 0.12); }
+/* Closed: just a 34px circle with the magnifier, the same size as the phone
+   🔍 button. It opens on click/tab and stays open while it has text. */
+.cr-header-search input:not(:focus):placeholder-shown {
+  width: 34px; height: 34px; padding: 0; cursor: pointer; color: transparent; background-position: center; background-size: 16px;
+}
+.cr-header-search input:not(:focus):placeholder-shown::placeholder { color: transparent; }
+.cr-header-search input::-webkit-search-cancel-button { -webkit-appearance: none; }
 .cr-header-search-icon {
   display: none; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: 999px;
   color: rgba(255, 255, 255, 0.9); border: 1px solid rgba(255, 255, 255, 0.25);
