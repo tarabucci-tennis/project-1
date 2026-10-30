@@ -4205,6 +4205,7 @@ button.cr-header-pill {
 .cr-dash-cal-dot-practice { background: #2563eb; }
 .cr-dash-cal-dot-clinic   { background: #059669; }
 .cr-dash-cal-dot-friendly { background: #d97706; }
+.cr-dash-cal-dot-other    { background: #7c3aed; }
 
 .cr-dash-cal-legend {
   margin-top: 10px;
@@ -4309,6 +4310,7 @@ button.cr-header-pill {
 .cr-dash-cal-item-practice { border-left: 3px solid #2563eb; }
 .cr-dash-cal-item-clinic   { border-left: 3px solid #059669; }
 .cr-dash-cal-item-friendly { border-left: 3px solid #d97706; }
+.cr-dash-cal-item-other    { border-left: 3px solid #7c3aed; }
 
 .cr-dash-cal-item-row {
   display: flex;
@@ -4746,6 +4748,8 @@ button.cr-header-pill {
 .cr-dash-cal-chip-practice { background: #eff4ff; color: #1e3a8a; border-left-color: #2563eb; }
 .cr-dash-cal-chip-clinic   { background: #ecfdf5; color: #065f46; border-left-color: #059669; }
 .cr-dash-cal-chip-friendly { background: #fff7ed; color: #9a3412; border-left-color: #d97706; }
+.cr-dash-cal-chip-other    { background: #f5f3ff; color: #5b21b6; border-left-color: #7c3aed; }
+.cr-dash-cal-form-other[hidden] { display: none; }
 @media (hover: hover) and (pointer: fine) {
   .cr-dash-cal-chip[data-url]:hover { text-decoration: underline; }
 }
