@@ -6157,3 +6157,100 @@ body.cr-ctx-admin-members { background: var(--cr-navy-page); }
   .cr-lookup-tbl th.cr-st-n:first-child, .cr-lookup-tbl td.cr-st-n:first-child { width: 30px; }
   .cr-lookup-tbl th.cr-st-n, .cr-lookup-tbl td.cr-st-n { width: 44px; }
 }
+
+/* ========================================================
+   Left column (signed in) — shared/_sidebar.html.erb
+   Computers (1000px+): a 248px navy column beside every page, under a
+   fixed-height top bar with just the logo. Phones and tablets: the ☰ button
+   slides the same column in over the page (bottom tab bar stays).
+   ======================================================== */
+:root { --cr-hh: 64px; --cr-sb-w: 248px; }
+.cr-has-sb .cr-header-inner { max-width: none; height: var(--cr-hh); padding-top: 0; padding-bottom: 0; box-sizing: border-box; }
+.cr-sb-burger {
+  display: none; flex: none; align-items: center; justify-content: center; width: 38px; height: 38px; margin-right: 4px;
+  border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.22); background: transparent; color: #fff; cursor: pointer;
+}
+.cr-shell { display: grid; grid-template-columns: var(--cr-sb-w) minmax(0, 1fr); align-items: start; }
+.cr-shell-main { min-width: 0; }
+.cr-sb {
+  position: sticky; top: var(--cr-hh); height: calc(100vh - var(--cr-hh)); overflow-y: auto; overscroll-behavior: contain;
+  box-sizing: border-box; padding: 16px 12px 24px; background: #12213d; color: #dbe3ef;
+  display: flex; flex-direction: column; gap: 2px; border-right: 1px solid rgba(255, 255, 255, 0.05);
+}
+.cr-sb-scrim { display: none; }
+.cr-sb > * { flex-shrink: 0; }
+
+/* Your name: opens My profile / Site members / Sign out below it. */
+.cr-sb-menu { position: relative; }
+.cr-sb-user {
+  display: flex; align-items: center; gap: 10px; width: 100%; padding: 9px 10px; border-radius: 12px;
+  background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(232, 184, 74, 0.45); color: #fff;
+  font: inherit; text-align: left; cursor: pointer;
+}
+.cr-sb-user:hover, .cr-sb-menu.cr-menu-open .cr-sb-user { background: rgba(255, 255, 255, 0.09); }
+.cr-sb-avatar {
+  flex: none; display: grid; place-items: center; width: 34px; height: 34px; border-radius: 50%;
+  background: linear-gradient(135deg, #f0c45e, #c9952a); color: #12213d; font-size: 0.78rem; font-weight: 800; letter-spacing: 0.3px;
+}
+.cr-sb-who { display: grid; min-width: 0; }
+.cr-sb-name { font-size: 0.92rem; font-weight: 700; color: #f3c96b; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cr-sb-meta { font-size: 0.72rem; color: #9fb0c8; }
+.cr-sb-caret { margin-left: auto; font-size: 0.7rem; color: #f3c96b; }
+.cr-sb-menu .cr-menu-panel { left: 0; right: 0; min-width: 0; }
+.cr-sb-menu .cr-menu-item { flex-direction: column; align-items: flex-start; gap: 1px; }
+.cr-sb-menu .cr-menu-item small { font-size: 0.73rem; font-weight: 500; color: var(--cr-text-muted); }
+.cr-sb-signout-form { margin: 0; }
+.cr-sb-signout { color: #b42318; }
+
+.cr-sb-search {
+  display: flex; align-items: center; gap: 8px; margin: 10px 0 6px; padding: 0 12px; height: 36px;
+  border-radius: 10px; background: rgba(255, 255, 255, 0.07); border: 1px solid transparent; color: #9fb0c8;
+}
+.cr-sb-search:focus-within { border-color: rgba(232, 184, 74, 0.6); background: rgba(255, 255, 255, 0.1); }
+.cr-sb-search input { flex: 1; min-width: 0; border: 0; background: transparent; color: #fff; font: inherit; font-size: 0.84rem; outline: none; }
+.cr-sb-search input::placeholder { color: #8d9db5; }
+.cr-sb-search input::-webkit-search-cancel-button { -webkit-appearance: none; }
+
+.cr-sb-h { margin: 14px 10px 4px; font-size: 0.64rem; font-weight: 800; letter-spacing: 1.2px; text-transform: uppercase; color: #7f91ab; }
+.cr-sb-link {
+  display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 9px;
+  color: #dbe3ef; text-decoration: none; font-size: 0.88rem; font-weight: 600;
+}
+.cr-sb-link:hover { background: rgba(255, 255, 255, 0.06); color: #fff; }
+.cr-sb-link .cr-icon { flex: none; opacity: 0.85; }
+.cr-sb-link.is-on { background: rgba(23, 180, 166, 0.16); color: #5fe0d2; box-shadow: inset 3px 0 0 #17b4a6; }
+.cr-sb-dot { flex: none; width: 8px; height: 8px; margin: 0 4px 0 5px; border-radius: 50%; }
+.cr-sb-team-name { min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cr-sb-team small { margin-left: auto; padding-left: 8px; font-size: 0.68rem; font-weight: 600; color: #7f91ab; white-space: nowrap; }
+
+/* + New Team: opens upward. */
+.cr-sb-new { margin-top: 16px; }
+.cr-sb-newbtn {
+  display: flex; align-items: center; justify-content: center; gap: 6px; width: 100%; height: 40px; border: 0; border-radius: 10px;
+  background: linear-gradient(135deg, #17b4a6, #0f8f84); color: #fff; font: inherit; font-size: 0.88rem; font-weight: 700; cursor: pointer;
+}
+.cr-sb-newbtn:hover { filter: brightness(1.06); }
+.cr-sb-new .cr-menu-panel { top: auto; bottom: calc(100% + 6px); }
+
+/* My Teams on computers: the column replaces the tab bar and the buttons
+   under the title (phones keep them). */
+@media (min-width: 1000px) {
+  .cr-has-sb.cr-ctx-teams-index .cr-home-tabs,
+  .cr-has-sb.cr-ctx-teams-index .cr-home-page > .cr-page-header-row .cr-page-header-actions { display: none; }
+}
+
+@media (max-width: 999px) {
+  .cr-sb-burger { display: inline-flex; }
+  .cr-shell { display: block; }
+  .cr-sb {
+    position: fixed; left: 0; top: var(--cr-hh); bottom: 0; height: auto; width: min(300px, 84vw); z-index: 10001;
+    transform: translateX(-102%); transition: transform 0.2s ease; box-shadow: 8px 0 30px rgba(0, 0, 0, 0.3); visibility: hidden;
+  }
+  .cr-sb-open .cr-sb { transform: none; visibility: visible; }
+  .cr-sb-open .cr-sb-scrim { display: block; position: fixed; inset: var(--cr-hh) 0 0 0; z-index: 10000; background: rgba(10, 22, 40, 0.45); }
+  .cr-sb-open { overflow: hidden; }
+}
+@media (max-width: 720px) {
+  :root { --cr-hh: 56px; }
+  .cr-sb { padding-bottom: 96px; }
+}

@@ -42,7 +42,7 @@ class SiteMembersTest < ActionDispatch::IntegrationTest
     assert_match "Member Player", response.body
     assert_no_match "Roster Only", response.body
     assert_select "a[href=?]", admin_members_path(format: :csv), text: "Download spreadsheet"
-    assert_select ".cr-user-menu a[href=?]", admin_members_path, text: "Site members"
+    assert_select ".cr-sb a[href=?]", admin_members_path, text: /Site members/
 
     get admin_members_path(format: :csv)
     assert_response :success
@@ -66,6 +66,6 @@ class SiteMembersTest < ActionDispatch::IntegrationTest
     get admin_members_path(format: :csv)
     assert_response :redirect
     get teams_path
-    assert_select ".cr-user-menu", count: 0
+    assert_select ".cr-sb a[href=?]", admin_members_path, count: 0
   end
 end

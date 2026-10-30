@@ -20,9 +20,15 @@
     <%= javascript_importmap_tags %>
   </head>
 
-  <body class="cr-ctx-<%= controller_name %>-<%= action_name %>">
+  <body class="cr-ctx-<%= controller_name %>-<%= action_name %><%= " cr-has-sb" if current_user %>"<% if current_user %> data-controller="sidebar"<% end %>>
     <nav class="cr-header">
       <div class="cr-header-inner">
+        <% if current_user %>
+          <button type="button" class="cr-sb-burger" data-action="sidebar#toggle"
+                  aria-controls="cr-sidebar" aria-expanded="false" aria-label="Menu">
+            <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          </button>
+        <% end %>
         <%= link_to (current_user ? teams_path : root_path), class: "cr-brand" do %>
           <span class="cr-brand-ball"><span class="cr-brand-ball-inner">🎾</span></span>
           <span class="cr-brand-text"><span class="cr-brand-your">YOUR</span>COURT <span class="cr-brand-gold">REPORT</span></span>
@@ -30,32 +36,8 @@
 
         <div class="cr-header-right">
           <% if current_user %>
-            <% if current_user.admin? %>
-              <%# Founder menu: hover (mouse) or tap your name. %>
-              <div class="cr-menu cr-hover-menu cr-user-menu" data-controller="menu" data-menu-hover-value="true">
-                <button type="button" class="cr-header-user cr-menu-trigger"
-                        data-action="menu#toggle" data-menu-target="trigger"
-                        aria-haspopup="true" aria-expanded="false">
-                  <%= current_user.name %> <span class="cr-menu-caret" aria-hidden="true">▾</span>
-                </button>
-                <div class="cr-menu-panel" data-menu-target="panel" role="menu">
-                  <%= link_to "My profile", profile_path, class: "cr-menu-item", role: "menuitem" %>
-                  <div class="cr-menu-divider"></div>
-                  <%= link_to "Site members", admin_members_path, class: "cr-menu-item", role: "menuitem" %>
-                  <%= link_to "Download members spreadsheet", admin_members_path(format: :csv), class: "cr-menu-item", role: "menuitem" %>
-                </div>
-              </div>
-            <% else %>
-              <%= link_to current_user.name, profile_path, class: "cr-header-user" %>
-            <% end %>
-            <%= button_to "Sign Out", session_path, method: :delete, class: "cr-header-pill cr-header-signout", form: { style: "display:inline-flex; margin:0;" } %>
-            <%# Search anything on the site (players, teams, matches, friendlies, pages).
-                Sits after Sign Out as a small 🔍 circle that opens into a box when
-                tapped (and stays open while there is text). Phones get a 🔍 button
-                that opens the search page instead. %>
-            <%= form_with url: search_path, method: :get, class: "cr-header-search", data: { turbo: false } do %>
-              <input type="search" name="q" placeholder="Search…" aria-label="Search the site" value="<%= params[:q] if controller_name == "searches" %>">
-            <% end %>
+            <%# Signed in: your name, Sign out, search and every page live in the
+                left column (shared/_sidebar). Phones keep a 🔍 button here. %>
             <%= link_to search_path, class: "cr-header-search-icon", "aria-label": "Search" do %>
               <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M16.5 16.5 21 21" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
             <% end %>
@@ -67,6 +49,7 @@
       </div>
     </nav>
 
+    <% if current_user %><div class="cr-shell"><%= render "shared/sidebar" %><div class="cr-shell-main"><% end %>
     <% if notice %>
       <div class="cr-flash cr-flash-notice"><%= notice %></div>
     <% end %>
@@ -77,6 +60,7 @@
     <main class="cr-main">
       <%= yield %>
     </main>
+    <% if current_user %></div></div><% end %>
 
     <%# Tiny inline scripts: password eye toggle + join-link copy button %>
     <script>

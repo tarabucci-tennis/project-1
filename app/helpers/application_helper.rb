@@ -15,8 +15,23 @@ module ApplicationHelper
     calendar: '<rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 10h16M9 3v4M15 3v4"/>',
     check:   '<circle cx="12" cy="12" r="8"/><path d="M8.5 12.5l2.5 2.5 4.5-5"/>',
     ball:    '<circle cx="12" cy="12" r="8"/><path d="M7 5.8c2.4 3.4 2.4 9 0 12.4M17 5.8c-2.4 3.4-2.4 9 0 12.4"/>',
-    trend:   '<path d="M4 17l5-5 4 3 7-8"/><path d="M15 7h5v5"/>'
+    trend:   '<path d="M4 17l5-5 4 3 7-8"/><path d="M15 7h5v5"/>',
+    clock:   '<circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2"/>',
+    star:    '<path d="M12 4l2.4 5 5.4.7-4 3.8 1 5.4L12 16.3 7.2 18.9l1-5.4-4-3.8 5.4-.7z"/>'
   }.freeze
+
+  # The left column's team list: your current (not archived) teams, grouped
+  # USTA → Del-Tri → Bux-Mont → Cup like My Teams. Once per page.
+  def sidebar_teams
+    @sidebar_teams ||= TennisTeam.group_by_league(current_user.member_teams.distinct.reject(&:archived?)).values.flatten
+  end
+
+  # A soft colour dot per league in the left column.
+  SIDEBAR_LEAGUE_DOTS = { "USTA" => "#4f8df5", "Del-Tri" => "#9b7bf0", "Bux-Mont" => "#f2a93b", "Cup" => "#34c3a3" }.freeze
+
+  def sidebar_league_dot(team)
+    SIDEBAR_LEAGUE_DOTS.fetch(team.league_group, "#9fb0c8")
+  end
 
   def icon(name, size: 18, css: nil)
     content_tag(:svg, ICON_PATHS.fetch(name).html_safe, width: size, height: size, viewBox: "0 0 24 24",
