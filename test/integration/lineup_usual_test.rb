@@ -65,4 +65,16 @@ class LineupUsualTest < ActionDispatch::IntegrationTest
     assert_no_match "played each line most", response.body
     assert_match "Most often here:", response.body
   end
+
+  test "Set Lineup knows each pair's record together" do
+    played(30, 1 => %w[Ann Bea])
+    played(23, 1 => %w[Ann Bea])
+    upcoming = @team.matches.create!(match_date: 5.days.from_now, opponent: "Next Club")
+
+    get edit_team_match_lineup_path(@team, upcoming)
+    pairs = JSON.parse(css_select("form[data-lineup-pick-pairs-value]").first["data-lineup-pick-pairs-value"])
+    key = [ @p["Ann"].id, @p["Bea"].id ].sort.join("-")
+    assert_equal({ "w" => 2, "l" => 0, "court" => "Doubles 1" }, pairs[key])
+    assert_select ".cr-lineup-pair[data-lineup-pick-target=pair]"
+  end
 end

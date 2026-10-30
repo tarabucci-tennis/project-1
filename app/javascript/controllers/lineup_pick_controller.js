@@ -5,7 +5,8 @@ import { Controller } from "@hotwired/stimulus"
 // on their own). A player can only be on one line, so placing her moves her
 // off any other line. Each name shows the line she's on.
 export default class extends Controller {
-  static targets = ["chip", "select", "spot"]
+  static targets = ["chip", "select", "spot", "pair"]
+  static values = { pairs: Object }
 
   connect() {
     this.picked = null
@@ -65,6 +66,21 @@ export default class extends Controller {
       spot.hidden = !this.picked
       spot.textContent = `Put ${first} here`
     })
+    this.pairTargets.forEach((pair) => this._showPair(pair))
+  }
+
+  // Next to a doubles line: how the two picked partners have done together
+  // on this team, or that they haven't played together yet.
+  _showPair(pair) {
+    const ids = [...pair.closest(".cr-lineup-line-card").querySelectorAll("select")]
+      .map((s) => s.value).filter((v) => /^\d+$/.test(v))
+    if (ids.length !== 2) { pair.hidden = true; return }
+    const rec = this.pairsValue[ids.map(Number).sort((a, b) => a - b).join("-")]
+    pair.classList.toggle("is-new", !rec)
+    pair.textContent = rec
+      ? `Together ${rec.w}–${rec.l}${rec.court ? ` · usually ${rec.court}` : ""}`
+      : "First time together"
+    pair.hidden = false
   }
 
   _set(select, value) {

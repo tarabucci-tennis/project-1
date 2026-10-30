@@ -48,6 +48,7 @@ class LineupsController < ApplicationController
     load_last_week
     load_usual
     load_subs
+    load_pair_records
   end
 
   # PATCH /teams/:team_id/matches/:match_id/lineup — captain saves lineup
@@ -234,6 +235,16 @@ class LineupsController < ApplicationController
       slots.zip(picks[key]).each { |slot, uid| @prefill[slot.id] = uid if uid }
     end
     @prefill_kind = :usual
+  end
+
+  # How each doubles pair has done together on this team ("4-1, usually
+  # Doubles 2"), keyed "smallerId-largerId" so the page can show it as soon as
+  # the captain picks two partners.
+  def load_pair_records
+    @pair_records = DoublesPairs.new(@team).pairs.to_h do |p|
+      court, = p.usual_court
+      [ p.players.map(&:id).sort.join("-"), { w: p.wins, l: p.losses, court: court } ]
+    end
   end
 
   SUB_OPTION = "sub".freeze
