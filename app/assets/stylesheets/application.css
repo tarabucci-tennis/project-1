@@ -6115,3 +6115,45 @@ body.cr-ctx-admin-members { background: var(--cr-navy-page); }
   .cr-rp-tbl-compact th:last-child, .cr-rp-tbl-compact td:last-child { width: auto; }
   .cr-rp-tbl-compact td:first-child, .cr-rp-tbl-compact th:first-child { padding-right: 28px; }
 }
+
+/* Players & Teams (/lookup): one centered 760px column. "← My Teams" sits
+   top-left like every back link; one search field with its button joined to
+   it; each table is name first, then narrow number columns, and the one text
+   column (Teams / League) last so it takes the leftover width — no gaps. */
+.cr-lookup-page { max-width: 760px; margin: 0 auto; }
+.cr-lookup-head { text-align: center; margin: 4px 0 18px; }
+.cr-lookup-head .cr-home-subtitle { margin-top: 6px; }
+.cr-lookup-search {
+  display: flex; width: 100%; max-width: 420px; margin: 0 auto 22px;
+  border: 1px solid var(--cr-border); border-radius: 999px; background: #fff; overflow: hidden;
+}
+.cr-lookup-search:focus-within { border-color: var(--cr-gold); box-shadow: 0 0 0 3px rgba(201, 162, 74, 0.18); }
+.cr-lookup-input { flex: 1 1 auto; min-width: 0; padding: 10px 16px; border: 0; font: inherit; font-size: 0.92rem; background: transparent; color: var(--cr-text); outline: none; }
+.cr-lookup-search .cr-btn { border-radius: 0; margin: 0; padding: 0 20px; box-shadow: none; }
+.cr-lookup-search .cr-btn + .cr-btn { border-left: 1px solid var(--cr-border); }
+.cr-lookup-result-note { font-size: 0.86rem; color: var(--cr-text-muted); margin: -8px 0 16px; text-align: center; }
+.cr-lookup-muted { font-size: 0.8rem; color: var(--cr-text-muted); }
+.cr-lookup-note { margin: 0; padding: 10px 18px 12px; font-size: 0.76rem; color: var(--cr-text-light); border-top: 1px solid var(--cr-border); }
+.cr-lookup-foot { border: 0; padding: 4px 2px; text-align: center; }
+.cr-lookup-page .cr-standings tbody tr.cr-st-row:first-child td { background: transparent; }
+.cr-lookup-page .cr-standings tbody tr.cr-st-row:first-child td:first-child { box-shadow: none; }
+.cr-lookup-tbl td, .cr-lookup-tbl th { overflow-wrap: normal; }
+.cr-lookup-tbl th.cr-st-n, .cr-lookup-tbl td.cr-st-n { width: 52px; }
+@media (min-width: 900px) {
+  .cr-lookup-page .cr-lookup-tbl th { width: auto; }
+  .cr-lookup-page .cr-lookup-tbl th.cr-st-n { width: 56px; }
+  .cr-lookup-page .cr-lookup-tbl th:first-child:not(.cr-st-n),
+  .cr-lookup-page .cr-lookup-tbl th.cr-st-n:first-child + th { width: 230px; }
+  .cr-lookup-page .cr-lookup-tbl th.cr-st-n:first-child { width: 48px; }
+  .cr-lookup-page .cr-lookup-tbl th.cr-lookup-wide, .cr-lookup-page .cr-lookup-tbl td.cr-lookup-wide { padding-left: 24px; }
+}
+/* Phones: drop the long text column so nothing needs a sideways swipe. */
+@media (max-width: 600px) {
+  .cr-lookup-tbl .cr-lookup-wide { display: none; }
+  /* The shared standings rule hides column 5 on phones; here that's Pts. */
+  .cr-lookup-page .cr-lookup-tbl th.cr-st-n, .cr-lookup-page .cr-lookup-tbl td.cr-st-n { display: table-cell; }
+  .cr-lookup-tbl td { white-space: normal; }
+  .cr-lookup-tbl th, .cr-lookup-tbl td { padding-left: 10px; padding-right: 10px; }
+  .cr-lookup-tbl th.cr-st-n:first-child, .cr-lookup-tbl td.cr-st-n:first-child { width: 30px; }
+  .cr-lookup-tbl th.cr-st-n, .cr-lookup-tbl td.cr-st-n { width: 44px; }
+}
