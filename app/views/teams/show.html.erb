@@ -488,41 +488,46 @@
         <% end %>
 
         <% if @roster.any? %>
-          <div class="cr-roster">
+          <div class="cr-roster cr-roster-table <%= 'has-mins' if mins %>">
             <% @roster.each do |membership| %>
               <div class="cr-roster-row">
-                <%= link_to membership.user.name + (membership.user_id == current_user.id ? " (you)" : ""),
-                            tennis_record_url(membership.user),
-                            target: "_blank", rel: "noopener",
-                            class: "cr-roster-name #{'cr-roster-self' if membership.user_id == current_user.id}",
-                            style: "text-decoration: none; color: inherit;",
-                            title: "View #{membership.user.name} on TennisRecord" %>
-                <% if membership.user.ntrp_rating.present? %>
-                  <div class="cr-roster-rating"><%= membership.user.ntrp_rating %></div>
-                <% end %>
+                <span class="cr-roster-who">
+                  <%= link_to membership.user.name + (membership.user_id == current_user.id ? " (you)" : ""),
+                              tennis_record_url(membership.user),
+                              target: "_blank", rel: "noopener",
+                              class: "cr-roster-name #{'cr-roster-self' if membership.user_id == current_user.id}",
+                              style: "text-decoration: none; color: inherit;",
+                              title: "View #{membership.user.name} on TennisRecord" %>
+                  <% if membership.captain? %><span class="cr-roster-role cr-roster-role-captain">Captain</span><% end %>
+                </span>
+                <%# Fixed cells so every row lines up like a table on computers. %>
+                <span class="cr-roster-cell cr-roster-cell-rating">
+                  <% if membership.user.ntrp_rating.present? %><span class="cr-roster-rating"><%= membership.user.ntrp_rating %></span><% end %>
+                </span>
                 <% if mins %>
                   <% c = mins.for_player(membership.user_id) %>
-                  <% if c.met? %>
-                    <span class="cr-mins cr-mins-ok" title="<%= c.played %> of <%= c.needed %> matches played">&#10003; <%= c.played %> played</span>
-                  <% else %>
-                    <span class="cr-mins cr-mins-short" title="<%= c.played %> of <%= c.needed %> matches played"><%= c.played %> of <%= c.needed %> · <%= c.short %> to go</span>
+                  <span class="cr-roster-cell cr-roster-cell-mins">
+                    <% if c.met? %>
+                      <span class="cr-mins cr-mins-ok" title="<%= c.played %> of <%= c.needed %> matches played">&#10003; <%= c.played %> played</span>
+                    <% else %>
+                      <span class="cr-mins cr-mins-short" title="<%= c.played %> of <%= c.needed %> matches played"><%= c.played %> of <%= c.needed %> · <%= c.short %> to go</span>
+                    <% end %>
+                  </span>
+                <% end %>
+                <span class="cr-roster-cell cr-roster-cell-actions">
+                  <%= link_to "Matches",
+                              tennis_record_match_history_url(membership.user),
+                              target: "_blank", rel: "noopener",
+                              class: "cr-roster-history-link",
+                              title: "#{membership.user.name}'s TennisRecord match history" %>
+                  <% if @is_captain && !membership.captain? %>
+                    <%= button_to "Make captain",
+                                  make_captain_team_path(@team, user_id: membership.user_id),
+                                  form: { style: "display: inline; margin: 0;",
+                                          data: { turbo_confirm: "Make #{membership.user.name} a captain of #{@team.name}? Current captains stay captains." } },
+                                  class: "cr-roster-history-link" %>
                   <% end %>
-                <% end %>
-                <% if membership.captain? %>
-                  <div class="cr-roster-role cr-roster-role-captain">Captain</div>
-                <% end %>
-                <%= link_to "Matches",
-                            tennis_record_match_history_url(membership.user),
-                            target: "_blank", rel: "noopener",
-                            class: "cr-roster-history-link",
-                            title: "#{membership.user.name}'s TennisRecord match history" %>
-                <% if @is_captain && !membership.captain? %>
-                  <%= button_to "Make captain",
-                                make_captain_team_path(@team, user_id: membership.user_id),
-                                form: { style: "display: inline; margin: 0;",
-                                        data: { turbo_confirm: "Make #{membership.user.name} a captain of #{@team.name}? Current captains stay captains." } },
-                                class: "cr-roster-history-link" %>
-                <% end %>
+                </span>
               </div>
             <% end %>
           </div>
