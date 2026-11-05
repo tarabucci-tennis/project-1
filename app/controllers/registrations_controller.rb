@@ -79,6 +79,16 @@ class RegistrationsController < ApplicationController
       end
     end
 
+    # Not from a join link: if exactly one roster entry (added by a captain or
+    # a league sync, never signed up) has this exact name and no other email,
+    # this is her: claim it so her teams, lineups and scores come with her.
+    # Two entries with the same name: don't guess, make a new account.
+    user ||= claimable_roster_entry(name, email)&.tap do |placeholder|
+      placeholder.email                 = email
+      placeholder.password              = password
+      placeholder.password_confirmation = password_confirmation
+    end
+
     # No placeholder → normal fresh account creation.
     user ||= User.new(
       name:                  name,
@@ -112,6 +122,14 @@ class RegistrationsController < ApplicationController
   end
 
   private
+
+  def claimable_roster_entry(name, email)
+    matches = User.where(password_digest: [ nil, "" ], sign_in_count: 0)
+                  .where("LOWER(name) = ?", name.downcase.squish)
+                  .where("email IS NULL OR email = '' OR LOWER(email) = ?", email)
+                  .limit(2).to_a
+    matches.one? ? matches.first : nil
+  end
 
   # The hidden box was filled in, or the form came back without its signed
   # start time, too fast, or more than a day later.

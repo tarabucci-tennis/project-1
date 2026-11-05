@@ -18,7 +18,7 @@ class AdminController < ApplicationController
     @active_this_week = @members.count { |u| u.last_seen_at && u.last_seen_at >= week_ago }
 
     respond_to do |format|
-      format.html
+      format.html { @duplicates = DuplicatePlayers.find }
       format.csv do
         send_data members_csv(@members), type: "text/csv; charset=utf-8",
                   filename: "court-report-members-#{Date.current.iso8601}.csv"
