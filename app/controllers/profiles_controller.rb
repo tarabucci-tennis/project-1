@@ -54,13 +54,18 @@ class ProfilesController < ApplicationController
     @is_self = (@user.id == current_user.id)
     @deltri_matches = @user.player_matches.chronological.group_by { |pm| [ pm.league, pm.division ] }
 
+    # Optional team filter: the "Stats for …" dropdown scopes the match-line
+    # stats to one of this player's teams so you can flip between them without
+    # leaving the page. Nil = "All Teams" (the default combined view).
+    @selected_team = @teams.detect { |t| t.id.to_s == params[:team].to_s } if params[:team].present?
+
     # Find teams you share with this player
     my_team_ids = current_user.member_teams.pluck(:id)
     their_team_ids = @user.member_teams.pluck(:id)
     shared_ids = my_team_ids & their_team_ids
     @shared_teams = TennisTeam.where(id: shared_ids).order(start_date: :desc)
-    @playing_stats = build_playing_stats(@user)
-    @league_year_stats = build_league_year_stats(@user)
+    @playing_stats = build_playing_stats(@user, team: @selected_team)
+    @league_year_stats = build_league_year_stats(@user, team: @selected_team)
   end
 
   private
@@ -74,11 +79,12 @@ class ProfilesController < ApplicationController
   # player page can show one clean stats table per league, like TennisRecord's
   # Advanced Player Stats matrix. Only uses decided lines (result present), so
   # there's nothing to fabricate — the numbers are our own entered results.
-  def build_league_year_stats(user)
+  def build_league_year_stats(user, team: nil)
     lines = MatchLine.joins(:match_line_players)
                      .where(match_line_players: { user_id: user.id })
                      .where.not(result: nil)
                      .includes(match: :tennis_team)
+    lines = lines.joins(:match).where(matches: { tennis_team_id: team.id }) if team
 
     data = {}
     lines.each do |line|
@@ -96,11 +102,12 @@ class ProfilesController < ApplicationController
     data
   end
 
-  def build_playing_stats(user)
+  def build_playing_stats(user, team: nil)
     lines = MatchLine.joins(:match_line_players)
                      .where(match_line_players: { user_id: user.id })
                      .where.not(result: nil)
                      .includes({ match: :tennis_team }, match_line_players: :user)
+    lines = lines.joins(:match).where(matches: { tennis_team_id: team.id }) if team
 
     # Always return a well-formed hash so the view can show the stat
     # structure even before any matches have been played. Empty sections
