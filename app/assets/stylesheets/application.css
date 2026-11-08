@@ -6313,3 +6313,30 @@ body.cr-ctx-admin-members { background: var(--cr-navy-page); }
   .cr-lu-reply { grid-column: 1 / -1; flex-wrap: wrap; }
   .cr-lu-reply span { flex-basis: 100%; }
 }
+
+/* Site members: possible duplicate players (DuplicatePlayers). Each row is
+   person | ↔ | person | reason, columns lined up. */
+.cr-dup { margin: 14px 18px 4px; border: 1px solid rgba(201, 162, 74, 0.45); border-radius: 12px; background: #fffaf0; }
+.cr-dup-head { position: relative; display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; padding: 12px 36px 12px 16px; cursor: pointer; list-style: none; font-weight: 800; font-size: 0.9rem; color: var(--cr-text); }
+.cr-dup-head::-webkit-details-marker { display: none; }
+.cr-dup-head::after { content: "▾"; position: absolute; right: 16px; top: 13px; color: var(--cr-text-light); font-size: 0.8rem; }
+.cr-dup:not([open]) .cr-dup-head::after { content: "▸"; }
+.cr-dup-count { display: inline-block; min-width: 20px; margin-left: 4px; padding: 1px 7px; border-radius: 999px; background: var(--cr-gold); color: #fff; font-size: 0.72rem; text-align: center; }
+.cr-dup-hint { font-weight: 500; font-size: 0.78rem; color: var(--cr-text-muted); }
+.cr-dup-list { border-top: 1px solid rgba(201, 162, 74, 0.3); }
+.cr-dup-row { display: grid; grid-template-columns: minmax(0, 1fr) 20px minmax(0, 1fr) 104px; gap: 4px 12px; align-items: center; padding: 10px 16px; border-top: 1px solid rgba(201, 162, 74, 0.18); }
+.cr-dup-row:first-child { border-top: 0; }
+.cr-dup-who { display: grid; min-width: 0; }
+.cr-dup-name { font-weight: 700; font-size: 0.88rem; color: var(--cr-text); text-decoration: none; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cr-dup-name:hover { color: var(--cr-teal-deep); }
+.cr-dup-meta { font-size: 0.74rem; color: var(--cr-text-muted); }
+.cr-dup-meta strong { color: #15803d; font-weight: 700; white-space: nowrap; }
+.cr-dup-vs { color: var(--cr-text-light); text-align: center; }
+.cr-dup-reason { justify-self: end; padding: 3px 9px; border-radius: 999px; background: rgba(201, 162, 74, 0.16); color: #8a6a1f; font-size: 0.7rem; font-weight: 700; white-space: nowrap; }
+@media (max-width: 600px) {
+  .cr-dup { margin: 12px 12px 4px; }
+  .cr-dup-row { grid-template-columns: minmax(0, 1fr) auto; padding: 10px 12px; }
+  .cr-dup-vs { display: none; }
+  .cr-dup-vs + .cr-dup-who { grid-row: 2; grid-column: 1; }
+  .cr-dup-reason { grid-row: 1; grid-column: 2; }
+}
