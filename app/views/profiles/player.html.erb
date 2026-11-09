@@ -213,7 +213,7 @@
 
       <%# Win % by Line %>
       <% if @playing_stats[:by_line].any? %>
-        <h3 class="cr-section-subtitle" style="margin-top: 20px;">Win % by Line</h3>
+        <h3 class="cr-section-subtitle" style="margin-top: 14px;">Win % by Line</h3>
         <div class="cr-playing-stats-table">
           <div class="cr-playing-stats-header">
             <span class="cr-ps-col-line">Line</span>
@@ -232,7 +232,7 @@
 
       <%# Doubles Partners %>
       <% if @playing_stats[:partners].any? %>
-        <h3 class="cr-section-subtitle" style="margin-top: 20px;">Doubles Partner Win %</h3>
+        <h3 class="cr-section-subtitle" style="margin-top: 14px;">Doubles Partner Win %</h3>
         <div class="cr-playing-stats-table">
           <div class="cr-playing-stats-header">
             <span class="cr-ps-col-name">Partner</span>
@@ -256,7 +256,7 @@
 
       <%# Recent Matches — tap a row to see the line's players + opponents %>
       <% if @playing_stats[:recent].any? %>
-        <h3 class="cr-section-subtitle" style="margin-top: 20px;">Recent Matches</h3>
+        <h3 class="cr-section-subtitle" style="margin-top: 14px;">Recent Matches</h3>
         <p style="font-size: 0.78rem; color: var(--cr-text-muted); margin: 0 0 8px;">Tap a match to see who played and who they faced.</p>
         <div class="cr-playing-stats-table">
           <div class="cr-playing-stats-header">
@@ -358,7 +358,7 @@
       <% if @deltri_matches.present? %>
         <% @deltri_matches.each do |(league, division), matches| %>
           <% wins = matches.count(&:won?); losses = matches.size - wins %>
-          <h3 class="cr-section-subtitle" style="margin-top: 18px;">
+          <h3 class="cr-section-subtitle" style="margin-top: 14px;">
             <%= [ league, division ].reject(&:blank?).join(" · ").presence || "Matches" %>
             <span class="cr-deltri-record"><%= wins %>–<%= losses %></span>
           </h3>
