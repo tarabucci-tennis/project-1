@@ -9,6 +9,7 @@ class ProfilesController < ApplicationController
     @stats = @user.tennis_stats.chronological
     @is_self = true
     @shared_teams = []
+    @external_events = @user.external_events.chronological
     @playing_stats = build_playing_stats(@user)
     @league_year_stats = build_league_year_stats(@user)
     @deltri_matches = @user.player_matches.chronological.group_by { |pm| [ pm.league, pm.division ] }
@@ -41,6 +42,26 @@ class ProfilesController < ApplicationController
     redirect_to profile_path, notice: city.present? ? "Saved your city." : "Removed your city."
   end
 
+  # POST /profile/calendar — save your Google Calendar iCal link and pull the
+  # tennis events (matches, clinics, friendlies) from it. Blank removes it.
+  def connect_calendar
+    url = params[:ical_url].to_s.strip
+    current_user.update(ical_url: url.presence)
+
+    if url.blank?
+      current_user.external_events.delete_all
+      redirect_to profile_path, notice: "Removed your Google Calendar link."
+      return
+    end
+
+    result = GoogleCalendarImport.new(current_user).call
+    if result.error
+      redirect_to profile_path, alert: "Couldn't read that calendar link (#{result.error}). Make sure it's the secret iCal address from Google Calendar settings."
+    else
+      redirect_to profile_path, notice: "Pulled #{result.imported} tennis event#{'s' unless result.imported == 1} from your calendar."
+    end
+  end
+
   # GET /players/:id — teammate's profile
   def player
     @user = User.find_by(id: params[:id])
@@ -64,6 +85,7 @@ class ProfilesController < ApplicationController
     their_team_ids = @user.member_teams.pluck(:id)
     shared_ids = my_team_ids & their_team_ids
     @shared_teams = TennisTeam.where(id: shared_ids).order(start_date: :desc)
+    @external_events = @user.external_events.chronological
     @playing_stats = build_playing_stats(@user, team: @selected_team)
     @league_year_stats = build_league_year_stats(@user, team: @selected_team)
   end
