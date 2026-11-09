@@ -6117,6 +6117,24 @@ body.cr-ctx-admin-members { background: var(--cr-navy-page); }
   .cr-rp-tbl-compact td:first-child, .cr-rp-tbl-compact th:first-child { padding-right: 28px; }
 }
 
+/* Phones: the Player Ratings table fits the screen with no sideways scroll and
+   short, single-line rows. Fixed widths keep names on one line; the least-
+   critical "Last played" column is dropped (tap a name for the full record). */
+@media (max-width: 600px) {
+  .cr-rp-scroll { overflow-x: hidden; }
+  .cr-rp-tbl { table-layout: fixed; width: 100%; font-size: 0.84rem; }
+  .cr-rp-tbl th, .cr-rp-tbl td { padding: 9px 4px; vertical-align: middle; }
+  .cr-rp-tbl th { white-space: normal; letter-spacing: 0.3px; line-height: 1.15; }
+  .cr-rp-tbl th:first-child, .cr-rp-tbl td:first-child {
+    width: 44%; padding-left: 14px;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .cr-rp-tbl th:nth-child(2), .cr-rp-tbl td:nth-child(2) { width: 19%; } /* USTA level */
+  .cr-rp-tbl th:nth-child(3), .cr-rp-tbl td:nth-child(3) { width: 19%; } /* Record */
+  .cr-rp-tbl th:nth-child(4), .cr-rp-tbl td:nth-child(4) { width: 18%; } /* Win % */
+  .cr-rp-tbl th:nth-child(5), .cr-rp-tbl td:nth-child(5) { display: none; } /* Last played */
+}
+
 /* Players & Teams (/lookup): one centered 760px column. "← My Teams" sits
    top-left like every back link; one search field with its button joined to
    it; each table is name first, then narrow number columns, and the one text
