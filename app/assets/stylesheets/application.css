@@ -3159,7 +3159,13 @@ button.cr-header-pill {
 .cr-ps-col-detail { width: 120px; text-align: right; flex-shrink: 0; color: var(--cr-text-muted); font-size: 0.8rem; }
 
 @media (max-width: 720px) {
-  .cr-playing-stats-grid { grid-template-columns: 1fr; }
+  /* Three compact stat cards across instead of three tall stacked ones, so
+     the partner and recent-match tables are much closer to the top. */
+  .cr-playing-stats-grid { grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .cr-playing-stat-card { padding: 12px 6px; }
+  .cr-playing-stat-value { font-size: 1.25rem; }
+  .cr-playing-stat-label { font-size: 0.62rem; letter-spacing: 0.3px; }
+  .cr-playing-stat-detail { font-size: 0.66rem; }
 }
 
 /* ========================================================
@@ -6369,3 +6375,17 @@ body.cr-ctx-admin-members { background: var(--cr-navy-page); }
   outline: none;
   border-color: var(--cr-gold);
 }
+
+/* Profile pages (your own and any player's): a tighter vertical rhythm so
+   partners, recent matches and the stat tables are reachable with much less
+   scrolling. Scoped to the profile body classes so other pages are unchanged. */
+body.cr-ctx-profiles-show .cr-section,
+body.cr-ctx-profiles-player .cr-section { margin-bottom: 20px; }
+body.cr-ctx-profiles-show .cr-section-title,
+body.cr-ctx-profiles-player .cr-section-title { margin-bottom: 10px; }
+body.cr-ctx-profiles-show .cr-lineup-facts,
+body.cr-ctx-profiles-player .cr-lineup-facts { padding: 14px 18px; margin-bottom: 20px; }
+body.cr-ctx-profiles-show .cr-pp,
+body.cr-ctx-profiles-player .cr-pp { margin-bottom: 18px; }
+body.cr-ctx-profiles-show .cr-team-switch,
+body.cr-ctx-profiles-player .cr-team-switch { margin: 0 0 14px; }
