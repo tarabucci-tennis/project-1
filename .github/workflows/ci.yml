@@ -8,7 +8,7 @@ on:
 jobs:
       
   scan_js:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     steps:
       - name: Checkout code
@@ -23,7 +23,7 @@ jobs:
         run: bin/importmap audit
 
   lint:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     env:
       RUBOCOP_CACHE_ROOT: tmp/rubocop
     steps:
@@ -49,7 +49,7 @@ jobs:
         run: bin/rubocop -f github
 
   test:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     # services:
     #  redis:
@@ -74,7 +74,7 @@ jobs:
         run: bin/rails db:test:prepare test
 
   system-test:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     # services:
     #  redis:

@@ -113,6 +113,20 @@
     </div>
   </div>
 
+  <%# ── Team switcher: see this player's stats one team at a time ── %>
+  <% if @teams.size > 1 %>
+    <div class="cr-team-switch">
+      <label class="cr-team-switch-label" for="cr-team-select">Stats for</label>
+      <select id="cr-team-select" class="cr-team-switch-select"
+              onchange="if (this.value) window.location.href = this.value;">
+        <option value="<%= player_path(@user) %>" <%= "selected" if @selected_team.nil? %>>All Teams</option>
+        <% @teams.each do |t| %>
+          <option value="<%= player_path(@user, team: t.id) %>" <%= "selected" if @selected_team&.id == t.id %>><%= t.name %></option>
+        <% end %>
+      </select>
+    </div>
+  <% end %>
+
   <%# ── Lineup Quick Facts — at-a-glance info captains need when setting a lineup ── %>
   <% if @playing_stats.present? %>
     <section class="cr-section cr-lineup-facts">
@@ -326,7 +340,7 @@
   <% end %>
 
   <%# ── Personal league match history (auto-pulled from team rosters) ── %>
-  <% if @is_self || @deltri_matches.present? %>
+  <% if @selected_team.nil? && (@is_self || @deltri_matches.present?) %>
     <section class="cr-section">
       <h2 class="cr-section-title">League Match History</h2>
 
@@ -375,12 +389,12 @@
   <% end %>
 
   <%# ── Advanced stats: clean per-year matrix, TennisRecord style ── %>
-  <% if @stats.any? || @league_year_stats.present? %>
+  <% if (@stats.any? && @selected_team.nil?) || @league_year_stats.present? %>
     <section class="cr-section" id="cr-advanced-stats">
       <h2 class="cr-section-title">Advanced Player Stats</h2>
 
       <%# Overall matrix (imported season totals: matches / sets / games / defaults) %>
-      <% if @stats.any? %>
+      <% if @stats.any? && @selected_team.nil? %>
         <div class="cr-adv-league-label">Overall</div>
         <div class="cr-adv-wrap">
           <table class="cr-adv">

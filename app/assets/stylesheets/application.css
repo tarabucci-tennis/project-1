@@ -6313,3 +6313,41 @@ body.cr-ctx-admin-members { background: var(--cr-navy-page); }
   .cr-lu-reply { grid-column: 1 / -1; flex-wrap: wrap; }
   .cr-lu-reply span { flex-basis: 100%; }
 }
+
+/* Team switcher on a player's page — pick a team to scope their stats, like
+   the USTA Team Details dropdown. Reloads to /players/:id?team=<id>. */
+.cr-team-switch {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 2px 0 20px;
+}
+.cr-team-switch-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  color: var(--cr-text-muted);
+  white-space: nowrap;
+}
+.cr-team-switch-select {
+  flex: 1;
+  min-width: 0;
+  padding: 10px 38px 10px 14px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--cr-text);
+  background-color: var(--cr-white);
+  border: 1px solid var(--cr-border);
+  border-radius: 10px;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M6 9l6 6 6-6'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+}
+.cr-team-switch-select:focus {
+  outline: none;
+  border-color: var(--cr-gold);
+}
