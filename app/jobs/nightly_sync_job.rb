@@ -41,6 +41,7 @@ class NightlySyncJob < ApplicationJob
     step("Rosters")         { TenniscoresRosterSync.new.call }
     step("Del-Tri results") { DeltriResults.new.call }
     step("Player history")  { DeltriPlayerImport.sync_all }
+    step("Calendar import") { GoogleCalendarImport.sync_all }
     step("Postseason")      { TennisrecordPlayoffs.new.call }
     step("Ratings")         { RatingCalculator.recompute! }
     save_status("done", finished_at: Time.current)

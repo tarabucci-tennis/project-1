@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_27_120000) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_09_120000) do
   create_table "availabilities", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.integer "match_id", null: false
@@ -52,6 +52,20 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_27_120000) do
     t.integer "wins", default: 0, null: false
     t.index ["tennis_team_id", "name"], name: "index_division_teams_on_tennis_team_id_and_name", unique: true
     t.index ["tennis_team_id"], name: "index_division_teams_on_tennis_team_id"
+  end
+
+  create_table "external_events", force: :cascade do |t|
+    t.boolean "all_day", default: false, null: false
+    t.datetime "created_at", null: false
+    t.datetime "ends_at"
+    t.string "location"
+    t.datetime "starts_at"
+    t.string "title"
+    t.string "uid"
+    t.datetime "updated_at", null: false
+    t.integer "user_id", null: false
+    t.index ["user_id", "starts_at"], name: "index_external_events_on_user_id_and_starts_at"
+    t.index ["user_id"], name: "index_external_events_on_user_id"
   end
 
   create_table "friendlies", force: :cascade do |t|
@@ -309,6 +323,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_27_120000) do
     t.decimal "dynamic_rating"
     t.date "dynamic_rating_date"
     t.string "email"
+    t.string "ical_url"
     t.datetime "last_seen_at"
     t.date "last_seen_on"
     t.datetime "last_sign_in_at"
@@ -330,6 +345,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_27_120000) do
   add_foreign_key "availabilities", "matches"
   add_foreign_key "availabilities", "users"
   add_foreign_key "division_teams", "tennis_teams"
+  add_foreign_key "external_events", "users"
   add_foreign_key "friendlies", "users", column: "organizer_id"
   add_foreign_key "friendly_spots", "friendlies"
   add_foreign_key "friendly_spots", "users"
