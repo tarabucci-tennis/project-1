@@ -339,15 +339,16 @@
     </section>
   <% end %>
 
-  <%# ── My Tennis Calendar: pull tennis events from your Google Calendar ── %>
+  <%# ── My Calendar: sync your whole calendar; tennis is highlighted gold ── %>
   <% if @is_self %>
-    <section class="cr-section">
-      <h2 class="cr-section-title">My Tennis Calendar</h2>
+    <section class="cr-section" id="my-tennis-calendar">
+      <h2 class="cr-section-title">My Calendar</h2>
       <p class="cr-deltri-hint">
-        Paste your Google Calendar's secret iCal link and Court Report will pull your tennis
-        events — matches, clinics and friendlies — onto your calendar (just the tennis ones). It
-        refreshes every night. In Google Calendar: <strong>Settings → your calendar → “Secret
-        address in iCal format”</strong>.
+        Paste your Google Calendar's secret iCal link and Court Report pulls your whole calendar,
+        with your <strong>tennis</strong> events — matches, clinics, friendlies —
+        <span class="cr-cal-tennis-ink">highlighted in gold</span>. It refreshes every night, and
+        <strong>only you</strong> can see your calendar here. In Google Calendar:
+        <strong>Settings → your calendar → “Secret address in iCal format”</strong>.
       </p>
       <%= form_with url: connect_calendar_path, method: :post, local: true, class: "cr-deltri-connect" do %>
         <div class="cr-deltri-row">
@@ -358,25 +359,27 @@
       <% end %>
 
       <% if @external_events.any? %>
-        <h3 class="cr-section-subtitle" style="margin-top: 14px;">Tennis events we found (<%= @external_events.size %>)</h3>
+        <h3 class="cr-section-subtitle" style="margin-top: 14px;">Upcoming on your calendar</h3>
         <div class="cr-match-list">
           <% @external_events.each do |ev| %>
-            <div class="cr-match-row">
+            <div class="cr-match-row cr-cal-ev<%= ' cr-cal-ev-tennis' if ev.tennis %>">
               <div class="cr-match-date" style="min-width: auto; padding: 8px 12px;">
                 <div class="cr-match-date-month" style="font-size: 0.62rem;"><%= ev.starts_at&.in_time_zone&.strftime("%-m/%-d") %></div>
               </div>
               <div class="cr-match-info">
-                <div class="cr-match-opponent" style="font-size: 0.9rem;"><%= ev.title %></div>
+                <div class="cr-match-opponent" style="font-size: 0.9rem;"><% if ev.tennis %><span class="cr-cal-ev-ball">🎾</span> <% end %><%= ev.title %></div>
                 <div class="cr-match-location"><%= [ ev.time_label, ev.location.presence ].compact.join(" · ").presence || (ev.all_day ? "All day" : "") %></div>
               </div>
             </div>
           <% end %>
         </div>
       <% elsif @user.ical_url.present? %>
-        <p class="cr-deltri-empty">No tennis events found in that calendar yet. We look for words like “match”, “clinic”, “friendly”, “court” or one of your team names — tell me if something’s missing and I’ll widen it.</p>
+        <p class="cr-deltri-empty">No upcoming events found in that calendar yet (we pull about two months back through next season).</p>
       <% end %>
     </section>
   <% end %>
+
+  <%# ── Personal league match history (auto-pulled from team rosters) ── %>
 
   <%# ── Personal league match history (auto-pulled from team rosters) ── %>
   <% if @selected_team.nil? && (@is_self || @deltri_matches.present?) %>

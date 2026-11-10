@@ -234,6 +234,13 @@
             </div>
           </div>
 
+          <div class="cr-cal-sync">
+            <%= link_to profile_path(anchor: "my-tennis-calendar"), class: "cr-chip-btn cr-cal-sync-btn" do %>
+              🔗 Sync your calendar
+            <% end %>
+            <span class="cr-cal-sync-note">Pull your own matches, clinics &amp; friendlies from Google Calendar (or any calendar).</span>
+          </div>
+
           <%# Day-detail modal (populated by Stimulus on day click) %>
           <div class="cr-dash-cal-modal"
                data-dashboard-calendar-target="modal"

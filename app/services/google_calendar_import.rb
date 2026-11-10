@@ -22,11 +22,16 @@ class GoogleCalendarImport
     "practice", "lineup", "deuce", "volley", "rally"
   ].freeze
 
-  Result = Struct.new(:imported, :scanned, :error, keyword_init: true) do
+  Result = Struct.new(:imported, :tennis, :scanned, :error, keyword_init: true) do
     def to_s
-      error ? "error: #{error}" : "kept #{imported} of #{scanned} events"
+      error ? "error: #{error}" : "imported #{imported} events (#{tennis} tennis)"
     end
   end
+
+  # Only keep events in a sensible window so we never store someone's entire
+  # multi-year calendar: recent past through next season.
+  WINDOW_BACK_DAYS = 60
+  WINDOW_AHEAD_DAYS = 400
 
   def self.sync_all
     total = 0
@@ -35,7 +40,7 @@ class GoogleCalendarImport
     rescue StandardError => e
       Rails.logger.error("[GoogleCalendarImport] user #{u.id}: #{e.class} — #{e.message}")
     end
-    "imported #{total} tennis events"
+    "imported #{total} calendar events"
   end
 
   def initialize(user)
@@ -44,23 +49,29 @@ class GoogleCalendarImport
 
   def call
     url = normalize(@user.ical_url)
-    return Result.new(imported: 0, scanned: 0, error: "No calendar link") if url.blank?
+    return Result.new(imported: 0, tennis: 0, scanned: 0, error: "No calendar link") if url.blank?
 
     events = parse(fetch(url))
-    kept = events.select { |e| tennis?(e) }
+    min_t = Time.now - WINDOW_BACK_DAYS * 86_400
+    max_t = Time.now + WINDOW_AHEAD_DAYS * 86_400
+    in_window = events.select { |e| e[:starts_at] && e[:starts_at] >= min_t && e[:starts_at] <= max_t }
 
+    tennis_count = 0
     ExternalEvent.transaction do
       @user.external_events.delete_all
-      kept.each do |e|
+      in_window.each do |e|
+        is_tennis = tennis?(e)
+        tennis_count += 1 if is_tennis
         @user.external_events.create!(
-          title: e[:summary].presence || "Tennis", starts_at: e[:starts_at],
-          ends_at: e[:ends_at], location: e[:location], all_day: e[:all_day], uid: e[:uid]
+          title: e[:summary].presence || "Busy", starts_at: e[:starts_at],
+          ends_at: e[:ends_at], location: e[:location], all_day: e[:all_day],
+          uid: e[:uid], tennis: is_tennis
         )
       end
     end
-    Result.new(imported: kept.size, scanned: events.size)
+    Result.new(imported: in_window.size, tennis: tennis_count, scanned: events.size)
   rescue StandardError => e
-    Result.new(imported: 0, scanned: 0, error: e.message)
+    Result.new(imported: 0, tennis: 0, scanned: 0, error: e.message)
   end
 
   # Parse an .ics string into event hashes. Public so it can be unit-tested
