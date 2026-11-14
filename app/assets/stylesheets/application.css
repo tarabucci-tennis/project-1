@@ -6193,7 +6193,7 @@ body.cr-ctx-admin-members { background: var(--cr-navy-page); }
 :root { --cr-hh: 64px; --cr-sb-w: 248px; }
 .cr-has-sb .cr-header-inner { max-width: none; height: var(--cr-hh); padding-top: 0; padding-bottom: 0; box-sizing: border-box; }
 .cr-sb-burger {
-  display: none; flex: none; align-items: center; justify-content: center; width: 38px; height: 38px; margin-right: 4px;
+  display: none; flex: none; align-items: center; justify-content: center; width: 38px; height: 38px;
   border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.22); background: transparent; color: #fff; cursor: pointer;
 }
 .cr-shell { display: grid; grid-template-columns: var(--cr-sb-w) minmax(0, 1fr); align-items: start; }
