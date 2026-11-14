@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_11_09_120000) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_10_120000) do
   create_table "availabilities", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.integer "match_id", null: false
@@ -60,6 +60,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_09_120000) do
     t.datetime "ends_at"
     t.string "location"
     t.datetime "starts_at"
+    t.boolean "tennis", default: false, null: false
     t.string "title"
     t.string "uid"
     t.datetime "updated_at", null: false

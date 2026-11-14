@@ -9,7 +9,7 @@ class ProfilesController < ApplicationController
     @stats = @user.tennis_stats.chronological
     @is_self = true
     @shared_teams = []
-    @external_events = @user.external_events.chronological
+    @external_events = @user.external_events.upcoming.limit(30)
     @playing_stats = build_playing_stats(@user)
     @league_year_stats = build_league_year_stats(@user)
     @deltri_matches = @user.player_matches.chronological.group_by { |pm| [ pm.league, pm.division ] }
@@ -58,7 +58,7 @@ class ProfilesController < ApplicationController
     if result.error
       redirect_to profile_path, alert: "Couldn't read that calendar link (#{result.error}). Make sure it's the secret iCal address from Google Calendar settings."
     else
-      redirect_to profile_path, notice: "Pulled #{result.imported} tennis event#{'s' unless result.imported == 1} from your calendar."
+      redirect_to profile_path, notice: "Synced #{result.imported} event#{'s' unless result.imported == 1} from your calendar (#{result.tennis} tennis)."
     end
   end
 
@@ -85,7 +85,7 @@ class ProfilesController < ApplicationController
     their_team_ids = @user.member_teams.pluck(:id)
     shared_ids = my_team_ids & their_team_ids
     @shared_teams = TennisTeam.where(id: shared_ids).order(start_date: :desc)
-    @external_events = @user.external_events.chronological
+    @external_events = @user.external_events.upcoming.limit(30)
     @playing_stats = build_playing_stats(@user, team: @selected_team)
     @league_year_stats = build_league_year_stats(@user, team: @selected_team)
   end

@@ -6390,3 +6390,13 @@ body.cr-ctx-profiles-show .cr-pp,
 body.cr-ctx-profiles-player .cr-pp { margin-bottom: 18px; }
 body.cr-ctx-profiles-show .cr-team-switch,
 body.cr-ctx-profiles-player .cr-team-switch { margin: 0 0 14px; }
+
+/* "Sync your calendar" button row under the My Teams month calendar. */
+.cr-cal-sync { margin-top: 12px; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; }
+.cr-cal-sync-note { font-size: 0.8rem; color: var(--cr-text-muted); }
+
+/* Calendar events synced from Google: tennis ones highlighted in gold (the
+   tennis-ball colour), personal events shown plain. */
+.cr-cal-ev-tennis { background: #fdf6e3; box-shadow: inset 3px 0 0 var(--cr-gold); }
+.cr-cal-ev-ball { font-size: 0.85em; }
+.cr-cal-tennis-ink { color: var(--cr-gold); font-weight: 700; }
