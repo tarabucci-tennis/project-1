@@ -447,6 +447,23 @@ class TeamsController < ApplicationController
   # seasons become browsable under the Roster tab. Players can rejoin
   # (or be re-added) for the new season without duplicate-key conflicts
   # thanks to the partial unique index on active memberships.
+  # POST /teams/:id/sync_scores — any teammate can pull this team's scores
+  # from its league site now instead of waiting for the hourly sync.
+  def sync_scores
+    team = TennisTeam.find_by(id: params[:id])
+    return redirect_to(teams_path, alert: "Team not found.") unless team
+    return redirect_to(teams_path, alert: "You're not a member of that team.") unless member_of?(team) || current_user.admin?
+    return redirect_to(team_path(team), alert: "This team's scores don't come from a league website.") if team.tenniscores_url.blank?
+
+    if TeamSyncJob.running?(team.id)
+      redirect_to team_path(team), notice: "Already syncing. Refresh in a minute to see new scores."
+    else
+      Rails.cache.write(TeamSyncJob.key(team.id), { state: "running", started_at: Time.current }, expires_in: 1.day)
+      TeamSyncJob.perform_later(team.id)
+      redirect_to team_path(team), notice: "Syncing scores from the league site. Refresh in a minute to see them."
+    end
+  end
+
   def archive_season
     @team = TennisTeam.find(params[:id])
     unless @team.can_set_lineup?(current_user) || current_user.admin?

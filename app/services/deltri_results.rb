@@ -30,11 +30,13 @@ class DeltriResults
     end
   end
 
-  def call
+  # Every team with a league-site link, or just the ones passed in (the
+  # team page's Sync scores button passes one team).
+  def call(teams = TennisTeam.all)
     updated = {}
     notes = []
 
-    TennisTeam.where.not(tenniscores_url: [ nil, "" ]).find_each do |team|
+    teams.where.not(tenniscores_url: [ nil, "" ]).find_each do |team|
       base = base_of(team.tenniscores_url)
       page = fetch(team.tenniscores_url)
       links = team_match_links(page, team)
@@ -107,7 +109,10 @@ class DeltriResults
     end
     raise "HTTP #{res.code}" unless res.code.to_i == 200
 
-    res.body.to_s
+    # Tenniscores sends no charset, so Net::HTTP hands back raw bytes. Read
+    # them as UTF-8: one accented name or arrow on a scorecard used to crash
+    # the parser ("incompatible encoding") and that match's scores never came in.
+    res.body.to_s.dup.force_encoding(Encoding::UTF_8).scrub
   end
 
   # The team's own row in the standings table. Each weekly cell links to a

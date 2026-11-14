@@ -6400,3 +6400,14 @@ body.cr-ctx-profiles-player .cr-team-switch { margin: 0 0 14px; }
 .cr-cal-ev-tennis { background: #fdf6e3; box-shadow: inset 3px 0 0 var(--cr-gold); }
 .cr-cal-ev-ball { font-size: 0.85em; }
 .cr-cal-tennis-ink { color: var(--cr-gold); font-weight: 700; }
+
+/* Team page schedule header: Sync scores (league-site teams) + Add Match. */
+.cr-sched-actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; justify-content: flex-end; }
+.cr-sync { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; justify-content: flex-end; }
+.cr-sync form { margin: 0; }
+.cr-sync-btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px; font-size: 0.85rem; font-weight: 700; white-space: nowrap; }
+.cr-sync-btn[disabled] { opacity: 0.6; cursor: default; }
+.cr-sync-note { font-size: 0.78rem; color: var(--cr-text-muted); white-space: nowrap; }
+@media (max-width: 600px) {
+  .cr-sched-actions, .cr-sync { justify-content: flex-start; }
+}
