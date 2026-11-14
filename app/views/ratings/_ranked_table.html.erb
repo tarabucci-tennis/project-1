@@ -1,0 +1,37 @@
+<%# A ranked list of players: rank | player | USTA level | record | win % | last played.
+    rows come from RatingsHistory.rank, so ranked players are already first. %>
+<div class="cr-rp-scroll">
+  <table class="cr-rp-tbl cr-rp-tbl-compact cr-rp-ranked">
+    <thead>
+      <tr>
+        <th class="cr-rp-c">#</th>
+        <th>Player</th>
+        <th class="cr-rp-c">USTA level</th>
+        <th class="cr-rp-c">Record</th>
+        <th class="cr-rp-c">Win %</th>
+        <th>Last played</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% rank = 0 %>
+      <% rows.each do |p| %>
+        <% user = @users_by_name[p.name.downcase.squish] %>
+        <% rank += 1 if p.ranked? %>
+        <tr data-rp-name="<%= p.name.downcase %>" class="<%= "cr-rp-unranked" unless p.ranked? %>">
+          <td class="cr-rp-c cr-rp-rank"><%= p.ranked? ? rank : "—" %></td>
+          <td>
+            <% if p.lines.positive? %>
+              <%= link_to p.name, ratings_player_path(name: p.name), class: "cr-rp-plink cr-rp-plink-strong" %>
+            <% else %>
+              <span class="cr-rp-plink-strong"><%= p.name %></span>
+            <% end %>
+          </td>
+          <td class="cr-rp-c"><%= user&.ntrp_rating.present? ? format("%.1f", user.ntrp_rating) : "—" %></td>
+          <td class="cr-rp-c cr-rp-nowrap"><%= p.lines.positive? ? "#{p.wins}–#{p.losses}" : "—" %></td>
+          <td class="cr-rp-c"><%= p.ranked? ? "#{p.win_pct.round}%" : "—" %></td>
+          <td class="cr-rp-nowrap"><%= p.last_date&.strftime("%-m/%-d/%y") || "No matches yet" %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
