@@ -359,9 +359,19 @@
         <% end %>
       </div>
 
-      <%# ── Panel 4: Friendlies & Clinics ───────────────────────── %>
-      <div data-home-tabs-target="panel" style="display: none;">
-        <% fc_items = (@upcoming_friendlies.to_a + @upcoming_team_events) %>
+      <%# ── Panel 4: Friendlies only ─────────────────────────────
+          Booked friendlies plus captain-added team friendlies. Clinics and
+          other calendar events ("League match", "Team dinner") stay on
+          Upcoming and Calendar; this tab is blank when there are no friendlies. %>
+      <div class="cr-fr-panel" data-home-tabs-target="panel" style="display: none;">
+        <%# Computers hide the tab bar (the left column replaces it), so the
+            Book a friendly menu isn't there: offer the same two links here.
+            Phones keep the tab-bar menu and never see this row. %>
+        <div class="cr-fr-panel-head">
+          <%= link_to "+ Book a friendly", new_friendly_path, class: "cr-btn cr-btn-gold" %>
+          <%= link_to "My friendlies →", friendlies_path, class: "cr-btn cr-btn-outline" %>
+        </div>
+        <% fc_items = @upcoming_friendlies.to_a + @upcoming_team_events.select { |e| e.display_kind == "friendly" } %>
         <% fc_items = fc_items.sort_by { |i| i.is_a?(Friendly) ? i.starts_at : i.event_date.in_time_zone } %>
         <% if fc_items.any? %>
           <div class="cr-my-week-list">
@@ -370,7 +380,7 @@
             <% end %>
           </div>
         <% else %>
-          <p class="cr-coming-up-empty">No friendlies or clinics coming up. Hover or tap Book a friendly above to book one and share the link, or a captain can add a clinic from the Calendar.</p>
+          <p class="cr-coming-up-empty">No friendlies coming up. Hover or tap Book a friendly above to book one and share the link.</p>
         <% end %>
       </div>
     </div>

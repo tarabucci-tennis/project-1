@@ -16,39 +16,41 @@
   <% end %>
 
   <% if @players.any? %>
-    <section class="cr-rp-card">
-      <div class="cr-rp-card-head">
-        <h2 class="cr-rp-card-title">Players (<%= @players.size %>)</h2>
-        <input type="search" class="cr-rp-filter" placeholder="Find a player…" aria-label="Find a player"
-               oninput="var q=this.value.toLowerCase();document.querySelectorAll('[data-rp-name]').forEach(function(r){r.style.display=r.dataset.rpName.indexOf(q)>-1?'':'none'})">
+    <div data-controller="home-tabs">
+      <div class="cr-home-tabs cr-rp-tabs">
+        <button class="cr-home-tab cr-home-tab-active" data-home-tabs-target="tab" data-tab-key="players" data-action="click->home-tabs#switch">All players</button>
+        <button class="cr-home-tab" data-home-tabs-target="tab" data-tab-key="teams" data-action="click->home-tabs#switch">Teams</button>
       </div>
-      <div class="cr-rp-scroll">
-        <table class="cr-rp-tbl cr-rp-tbl-compact">
-          <thead>
-            <tr>
-              <th>Player</th>
-              <th class="cr-rp-c">USTA level</th>
-              <th class="cr-rp-c">Record</th>
-              <th class="cr-rp-c">Win %</th>
-              <th>Last played</th>
-            </tr>
-          </thead>
-          <tbody>
-            <% @players.each do |p| %>
-              <% user = @users_by_name[p.name.downcase.squish] %>
-              <tr data-rp-name="<%= p.name.downcase %>">
-                <td><%= link_to p.name, ratings_player_path(name: p.name), class: "cr-rp-plink cr-rp-plink-strong" %></td>
-                <td class="cr-rp-c"><%= user&.ntrp_rating.present? ? format("%.1f", user.ntrp_rating) : "—" %></td>
-                <td class="cr-rp-c cr-rp-nowrap"><%= p.wins %>–<%= p.losses %></td>
-                <td class="cr-rp-c"><%= p.lines >= 5 ? "#{(100.0 * p.wins / p.lines).round}%" : "—" %></td>
-                <td class="cr-rp-nowrap"><%= p.last_date&.strftime("%-m/%-d/%y") %></td>
-              </tr>
-            <% end %>
-          </tbody>
-        </table>
+
+      <%# ── Players: everyone, ranked by win % ── %>
+      <section class="cr-rp-card cr-rp-panel-players" data-home-tabs-target="panel">
+        <div class="cr-rp-card-head">
+          <h2 class="cr-rp-card-title">Players (<%= @players.size %>)</h2>
+          <input type="search" class="cr-rp-filter" placeholder="Find a player…" aria-label="Find a player"
+                 oninput="var q=this.value.toLowerCase();document.querySelectorAll('.cr-rp-panel-players [data-rp-name]').forEach(function(r){r.style.display=r.dataset.rpName.indexOf(q)>-1?'':'none'})">
+        </div>
+        <%= render "ranked_table", rows: @players %>
+      </section>
+
+      <%# ── Teams: one dropdown per USTA team I'm on ── %>
+      <div class="cr-rp-panel-teams" data-home-tabs-target="panel" style="display: none;">
+        <% if @teams.any? %>
+          <% @teams.each do |team, rows| %>
+            <details class="cr-rp-card cr-rp-team">
+              <summary class="cr-rp-card-head cr-rp-team-head">
+                <span class="cr-rp-card-title"><%= team.name %></span>
+                <span class="cr-rp-team-count"><%= rows.size %> <%= "player".pluralize(rows.size) %></span>
+              </summary>
+              <%= render "ranked_table", rows: rows %>
+            </details>
+          <% end %>
+        <% else %>
+          <section class="cr-rp-card cr-rp-empty"><p>You're not on any USTA teams yet.</p></section>
+        <% end %>
       </div>
-      <p class="cr-rp-foot">Fills in automatically from the scores players enter on Court Report for USTA teams. Win % shows once a player has 5+ lines. USTA level comes from Court Report rosters.</p>
-    </section>
+
+      <p class="cr-rp-foot">Ranked by win % (lines won ÷ lines played). A player needs <%= RatingsHistory::MIN_LINES_TO_RANK %>+ lines to get a rank, so a 2–0 start can't sit above a 10–3 season; players with fewer are listed after, unranked. On the Teams tab each player's record is her whole USTA record, not just that team. Fills in automatically from the scores entered on Court Report for USTA teams.</p>
+    </div>
   <% else %>
     <section class="cr-rp-card cr-rp-empty">
       

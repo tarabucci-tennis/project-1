@@ -6263,7 +6263,10 @@ body.cr-ctx-admin-members { background: var(--cr-navy-page); }
 @media (min-width: 1000px) {
   .cr-has-sb.cr-ctx-teams-index .cr-home-tabs,
   .cr-has-sb.cr-ctx-teams-index .cr-home-page > .cr-page-header-row .cr-page-header-actions { display: none; }
+  .cr-has-sb.cr-ctx-teams-index .cr-fr-panel-head { display: flex; }
 }
+/* Book a friendly row on the Friendlies tab: only where the tab bar is hidden. */
+.cr-fr-panel-head { display: none; gap: 10px; justify-content: flex-start; margin: 0 auto 14px; max-width: 760px; }
 
 @media (max-width: 999px) {
   .cr-sb-burger { display: inline-flex; }
@@ -6410,4 +6413,34 @@ body.cr-ctx-profiles-player .cr-team-switch { margin: 0 0 14px; }
 .cr-sync-note { font-size: 0.78rem; color: var(--cr-text-muted); white-space: nowrap; }
 @media (max-width: 600px) {
   .cr-sched-actions, .cr-sync { justify-content: flex-start; }
+
+/* Ratings: All players / Teams tabs. The tabs span the page like the cards. */
+.cr-rp-tabs { max-width: none; margin: 0 0 14px; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-auto-flow: row; }
+.cr-rp-team { margin-bottom: 10px; }
+.cr-rp-team-head { cursor: pointer; list-style: none; }
+.cr-rp-team-head::-webkit-details-marker { display: none; }
+.cr-rp-team-head::after { content: "▾"; color: var(--cr-teal-deep); margin-left: 8px; transition: transform 0.15s; }
+.cr-rp-team[open] .cr-rp-team-head::after { transform: rotate(180deg); }
+.cr-rp-team:not([open]) .cr-rp-team-head { border-bottom: 0; }
+.cr-rp-team-count { margin-left: auto; font-size: 0.82rem; color: var(--cr-text-muted); }
+.cr-rp-rank { font-weight: 700; color: var(--cr-teal-deep); }
+.cr-rp-unranked td { color: var(--cr-text-muted); }
+/* Ranked tables: a slim # column; the gap after the name moves to column 2. */
+.cr-rp-ranked th:first-child, .cr-rp-ranked td:first-child { width: 1%; padding-left: 14px; padding-right: 4px; }
+@media (min-width: 601px) {
+  .cr-rp-ranked td:nth-child(2), .cr-rp-ranked th:nth-child(2) { padding-right: 28px; }
+}
+/* Phones: the # column shifts every column right by one, so restate the
+   fixed widths: # | player | level | record | win %; Last played drops. */
+@media (max-width: 600px) {
+  .cr-rp-ranked th:first-child, .cr-rp-ranked td:first-child {
+    width: 9%; padding-left: 10px; padding-right: 2px; overflow: visible; text-overflow: clip;
+  }
+  .cr-rp-ranked th:nth-child(2), .cr-rp-ranked td:nth-child(2) {
+    width: 39%; display: table-cell; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .cr-rp-ranked th:nth-child(3), .cr-rp-ranked td:nth-child(3) { width: 18%; }
+  .cr-rp-ranked th:nth-child(4), .cr-rp-ranked td:nth-child(4) { width: 18%; }
+  .cr-rp-ranked th:nth-child(5), .cr-rp-ranked td:nth-child(5) { width: 16%; display: table-cell; }
+  .cr-rp-ranked th:nth-child(6), .cr-rp-ranked td:nth-child(6) { display: none; }
 }
