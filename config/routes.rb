@@ -95,6 +95,7 @@ Rails.application.routes.draw do
       post "make_captain", to: "teams#make_captain"
       post "paste_roster", to: "teams#paste_roster"
       post "archive_season", to: "teams#archive_season"
+      post "sync_scores", to: "teams#sync_scores"
       post "advance", to: "teams#advance"
       post "archive", to: "teams#archive"
       get  "usta_upload", to: "usta_uploads#new", as: :usta_upload
