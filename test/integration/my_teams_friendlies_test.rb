@@ -38,6 +38,12 @@ class MyTeamsFriendliesTest < ActionDispatch::IntegrationTest
     assert_match "Over-served", response.body, "the league match still shows on Upcoming"
   end
 
+  test "Friendlies tab has its own Book a friendly link for computers, where the tab bar is hidden" do
+    get teams_path
+    assert_select ".cr-fr-panel .cr-fr-panel-head a[href=?]", new_friendly_path, text: "+ Book a friendly"
+    assert_select ".cr-fr-panel .cr-fr-panel-head a[href=?]", friendlies_path
+  end
+
   test "Book a friendly menu: book one, or open / edit my upcoming friendlies" do
     mine = Friendly.find_by(title: "Thursday hit")
     other = User.create!(name: "Other Org", email: "other-org-fr@example.com")
