@@ -23,10 +23,30 @@ class RatingsHistory
     end
   end
 
+  # A player needs this many lines before she gets a win % and a rank, so a
+  # 2-0 start can't sit above a 10-3 season.
+  MIN_LINES_TO_RANK = 5
+
   PlayerSummary = Struct.new(:name, :wins, :losses, :last_date, keyword_init: true) do
     def lines
       wins + losses
     end
+
+    def ranked?
+      lines >= MIN_LINES_TO_RANK
+    end
+
+    def win_pct
+      lines.zero? ? 0.0 : 100.0 * wins / lines
+    end
+  end
+
+  # Ranked players first (highest win %, then most lines), then everyone with
+  # too few lines (most lines first).
+  def self.rank(summaries)
+    ranked, rest = summaries.partition(&:ranked?)
+    ranked.sort_by { |s| [ -s.win_pct, -s.lines, s.name.downcase ] } +
+      rest.sort_by { |s| [ -s.lines, s.name.downcase ] }
   end
 
   def self.lines

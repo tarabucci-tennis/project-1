@@ -15,9 +15,27 @@ class RatingsController < ApplicationController
   helper_method :can_upload?
 
   # GET /ratings — everyone with saved USTA history.
+  # Players tab: everyone ranked by win %. Teams tab: one dropdown per USTA
+  # team I'm on, its active roster ranked the same way.
   def index
-    @players = RatingsHistory.player_summaries
-    @users_by_name = users_by_name(@players.map(&:name))
+    summaries = RatingsHistory.player_summaries
+    @players = RatingsHistory.rank(summaries)
+    by_key = summaries.index_by { |s| s.name.downcase.squish }
+
+    # USTA only: that's all the Ratings history covers.
+    teams = TennisTeam.usta.where(id: current_user.team_memberships.active.select(:tennis_team_id))
+                      .reject(&:archived?).sort_by { |t| t.name.to_s.downcase }
+    @teams = teams.map do |team|
+      roster = team.team_memberships.active.includes(:user).map(&:user).compact.uniq
+      rows = roster.map do |u|
+        by_key[u.name.to_s.downcase.squish] ||
+          RatingsHistory::PlayerSummary.new(name: u.name, wins: 0, losses: 0)
+      end
+      [ team, RatingsHistory.rank(rows) ]
+    end
+
+    names = @players.map(&:name) + @teams.flat_map { |_, rows| rows.map(&:name) }
+    @users_by_name = users_by_name(names)
   end
 
   # GET /ratings/player?name=Jane+Smith — one player's card + history.
