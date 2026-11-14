@@ -11,18 +11,37 @@ class MyTeamsFriendliesTest < ActionDispatch::IntegrationTest
     post session_path, params: { email: @user.email, password: "tennis-123" }
   end
 
-  test "friendlies and clinics show on Upcoming and the Friendlies tab; practice reads as Friendly" do
+  test "friendlies and clinics show on Upcoming; only friendlies on the Friendlies tab; practice reads as Friendly" do
     get teams_path
     assert_response :success
     body = response.body
     assert_select ".cr-home-tab", text: "Book a friendly"
     assert_select ".cr-home-tab", text: "Upcoming"
-    # 3 cards (friendly, clinic, old practice) on Upcoming + the same 3 on the Friendlies tab.
-    assert_select ".cr-my-week-card-event", 6
+    # 3 cards (friendly, clinic, old practice) on Upcoming + 2 (friendly, old practice) on the Friendlies tab.
+    assert_select ".cr-my-week-card-event", 5
+    assert_select ".cr-fr-panel .cr-my-week-card-event", 2
+    assert_select ".cr-fr-panel", text: /Serve clinic/, count: 0
     assert_match "Thursday hit", body
     assert_match "Serve clinic", body
     assert_no_match(/>\s*Practice\s*</, body)
     assert_no_match(/PRACTICE/, body)
+  end
+
+  test "Friendlies tab is blank when there are no friendlies, even with league matches and clinics" do
+    Friendly.destroy_all
+    TeamEvent.where(kind: "practice").destroy_all
+    team = TennisTeam.find_by(name: "Test Aces")
+    team.team_events.create!(title: "Over-served — Away @ GM", kind: "League match", event_date: 4.days.from_now.to_date)
+    get teams_path
+    assert_select ".cr-fr-panel .cr-my-week-card-event", 0
+    assert_select ".cr-fr-panel .cr-coming-up-empty", text: /No friendlies coming up/
+    assert_match "Over-served", response.body, "the league match still shows on Upcoming"
+  end
+
+  test "Friendlies tab has its own Book a friendly link for computers, where the tab bar is hidden" do
+    get teams_path
+    assert_select ".cr-fr-panel .cr-fr-panel-head a[href=?]", new_friendly_path, text: "+ Book a friendly"
+    assert_select ".cr-fr-panel .cr-fr-panel-head a[href=?]", friendlies_path
   end
 
   test "Book a friendly menu: book one, or open / edit my upcoming friendlies" do
@@ -53,8 +72,8 @@ class MyTeamsFriendliesTest < ActionDispatch::IntegrationTest
 
   test "every friendly and clinic card has calendar and share buttons" do
     get teams_path
-    assert_select ".cr-my-week-card-event .cr-my-week-right a.cr-cal-btn[href^='https://calendar.google.com']", 6
-    assert_select ".cr-my-week-card-event .cr-my-week-right button.cr-share-icon[data-share-text]", 6
+    assert_select ".cr-my-week-card-event .cr-my-week-right a.cr-cal-btn[href^='https://calendar.google.com']", 5
+    assert_select ".cr-my-week-card-event .cr-my-week-right button.cr-share-icon[data-share-text]", 5
     assert_select "button.cr-share-icon[data-share-text*='Clinic: Serve clinic']"
     assert_select "button.cr-share-icon[data-share-url*='/f/']"
   end
