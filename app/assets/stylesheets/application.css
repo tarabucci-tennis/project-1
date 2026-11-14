@@ -6263,7 +6263,10 @@ body.cr-ctx-admin-members { background: var(--cr-navy-page); }
 @media (min-width: 1000px) {
   .cr-has-sb.cr-ctx-teams-index .cr-home-tabs,
   .cr-has-sb.cr-ctx-teams-index .cr-home-page > .cr-page-header-row .cr-page-header-actions { display: none; }
+  .cr-has-sb.cr-ctx-teams-index .cr-fr-panel-head { display: flex; }
 }
+/* Book a friendly row on the Friendlies tab: only where the tab bar is hidden. */
+.cr-fr-panel-head { display: none; gap: 10px; justify-content: flex-start; margin: 0 auto 14px; max-width: 760px; }
 
 @media (max-width: 999px) {
   .cr-sb-burger { display: inline-flex; }
