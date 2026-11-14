@@ -249,13 +249,10 @@ class LineupsController < ApplicationController
 
   SUB_OPTION = "sub".freeze
 
-  # Subs this team has used before (players in its past lineups who aren't on
-  # the roster), so a regular sub can be picked again instead of re-typed.
+  # The team's Subs tab list (saved subs plus anyone who has subbed before),
+  # so a regular sub can be picked instead of re-typed.
   def load_subs
-    member_ids = @members.map(&:id)
-    team_lineups = Lineup.joins(:match).where(matches: { tennis_team_id: @team.id }).select(:id)
-    @subs = User.where(id: LineupSlot.where(lineup_id: team_lineups).where.not(user_id: nil).select(:user_id))
-                .where.not(id: member_ids).order(:name).to_a
+    @subs = @team.sub_rows.map(&:user)
   end
 
   def sub_user_for(name)

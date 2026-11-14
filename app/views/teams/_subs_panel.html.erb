@@ -1,0 +1,51 @@
+<%# ── Subs: the team's list of fill-in players ──────────────
+    Saved subs (captains add them) first, then anyone who has subbed in a
+    lineup before. Set Lineup offers every name here on every line. %>
+<% rows = team.sub_rows %>
+<div data-team-tabs-target="panel" style="display: none;">
+  <section class="cr-section cr-subs">
+    <h2 class="cr-section-title">Subs (<%= rows.size %>)</h2>
+    <p class="cr-subs-intro">Players who fill in when someone on the roster can't play. Every name here shows up in Set Lineup, on every line.</p>
+
+    <% if can_edit %>
+      <%= form_with url: team_subs_path(team), method: :post, class: "cr-subs-add" do %>
+        <input type="text" name="name" placeholder="Sub's name" maxlength="60" required aria-label="Sub's name" class="cr-subs-input">
+        <input type="text" name="note" placeholder="Note (optional): 3.5, courts 4–6…" maxlength="80" aria-label="Note" class="cr-subs-input cr-subs-note-input">
+        <button type="submit" class="cr-btn cr-btn-gold">+ Add sub</button>
+      <% end %>
+    <% end %>
+
+    <% if rows.any? %>
+      <div class="cr-subs-list">
+        <% rows.each do |r| %>
+          <div class="cr-subs-row">
+            <div class="cr-subs-who">
+              <span class="cr-subs-name"><%= r.user.name %></span>
+              <% if r.user.ntrp_rating.present? %><span class="cr-subs-level"><%= format("%.1f", r.user.ntrp_rating) %></span><% end %>
+              <% if r.saved&.note.present? %><span class="cr-subs-note"><%= r.saved.note %></span><% end %>
+            </div>
+            <div class="cr-subs-played">
+              <% if r.times.positive? %>
+                Subbed <%= pluralize(r.times, "time") %> · last <%= r.last_date&.strftime("%-m/%-d/%y") %>
+              <% else %>
+                Hasn't subbed yet
+              <% end %>
+            </div>
+            <div class="cr-subs-action">
+              <% if can_edit %>
+                <% if r.saved %>
+                  <%= button_to "Remove", team_sub_path(team, r.saved), method: :delete, class: "cr-btn cr-btn-outline cr-btn-sm",
+                        form: { data: { turbo_confirm: "Take #{r.user.name} off the Subs list?" } } %>
+                <% else %>
+                  <%= button_to "Save to list", team_subs_path(team, user_id: r.user.id), method: :post, class: "cr-btn cr-btn-outline cr-btn-sm" %>
+                <% end %>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    <% else %>
+      <p class="cr-coming-up-empty">No subs yet.<%= " Add one above, or write one in on Set Lineup." if can_edit %></p>
+    <% end %>
+  </section>
+</div>

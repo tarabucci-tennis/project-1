@@ -1,6 +1,7 @@
 class TennisTeam < ApplicationRecord
   belongs_to :user
   has_many :team_memberships, dependent: :destroy
+  has_many :team_subs, dependent: :destroy
   has_many :members, through: :team_memberships, source: :user
   has_many :matches, dependent: :destroy
   has_many :team_events, dependent: :destroy
@@ -107,6 +108,25 @@ class TennisTeam < ApplicationRecord
   def captain?(user)
     return false unless user
     team_memberships.captains.exists?(user: user)
+  end
+
+  # Everyone on this team's Subs tab, one row each: the subs captains saved
+  # to the list, plus anyone who played in a lineup without being on the
+  # roster. Each row: user, saved (TeamSub or nil), times subbed, last date.
+  SubRow = Struct.new(:user, :saved, :times, :last_date, keyword_init: true)
+
+  def sub_rows
+    roster_ids = team_memberships.active.pluck(:user_id)
+    slots = LineupSlot.joins(lineup: :match).where(matches: { tennis_team_id: id })
+                      .where.not(user_id: nil).where.not(user_id: roster_ids)
+                      .pluck(:user_id, "matches.match_date")
+    played = slots.group_by(&:first)
+    saved = team_subs.includes(:user).index_by(&:user_id)
+    ids = (saved.keys + played.keys).uniq - roster_ids
+    User.where(id: ids).map do |u|
+      dates = (played[u.id] || []).map(&:last)
+      SubRow.new(user: u, saved: saved[u.id], times: dates.size, last_date: dates.max&.to_date)
+    end.sort_by { |r| [ r.saved ? 0 : 1, -r.times, r.user.name.to_s.downcase ] }
   end
 
   # Anyone allowed to set the lineup: captain or co-captain. Admin users
