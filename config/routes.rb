@@ -73,6 +73,7 @@ Rails.application.routes.draw do
   # Core app
   resources :teams, only: [ :index, :show, :destroy ] do
     resources :events, only: [ :create, :destroy ], controller: "team_events"
+    resources :subs, only: [ :create, :destroy ], controller: "team_subs"
     resources :matches, only: [ :index, :new, :create, :show, :edit, :update ] do
       member do
         get  "results", to: "matches#edit_results", as: :edit_results

@@ -6400,3 +6400,25 @@ body.cr-ctx-profiles-player .cr-team-switch { margin: 0 0 14px; }
 .cr-cal-ev-tennis { background: #fdf6e3; box-shadow: inset 3px 0 0 var(--cr-gold); }
 .cr-cal-ev-ball { font-size: 0.85em; }
 .cr-cal-tennis-ink { color: var(--cr-gold); font-weight: 700; }
+
+/* Team page Subs tab: name + level + note | how often subbed | one button. */
+.cr-subs-intro { font-size: 0.86rem; color: var(--cr-text-muted); margin: 6px 0 14px; }
+.cr-subs-add { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr) auto; gap: 8px; margin-bottom: 14px; }
+.cr-subs-input { min-width: 0; height: 40px; padding: 0 12px; border: 1px solid var(--cr-border); border-radius: 10px; font: inherit; font-size: 0.9rem; background: var(--cr-white); }
+.cr-subs-list { background: var(--cr-white); border: 1px solid var(--cr-border); border-radius: 12px; overflow: hidden; }
+.cr-subs-row { display: grid; grid-template-columns: minmax(0, 1fr) 190px 124px; align-items: center; gap: 12px; padding: 10px 14px; border-top: 1px solid var(--cr-border); }
+.cr-subs-row:first-child { border-top: 0; }
+.cr-subs-who { min-width: 0; display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px 8px; }
+.cr-subs-name { font-weight: 700; color: var(--cr-text); }
+.cr-subs-level { font-size: 0.8rem; font-weight: 600; color: var(--cr-teal-deep); }
+.cr-subs-note { font-size: 0.8rem; color: var(--cr-text-muted); }
+.cr-subs-played { font-size: 0.82rem; color: var(--cr-text-muted); }
+.cr-subs-action { display: flex; justify-content: flex-end; }
+.cr-subs-action form { margin: 0; }
+.cr-subs-action .cr-btn { width: 124px; justify-content: center; white-space: nowrap; }
+@media (max-width: 600px) {
+  .cr-subs-add { grid-template-columns: 1fr; }
+  .cr-subs-row { grid-template-columns: minmax(0, 1fr) auto; }
+  .cr-subs-played { grid-column: 1; grid-row: 2; }
+  .cr-subs-action { grid-column: 2; grid-row: 1 / span 2; }
+}

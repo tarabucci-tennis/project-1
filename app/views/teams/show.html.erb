@@ -121,6 +121,7 @@
       <button class="cr-subtab cr-subtab-active" data-team-tabs-target="tab" data-action="click->team-tabs#switch">Schedule</button>
       <button class="cr-subtab" data-team-tabs-target="tab" data-action="click->team-tabs#switch">Availability</button>
       <button class="cr-subtab" data-team-tabs-target="tab" data-action="click->team-tabs#switch">Roster</button>
+      <button class="cr-subtab" data-team-tabs-target="tab" data-action="click->team-tabs#switch">Subs</button>
       <button class="cr-subtab" data-team-tabs-target="tab" data-action="click->team-tabs#switch">Player Stats</button>
       <button class="cr-subtab" data-team-tabs-target="tab" data-action="click->team-tabs#switch">Standings</button>
       <% if @is_captain %>
@@ -577,6 +578,8 @@
         <% end %>
       </section>
     </div>
+
+<%= render "teams/subs_panel", team: @team, can_edit: @is_captain %>
 
     <%# ── Tab 4: Player Stats ──────────────────────────── %>
     <div data-team-tabs-target="panel" style="display: none;">
