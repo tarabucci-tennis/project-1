@@ -17,6 +17,7 @@ module ApplicationHelper
     ball:    '<circle cx="12" cy="12" r="8"/><path d="M7 5.8c2.4 3.4 2.4 9 0 12.4M17 5.8c-2.4 3.4-2.4 9 0 12.4"/>',
     trend:   '<path d="M4 17l5-5 4 3 7-8"/><path d="M15 7h5v5"/>',
     clock:   '<circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2"/>',
+    refresh: '<path d="M20 11a8 8 0 0 0-14.9-3.5M4 4v4h4"/><path d="M4 13a8 8 0 0 0 14.9 3.5M20 20v-4h-4"/>',
     star:    '<path d="M12 4l2.4 5 5.4.7-4 3.8 1 5.4L12 16.3 7.2 18.9l1-5.4-4-3.8 5.4-.7z"/>'
   }.freeze
 

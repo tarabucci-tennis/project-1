@@ -134,11 +134,26 @@
         <h2 class="cr-section-title" style="margin-bottom: 0;">
           <%= @team.season_name.present? ? @team.season_name : "" %> Schedule
         </h2>
-        <% if @is_captain %>
-          <%= link_to new_team_match_path(@team), class: "cr-btn cr-btn-gold", style: "padding: 8px 16px; font-size: 0.85rem; font-weight: 700; text-decoration: none; white-space: nowrap;" do %>
-            + Add Match
+        <div class="cr-sched-actions">
+          <% if @team.tenniscores_url.present? %>
+            <%# Pull this team's scores from its league site now (any teammate). %>
+            <% sync = TeamSyncJob.status(@team.id) %>
+            <div class="cr-sync">
+              <%= button_to sync_scores_team_path(@team), method: :post, class: "cr-btn cr-btn-outline cr-sync-btn",
+                    disabled: TeamSyncJob.running?(@team.id) do %>
+                <%= icon(:refresh, size: 15) %> <%= TeamSyncJob.running?(@team.id) ? "Syncing…" : "Sync scores" %>
+              <% end %>
+              <% if sync[:finished_at].present? %>
+                <span class="cr-sync-note">Last synced <%= sync[:finished_at].to_time.in_time_zone("Eastern Time (US & Canada)").strftime("%b %-d, %-l:%M %p") %><%= " · some scores couldn't be read" if sync[:ok] == false %></span>
+              <% end %>
+            </div>
           <% end %>
-        <% end %>
+          <% if @is_captain %>
+            <%= link_to new_team_match_path(@team), class: "cr-btn cr-btn-gold", style: "padding: 8px 16px; font-size: 0.85rem; font-weight: 700; text-decoration: none; white-space: nowrap;" do %>
+              + Add Match
+            <% end %>
+          <% end %>
+        </div>
       </div>
 
       <% upcoming = @upcoming_matches.reject(&:playoff?) %>
@@ -154,7 +169,7 @@
           <div class="cr-awaiting-alert-text">
             <strong><%= pluralize(awaiting.size, "past match") %> still <%= awaiting.size == 1 ? "needs" : "need" %> scores.</strong>
             <% if auto_synced %>
-              They update automatically from the league site within the hour.
+              They come in from the league site every hour, or tap <strong>Sync scores</strong> to get them now.
             <% elsif @is_captain && usta_team %>
               Upload the latest TennisLink Team Summary to fill them in.
             <% elsif @is_captain %>
