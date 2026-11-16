@@ -126,15 +126,22 @@ class DeltriPlayerHistory
 
   # The page shows MM/DD with no year. Infer it from the current Del-Tri
   # season (Aug–Jul): months Aug–Dec belong to the season's first year.
+  # Labels carry no year ("5/4"). These are matches already PLAYED, so the
+  # date is the most recent month/day that isn't in the future. (The old
+  # guess assumed a fall-to-summer season and filed spring Inter-Club
+  # matches under next year, so they never lined up with Court Report.)
   def infer_date(label)
     return nil unless label
     mm, dd = label.split("/").map(&:to_i)
     return nil unless mm && dd && mm.between?(1, 12)
-    base = Date.current.month >= 8 ? Date.current.year : Date.current.year - 1
-    year = mm >= 8 ? base : base + 1
-    Date.new(year, mm, dd)
+    self.class.most_recent(mm, dd)
   rescue ArgumentError
     nil
+  end
+
+  def self.most_recent(month, day, today: Date.current)
+    date = Date.new(today.year, month, day)
+    date > today ? date.prev_year : date
   end
 
   def clean(str)
