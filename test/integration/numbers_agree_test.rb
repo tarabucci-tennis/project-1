@@ -100,3 +100,74 @@ class NumbersAgreeTest < ActionDispatch::IntegrationTest
     assert_select "th", text: "USTA win %"
   end
 end
+
+class NumbersAgreeFollowupTest < ActionDispatch::IntegrationTest
+  setup do
+    @joanne = User.create!(name: "Fixture Joanne", email: "fixture-joanne@example.com", password: "tennis-123")
+    @mate = User.create!(name: "Fixture Mate", email: "fixture-mate@example.com")
+  end
+
+  def sign_in(user)
+    post session_path, params: { email: user.email, password: "tennis-123" }
+  end
+
+  test "Joanne: 4 Court Report scores + 2 Cup 2 subs = 6, Cup 6 site rows counted once" do
+    pcc2 = TennisTeam.create!(user: @joanne, name: "Philadelphia Country #2", league_category: "Inter-Club", league_name: "Inter-Club")
+    usta = TennisTeam.create!(user: @joanne, name: "Fixture USTA", league_category: "USTA")
+    [ [ pcc2, "Laurel Creek #1", Date.new(2026, 4, 27) ], [ pcc2, "Waynesborough #3", Date.new(2026, 5, 4) ],
+      [ pcc2, "Dupont CC #1", Date.new(2026, 5, 18) ], [ usta, "Love Hurts", Date.new(2026, 5, 12) ] ].each_with_index do |(t, opp, d), i|
+      m = t.matches.create!(opponent: opp, match_date: Time.zone.local(d.year, d.month, d.day, 10))
+      line = m.match_lines.create!(line_type: "doubles", position: 1, result: i.even? ? "win" : "loss", set1_score: "6-4")
+      line.match_line_players.create!(user: @joanne)
+      line.match_line_players.create!(user: @mate)
+    end
+    # League-site Cup 6 rows for the same fixtures, saved by the old year
+    # guess under 2027 and with the club spelled without "#".
+    [ [ "4/27", "Laurel Creek #1" ], [ "5/4", "Waynesborough #3" ], [ "5/18", "Dupont CC #1" ] ].each_with_index do |(lbl, opp), i|
+      mm, dd = lbl.split("/").map(&:to_i)
+      @joanne.player_matches.create!(source: "witap", source_key: "c6-#{i}", league: "Inter-Club", division: "Cup 6",
+                                     date_label: lbl, played_on: Date.new(2027, mm, dd), result: i.even? ? "win" : "loss",
+                                     match_label: "Philadelphia Country 2 vs #{opp}", line_label: "Line 1")
+    end
+    # Two Cup 2 matches subbing for Philadelphia Country #1 (not on Court Report).
+    [ [ "5/5", "Overbrook #1" ], [ "5/19", "Merion #1" ] ].each_with_index do |(lbl, opp), i|
+      mm, dd = lbl.split("/").map(&:to_i)
+      @joanne.player_matches.create!(source: "witap", source_key: "c2-#{i}", league: "Inter-Club", division: "Cup 2",
+                                     date_label: lbl, played_on: Date.new(2027, mm, dd), result: "win",
+                                     match_label: "Philadelphia Country #1 vs #{opp}", line_label: "Line 4")
+    end
+
+    record = PlayerRecord.new(@joanne)
+    assert_equal 6, record.entries.size
+    assert_equal 2, record.league_site_entries.size
+    assert_equal [ 2026 ], record.by_year.keys
+
+    sign_in(@joanne)
+    get profile_path
+    assert_select ".cr-playing-stat-detail", text: /of 6 matches/
+    assert_select ".cr-stats-scope", text: /6 matches: 4 from scores on Court Report \+ 2 from league websites/
+    assert_match(/3 of them are the same matches as Court Report scores/, response.body)
+  end
+
+  test "league-site dates are the most recent past day, never next year" do
+    assert_equal Date.new(2026, 5, 4), DeltriPlayerHistory.most_recent(5, 4, today: Date.new(2026, 11, 16))
+    assert_equal Date.new(2025, 12, 5), DeltriPlayerHistory.most_recent(12, 5, today: Date.new(2026, 11, 16))
+  end
+
+  test "team hero counts match-type calendar entries listed in the schedule" do
+    team = TennisTeam.create!(user: @joanne, name: "Fixture Served", league_category: "Local", league_name: "Bux-Mont")
+    TeamMembership.create!(user: @joanne, tennis_team: team, role: "captain")
+    team.team_events.create!(title: "vs Smashers", kind: "Match", event_date: Date.current + 2)
+    team.team_events.create!(title: "vs Aces", kind: "Match", event_date: Date.current + 3)
+    team.team_events.create!(title: "Friday hit", kind: "friendly", event_date: Date.current + 4)
+
+    sign_in(@joanne)
+    get team_path(team)
+    assert_select ".cr-hero-stat-value", text: "2"
+    assert_select ".cr-hero-breakdown", text: /2 to play · 1 friendly/
+    assert_select ".cr-stat-card-label", text: "To play"
+    assert_select ".cr-stat-card", text: /2\s*To play/
+    assert_select ".cr-hero-stat-value", text: (Date.current + 2).strftime("%b %-d").upcase
+    assert_select ".cr-sched-event", 3
+  end
+end

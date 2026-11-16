@@ -62,42 +62,69 @@ class PlayerRecord
   def league_site_entries
     return [] if team
 
-    @league_site_entries ||= begin
-      taken = Hash.new(0)
-      court_report_entries.each { |e| taken[self.class.dedupe_key(e.date, e.league)] += 1 }
-      user.player_matches.where(result: %w[win loss]).order(:played_on).filter_map do |pm|
-        key = self.class.dedupe_key(pm.played_on, pm.league)
-        if taken[key].positive?
-          taken[key] -= 1
-          next
-        end
-        Entry.new(
-          date: pm.played_on, league: pm.league.presence || "Other",
-          team_name: [ pm.league, pm.division ].compact_blank.join(" · ").presence, singles: false,
-          position: pm.line_label.to_s[/\d+/]&.to_i, result: pm.result,
-          partners: [ pm.partner ].compact_blank, opponent: pm.match_label, opponents: pm.opponents,
-          score: pm.score, source: :league_site, match_id: nil,
-          player_ids: [ { id: user.id, name: user.name } ]
-        )
-      end
+    @league_site_entries ||= paired_league_site_rows[:kept].map do |pm, date|
+      Entry.new(
+        date: date, league: pm.league.presence || "Other",
+        team_name: [ pm.league, pm.division ].compact_blank.join(" · ").presence, singles: false,
+        position: pm.line_label.to_s[/\d+/]&.to_i, result: pm.result,
+        partners: [ pm.partner ].compact_blank, opponent: pm.match_label, opponents: pm.opponents,
+        score: pm.score, source: :league_site, match_id: nil,
+        player_ids: [ { id: user.id, name: user.name } ]
+      )
     end
   end
 
   # Ids of the league-site rows that are the same match as a Court Report
   # line, so League Match History can say which ones are counted from there.
   def duplicate_player_match_ids
-    taken = Hash.new(0)
-    court_report_entries.each { |e| taken[self.class.dedupe_key(e.date, e.league)] += 1 }
-    user.player_matches.where(result: %w[win loss]).order(:played_on).each_with_object([]) do |pm, ids|
-      key = self.class.dedupe_key(pm.played_on, pm.league)
-      next unless taken[key].positive?
-      taken[key] -= 1
-      ids << pm.id
+    paired_league_site_rows[:duplicate_ids]
+  end
+
+  # Pairs each league-site row with the Court Report line for the same
+  # FIXTURE: same day, and a match label ("Philadelphia Country #2 vs
+  # Laurel Creek #1") naming that line's team or opponent (same league when
+  # the row has no label).
+  # Each Court Report line can absorb one league-site row.
+  def paired_league_site_rows
+    @paired_league_site_rows ||= begin
+      open_lines = court_report_entries.dup
+      kept = []
+      duplicate_ids = []
+      user.player_matches.where(result: %w[win loss]).order(:played_on, :id).each do |pm|
+        date = self.class.played_date(pm)
+        twin = open_lines.index { |e| self.class.same_fixture?(e, pm, date) }
+        if twin
+          open_lines.delete_at(twin)
+          duplicate_ids << pm.id
+        else
+          kept << [ pm, date ]
+        end
+      end
+      { kept: kept, duplicate_ids: duplicate_ids }
     end
   end
 
-  def self.dedupe_key(date, league)
-    [ date, league.to_s.downcase.squish ]
+  # A played match is never in the future: rows saved by the old year guess
+  # (spring Inter-Club filed under next year) are read a year earlier.
+  def self.played_date(pm)
+    date = pm.played_on
+    return nil unless date
+    date > Date.current ? date.prev_year : date
+  end
+
+  def self.same_fixture?(entry, pm, date)
+    return false unless entry.date && date && entry.date == date
+
+    label = norm(pm.match_label)
+    # No fixture label on the row: fall back to same day + same league.
+    return norm(entry.league) == norm(pm.league) if label.blank?
+
+    [ entry.team_name, entry.opponent ].any? { |n| (k = norm(n)).present? && label.include?(k) }
+  end
+
+  # "Philadelphia Country #2" and "Philadelphia Country 2" compare equal.
+  def self.norm(str)
+    str.to_s.downcase.gsub(/[^a-z0-9]+/, "")
   end
 
   # { won:, lost:, total: } over a set of entries.

@@ -135,7 +135,7 @@ class TeamsController < ApplicationController
     # Friendlies / clinics / anything added from the calendar: listed in the
     # schedule so it matches Calendar and Upcoming, never counted as a match.
     @upcoming_events  = @team.team_events.upcoming.to_a
-    @sched            = schedule_counts(@team)
+    @sched            = schedule_counts(@team, @upcoming_events)
     @division_teams   = @team.division_teams.ranked
     @doubles_pairs    = DoublesPairs.new(@team)
     # Opponent name => its standings row, so schedule/results can open that
@@ -940,17 +940,23 @@ class TeamsController < ApplicationController
     end.sort_by { |p| [ -p[:played], -p[:win_pct] ] }
   end
 
-  # The hero's "Matches" and its breakdown. The parts add up to the total:
-  # played (has a score) + need scores (date passed, no score) + to play
-  # (still ahead), plus playoff matches, which have their own tabs.
-  def schedule_counts(team)
+  # The hero's "Matches" and its breakdown, from the same items as the
+  # schedule list: league matches, plus calendar entries a captain added as
+  # a match (any kind except Friendly / Clinic, e.g. "Match", "Tournament").
+  # Friendlies and clinics are listed and named in the breakdown but aren't
+  # matches. Parts add up: played + need scores + to play (+ playoff).
+  def schedule_counts(team, upcoming_events)
     now = Time.current
     regular, playoff = team.matches.partition { |m| !m.playoff? }
+    match_events, other_events = upcoming_events.partition { |e| e.display_kind == "other" }
     played   = regular.count { |m| m.match_date < now && m.played? }
     awaiting = regular.count { |m| m.match_date < now && !m.played? }
-    to_play  = regular.count { |m| m.match_date >= now }
+    to_play  = regular.count { |m| m.match_date >= now } + match_events.size
     { played: played, awaiting: awaiting, to_play: to_play, playoff: playoff.size,
-      total: regular.size + playoff.size,
+      total: regular.size + playoff.size + match_events.size,
+      friendlies: other_events.count { |e| e.display_kind == "friendly" },
+      clinics: other_events.count { |e| e.display_kind == "clinic" },
+      next_date: [ team.next_match&.match_date&.to_date, match_events.map(&:event_date).min ].compact.min,
       started: team.matches.any? { |m| m.match_date < now } }
   end
 end
