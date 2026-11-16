@@ -171,3 +171,92 @@ class NumbersAgreeFollowupTest < ActionDispatch::IntegrationTest
     assert_select ".cr-sched-event", 3
   end
 end
+
+class ProfileCleanupTest < ActionDispatch::IntegrationTest
+  setup do
+    @me = User.create!(name: "Clean Tara", email: "clean-tara@example.com", password: "tennis-123",
+                       ical_url: "https://calendar.google.com/calendar/ical/secret/basic.ics",
+                       deltri_player_url: "https://buxmont.tenniscores.com/player.php?p=abc")
+    @partners = (1..4).map { |i| User.create!(name: "Clean Partner #{i}", email: "clean-p#{i}@example.com") }
+    @team = TennisTeam.create!(user: @me, name: "Clean Aces", league_category: "Local", league_name: "Bux-Mont",
+                               team_type: "Bux-Mont Division 1")
+    TeamMembership.create!(user: @me, tennis_team: @team, role: "player")
+    @old = TennisTeam.create!(user: @me, name: "Clean Old", league_category: "USTA", archived: true)
+    TeamMembership.create!(user: @me, tennis_team: @old, role: "player")
+    @blank = TennisTeam.create!(user: @me, name: "Clean Winter", league_category: "USTA")
+    TeamMembership.create!(user: @me, tennis_team: @blank, role: "captain")
+    # Partner 1: 3-0 together (qualifies). Partners 2-4: 1-0 each.
+    plan = [ @partners[0], @partners[0], @partners[0], @partners[1], @partners[2], @partners[3] ]
+    plan.each_with_index do |partner, i|
+      m = @team.matches.create!(opponent: "Opp #{i}", match_date: (20 - i).days.ago)
+      line = m.match_lines.create!(line_type: "doubles", position: 1, result: "win", set1_score: "6-2")
+      line.match_line_players.create!(user: @me)
+      line.match_line_players.create!(user: partner)
+    end
+  end
+
+  def sign_in(user)
+    post session_path, params: { email: user.email, password: "tennis-123" }
+  end
+
+  test "best partner needs 3+ matches; no singles reads 'No singles yet'" do
+    sign_in(@me)
+    get profile_path
+    assert_match(/Best Doubles Partner: <strong>Clean Partner 1<\/strong>/, response.body)
+    assert_select ".cr-playing-stat-card", text: /No singles yet/
+    assert_no_match(/0 of 0 matches/, response.body)
+    # A 1-0 partner shows a record but no %.
+    assert_select ".cr-playing-stats-row", text: /Clean Partner 2\s*—\s*1–0 \(1 match\)/
+  end
+
+  test "no best partner when nobody has 3 matches together" do
+    other = User.create!(name: "Clean Solo", email: "clean-solo@example.com", password: "tennis-123")
+    m = @team.matches.create!(opponent: "Solo", match_date: 2.days.ago)
+    line = m.match_lines.create!(line_type: "doubles", position: 2, result: "win", set1_score: "6-2")
+    line.match_line_players.create!(user: other)
+    line.match_line_players.create!(user: @partners[1])
+    sign_in(other)
+    get profile_path
+    assert_no_match(/Best Doubles Partner: <strong>/, response.body)
+    assert_match(/Needs 3\+ matches together/, response.body)
+  end
+
+  test "teams split into current and past, badge matches league, no empty subtitle" do
+    sign_in(@me)
+    get profile_path
+    assert_select "h3", text: "Past seasons"
+    assert_select ".cr-pp-past-teams", text: /Clean Old/
+    assert_select ".cr-pp-past-teams", text: /Clean Aces/, count: 0
+    assert_select ".cr-match-row", text: /BUX-MONT\s*Clean Aces\s*Bux-Mont Division 1/
+    assert_select ".cr-match-date-month", text: "DEL-TRI", count: 0
+    assert_select ".cr-match-row", text: /Clean Winter/ do
+      assert_select ".cr-match-location", count: 0
+    end
+    assert_select "#cr-team-select option", text: "Clean Old", count: 0
+  end
+
+  test "private links live in Settings, not on the profile; one Advanced link; no Remove button" do
+    sign_in(@me)
+    get profile_path
+    assert_no_match(/calendar\.google\.com/, response.body)
+    assert_no_match(/player\.php\?p=abc/, response.body)
+    assert_no_match(/Advanced Stats ↓/, response.body)
+    assert_select "a", text: "Advanced Player Stats ↓", count: 1
+    assert_select "form[action='#{refresh_deltri_path}']"
+    assert_select "a[href='#{settings_path}']"
+
+    get settings_path
+    assert_response :success
+    assert_select "input[type=password][name=ical_url]"
+    assert_select "input[name=deltri_player_url]"
+  end
+
+  test "no USTA rating says so; a year-end date is labelled" do
+    sign_in(@me)
+    get profile_path
+    assert_select ".cr-pp-metric-none", text: /No USTA\s*rating yet/
+    @me.update!(ntrp_rating: 4.0, ntrp_rating_date: Date.new(2025, 12, 31))
+    get profile_path
+    assert_select ".cr-pp-metric-cap", text: /USTA rating\s*year-end 2025/
+  end
+end

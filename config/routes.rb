@@ -120,6 +120,10 @@ Rails.application.routes.draw do
   post "profile/deltri", to: "profiles#connect_deltri", as: :connect_deltri
   post "profile/city",   to: "profiles#update_city",    as: :profile_city
   post "profile/calendar", to: "profiles#connect_calendar", as: :connect_calendar
+  post "profile/deltri/refresh", to: "profiles#refresh_deltri", as: :refresh_deltri
+  # Settings: private links (Google Calendar iCal, league player page). Kept
+  # off the profile page, which teammates can see.
+  get "settings", to: "profiles#settings", as: :settings
   get "players/:id",  to: "profiles#player", as: :player
 
   # Stats test page (pulls from Google Sheets)

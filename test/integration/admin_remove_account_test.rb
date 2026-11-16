@@ -1,6 +1,7 @@
 require "test_helper"
 
-# An admin can remove a junk account straight from its player page.
+# Removing an account lives on Site members only (Tara, Nov 16 2026): never
+# on a profile page, not even for the admin.
 class AdminRemoveAccountTest < ActionDispatch::IntegrationTest
   setup do
     @admin = User.create!(name: "Ada Admin", email: "remove-admin@example.com", password: "tennis-123", admin: true)
@@ -8,10 +9,10 @@ class AdminRemoveAccountTest < ActionDispatch::IntegrationTest
     @player = User.create!(name: "Pat Player", email: "remove-player@example.com", password: "tennis-123")
   end
 
-  test "an admin sees Remove on someone else's page and lands back on Site members" do
+  test "profiles never show Remove, even to an admin; removing lands back on Site members" do
     post session_path, params: { email: @admin.email, password: "tennis-123" }
     get player_path(@spam)
-    assert_select "button", text: "Remove this account"
+    assert_select "button", text: "Remove this account", count: 0
     get player_path(@admin)
     assert_select "button", text: "Remove this account", count: 0
 

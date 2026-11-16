@@ -1,4 +1,6 @@
 class ProfilesController < ApplicationController
+  # Fewest matches before a win % or a "best" pick is shown (Tara, Nov 16 2026).
+  MIN_SAMPLE = 3
   before_action :require_login
 
   # GET /profile — your own profile
@@ -8,7 +10,7 @@ class ProfilesController < ApplicationController
     @teams = current_user.tennis_teams.order(start_date: :desc) if @teams.empty?
     @is_self = true
     @shared_teams = []
-    @external_events = @user.external_events.upcoming.limit(30)
+    split_teams(@user, @teams)
     load_record(@user)
     render :player
   end
@@ -19,16 +21,37 @@ class ProfilesController < ApplicationController
     current_user.update(deltri_player_url: url.presence)
 
     if url.blank?
-      redirect_to profile_path, notice: "Removed your Del-Tri link."
+      redirect_to settings_path, notice: "Removed your league link."
       return
     end
 
     result = DeltriPlayerImport.new(current_user).call
     if result.imported.any?
-      redirect_to profile_path, notice: "Pulled your Del-Tri matches — #{result}"
+      redirect_to settings_path, notice: "Pulled your league matches — #{result}"
     else
-      redirect_to profile_path, alert: "Couldn't read that Del-Tri link. #{result.notes.join('; ')}"
+      redirect_to settings_path, alert: "Couldn't read that league link. #{result.notes.join('; ')}"
     end
+  end
+
+  # POST /profile/deltri/refresh — pull your league-site matches again from
+  # the link saved in Settings (the link itself never shows on the profile).
+  def refresh_deltri
+    unless current_user.deltri_player_url.present?
+      return redirect_to settings_path, alert: "Add your league player-page link first."
+    end
+
+    result = DeltriPlayerImport.new(current_user).call
+    if result.imported.any?
+      redirect_to profile_path(anchor: "league-history"), notice: "Refreshed your league matches."
+    else
+      redirect_to profile_path(anchor: "league-history"), alert: "Couldn't refresh right now. #{result.notes.join('; ')}"
+    end
+  end
+
+  # GET /settings — your private links and your synced calendar.
+  def settings
+    @user = current_user
+    @external_events = @user.external_events.upcoming.limit(30)
   end
 
   # POST /profile/city — optional: the city shown next to your name.
@@ -47,15 +70,15 @@ class ProfilesController < ApplicationController
 
     if url.blank?
       current_user.external_events.delete_all
-      redirect_to profile_path, notice: "Removed your Google Calendar link."
+      redirect_to settings_path, notice: "Removed your Google Calendar link."
       return
     end
 
     result = GoogleCalendarImport.new(current_user).call
     if result.error
-      redirect_to profile_path, alert: "Couldn't read that calendar link (#{result.error}). Make sure it's the secret iCal address from Google Calendar settings."
+      redirect_to settings_path, alert: "Couldn't read that calendar link (#{result.error}). Make sure it's the secret iCal address from Google Calendar settings."
     else
-      redirect_to profile_path, notice: "Synced #{result.imported} event#{'s' unless result.imported == 1} from your calendar (#{result.tennis} tennis)."
+      redirect_to settings_path, notice: "Synced #{result.imported} event#{'s' unless result.imported == 1} from your calendar (#{result.tennis} tennis)."
     end
   end
 
@@ -69,6 +92,7 @@ class ProfilesController < ApplicationController
 
     @teams = @user.member_teams.includes(:team_memberships).order(start_date: :desc)
     @is_self = (@user.id == current_user.id)
+    split_teams(@user, @teams)
 
     # Optional team filter: the "Stats for …" dropdown scopes the match-line
     # stats to one of this player's teams so you can flip between them without
@@ -80,7 +104,6 @@ class ProfilesController < ApplicationController
     their_team_ids = @user.member_teams.pluck(:id)
     shared_ids = my_team_ids & their_team_ids
     @shared_teams = TennisTeam.where(id: shared_ids).order(start_date: :desc)
-    @external_events = @user.external_events.upcoming.limit(30)
     load_record(@user, team: @selected_team)
   end
 
@@ -88,6 +111,18 @@ class ProfilesController < ApplicationController
 
   def require_login
     redirect_to login_path unless current_user
+  end
+
+  # Current teams (what My Teams shows) first, past seasons separately: a
+  # team is past when it's archived or this player's spot on it was
+  # archived with an old season.
+  def split_teams(user, teams)
+    archived_ids = user.team_memberships.where.not(archived_season: [ nil, "" ]).pluck(:tennis_team_id)
+    active_ids = user.team_memberships.where(archived_season: [ nil, "" ]).pluck(:tennis_team_id)
+    teams = teams.to_a.uniq
+    current, past = teams.partition { |t| !t.archived? && (active_ids.include?(t.id) || !archived_ids.include?(t.id)) }
+    @current_teams = TennisTeam.group_by_league(current).values.flatten
+    @past_teams = past.sort_by { |t| [ t.start_date || Date.new(0), t.name.to_s ] }.reverse
   end
 
   def load_record(user, team: nil)
@@ -161,10 +196,17 @@ class ProfilesController < ApplicationController
         partner_data[name][:lost] += 1 if e.lost?
       end
     end
-    stats[:partners] = partner_data.map do |name, data|
-      { name: name, won: data[:won], lost: data[:lost], total: data[:total], pct: pct(data[:won], data[:total]) }
-    end.sort_by { |p| [ -p[:pct], -p[:total] ] }
-    stats[:best_partner] = stats[:partners].first if stats[:partners].any?
+    # Percentages and "best" need a real sample: under MIN_SAMPLE matches a
+    # partner shows a record but no %, and can't be Best Partner (a 1-0
+    # partnership isn't "best"). Qualified partners first, best % first.
+    rows = partner_data.map do |name, data|
+      { name: name, won: data[:won], lost: data[:lost], total: data[:total], pct: pct(data[:won], data[:total]),
+        qualified: data[:total] >= MIN_SAMPLE }
+    end
+    qualified, small = rows.partition { |p| p[:qualified] }
+    stats[:partners] = qualified.sort_by { |p| [ -p[:pct], -p[:total], p[:name].to_s ] } +
+                       small.sort_by { |p| [ -p[:total], -p[:won], p[:name].to_s ] }
+    stats[:best_partner] = qualified.any? ? stats[:partners].first : nil
 
     # Recent matches (last 5)
     stats[:recent] = entries.last(5).reverse.map do |e|

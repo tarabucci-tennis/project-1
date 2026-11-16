@@ -1,0 +1,65 @@
+<% content_for :title, "Settings · Court Report" %>
+
+<%# Private settings: only you ever see this page. The links here are secret
+    (anyone with your iCal link can read your calendar), so they never show
+    on your profile, which teammates can open. %>
+<div class="cr-team-page cr-settings">
+  <%= link_to "← My profile", profile_path, class: "cr-back-link" %>
+  <h1 class="cr-section-title" style="font-size: 1.5rem;">Settings</h1>
+  <p class="cr-deltri-hint" style="margin-bottom: 22px;">Only you can see this page.</p>
+
+  <section class="cr-section" id="league-link">
+    <h2 class="cr-section-title">League match history</h2>
+    <p class="cr-deltri-hint">Court Report pulls your matches from your teams' league pages automatically. If a league is missing (for example a team you only subbed on), paste your player-page link from that league's site here.</p>
+    <%= form_with url: connect_deltri_path, method: :post, local: true, class: "cr-deltri-connect" do %>
+      <div class="cr-deltri-row">
+        <input type="url" name="deltri_player_url" value="<%= @user.deltri_player_url %>"
+               placeholder="https://...tenniscores.com/player.php?p=..." class="cr-deltri-input" aria-label="League player-page link">
+        <button type="submit" class="cr-btn cr-btn-gold cr-deltri-btn"><%= @user.deltri_player_url.present? ? "Save" : "Add" %></button>
+      </div>
+    <% end %>
+    <% if @user.deltri_player_url.present? %>
+      <p class="cr-deltri-empty">To remove it, clear the box and save.</p>
+    <% end %>
+  </section>
+
+  <%# ── My Calendar: sync your whole calendar; tennis is highlighted gold ── %>
+  <section class="cr-section" id="my-tennis-calendar">
+    <h2 class="cr-section-title">My Calendar</h2>
+    <p class="cr-deltri-hint">
+      Paste your Google Calendar's secret iCal link and Court Report pulls your whole calendar,
+      with your <strong>tennis</strong> events — matches, clinics, friendlies —
+      <span class="cr-cal-tennis-ink">highlighted in gold</span>. It refreshes every night, and
+      <strong>only you</strong> can see your calendar here. In Google Calendar:
+      <strong>Settings → your calendar → “Secret address in iCal format”</strong>.
+    </p>
+    <%= form_with url: connect_calendar_path, method: :post, local: true, class: "cr-deltri-connect" do %>
+      <div class="cr-deltri-row">
+        <%# The iCal link is a secret: masked like a password, never shown as text. %>
+        <input type="password" name="ical_url" value="<%= @user.ical_url %>" autocomplete="off"
+               placeholder="https://calendar.google.com/calendar/ical/.../basic.ics" class="cr-deltri-input"
+               aria-label="Google Calendar secret iCal link">
+        <button type="submit" class="cr-btn cr-btn-gold cr-deltri-btn"><%= @user.ical_url.present? ? "Refresh" : "Connect" %></button>
+      </div>
+    <% end %>
+
+    <% if @external_events.any? %>
+      <h3 class="cr-section-subtitle" style="margin-top: 14px;">Upcoming on your calendar</h3>
+      <div class="cr-match-list">
+        <% @external_events.each do |ev| %>
+          <div class="cr-match-row cr-cal-ev<%= ' cr-cal-ev-tennis' if ev.tennis %>">
+            <div class="cr-match-date" style="min-width: auto; padding: 8px 12px;">
+              <div class="cr-match-date-month" style="font-size: 0.62rem;"><%= ev.starts_at&.in_time_zone&.strftime("%-m/%-d") %></div>
+            </div>
+            <div class="cr-match-info">
+              <div class="cr-match-opponent" style="font-size: 0.9rem;"><% if ev.tennis %><span class="cr-cal-ev-ball">🎾</span> <% end %><%= ev.title %></div>
+              <div class="cr-match-location"><%= [ ev.time_label, ev.location.presence ].compact.join(" · ").presence || (ev.all_day ? "All day" : "") %></div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    <% elsif @user.ical_url.present? %>
+      <p class="cr-deltri-empty">No upcoming events found in that calendar yet (we pull about two months back through next season).</p>
+    <% end %>
+  </section>
+</div>
