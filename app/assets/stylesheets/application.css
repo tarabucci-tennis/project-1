@@ -6424,6 +6424,7 @@ body.cr-ctx-profiles-player .cr-team-switch { margin: 0 0 14px; }
   .cr-subs-row { grid-template-columns: minmax(0, 1fr) auto; }
   .cr-subs-played { grid-column: 1; grid-row: 2; }
   .cr-subs-action { grid-column: 2; grid-row: 1 / span 2; }
+}
 
 /* Team page schedule header: Sync scores (league-site teams) + Add Match. */
 .cr-sched-actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; justify-content: flex-end; }
@@ -6434,6 +6435,7 @@ body.cr-ctx-profiles-player .cr-team-switch { margin: 0 0 14px; }
 .cr-sync-note { font-size: 0.78rem; color: var(--cr-text-muted); white-space: nowrap; }
 @media (max-width: 600px) {
   .cr-sched-actions, .cr-sync { justify-content: flex-start; }
+}
 
 /* Ratings: All players / Teams tabs. The tabs span the page like the cards. */
 .cr-rp-tabs { max-width: none; margin: 0 0 14px; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-auto-flow: row; }
@@ -6464,4 +6466,28 @@ body.cr-ctx-profiles-player .cr-team-switch { margin: 0 0 14px; }
   .cr-rp-ranked th:nth-child(4), .cr-rp-ranked td:nth-child(4) { width: 18%; }
   .cr-rp-ranked th:nth-child(5), .cr-rp-ranked td:nth-child(5) { width: 16%; display: table-cell; }
   .cr-rp-ranked th:nth-child(6), .cr-rp-ranked td:nth-child(6) { display: none; }
+}
+
+/* Profile: what the stats count, right under each stats heading. */
+.cr-stats-scope {
+  font-size: 0.8rem;
+  line-height: 1.45;
+  color: var(--cr-text-muted);
+  margin: -4px 0 12px;
+}
+
+/* Team hero: "5 played · 2 need scores · 12 to play" under the stats. */
+.cr-hero-breakdown {
+  margin-top: 10px;
+  font-size: 0.78rem;
+  color: rgba(255, 255, 255, 0.7);
+  letter-spacing: 0.2px;
+}
+.cr-hero-breakdown-note { margin-top: 2px; color: rgba(255, 255, 255, 0.55); }
+
+/* Profile stats tables (5 columns) fit a phone without a sideways swipe. */
+.cr-adv.cr-adv-compact { min-width: 0; }
+@media (max-width: 480px) {
+  .cr-adv.cr-adv-compact th, .cr-adv.cr-adv-compact td { padding: 10px 6px; }
+  .cr-adv.cr-adv-compact .cr-adv-rowhead { padding-left: 12px !important; }
 }

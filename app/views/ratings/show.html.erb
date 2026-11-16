@@ -27,12 +27,12 @@
   <%# ── At-a-glance tiles ── %>
   <section class="cr-rp-tiles">
     <div class="cr-rp-tile">
-      <div class="cr-rp-tile-label">Record</div>
+      <div class="cr-rp-tile-label">USTA record</div>
       <div class="cr-rp-tile-val"><%= @wins %>–<%= @losses %></div>
-      <div class="cr-rp-tile-cap"><%= total %> <%= "line".pluralize(total) %> played</div>
+      <div class="cr-rp-tile-cap"><%= total %> USTA <%= "line".pluralize(total) %> · other leagues not counted</div>
     </div>
     <div class="cr-rp-tile">
-      <div class="cr-rp-tile-label">Line win %</div>
+      <div class="cr-rp-tile-label">USTA line win %</div>
       <%# Percentages hide under 5 lines (too few to mean anything). %>
       <div class="cr-rp-tile-val"><%= total >= 5 ? "#{(100.0 * @wins / total).round}%" : "—" %></div>
       <div class="cr-rp-tile-cap"><%= total >= 5 ? "of #{total} lines" : "needs 5+ lines" %></div>

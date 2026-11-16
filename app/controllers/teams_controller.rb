@@ -131,6 +131,11 @@ class TeamsController < ApplicationController
     @is_captain       = @team.can_set_lineup?(current_user) || current_user.admin?
     @wins             = @team.matches.where(result: "win").count
     @losses           = @team.matches.where(result: "loss").count
+    @ties             = @team.matches.where(result: "tie").count
+    # Friendlies / clinics / anything added from the calendar: listed in the
+    # schedule so it matches Calendar and Upcoming, never counted as a match.
+    @upcoming_events  = @team.team_events.upcoming.to_a
+    @sched            = schedule_counts(@team)
     @division_teams   = @team.division_teams.ranked
     @doubles_pairs    = DoublesPairs.new(@team)
     # Opponent name => its standings row, so schedule/results can open that
@@ -933,5 +938,19 @@ class TeamsController < ApplicationController
         win_pct: total > 0 ? (data[:wins].to_f / total * 100).round(0) : 0
       }
     end.sort_by { |p| [ -p[:played], -p[:win_pct] ] }
+  end
+
+  # The hero's "Matches" and its breakdown. The parts add up to the total:
+  # played (has a score) + need scores (date passed, no score) + to play
+  # (still ahead), plus playoff matches, which have their own tabs.
+  def schedule_counts(team)
+    now = Time.current
+    regular, playoff = team.matches.partition { |m| !m.playoff? }
+    played   = regular.count { |m| m.match_date < now && m.played? }
+    awaiting = regular.count { |m| m.match_date < now && !m.played? }
+    to_play  = regular.count { |m| m.match_date >= now }
+    { played: played, awaiting: awaiting, to_play: to_play, playoff: playoff.size,
+      total: regular.size + playoff.size,
+      started: team.matches.any? { |m| m.match_date < now } }
   end
 end

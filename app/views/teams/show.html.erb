@@ -57,7 +57,7 @@
         <% end %>
         <% if @team.rating.present? %>
           · <%= @team.section %> <%= @team.rating %> <%= @team.gender == "F" ? "Women's" : "Men's" %>
-        <% else %>
+        <% elsif @team.section.present? %>
           · <%= @team.section %>
         <% end %>
         <% if @team.season_name.present? %>
@@ -67,20 +67,31 @@
 
       <div class="cr-team-hero-stats">
         <div class="cr-hero-stat">
-          <div class="cr-hero-stat-value"><%= @wins %>-<%= @losses %></div>
-          <div class="cr-hero-stat-label">Record</div>
+          <div class="cr-hero-stat-value"><%= @wins %>-<%= @losses %><%= "-#{@ties}" if @ties.positive? %></div>
+          <div class="cr-hero-stat-label">Record<%= " (W-L-T)" if @ties.positive? %></div>
         </div>
         <div class="cr-hero-stat">
-          <div class="cr-hero-stat-value"><%= @upcoming_matches.count + @past_matches.count %></div>
+          <div class="cr-hero-stat-value"><%= @sched[:total] %></div>
           <div class="cr-hero-stat-label">Matches</div>
         </div>
         <% if @team.next_match %>
           <div class="cr-hero-stat">
             <div class="cr-hero-stat-value"><%= @team.next_match.match_date.strftime("%b %-d").upcase %></div>
-            <div class="cr-hero-stat-label">Starts</div>
+            <%# "Starts" only before the season's first match; after that it's the next one. %>
+            <div class="cr-hero-stat-label"><%= @sched[:started] ? "Next match" : "Starts" %></div>
           </div>
         <% end %>
       </div>
+      <% if @sched[:total].positive? %>
+        <%# The parts always add up to Matches, so the count can be checked at a glance. %>
+        <div class="cr-hero-breakdown">
+          <%= [ ("#{@sched[:played]} played" if @sched[:played].positive?),
+                ("#{@sched[:awaiting]} #{@sched[:awaiting] == 1 ? 'needs' : 'need'} scores" if @sched[:awaiting].positive?),
+                ("#{@sched[:to_play]} to play" if @sched[:to_play].positive?),
+                ("#{@sched[:playoff]} playoff" if @sched[:playoff].positive?) ].compact.join(" · ") %>
+          <% if @ties.positive? %><div class="cr-hero-breakdown-note">A tie counts as half a win in win %.</div><% end %>
+        </div>
+      <% end %>
     </div>
   </div>
 
@@ -106,8 +117,8 @@
       <div class="cr-stat-card-label">Losses</div>
     </div>
     <div class="cr-stat-card">
-      <div class="cr-stat-card-value"><%= @upcoming_matches.count %></div>
-      <div class="cr-stat-card-label">Scheduled</div>
+      <div class="cr-stat-card-value"><%= @sched[:to_play] %></div>
+      <div class="cr-stat-card-label">To play</div>
     </div>
     <div class="cr-stat-card">
       <div class="cr-stat-card-value"><%= @player_count %></div>
@@ -196,9 +207,11 @@
 
         <%# ── Schedule (upcoming) ── %>
         <div data-seg-target="panel">
-          <% if upcoming.any? %>
+          <% sched_items = (upcoming + @upcoming_events).sort_by { |i| i.is_a?(TeamEvent) ? [ i.event_date, 1 ] : [ i.match_date.to_date, 0 ] } %>
+          <% if sched_items.any? %>
             <div class="cr-sched-list">
-              <% upcoming.each do |match| %>
+              <% sched_items.each do |match| %>
+                <% if match.is_a?(TeamEvent) %><%= render "teams/event_sched_row", event: match %><% next %><% end %>
                 <% lineup = match.lineup %>
                 <details class="cr-sched-item">
                   <summary class="cr-sched-row <%= 'cr-has-venue' if match.venue %>">
@@ -265,7 +278,7 @@
             </div>
           <% else %>
             <div class="cr-empty" style="padding: 40px 20px; text-align: center; color: var(--cr-text-light);">
-              No upcoming matches<% if @team.next_match %> — next up <%= @team.next_match.match_date.strftime("%B %-d") %><% end %>.
+              No upcoming matches or events<% if @team.next_match %> — next up <%= @team.next_match.match_date.strftime("%B %-d") %><% end %>.
             </div>
           <% end %>
         </div>

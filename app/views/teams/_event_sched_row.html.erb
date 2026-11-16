@@ -1,0 +1,23 @@
+<%# A team event (friendly, clinic, or anything a captain added from the
+    calendar) in the team's schedule, so the team page lists the same things
+    as Calendar and Upcoming on My Teams. Not a league match: it never counts
+    toward Matches or the record. %>
+<div class="cr-sched-item cr-sched-event">
+  <div class="cr-sched-row" style="cursor: default;">
+    <div class="cr-sched-date">
+      <div class="cr-sched-date-mon"><%= event.event_date.strftime("%b").upcase %></div>
+      <div class="cr-sched-date-day"><%= event.event_date.strftime("%-d") %></div>
+    </div>
+    <div class="cr-sched-main">
+      <div class="cr-sched-opp"><%= event.title %></div>
+      <div class="cr-sched-sub">
+        <% if event.location.present? %><span><%= event.location %></span><% end %>
+        <% if event.start_time.present? %><span><%= "· " if event.location.present? %><%= event.start_time %></span><% end %>
+      </div>
+    </div>
+    <div class="cr-sched-right">
+      <span class="cr-sched-upcoming"><%= event.kind_label %></span>
+      <span class="cr-sched-caret" aria-hidden="true" style="visibility: hidden;">▾</span>
+    </div>
+  </div>
+</div>

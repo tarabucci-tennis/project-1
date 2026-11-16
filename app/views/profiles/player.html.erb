@@ -191,6 +191,7 @@
   <% if @playing_stats.present? && !@playing_stats[:is_empty] %>
     <section class="cr-section">
       <h2 class="cr-section-title">Playing Stats</h2>
+      <p class="cr-stats-scope"><%= render "profiles/stats_scope", record: @record, team: @selected_team %></p>
 
       <%# Overall stats row %>
       <div class="cr-playing-stats-grid">
@@ -269,7 +270,7 @@
             <details class="cr-ps-details">
               <summary class="cr-playing-stats-row cr-ps-summary">
                 <span class="cr-ps-col-name">
-                  <span class="cr-ps-caret">▸</span> vs. <%= match[:opponent] %>
+                  <span class="cr-ps-caret">▸</span> <%= match[:from_league_site] ? match[:opponent].presence || "League match" : "vs. #{match[:opponent]}" %>
                   <div style="font-size: 0.7rem; color: var(--cr-text-light);"><%= match[:team] %> · <%= match[:date].strftime("%-m/%-d/%y") %></div>
                 </span>
                 <span class="cr-ps-col-line"><%= match[:line_label] %></span>
@@ -398,6 +399,8 @@
       <% end %>
 
       <% if @deltri_matches.present? %>
+        <% dup_count = @deltri_matches.values.flatten.count { |m| @counted_elsewhere_ids.include?(m.id) } %>
+        <p class="cr-stats-scope">From the league websites (USTA isn't on them). Every match here is in the totals above<% if dup_count.positive? %>: <%= dup_count %> of them <%= dup_count == 1 ? "is the same match as a" : "are the same matches as" %> Court Report <%= "score".pluralize(dup_count) %>, so <%= dup_count == 1 ? "it's" : "they're" %> counted once<% end %>.</p>
         <% @deltri_matches.each do |(league, division), matches| %>
           <% wins = matches.count(&:won?); losses = matches.size - wins %>
           <h3 class="cr-section-subtitle" style="margin-top: 14px;">
@@ -430,64 +433,44 @@
     </section>
   <% end %>
 
-  <%# ── Advanced stats: clean per-year matrix, TennisRecord style ── %>
-  <% if (@stats.any? && @selected_team.nil?) || @league_year_stats.present? %>
+  <%# ── Advanced stats: per-year matrix, same matches as Playing Stats ── %>
+  <% if @year_stats.present? %>
     <section class="cr-section" id="cr-advanced-stats">
       <h2 class="cr-section-title">Advanced Player Stats</h2>
+      <p class="cr-stats-scope"><%= render "profiles/stats_scope", record: @record, team: @selected_team %> The Overall table is every league together; each league's own table follows.</p>
 
-      <%# Overall matrix (imported season totals: matches / sets / games / defaults) %>
-      <% if @stats.any? && @selected_team.nil? %>
-        <div class="cr-adv-league-label">Overall</div>
-        <div class="cr-adv-wrap">
-          <table class="cr-adv">
-            <thead>
+      <div class="cr-adv-league-label">Overall<%= " · #{@selected_team.name}" if @selected_team %></div>
+      <div class="cr-adv-wrap">
+        <table class="cr-adv cr-adv-compact">
+          <thead>
+            <tr>
+              <th class="cr-adv-rowhead">All leagues</th>
+              <th>Matches</th><th>Win</th><th>Loss</th><th>WPct</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @year_stats.sort_by { |year, _| -year }.each do |year, c| %>
               <tr>
-                <th class="cr-adv-rowhead">All Matches</th>
-                <th>Total Matches</th><th>Win</th><th>Loss</th><th>WPct</th>
-                <th class="cr-adv-group">Total Sets</th><th>Win</th><th>Loss</th><th>WPct</th>
-                <th class="cr-adv-group">Total Games</th><th>Win</th><th>Loss</th><th>WPct</th>
-                <th class="cr-adv-group">Defaults</th>
+                <td class="cr-adv-rowhead cr-adv-year"><%= year %></td>
+                <td><%= c[:total] %></td>
+                <td class="cr-adv-win"><%= c[:won] %></td>
+                <td class="cr-adv-loss"><%= c[:lost] %></td>
+                <td><%= c[:total].positive? ? sprintf("%.1f", c[:won].to_f / c[:total] * 100) : "—" %></td>
               </tr>
-            </thead>
-            <tbody>
-              <% @stats.each do |s| %>
-                <tr>
-                  <td class="cr-adv-rowhead cr-adv-year"><%= s.year %></td>
-                  <td><%= s.matches_total || "—" %></td>
-                  <td class="cr-adv-win"><%= s.matches_won || "—" %></td>
-                  <td class="cr-adv-loss"><%= s.matches_lost || "—" %></td>
-                  <td><%= s.match_wpct ? sprintf("%.1f", s.match_wpct) : "—" %></td>
-                  <td class="cr-adv-group"><%= s.sets_total || "—" %></td>
-                  <td class="cr-adv-win"><%= s.sets_won || "—" %></td>
-                  <td class="cr-adv-loss"><%= s.sets_lost || "—" %></td>
-                  <td><%= s.set_wpct ? sprintf("%.1f", s.set_wpct) : "—" %></td>
-                  <td class="cr-adv-group"><%= s.games_total || "—" %></td>
-                  <td class="cr-adv-win"><%= s.games_won || "—" %></td>
-                  <td class="cr-adv-loss"><%= s.games_lost || "—" %></td>
-                  <td><%= s.game_wpct ? sprintf("%.1f", s.game_wpct) : "—" %></td>
-                  <td class="cr-adv-group"><%= s.defaults || 0 %></td>
-                </tr>
-              <% end %>
-              <%
-                mt = @stats.sum { |s| s.matches_total.to_i }; mw = @stats.sum { |s| s.matches_won.to_i }; ml = @stats.sum { |s| s.matches_lost.to_i }
-                st = @stats.sum { |s| s.sets_total.to_i };    sw = @stats.sum { |s| s.sets_won.to_i };    sl = @stats.sum { |s| s.sets_lost.to_i }
-                gt = @stats.sum { |s| s.games_total.to_i };   gw = @stats.sum { |s| s.games_won.to_i };   gl = @stats.sum { |s| s.games_lost.to_i }
-                df = @stats.sum { |s| s.defaults.to_i }
-                pct = ->(w, t) { t.positive? ? sprintf("%.1f", w.to_f / t * 100) : "—" }
-              %>
-              <tr class="cr-adv-total">
-                <td class="cr-adv-rowhead">Total</td>
-                <td><%= mt %></td><td class="cr-adv-win"><%= mw %></td><td class="cr-adv-loss"><%= ml %></td><td><%= pct.call(mw, mt) %></td>
-                <td class="cr-adv-group"><%= st %></td><td class="cr-adv-win"><%= sw %></td><td class="cr-adv-loss"><%= sl %></td><td><%= pct.call(sw, st) %></td>
-                <td class="cr-adv-group"><%= gt %></td><td class="cr-adv-win"><%= gw %></td><td class="cr-adv-loss"><%= gl %></td><td><%= pct.call(gw, gt) %></td>
-                <td class="cr-adv-group"><%= df %></td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      <% end %>
+            <% end %>
+            <% ot = @playing_stats[:overall] %>
+            <tr class="cr-adv-total">
+              <td class="cr-adv-rowhead">Total</td>
+              <td><%= ot[:total] %></td>
+              <td class="cr-adv-win"><%= ot[:won] %></td>
+              <td class="cr-adv-loss"><%= ot[:lost] %></td>
+              <td><%= ot[:total].positive? ? sprintf("%.1f", ot[:won].to_f / ot[:total] * 100) : "—" %></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
 
-      <%# One matrix per league, from the results entered into Court Report %>
+      <%# One matrix per league — the same matches, split by league %>
       <% if @league_year_stats.present? %>
         <% @league_year_stats.sort_by { |label, _| label.to_s }.each do |league, by_year| %>
           <div class="cr-adv-league-label"><%= league %></div>
@@ -525,7 +508,6 @@
             </table>
           </div>
         <% end %>
-        <p class="cr-adv-note">Per-league tables count the lines you played from results entered into Court Report. The Overall table above shows your imported season totals.</p>
       <% end %>
     </section>
   <% end %>
