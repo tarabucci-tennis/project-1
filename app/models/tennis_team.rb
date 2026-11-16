@@ -162,8 +162,14 @@ class TennisTeam < ApplicationRecord
     matches.count { |m| m.result == "loss" }
   end
 
+  def ties_count
+    matches.count { |m| m.result == "tie" }
+  end
+
+  # "3-3", or "3-3-1" (wins-losses-ties) once the team has a tie.
   def record_label
-    "#{wins_count}-#{losses_count}"
+    ties = ties_count
+    ties.positive? ? "#{wins_count}-#{losses_count}-#{ties}" : "#{wins_count}-#{losses_count}"
   end
 
   # Win percentage over decided matches (for the standings table). nil when

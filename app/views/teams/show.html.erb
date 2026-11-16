@@ -67,17 +67,17 @@
 
       <div class="cr-team-hero-stats">
         <div class="cr-hero-stat">
-          <div class="cr-hero-stat-value"><%= @wins %>-<%= @losses %></div>
-          <div class="cr-hero-stat-label">Record</div>
+          <div class="cr-hero-stat-value"><%= @wins %>-<%= @losses %><%= "-#{@ties}" if @ties.positive? %></div>
+          <div class="cr-hero-stat-label"><%= @ties.positive? ? "Record (W-L-T)" : "Record" %></div>
         </div>
         <div class="cr-hero-stat">
-          <div class="cr-hero-stat-value"><%= @upcoming_matches.count + @past_matches.count %></div>
+          <div class="cr-hero-stat-value"><%= @season_match_count %></div>
           <div class="cr-hero-stat-label">Matches</div>
         </div>
-        <% if @team.next_match %>
+        <% if @next_date %>
           <div class="cr-hero-stat">
-            <div class="cr-hero-stat-value"><%= @team.next_match.match_date.strftime("%b %-d").upcase %></div>
-            <div class="cr-hero-stat-label">Starts</div>
+            <div class="cr-hero-stat-value"><%= @next_date.strftime("%b %-d").upcase %></div>
+            <div class="cr-hero-stat-label"><%= @has_played ? "Next match" : "Starts" %></div>
           </div>
         <% end %>
       </div>
@@ -106,7 +106,7 @@
       <div class="cr-stat-card-label">Losses</div>
     </div>
     <div class="cr-stat-card">
-      <div class="cr-stat-card-value"><%= @upcoming_matches.count %></div>
+      <div class="cr-stat-card-value"><%= @scheduled_count %></div>
       <div class="cr-stat-card-label">Scheduled</div>
     </div>
     <div class="cr-stat-card">
@@ -263,9 +263,20 @@
                 </details>
               <% end %>
             </div>
-          <% else %>
+          <% end %>
+          <%# Matches and clinics a captain added on the calendar: the same items
+              Calendar and Upcoming on My Teams show for this team. %>
+          <% if @upcoming_events.any? %>
+            <% if upcoming.any? %><h3 class="cr-sched-events-title">Also on the team calendar</h3><% end %>
+            <div class="cr-my-week-list cr-sched-events">
+              <% @upcoming_events.each do |event| %>
+                <%= render "teams/event_card", item: event %>
+              <% end %>
+            </div>
+          <% end %>
+          <% if upcoming.empty? && @upcoming_events.empty? %>
             <div class="cr-empty" style="padding: 40px 20px; text-align: center; color: var(--cr-text-light);">
-              No upcoming matches<% if @team.next_match %> — next up <%= @team.next_match.match_date.strftime("%B %-d") %><% end %>.
+              No upcoming matches.
             </div>
           <% end %>
         </div>
