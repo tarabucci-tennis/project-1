@@ -72,7 +72,10 @@ Rails.application.routes.draw do
 
   # Core app
   resources :teams, only: [ :index, :show, :destroy ] do
-    resources :events, only: [ :create, :destroy ], controller: "team_events"
+    resources :events, only: [ :create, :destroy ], controller: "team_events" do
+      # Captains: turn a calendar entry into a real match (so it can get a score).
+      post :make_match, on: :member
+    end
     resources :subs, only: [ :create, :destroy ], controller: "team_subs"
     resources :matches, only: [ :index, :new, :create, :show, :edit, :update ] do
       member do

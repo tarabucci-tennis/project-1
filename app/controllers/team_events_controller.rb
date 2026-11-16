@@ -46,6 +46,51 @@ class TeamEventsController < ApplicationController
     redirect_back fallback_location: teams_path, notice: "Event removed."
   end
 
+  # POST /teams/:team_id/events/:id/make_match — captain-only. A calendar
+  # entry can't hold a score, so a league match added from the calendar
+  # would keep the team's record at 0-0. This turns it into a real match
+  # (same date, time and place), removes the calendar copy, and opens Edit
+  # Match so the captain can check the opponent and home/away.
+  def make_match
+    unless @team.captain?(current_user) || current_user.admin?
+      return redirect_back fallback_location: team_path(@team),
+                           alert: "Only captains can turn an event into a match."
+    end
+
+    event = @team.team_events.find(params[:id])
+    match = nil
+    TeamEvent.transaction do
+      match = @team.matches.create!(
+        opponent:   self.class.opponent_from(event.title, @team.name),
+        match_date: self.class.match_time_for(event.event_date, event.start_time),
+        match_time: event.start_time,
+        location:   event.location,
+        notes:      event.notes
+      )
+      event.destroy!
+    end
+    redirect_to edit_team_match_path(@team, match),
+                notice: "#{match.match_date.strftime('%b %-d')} is now a match. Check the opponent and home/away, then save."
+  rescue ActiveRecord::RecordInvalid => e
+    redirect_back fallback_location: team_path(@team), alert: "Couldn't make it a match: #{e.message}"
+  end
+
+  # "Over Served vs Smashers" / "vs. Smashers" → "Smashers"; anything else as is.
+  def self.opponent_from(title, team_name)
+    t = title.to_s.squish
+    t = t.sub(/\A#{Regexp.escape(team_name.to_s.squish)}\s*/i, "") if team_name.present?
+    t.sub(/\A.*?\bvs?\.?\s+/i, "").presence || t
+  end
+
+  # Stored as the wall-clock time typed, like matches added with Add Match.
+  # No usable time ("Morning", blank) → noon, so the match doesn't drop off
+  # Upcoming at midnight.
+  def self.match_time_for(date, start_time)
+    text = start_time.to_s
+    parsed = text.match?(/\d/) ? (Time.zone.parse("#{date} #{text}") rescue nil) : nil
+    parsed || Time.zone.local(date.year, date.month, date.day, 12)
+  end
+
   private
 
   def set_team

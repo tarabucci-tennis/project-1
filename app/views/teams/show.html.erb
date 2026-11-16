@@ -213,7 +213,7 @@
           <% if sched_items.any? %>
             <div class="cr-sched-list">
               <% sched_items.each do |match| %>
-                <% if match.is_a?(TeamEvent) %><%= render "teams/event_sched_row", event: match %><% next %><% end %>
+                <% if match.is_a?(TeamEvent) %><%= render "teams/event_sched_row", event: match, team: @team, can_convert: @team.captain?(current_user) || current_user.admin? %><% next %><% end %>
                 <% lineup = match.lineup %>
                 <details class="cr-sched-item">
                   <summary class="cr-sched-row <%= 'cr-has-venue' if match.venue %>">
