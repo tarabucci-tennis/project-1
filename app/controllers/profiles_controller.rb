@@ -1,4 +1,7 @@
 class ProfilesController < ApplicationController
+  # A pairing needs this many matches together to be called "Best Partner".
+  MIN_PARTNER_MATCHES = 3
+
   before_action :require_login
 
   # GET /profile — your own profile
@@ -210,10 +213,16 @@ class ProfilesController < ApplicationController
 
     stats[:partners] = partner_data.map do |name, data|
       { name: name, won: data[:won], lost: data[:lost], total: data[:total], pct: pct(data[:won], data[:total]) }
-    end.sort_by { |p| [ -p[:pct], -p[:total] ] }
+    end
+    # Partners with enough matches together come first (by win %), then the
+    # rest by how often you've played together, so a 1-0 pairing never tops
+    # the list.
+    enough, few = stats[:partners].partition { |p| p[:total] >= MIN_PARTNER_MATCHES }
+    stats[:partners] = enough.sort_by { |p| [ -p[:pct], -p[:total], p[:name].to_s ] } +
+                       few.sort_by { |p| [ -p[:total], -p[:pct], p[:name].to_s ] }
 
-    # Best doubles partner
-    stats[:best_partner] = stats[:partners].first if stats[:partners].any?
+    # Best doubles partner: only from pairings with 3+ matches together.
+    stats[:best_partner] = enough.max_by { |p| [ p[:pct], p[:total] ] }
 
     # Recent matches (last 5)
     stats[:recent] = lines.sort_by { |l| l.match.match_date }.last(5).reverse.map do |line|

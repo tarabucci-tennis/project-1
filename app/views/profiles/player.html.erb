@@ -164,7 +164,7 @@
               <%= @playing_stats[:best_partner][:name] %>
               <span style="color: var(--cr-text-muted); font-weight: 500; font-size: 0.85rem;">(<%= @playing_stats[:best_partner][:pct] %>%)</span>
             <% else %>
-              —
+              <span style="color: var(--cr-text-muted); font-weight: 500; font-size: 0.85rem;">Needs <%= ProfilesController::MIN_PARTNER_MATCHES %>+ matches together</span>
             <% end %>
           </div>
         </div>
@@ -200,14 +200,26 @@
           <div class="cr-playing-stat-detail"><%= @playing_stats[:overall][:won] %> of <%= @playing_stats[:overall][:total] %> matches</div>
         </div>
         <div class="cr-playing-stat-card">
-          <div class="cr-playing-stat-value"><%= @playing_stats[:singles][:pct] %>%</div>
-          <div class="cr-playing-stat-label">Singles Win %</div>
-          <div class="cr-playing-stat-detail"><%= @playing_stats[:singles][:won] %> of <%= @playing_stats[:singles][:total] %> matches</div>
+          <% if @playing_stats[:singles][:total].to_i.zero? %>
+            <div class="cr-playing-stat-value">—</div>
+            <div class="cr-playing-stat-label">Singles Win %</div>
+            <div class="cr-playing-stat-detail">No singles yet</div>
+          <% else %>
+            <div class="cr-playing-stat-value"><%= @playing_stats[:singles][:pct] %>%</div>
+            <div class="cr-playing-stat-label">Singles Win %</div>
+            <div class="cr-playing-stat-detail"><%= @playing_stats[:singles][:won] %> of <%= @playing_stats[:singles][:total] %> matches</div>
+          <% end %>
         </div>
         <div class="cr-playing-stat-card">
-          <div class="cr-playing-stat-value"><%= @playing_stats[:doubles][:pct] %>%</div>
-          <div class="cr-playing-stat-label">Doubles Win %</div>
-          <div class="cr-playing-stat-detail"><%= @playing_stats[:doubles][:won] %> of <%= @playing_stats[:doubles][:total] %> matches</div>
+          <% if @playing_stats[:doubles][:total].to_i.zero? %>
+            <div class="cr-playing-stat-value">—</div>
+            <div class="cr-playing-stat-label">Doubles Win %</div>
+            <div class="cr-playing-stat-detail">No doubles yet</div>
+          <% else %>
+            <div class="cr-playing-stat-value"><%= @playing_stats[:doubles][:pct] %>%</div>
+            <div class="cr-playing-stat-label">Doubles Win %</div>
+            <div class="cr-playing-stat-detail"><%= @playing_stats[:doubles][:won] %> of <%= @playing_stats[:doubles][:total] %> matches</div>
+          <% end %>
         </div>
       </div>
 
