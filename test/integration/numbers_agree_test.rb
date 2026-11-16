@@ -82,7 +82,7 @@ class NumbersAgreeTest < ActionDispatch::IntegrationTest
     assert_select ".cr-stats-scope", text: /3 matches: 2 from scores on Court Report \+ 1 from league websites/
     assert_select "#cr-advanced-stats .cr-adv-total td", text: "3"
     assert_no_match(/>45</, response.body)
-    assert_match(/1 of them is the same match as a Court Report score/, response.body)
+    assert_select "#league-history .cr-match-row", 3
   end
 
   test "ratings table says its record is USTA only" do
@@ -146,7 +146,7 @@ class NumbersAgreeFollowupTest < ActionDispatch::IntegrationTest
     get profile_path
     assert_select ".cr-playing-stat-detail", text: /of 6 matches/
     assert_select ".cr-stats-scope", text: /6 matches: 4 from scores on Court Report \+ 2 from league websites/
-    assert_match(/3 of them are the same matches as Court Report scores/, response.body)
+    assert_select "#league-history .cr-match-row", 6
   end
 
   test "league-site dates are the most recent past day, never next year" do
@@ -230,7 +230,7 @@ class ProfileCleanupTest < ActionDispatch::IntegrationTest
     assert_select ".cr-match-row", text: /BUX-MONT\s*Clean Aces\s*Bux-Mont Division 1/
     assert_select ".cr-match-date-month", text: "DEL-TRI", count: 0
     assert_select ".cr-match-row", text: /Clean Winter/ do
-      assert_select ".cr-match-location", count: 0
+      assert_select ".cr-match-location", text: "USTA"
     end
     assert_select "#cr-team-select option", text: "Clean Old", count: 0
   end
@@ -258,5 +258,72 @@ class ProfileCleanupTest < ActionDispatch::IntegrationTest
     @me.update!(ntrp_rating: 4.0, ntrp_rating_date: Date.new(2025, 12, 31))
     get profile_path
     assert_select ".cr-pp-metric-cap", text: /USTA rating\s*year-end 2025/
+  end
+end
+
+class PriorityTwoRecheckTest < ActionDispatch::IntegrationTest
+  def sign_in(user)
+    post session_path, params: { email: user.email, password: "tennis-123" }
+  end
+
+  test "Match History lists Court Report scores too (Sarah's Legacy 2 matches)" do
+    sarah = User.create!(name: "Recheck Sarah", email: "recheck-sarah@example.com", password: "tennis-123")
+    mate = User.create!(name: "Recheck Mate", email: "recheck-mate@example.com")
+    legacy = TennisTeam.create!(user: sarah, name: "Recheck Legacy 2", league_category: "Local", league_name: "Del-Tri")
+    TeamMembership.create!(user: sarah, tennis_team: legacy, role: "player")
+    3.times do |i|
+      m = legacy.matches.create!(opponent: "DVTA #{i}", match_date: Time.zone.local(2026, 1, 9 + i * 7, 10))
+      l = m.match_lines.create!(line_type: "doubles", position: 2, result: "win", set1_score: "6-3")
+      l.match_line_players.create!(user: sarah)
+      l.match_line_players.create!(user: mate)
+    end
+    sarah.player_matches.create!(source: "buxmont", source_key: "x", league: "Bux-Mont", division: "Division 1",
+                                 played_on: Date.new(2026, 11, 9), result: "loss", match_label: "Advantage Us vs Upper Dublin Orchids")
+    sign_in(sarah)
+    get profile_path
+    assert_select "#league-history h2", text: "Match History"
+    assert_select "#league-history .cr-match-row", 4
+    assert_select "#league-history", text: /vs\. DVTA 0/
+    assert_select "#league-history", text: /Upper Dublin Orchids/
+  end
+
+  test "header: My Profile on your own page, no bare 'You'; team row always has a league" do
+    me = User.create!(name: "Recheck Tara", email: "recheck-tara@example.com", password: "tennis-123", ntrp_rating: 3.0)
+    winter = TennisTeam.create!(user: me, name: "Recheck Winter", league_category: "USTA", gender: "F",
+                                start_date: Date.new(2026, 11, 2))
+    TeamMembership.create!(user: me, tennis_team: winter, role: "captain")
+    sign_in(me)
+    get profile_path
+    assert_select ".cr-pp-head-title", text: "My Profile"
+    assert_select ".cr-pp-you", count: 0
+    assert_select ".cr-pp-metric-cap", text: /date not on file/
+    assert_select ".cr-match-row", text: /Recheck Winter\s*USTA · Women's · Season from Nov 2, 2026/
+  end
+
+  test "the data update merges the three named pairs and skips what it can't" do
+    jo1 = User.create!(name: "Joanne Steinberg")
+    jo2 = User.create!(name: "JoAnne Steinberg", email: "jo-recheck@example.com")
+    s1 = User.create!(name: "Sarah Dougherty")
+    s2 = User.create!(name: "Sarah Dougherty", email: "sarah-recheck@example.com")
+    k1 = User.create!(name: "Kriste Davidse")
+    k2 = User.create!(name: "Kristen Davidse", email: "kristen-recheck@example.com")
+    winter = TennisTeam.create!(user: jo2, name: "Kiss My Ace Winter", league_category: "USTA")
+
+    require Rails.root.join("db/migrate/20261116120000_merge_known_duplicate_people").to_s
+    ActiveRecord::Migration.suppress_messages { MergeKnownDuplicatePeople.new.up }
+
+    assert_not User.exists?(jo1.id)
+    assert_equal "JoAnne Steinberg", jo2.reload.name
+    assert_not User.exists?(s1.id)
+    assert User.exists?(s2.id)
+    assert_not User.exists?(k1.id)
+    assert_equal "Kristen Davidse", k2.reload.name
+    winter.reload
+    assert_equal "Winter 2026-27", winter.season_name
+    assert_equal Date.new(2026, 11, 2), winter.start_date
+    # Running it again changes nothing.
+    assert_no_difference -> { User.count } do
+      ActiveRecord::Migration.suppress_messages { MergeKnownDuplicatePeople.new.up }
+    end
   end
 end
