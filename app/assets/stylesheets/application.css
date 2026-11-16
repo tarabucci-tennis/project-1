@@ -6510,3 +6510,31 @@ body.cr-ctx-profiles-player .cr-team-switch { margin: 0 0 14px; }
 .cr-ps-col-muted { color: var(--cr-text-light); font-weight: 600; }
 .cr-ps-min-note { font-size: 0.75rem; color: var(--cr-text-light); margin-top: 2px; }
 .cr-settings .cr-deltri-btn { min-width: 112px; justify-content: center; text-align: center; }
+
+/* Admin: Possible duplicates (merge two records of one person). */
+.cr-mem-head-actions { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+.cr-dup-list { display: flex; flex-direction: column; gap: 12px; padding: 0 18px 18px; }
+.cr-dup { border: 1px solid var(--cr-border); border-radius: 12px; padding: 12px 14px; background: var(--cr-white); }
+.cr-dup-reason { font-size: 0.68rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--cr-teal-deep); margin-bottom: 8px; }
+.cr-dup-sides { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.cr-dup-side { border: 1px solid #eef1f5; border-radius: 10px; padding: 10px 12px; min-width: 0; }
+.cr-dup-name { font-weight: 700; overflow-wrap: anywhere; }
+.cr-dup-name a { color: var(--cr-text); text-decoration: none; }
+.cr-dup-meta { font-size: 0.78rem; color: var(--cr-text-muted); margin-top: 3px; overflow-wrap: anywhere; }
+.cr-dup-tag { display: inline-block; margin-top: 8px; font-size: 0.68rem; font-weight: 700; padding: 2px 8px; border-radius: 999px; background: #f1f5f9; color: var(--cr-text-muted); }
+.cr-dup-side:first-child .cr-dup-tag { background: rgba(14, 125, 115, 0.12); color: var(--cr-teal-deep); }
+.cr-dup-form { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-top: 10px; }
+.cr-dup-keep-label { font-size: 0.8rem; font-weight: 600; }
+.cr-dup-radio { font-size: 0.85rem; display: inline-flex; align-items: center; gap: 4px; }
+.cr-dup-btn { margin-left: auto; min-width: 96px; justify-content: center; }
+.cr-dup-blocked { font-size: 0.8rem; color: var(--cr-red); margin-top: 10px; }
+@media (max-width: 520px) {
+  .cr-dup-sides { grid-template-columns: 1fr; }
+  .cr-dup-btn { margin-left: 0; width: 100%; }
+}
+.cr-dup-intro { margin-bottom: 12px; }
+@media (max-width: 520px) {
+  .cr-dup-list { padding: 0 10px 12px; }
+  .cr-dup { padding: 10px; }
+  .cr-dup-form { flex-direction: column; align-items: stretch; gap: 6px; }
+}

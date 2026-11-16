@@ -26,6 +26,29 @@ class AdminController < ApplicationController
     end
   end
 
+  # GET /admin/duplicates — person records that are probably the same human.
+  def duplicates
+    @pairs = DuplicatePeople.pairs
+    ids = @pairs.flat_map { |p| [ p.a.id, p.b.id ] }.uniq
+    lines = MatchLinePlayer.joins(:match_line).where(user_id: ids).where(match_lines: { result: %w[win loss] })
+    @line_counts = lines.group(:user_id).count
+    @line_wins = lines.where(match_lines: { result: "win" }).group(:user_id).count
+    @site_counts = PlayerMatch.where(user_id: ids).group(:user_id).count
+    @teams_by_user = TeamMembership.where(user_id: ids).includes(:tennis_team).group_by(&:user_id)
+                                   .transform_values { |ms| ms.map { |m| m.tennis_team&.name }.compact.uniq }
+  end
+
+  # POST /admin/merge — merge two records into one (see UserMerge).
+  def merge
+    a = User.find_by(id: params[:a_id])
+    b = User.find_by(id: params[:b_id])
+    result = UserMerge.new(a, b, name: params[:keep_name]).call
+    redirect_to admin_duplicates_path,
+                notice: "Merged into #{result.survivor.name}. #{result.moved.values.sum} records moved."
+  rescue UserMerge::Refused => e
+    redirect_to admin_duplicates_path, alert: e.message
+  end
+
   def tennislink_test
     @person_id = params[:person_id].to_s.strip
     @year = params[:year].presence || Date.current.year.to_s

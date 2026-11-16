@@ -1,0 +1,60 @@
+<% content_for :title, "Possible duplicates · Court Report" %>
+
+<%# Admin only. Two records that are probably one person; Merge moves
+    everything onto one record (the one that can sign in) and deletes the
+    other. Nothing changes until you tap Merge. %>
+<div class="cr-rp-page cr-mem-page">
+  <section class="cr-rp-card">
+    <div class="cr-rp-card-head">
+      <div>
+        <h2 class="cr-rp-card-title">Possible duplicates</h2>
+        <span class="cr-rp-card-note">Only you can see this page. Nothing changes until you tap Merge.</span>
+      </div>
+      <%= link_to "Site members", admin_members_path, class: "cr-btn cr-btn-outline cr-btn-compact" %>
+    </div>
+
+    <p class="cr-mem-note cr-dup-intro">Merging puts both records' teams, scores, lineups and league history on one person and deletes the other record. It can't be undone. The record that can sign in is kept, so nobody loses their login; pick which spelling of the name to keep.</p>
+
+    <% if @pairs.empty? %>
+      <p class="cr-mem-note"><strong>No likely duplicates found.</strong></p>
+    <% end %>
+
+    <div class="cr-dup-list">
+      <% @pairs.each do |pair| %>
+        <% keep, drop = UserMerge.order(pair.a, pair.b) %>
+        <div class="cr-dup">
+          <div class="cr-dup-reason"><%= pair.reason %></div>
+          <div class="cr-dup-sides">
+            <% [ keep, drop ].each do |u| %>
+              <% n = @line_counts[u.id].to_i; w = @line_wins[u.id].to_i %>
+              <div class="cr-dup-side">
+                <div class="cr-dup-name"><%= link_to u.name, player_path(u) %></div>
+                <div class="cr-dup-meta">
+                  <%= u.email.present? ? "Can sign in" : "No sign-in (roster name)" %>
+                  · <%= u.ntrp_rating.present? ? "USTA #{u.ntrp_rating}" : "no rating" %>
+                </div>
+                <div class="cr-dup-meta"><%= n.positive? ? "#{w}–#{n - w} on Court Report" : "No scores on Court Report" %> · <%= pluralize(@site_counts[u.id].to_i, "league-site match") %></div>
+                <div class="cr-dup-meta"><%= (@teams_by_user[u.id] || []).join(", ").presence || "No teams" %></div>
+                <div class="cr-dup-tag"><%= u == keep ? "Kept" : "Merged in, then deleted" %></div>
+              </div>
+            <% end %>
+          </div>
+          <% if keep.email.present? && drop.email.present? %>
+            <p class="cr-dup-blocked">Both records can sign in, so they can't be merged as is. Remove the email from the one that isn't used (Site members → Edit), then merge.</p>
+          <% else %>
+            <%= form_with url: admin_merge_path, method: :post, local: true, class: "cr-dup-form",
+                  data: { turbo_confirm: "Merge #{drop.name} into #{keep.name}? This can't be undone." } do %>
+              <input type="hidden" name="a_id" value="<%= pair.a.id %>">
+              <input type="hidden" name="b_id" value="<%= pair.b.id %>">
+              <span class="cr-dup-keep-label">Keep the name</span>
+              <% [ keep.name, drop.name ].map(&:squish).uniq.each_with_index do |nm, i| %>
+                <label class="cr-dup-radio"><input type="radio" name="keep_name" value="<%= nm %>" <%= "checked" if i.zero? %>> <%= nm %></label>
+              <% end %>
+              <button type="submit" class="cr-btn cr-btn-gold cr-btn-compact cr-dup-btn">Merge</button>
+            <% end %>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+  </section>
+</div>
