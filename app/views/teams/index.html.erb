@@ -122,14 +122,14 @@
                   from different leagues aren't comparable, so each ranks on its own. %>
               <% @teams_by_league.each do |league, league_teams| %>
               <tr class="cr-st-league"><td colspan="6"><%= league %></td></tr>
-              <% standings = league_teams.sort_by { |t| [ (t.wins_count + t.losses_count).positive? ? 0 : 1, -(t.win_pct || 0), -t.wins_count, t.name.to_s.downcase ] } %>
+              <% standings = league_teams.sort_by { |t| [ (t.wins_count + t.losses_count + t.ties_count).positive? ? 0 : 1, -(t.win_pct || 0), -t.wins_count, t.name.to_s.downcase ] } %>
               <% standings.each_with_index do |team, i| %>
                 <tr class="cr-st-row" onclick="if (!event.target.closest('a')) window.location='<%= team_path(team) %>'">
                   <td class="cr-st-n cr-st-rank"><span class="cr-st-rank-badge"><%= i + 1 %></span></td>
                   <td>
                     <%= link_to team.name, team_path(team), class: "cr-st-team" %>
                     <div class="cr-st-sub">
-                      <%= team.league_label %><% if team.team_type.present? %> · <%= team.team_type %><% end %><% if team.rating.present? %> · <%= team.rating %><% end %>
+                      <%= team.league_label %><% if team.team_type.present? %> · <%= team.team_type %><% end %><% if team.rating.present? %> · <%= team.rating %><% end %><% if team.ties_count.positive? %> · <%= pluralize(team.ties_count, "tie") %><% end %>
                     </div>
                   </td>
                   <td class="cr-st-n cr-st-w"><%= team.wins_count %></td>

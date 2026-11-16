@@ -1,0 +1,12 @@
+<%# The one definition every number on the profile uses, said right next to
+    the numbers (Tara, Nov 16 2026). %>
+<% total = record.entries.size %>
+<% extra = record.league_site_entries.size %>
+One match = one line (court) played, with a result.
+<% if team %>
+  <%= pluralize(total, "match") %> for <%= team.name %>, from its scores on Court Report.
+<% elsif extra.positive? %>
+  <%= pluralize(total, "match") %>: <%= total - extra %> from scores on Court Report + <%= extra %> from league websites that have no score on Court Report.
+<% else %>
+  <%= pluralize(total, "match") %>, all from scores on Court Report.
+<% end %>
