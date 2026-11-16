@@ -4,12 +4,15 @@
 <%
   gender_word = { "F" => "Women's", "M" => "Men's" }[team.gender.to_s.upcase]
   level = [ team.rating.presence && format("%.1f", team.rating), gender_word ].compact.join(" ").presence
-  parts = [ team.team_type, level, team.season_name ].map { |p| p.to_s.squish }.reject(&:blank?).uniq
-  parts = [ "Season starts #{team.start_date.strftime('%b %-d, %Y')}" ] if parts.empty? && team.start_date
+  # Every row reads league · level · season: the league part falls back to
+  # the flight, then the league's name; the season to its start date.
+  league = team.team_type.presence || team.flight.presence || team.league_label
+  season = team.season_name.presence || (team.start_date && "Season from #{team.start_date.strftime('%b %-d, %Y')}")
+  parts = [ league, level, season ].map { |p| p.to_s.squish }.reject(&:blank?).uniq
   membership = team.team_memberships.find { |m| m.user_id == user.id }
 %>
 <%= link_to team_path(team), class: "cr-match-row", style: "text-decoration: none; color: inherit;" do %>
-  <div class="cr-match-date" style="min-width: 76px; padding: 8px 10px;">
+  <div class="cr-match-date cr-pp-team-badge">
     <div class="cr-match-date-month" style="font-size: 0.6rem;"><%= team.league_group.to_s.upcase %></div>
   </div>
   <div class="cr-match-info">

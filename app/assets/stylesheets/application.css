@@ -6538,3 +6538,11 @@ body.cr-ctx-profiles-player .cr-team-switch { margin: 0 0 14px; }
   .cr-dup { padding: 10px; }
   .cr-dup-form { flex-direction: column; align-items: stretch; gap: 6px; }
 }
+/* Match History: one date width, so opponent names line up row to row. */
+.cr-match-date.cr-mh-date { width: 76px; min-width: 76px; flex: 0 0 76px; padding: 8px 6px; text-align: center; }
+.cr-match-date.cr-pp-team-badge { width: 92px; min-width: 92px; flex: 0 0 92px; padding: 8px 4px; text-align: center; }
+@media (max-width: 480px) {
+  .cr-match-date.cr-pp-team-badge { width: 70px; min-width: 70px; flex: 0 0 70px; padding: 7px 2px; }
+  .cr-match-date.cr-pp-team-badge .cr-match-date-month { font-size: 0.55rem !important; letter-spacing: 0.3px; }
+  .cr-match-date.cr-mh-date { width: 66px; min-width: 66px; flex: 0 0 66px; }
+}

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_11_14_120000) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_16_120000) do
   create_table "availabilities", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.integer "match_id", null: false
@@ -158,8 +158,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_14_120000) do
     t.string "opponent"
     t.string "playoff_level"
     t.string "result"
-    t.string "scorecard_url"
     t.string "score_summary"
+    t.string "scorecard_url"
     t.integer "tennis_team_id", null: false
     t.datetime "updated_at", null: false
     t.string "usta_status"
@@ -282,16 +282,16 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_14_120000) do
     t.string "season_name"
     t.string "section"
     t.string "standings_style"
+    t.date "start_date"
     t.string "stats_sheet_url"
     t.string "team_colors"
-    t.date "start_date"
     t.string "team_type"
     t.string "tenniscores_url"
     t.datetime "updated_at", null: false
     t.integer "user_id", null: false
-    t.decimal "usta_games_won_pct", precision: 5, scale: 2
     t.integer "usta_games_lost"
     t.integer "usta_games_won"
+    t.decimal "usta_games_won_pct", precision: 5, scale: 2
     t.integer "usta_matches_played"
     t.integer "usta_points"
     t.integer "usta_sets_lost"
@@ -301,29 +301,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_14_120000) do
     t.index ["join_code"], name: "index_tennis_teams_on_join_code", unique: true
     t.index ["league_category"], name: "index_tennis_teams_on_league_category"
     t.index ["user_id"], name: "index_tennis_teams_on_user_id"
-  end
-
-  create_table "usta_lines", force: :cascade do |t|
-    t.datetime "created_at", null: false
-    t.string "district"
-    t.string "league"
-    t.string "level"
-    t.string "line_type"
-    t.string "loser_1"
-    t.string "loser_2"
-    t.date "match_date"
-    t.string "match_type", null: false
-    t.integer "position"
-    t.string "score"
-    t.string "section"
-    t.datetime "updated_at", null: false
-    t.integer "uploaded_by_id"
-    t.string "usta_match_id", null: false
-    t.string "winner_1"
-    t.string "winner_2"
-    t.index ["match_date"], name: "index_usta_lines_on_match_date"
-    t.index ["uploaded_by_id"], name: "index_usta_lines_on_uploaded_by_id"
-    t.index ["usta_match_id", "match_type"], name: "index_usta_lines_on_usta_match_id_and_match_type", unique: true
   end
 
   create_table "users", force: :cascade do |t|
@@ -355,6 +332,29 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_14_120000) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  create_table "usta_lines", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "district"
+    t.string "league"
+    t.string "level"
+    t.string "line_type"
+    t.string "loser_1"
+    t.string "loser_2"
+    t.date "match_date"
+    t.string "match_type", null: false
+    t.integer "position"
+    t.string "score"
+    t.string "section"
+    t.datetime "updated_at", null: false
+    t.integer "uploaded_by_id"
+    t.string "usta_match_id", null: false
+    t.string "winner_1"
+    t.string "winner_2"
+    t.index ["match_date"], name: "index_usta_lines_on_match_date"
+    t.index ["uploaded_by_id"], name: "index_usta_lines_on_uploaded_by_id"
+    t.index ["usta_match_id", "match_type"], name: "index_usta_lines_on_usta_match_id_and_match_type", unique: true
+  end
+
   add_foreign_key "availabilities", "matches"
   add_foreign_key "availabilities", "users"
   add_foreign_key "division_teams", "tennis_teams"
@@ -369,16 +369,16 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_14_120000) do
   add_foreign_key "match_line_players", "users"
   add_foreign_key "match_lines", "matches"
   add_foreign_key "matches", "tennis_teams"
-  add_foreign_key "player_matches", "users"
   add_foreign_key "notifications", "matches"
   add_foreign_key "notifications", "tennis_teams"
   add_foreign_key "notifications", "users"
   add_foreign_key "notifications", "users", column: "actor_id"
-  add_foreign_key "team_subs", "tennis_teams"
-  add_foreign_key "team_subs", "users"
+  add_foreign_key "player_matches", "users"
   add_foreign_key "team_events", "tennis_teams"
   add_foreign_key "team_memberships", "tennis_teams"
   add_foreign_key "team_memberships", "users"
+  add_foreign_key "team_subs", "tennis_teams"
+  add_foreign_key "team_subs", "users"
   add_foreign_key "tennis_stats", "users"
   add_foreign_key "tennis_teams", "users"
   add_foreign_key "usta_lines", "users", column: "uploaded_by_id", on_delete: :nullify
