@@ -21,6 +21,8 @@ Rails.application.routes.draw do
 
   # Admin: TennisLink fetch POC (Session 15)
   get "admin/members", to: "admin#members", as: :admin_members
+  get "admin/duplicates", to: "admin#duplicates", as: :admin_duplicates
+  post "admin/merge", to: "admin#merge", as: :admin_merge
   get "admin/tennislink_test", to: "admin#tennislink_test", as: :admin_tennislink_test
   get "admin/usta_import", to: "admin#usta_import", as: :admin_usta_import
   post "admin/usta_import", to: "admin#usta_import"

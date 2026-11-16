@@ -8,7 +8,10 @@
         <h2 class="cr-rp-card-title">Site members</h2>
         <span class="cr-rp-card-note">Only you can see this page.</span>
       </div>
-      <%= link_to "Download spreadsheet", admin_members_path(format: :csv), class: "cr-btn cr-btn-gold cr-btn-compact" %>
+      <div class="cr-mem-head-actions">
+        <%= link_to "Possible duplicates", admin_duplicates_path, class: "cr-btn cr-btn-outline cr-btn-compact" %>
+        <%= link_to "Download spreadsheet", admin_members_path(format: :csv), class: "cr-btn cr-btn-gold cr-btn-compact" %>
+      </div>
     </div>
 
     <div class="cr-mem-stats">
