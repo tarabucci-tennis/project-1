@@ -131,6 +131,20 @@ class TeamsController < ApplicationController
     @is_captain       = @team.can_set_lineup?(current_user) || current_user.admin?
     @wins             = @team.matches.where(result: "win").count
     @losses           = @team.matches.where(result: "loss").count
+    @ties             = @team.matches.where(result: "tie").count
+    # Matches a captain added on the calendar ("League match") instead of the
+    # schedule. Calendar and Upcoming show them, so the team page must too.
+    team_events       = @team.team_events.to_a
+    @upcoming_events  = team_events.select { |e| e.event_date >= Date.current }.sort_by(&:event_date)
+    calendar_matches  = team_events.select { |e| e.kind.to_s.match?(/match/i) }
+    @upcoming_calendar_matches = calendar_matches.count { |e| e.event_date >= Date.current }
+    # One count everywhere: regular-season matches (playoff rounds have their
+    # own section) plus calendar-only league matches.
+    @season_match_count = @team.matches.count { |m| !m.playoff? } + calendar_matches.size
+    @scheduled_count    = @upcoming_matches.count { |m| !m.playoff? } + @upcoming_calendar_matches
+    @has_played         = @team.matches.any?(&:played?) || calendar_matches.any? { |e| e.event_date < Date.current }
+    next_event          = calendar_matches.select { |e| e.event_date >= Date.current }.min_by(&:event_date)
+    @next_date          = [ @team.next_match&.match_date&.to_date, next_event&.event_date ].compact.min
     @division_teams   = @team.division_teams.ranked
     @doubles_pairs    = DoublesPairs.new(@team)
     # Opponent name => its standings row, so schedule/results can open that

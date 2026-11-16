@@ -6465,3 +6465,7 @@ body.cr-ctx-profiles-player .cr-team-switch { margin: 0 0 14px; }
   .cr-rp-ranked th:nth-child(5), .cr-rp-ranked td:nth-child(5) { width: 16%; display: table-cell; }
   .cr-rp-ranked th:nth-child(6), .cr-rp-ranked td:nth-child(6) { display: none; }
 }
+
+/* Team page Upcoming: calendar-added matches/clinics under the schedule. */
+.cr-sched-events-title { font-size: 0.74rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--cr-text-muted); margin: 18px 0 8px; }
+.cr-sched-events { margin-top: 0; }
