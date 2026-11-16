@@ -6491,3 +6491,9 @@ body.cr-ctx-profiles-player .cr-team-switch { margin: 0 0 14px; }
   .cr-adv.cr-adv-compact th, .cr-adv.cr-adv-compact td { padding: 10px 6px; }
   .cr-adv.cr-adv-compact .cr-adv-rowhead { padding-left: 12px !important; }
 }
+
+/* Team schedule: calendar entry → "Make this a match" (captains). */
+.cr-sched-event-note { font-size: 0.8rem; color: var(--cr-text-muted); line-height: 1.45; margin: 4px 0 10px; }
+.cr-sched-event .cr-sched-actions form { margin: 0; }
+.cr-chip-btn-primary { background: var(--cr-teal-deep); border-color: var(--cr-teal-deep); color: #fff; font-weight: 700; cursor: pointer; }
+.cr-chip-btn-primary:hover { filter: brightness(1.05); }
