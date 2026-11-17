@@ -141,3 +141,35 @@ class MergeFollowupTest < ActionDispatch::IntegrationTest
     assert_select ".cr-pp-metric-cap", text: /year-end 2025/
   end
 end
+
+class TaraConfirmedFixesNov17Test < ActiveSupport::TestCase
+  def run_update
+    require Rails.root.join("db/migrate/20261117150000_tara_confirmed_fixes_nov_17").to_s
+    ActiveRecord::Migration.suppress_messages { TaraConfirmedFixesNov17.new.up }
+  end
+
+  test "both Davidse records can sign in: keeps the recent login, merges into Kristen Davidse" do
+    old = User.create!(name: "Kriste Davidse", email: "kd-old@example.com", password: "tennis-123", last_sign_in_at: 3.months.ago)
+    used = User.create!(name: "Kristen Davidse", email: "kd-new@example.com", password: "tennis-123", last_sign_in_at: 1.day.ago)
+    team = TennisTeam.create!(user: used, name: "KD Team", league_category: "Local", league_name: "Bux-Mont")
+    TeamMembership.create!(user: old, tennis_team: team, role: "player")
+    run_update
+    assert_not User.exists?(old.id)
+    used.reload
+    assert_equal "Kristen Davidse", used.name
+    assert_equal "kd-new@example.com", used.email
+    assert_equal 1, used.team_memberships.count
+    assert_equal used.id, MergedUser.current_id_for(old.id)
+    assert_no_difference -> { User.count } do
+      run_update
+    end
+  end
+
+  test "Sarah's blank rating date becomes 12/31/2025; Tri Hards is archived" do
+    sarah = User.create!(name: "Sarah Dougherty", ntrp_rating: 3.0)
+    tri = TennisTeam.create!(user: sarah, name: "Tri Hards", league_category: "USTA")
+    run_update
+    assert_equal Date.new(2025, 12, 31), sarah.reload.ntrp_rating_date
+    assert tri.reload.archived?
+  end
+end
