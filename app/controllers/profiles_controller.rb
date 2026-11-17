@@ -117,16 +117,9 @@ class ProfilesController < ApplicationController
     redirect_to login_path unless current_user
   end
 
-  # Current teams (what My Teams shows) first, past seasons separately: a
-  # team is past when it's archived or this player's spot on it was
-  # archived with an old season.
+  # Current teams first, past seasons separately (see User#current_and_past_teams).
   def split_teams(user, teams)
-    archived_ids = user.team_memberships.where.not(archived_season: [ nil, "" ]).pluck(:tennis_team_id)
-    active_ids = user.team_memberships.where(archived_season: [ nil, "" ]).pluck(:tennis_team_id)
-    teams = teams.to_a.uniq
-    current, past = teams.partition { |t| !t.archived? && (active_ids.include?(t.id) || !archived_ids.include?(t.id)) }
-    @current_teams = TennisTeam.group_by_league(current).values.flatten
-    @past_teams = past.sort_by { |t| [ t.start_date || Date.new(0), t.name.to_s ] }.reverse
+    @current_teams, @past_teams = user.current_and_past_teams(teams)
   end
 
   def load_record(user, team: nil)

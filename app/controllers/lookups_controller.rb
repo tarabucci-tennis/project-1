@@ -56,7 +56,10 @@ class LookupsController < ApplicationController
     end
 
     # ── Teams: your own teams, plus opponents in your divisions ───────────
-    @my_teams_list = filter_by_name(my_teams.sort_by { |t| t.name.to_s.downcase }, &:name)
+    # Current teams only under "Your Teams"; past seasons get their own list.
+    current, past = current_user.current_and_past_teams(my_teams)
+    @my_teams_list = filter_by_name(current.sort_by { |t| t.name.to_s.downcase }, &:name)
+    @my_past_teams = filter_by_name(past, &:name)
 
     # Opponent teams come from the standings we already pull for each league.
     # Dedupe by name so a team you also play doesn't show twice, and skip the

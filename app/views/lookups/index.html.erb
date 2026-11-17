@@ -25,7 +25,7 @@
     <p class="cr-lookup-result-note">
       Showing matches for “<strong><%= @query %></strong>” —
       <%= pluralize(@players.size, "player") %>,
-      <%= pluralize(@my_teams_list.size + @opponent_teams.size, "team") %>.
+      <%= pluralize(@my_teams_list.size + @my_past_teams.size + @opponent_teams.size, "team") %>.
     </p>
   <% end %>
 
@@ -120,6 +120,26 @@
       </p>
     <% end %>
   </div>
+
+  <%# ── Past seasons: teams you were on before (archived) ─────── %>
+  <% if @my_past_teams.any? %>
+    <details class="cr-standings-wrap cr-lookup-past" style="margin-bottom: 26px;">
+      <summary class="cr-standings-head">
+        <span class="cr-standings-head-title">Your Past Seasons (<%= @my_past_teams.size %>)</span>
+      </summary>
+      <table class="cr-standings cr-lookup-tbl">
+        <tbody>
+          <% @my_past_teams.each do |team| %>
+            <tr class="cr-st-row" onclick="if (!event.target.closest('a')) window.location='<%= team_path(team) %>'">
+              <td><%= link_to team.name, team_path(team), class: "cr-st-team" %></td>
+              <td class="cr-st-n"><%= team.record_label %></td>
+              <td class="cr-lookup-wide cr-lookup-muted"><%= [ team.league_label, team.season_name.presence ].compact.join(" · ") %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </details>
+  <% end %>
 
   <%# ── Opponent teams in your divisions ───────────────────────── %>
   <div class="cr-standings-wrap">

@@ -5,13 +5,12 @@
 
   <div class="cr-fr-index-head">
     <h1 class="cr-rp-name">Friendlies</h1>
-    <%= link_to "+ New friendly", new_friendly_path, class: "cr-btn cr-btn-gold" %>
+    <%= link_to "+ Book a friendly", new_friendly_path, class: "cr-btn cr-btn-gold" %>
   </div>
 
   <% if @friendlies.any? %>
     <div class="cr-fr-index">
       <% @friendlies.each do |f| %>
-        <% n = f.active_spots.size %>
         <%= link_to friendly_path(f), class: "cr-fr-index-row" do %>
           <div class="cr-fr-index-main">
             <div class="cr-fr-index-title"><%= f.title %></div>
@@ -19,7 +18,7 @@
               <%= f.starts_at.strftime("%a, %b %-d") %> · <%= f.time_label %><% if f.location.present? %> · <%= f.location %><% end %>
             </div>
             <div class="cr-fr-index-sub">
-              <%= n %> signed up · <%= f.courts_needed %> <%= "court".pluralize(f.courts_needed) %><%= " · #{f.waitlist.size} on the waitlist" if f.courts_needed.positive? && f.waitlist.any? %>
+              <%= friendly_signup_status(f) %>
             </div>
           </div>
           <span class="cr-fr-badge <%= f.done? ? "cr-fr-badge-done" : "cr-fr-badge-up" %>"><%= f.done? ? "Done" : "Upcoming" %></span>

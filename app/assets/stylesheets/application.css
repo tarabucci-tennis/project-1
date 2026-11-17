@@ -6546,3 +6546,17 @@ body.cr-ctx-profiles-player .cr-team-switch { margin: 0 0 14px; }
   .cr-match-date.cr-pp-team-badge .cr-match-date-month { font-size: 0.55rem !important; letter-spacing: 0.3px; }
   .cr-match-date.cr-mh-date { width: 66px; min-width: 66px; flex: 0 0 66px; }
 }
+
+/* Players & Teams: past seasons fold away under their own heading. */
+.cr-lookup-past > summary { cursor: pointer; list-style: none; }
+.cr-lookup-past > summary::-webkit-details-marker { display: none; }
+.cr-lookup-past > summary::after { content: "▾"; color: var(--cr-gold); margin-left: 8px; transition: transform 0.15s; }
+.cr-lookup-past[open] > summary::after { transform: rotate(180deg); }
+.cr-lookup-past:not([open]) > summary { border-bottom: 0; }
+
+/* Ratings: the rank rule sits right above each table, not after 200 rows. */
+.cr-rp-rule { font-size: 0.78rem; color: var(--cr-text-muted); line-height: 1.45; margin: 0; padding: 10px 18px 8px; }
+
+/* Lineups: current teams with nothing ahead, named under the list. */
+.cr-lu-none { font-size: 0.82rem; color: var(--cr-text-muted); line-height: 1.5; margin: 14px 2px 0; }
+.cr-lu-none a { color: var(--cr-teal-deep); font-weight: 600; text-decoration: none; }

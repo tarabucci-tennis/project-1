@@ -15,7 +15,7 @@ class MyTeamsFriendliesTest < ActionDispatch::IntegrationTest
     get teams_path
     assert_response :success
     body = response.body
-    assert_select ".cr-home-tab", text: "Book a friendly"
+    assert_select ".cr-home-tab", text: "Friendlies"
     assert_select ".cr-home-tab", text: "Upcoming"
     # 3 cards (friendly, clinic, old practice) on Upcoming + 2 (friendly, old practice) on the Friendlies tab.
     assert_select ".cr-my-week-card-event", 5
@@ -50,9 +50,9 @@ class MyTeamsFriendliesTest < ActionDispatch::IntegrationTest
     theirs = Friendly.create!(organizer: other, starts_at: 4.days.from_now, title: "Their hit")
     theirs.spots.create!(user: @user, name: @user.name)
     get teams_path
-    assert_select ".cr-home-tabs .cr-fr-menu .cr-home-tab[data-tab-key=friendlies]", text: "Book a friendly"
+    assert_select ".cr-home-tabs .cr-fr-menu .cr-home-tab[data-tab-key=friendlies]", text: "Friendlies"
     assert_select ".cr-fr-menu a.cr-menu-item[href=?]", new_friendly_path, text: /Book a friendly/
-    assert_select ".cr-fr-menu a.cr-fr-menu-head[href=?]", friendlies_path, text: /My friendlies/
+    assert_select ".cr-fr-menu a.cr-fr-menu-head[href=?]", friendlies_path, text: /All friendlies/
     assert_select ".cr-page-header-actions > a", text: "Book a friendly", count: 0
     assert_select ".cr-page-header-actions .cr-fr-menu", count: 0
     assert_select ".cr-fr-tab-head", { count: 0 }, "no separate Book a friendly / All my friendlies buttons in the panel"

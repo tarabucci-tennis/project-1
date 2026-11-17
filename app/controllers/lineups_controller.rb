@@ -6,11 +6,13 @@ class LineupsController < ApplicationController
   def dashboard
     owned_team_ids  = current_user.tennis_teams.pluck(:id) rescue []
     member_team_ids = current_user.member_teams.pluck(:id) rescue []
-    @teams = TennisTeam.where(id: (owned_team_ids + member_team_ids).uniq)
+    all_teams = TennisTeam.where(id: (owned_team_ids + member_team_ids).uniq).to_a
+    # Current teams only (same rule as My Teams and the profile).
+    @teams, = current_user.current_and_past_teams(all_teams)
     @upcoming = []
 
     @teams.each do |team|
-      next unless team.respond_to?(:matches)
+      season = team.matches.reject(&:playoff?).sort_by(&:match_date)
       team.matches.where("match_date >= ?", Date.current).order(:match_date).each do |match|
         lineup = match.lineup rescue nil
         slot   = lineup&.lineup_slots&.find_by(user_id: current_user.id) rescue nil
@@ -20,12 +22,16 @@ class LineupsController < ApplicationController
           lineup: lineup,
           published: lineup&.published?,
           my_slot: slot,
-          is_captain: team.respond_to?(:captain?) ? team.captain?(current_user) : false
+          is_captain: team.respond_to?(:captain?) ? team.captain?(current_user) : false,
+          meeting: meeting_label(season, match)
         }
       end
     end
 
     @upcoming.sort_by! { |u| u[:match].match_date }
+    # Every current team is accounted for: those with nothing ahead are named.
+    with_matches = @upcoming.map { |u| u[:team].id }.uniq
+    @teams_without_upcoming = @teams.reject { |t| with_matches.include?(t.id) }
   end
 
   # GET /teams/:team_id/matches/:match_id/lineup/edit — captain sets lineup
@@ -160,6 +166,15 @@ class LineupsController < ApplicationController
   end
 
   private
+
+  # "Meeting 2 of 2" when a team plays the same opponent more than once this
+  # season, so the two rows can be told apart; nil otherwise.
+  def meeting_label(season, match)
+    key = ->(m) { m.opponent.to_s.downcase.gsub(/[^a-z0-9]/, "") }
+    same = season.select { |m| key.call(m) == key.call(match) && key.call(m).present? }
+    return nil if same.size < 2
+    "Meeting #{same.index { |m| m.id == match.id }.to_i + 1} of #{same.size}"
+  end
 
   # Email goes out only once the server has a Gmail login (SMTP_USERNAME / SMTP_PASSWORD).
   def email_ready?

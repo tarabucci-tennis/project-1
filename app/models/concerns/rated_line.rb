@@ -7,23 +7,42 @@ module RatedLine
     delegate :match_date, :league, :level, :match_type, to: :line
   end
 
+  # Score entries carry placeholders and notes typed where a name goes:
+  # "A (Default)", "N", "Default (no opponents)", "Nancy Krouse (timed match)".
+  # A note in brackets is dropped ("Nancy Krouse"); what's left must look like
+  # a person (at least two letters, not "default"/"forfeit"/"TBD"/"N/A"), or
+  # it's not a player at all.
+  NOT_A_NAME = /\A(n\/?a|tbd|tba|unknown|none|bye)\z|default|forfeit|walkover/i
+
+  def self.clean_name(name)
+    n = name.to_s.gsub(/\([^)]*\)/, " ").squish
+    return nil if n.blank? || n.match?(NOT_A_NAME) || n.delete("^A-Za-z").length < 2
+    n
+  end
+
+  def self.name_key(name)
+    clean_name(name)&.downcase
+  end
+
+  # Real people on this line, notes removed.
   def players
-    winners + losers
+    (winners + losers).filter_map { |n| RatedLine.clean_name(n) }
   end
 
   # This line from `name`'s point of view, or nil if they didn't play it.
   def entry_for(name)
-    key = name.to_s.downcase.squish
-    won = winners.any? { |n| n.downcase.squish == key }
-    lost = losers.any? { |n| n.downcase.squish == key }
+    key = RatedLine.name_key(name)
+    return nil unless key
+    won = winners.any? { |n| RatedLine.name_key(n) == key }
+    lost = losers.any? { |n| RatedLine.name_key(n) == key }
     return nil unless won || lost
 
     side = won ? winners : losers
     Entry.new(
       line: self,
       won: won,
-      partner: side.reject { |n| n.downcase.squish == key }.first,
-      opponents: won ? losers : winners,
+      partner: side.filter_map { |n| RatedLine.clean_name(n) }.reject { |n| n.downcase == key }.first,
+      opponents: (won ? losers : winners).filter_map { |n| RatedLine.clean_name(n) },
       set_scores: sets_for(won)
     )
   end
