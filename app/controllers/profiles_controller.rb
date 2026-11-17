@@ -86,6 +86,10 @@ class ProfilesController < ApplicationController
   def player
     @user = User.find_by(id: params[:id])
     unless @user
+      # A merged-away record: forward to the person it was merged into.
+      kept = User.find_by(id: MergedUser.current_id_for(params[:id]))
+      return redirect_to(player_path(kept, team: params[:team].presence), status: :moved_permanently) if kept
+
       redirect_to teams_path, alert: "Player not found."
       return
     end
@@ -188,19 +192,26 @@ class ProfilesController < ApplicationController
     stats[:matches_played_total] = entries.size
 
     # Doubles partner stats
+    # Grouped by person, not by spelling: league websites type partner names
+    # as text ("Joanne Steinberg"), so they're matched to the Court Report
+    # player ("JoAnne Steinberg") ignoring case, spacing and accents, and
+    # shown with the Court Report spelling.
     partner_data = Hash.new { |h, k| h[k] = { won: 0, lost: 0, total: 0 } }
-    doubles.each do |e|
+    display_name = {}
+    doubles.sort_by { |e| e.source == :court_report ? 0 : 1 }.each do |e|
       e.partners.each do |name|
-        partner_data[name][:total] += 1
-        partner_data[name][:won] += 1 if e.won?
-        partner_data[name][:lost] += 1 if e.lost?
+        key = name.to_s.unicode_normalize(:nfkd).gsub(/\p{Mn}/, "").downcase.squish
+        display_name[key] ||= name
+        partner_data[key][:total] += 1
+        partner_data[key][:won] += 1 if e.won?
+        partner_data[key][:lost] += 1 if e.lost?
       end
     end
     # Percentages and "best" need a real sample: under MIN_SAMPLE matches a
     # partner shows a record but no %, and can't be Best Partner (a 1-0
     # partnership isn't "best"). Qualified partners first, best % first.
-    rows = partner_data.map do |name, data|
-      { name: name, won: data[:won], lost: data[:lost], total: data[:total], pct: pct(data[:won], data[:total]),
+    rows = partner_data.map do |key, data|
+      { name: display_name[key], won: data[:won], lost: data[:lost], total: data[:total], pct: pct(data[:won], data[:total]),
         qualified: data[:total] >= MIN_SAMPLE }
     end
     qualified, small = rows.partition { |p| p[:qualified] }

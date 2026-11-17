@@ -89,3 +89,55 @@ class MergePeopleTest < ActionDispatch::IntegrationTest
     end
   end
 end
+
+class MergeFollowupTest < ActionDispatch::IntegrationTest
+  setup do
+    @admin = User.create!(name: "Follow Admin", email: "follow-admin@example.com", password: "tennis-123", admin: true)
+  end
+
+  def sign_in(user)
+    post session_path, params: { email: user.email, password: "tennis-123" }
+  end
+
+  test "partner table groups a league-website spelling with the Court Report player" do
+    tara = User.create!(name: "Follow Tara", email: "follow-tara@example.com", password: "tennis-123")
+    jo = User.create!(name: "JoAnne Follow")
+    team = TennisTeam.create!(user: tara, name: "Follow PCC", league_category: "Inter-Club", league_name: "Inter-Club")
+    3.times do |i|
+      m = team.matches.create!(opponent: "Opp #{i}", match_date: (30 - i).days.ago)
+      l = m.match_lines.create!(line_type: "doubles", position: 1, result: "win", set1_score: "6-1")
+      l.match_line_players.create!(user: tara)
+      l.match_line_players.create!(user: jo)
+    end
+    tara.player_matches.create!(source: "deltri", source_key: "p1", league: "Del-Tri", played_on: 5.days.ago.to_date,
+                                result: "loss", partner: "Joanne  Follow", match_label: "Legacy 1 vs DVTA")
+    sign_in(tara)
+    get profile_path
+    assert_select ".cr-playing-stats-row", text: /JoAnne Follow\s*75%\s*3–1 \(4 matches\)/
+    assert_select ".cr-playing-stats-row", text: /Joanne  Follow/, count: 0
+  end
+
+  test "an old profile link forwards to the record it was merged into" do
+    old = User.create!(name: "Fwd Joanne")
+    kept = User.create!(name: "Fwd JoAnne", email: "fwd@example.com")
+    old_id = old.id
+    UserMerge.new(old, kept, name: "Fwd JoAnne").call
+    assert_equal kept.id, MergedUser.current_id_for(old_id)
+
+    sign_in(@admin)
+    get player_path(old_id)
+    assert_redirected_to player_path(kept)
+    get player_path(999_999)
+    assert_redirected_to teams_path
+  end
+
+  test "admin can save a rating date; the profile shows it" do
+    sarah = User.create!(name: "Date Sarah", email: "date-sarah@example.com", ntrp_rating: 3.0)
+    sign_in(@admin)
+    patch user_path(sarah, return_to: "members"),
+          params: { user: { name: sarah.name, ntrp_rating: "3.0", ntrp_rating_date: "2025-12-31" } }
+    assert_equal Date.new(2025, 12, 31), sarah.reload.ntrp_rating_date
+    get player_path(sarah)
+    assert_select ".cr-pp-metric-cap", text: /year-end 2025/
+  end
+end

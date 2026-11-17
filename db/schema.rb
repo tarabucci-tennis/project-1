@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_11_16_120000) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_17_120000) do
   create_table "availabilities", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.integer "match_id", null: false
@@ -166,6 +166,14 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_16_120000) do
     t.index ["availability_token"], name: "index_matches_on_availability_token", unique: true
     t.index ["tennis_team_id", "match_date"], name: "index_matches_on_tennis_team_id_and_match_date"
     t.index ["tennis_team_id"], name: "index_matches_on_tennis_team_id"
+  end
+
+  create_table "merged_users", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.integer "from_user_id", null: false
+    t.integer "into_user_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["from_user_id"], name: "index_merged_users_on_from_user_id", unique: true
   end
 
   create_table "notifications", force: :cascade do |t|

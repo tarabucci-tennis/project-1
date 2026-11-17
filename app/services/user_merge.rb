@@ -60,6 +60,10 @@ class UserMerge
       UstaLine.where(uploaded_by_id: @drop.id).update_all(uploaded_by_id: @keep.id)
 
       fill_blanks!
+      # Old profile links forward to the kept record (also earlier merges
+      # that pointed at the record being removed).
+      MergedUser.where(into_user_id: @drop.id).update_all(into_user_id: @keep.id)
+      MergedUser.create!(from_user_id: @drop.id, into_user_id: @keep.id)
       @drop.reload
       @drop.delete
     end
