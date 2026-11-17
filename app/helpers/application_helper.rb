@@ -118,6 +118,22 @@ module ApplicationHelper
     }
   end
 
+  # "1 signed up · 3 more for a court", "8 signed up · 2 courts · 1 waiting".
+  # Courts come from names (every 4 = 1 court), so with fewer than 4 say how
+  # many more are needed instead of "0 courts".
+  def friendly_signup_status(friendly)
+    n = friendly.active_spots.size
+    courts = friendly.courts_needed
+    bits = [ "#{n} signed up" ]
+    if courts.zero?
+      bits << "#{friendly.players_for_next_court} more for a court"
+    else
+      bits << pluralize(courts, "court")
+      bits << "#{friendly.waitlist.size} waiting" if friendly.waitlist.any?
+    end
+    bits.join(" · ")
+  end
+
   # The friendly invite text (the link itself is shared separately):
   #   🎾 KMA
   #   📅 Sat, Oct 17 · 1:00 – 2:30 PM

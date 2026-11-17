@@ -69,14 +69,14 @@
             opens the same menu. Either way the tab also shows the friendlies panel. %>
         <div class="cr-menu cr-hover-menu cr-fr-menu cr-home-tab-menu" data-controller="menu" data-menu-hover-value="true">
           <button class="cr-home-tab" data-home-tabs-target="tab" data-tab-key="friendlies"
-                  data-action="click->home-tabs#switch click->menu#tabTap" aria-haspopup="true">Book a friendly</button>
+                  data-action="click->home-tabs#switch click->menu#tabTap" aria-haspopup="true">Friendlies</button>
             <div class="cr-menu-panel" data-menu-target="panel" role="menu">
               <%= link_to new_friendly_path, class: "cr-menu-item", role: "menuitem" do %>
                 + Book a friendly
               <% end %>
               <div class="cr-menu-divider"></div>
               <%= link_to friendlies_path, class: "cr-menu-item cr-fr-menu-head", role: "menuitem" do %>
-                My friendlies <span aria-hidden="true">→</span>
+                All friendlies <span aria-hidden="true">→</span>
               <% end %>
               <% menu_friendlies = @upcoming_friendlies.first(8) %>
               <% if menu_friendlies.any? %>
@@ -197,7 +197,7 @@
                      },
                      friendlies: friendlies_today.map { |f|
                        { title: f.title, time: f.time_label, location: f.location,
-                         spots: "#{f.active_spots.size} signed up · #{f.courts_needed} #{'court'.pluralize(f.courts_needed)}#{" · #{f.waitlist.size} waiting" if f.courts_needed.positive? && f.waitlist.any?}", url: friendly_path(f) }
+                         spots: friendly_signup_status(f), url: friendly_path(f) }
                      }
                    }.to_json %>
 
@@ -298,7 +298,7 @@
               </div>
 
               <p class="cr-dash-cal-modal-captain-note" data-dashboard-calendar-target="captainNote" style="display: none;">
-                Only captains and co-captains can add friendlies or clinics here. Anyone can use Book a friendly.
+                Only captains and co-captains can add friendlies or clinics here. Anyone can use + Book a friendly.
               </p>
             </div>
           </div>
@@ -369,7 +369,7 @@
             Phones keep the tab-bar menu and never see this row. %>
         <div class="cr-fr-panel-head">
           <%= link_to "+ Book a friendly", new_friendly_path, class: "cr-btn cr-btn-gold" %>
-          <%= link_to "My friendlies →", friendlies_path, class: "cr-btn cr-btn-outline" %>
+          <%= link_to "All friendlies →", friendlies_path, class: "cr-btn cr-btn-outline" %>
         </div>
         <% fc_items = @upcoming_friendlies.to_a + @upcoming_team_events.select { |e| e.display_kind == "friendly" } %>
         <% fc_items = fc_items.sort_by { |i| i.is_a?(Friendly) ? i.starts_at : i.event_date.in_time_zone } %>
@@ -380,7 +380,7 @@
             <% end %>
           </div>
         <% else %>
-          <p class="cr-coming-up-empty">No friendlies coming up. Hover or tap Book a friendly above to book one and share the link.</p>
+          <p class="cr-coming-up-empty">No friendlies coming up. Tap + Book a friendly to book one and share the link.</p>
         <% end %>
       </div>
     </div>

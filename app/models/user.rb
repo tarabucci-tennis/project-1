@@ -86,6 +86,17 @@ class User < ApplicationRecord
          .distinct
   end
 
+  # [current, past] teams. Current = what My Teams shows; past = the team was
+  # archived, or this player's spot on it was archived with an old season.
+  # One rule for the profile, Players & Teams and Lineups.
+  def current_and_past_teams(teams = member_teams.to_a)
+    archived_ids = team_memberships.where.not(archived_season: [ nil, "" ]).pluck(:tennis_team_id)
+    active_ids = team_memberships.where(archived_season: [ nil, "" ]).pluck(:tennis_team_id)
+    current, past = teams.to_a.uniq.partition { |t| !t.archived? && (active_ids.include?(t.id) || !archived_ids.include?(t.id)) }
+    [ TennisTeam.group_by_league(current).values.flatten,
+      past.sort_by { |t| [ t.start_date || Date.new(0), t.name.to_s ] }.reverse ]
+  end
+
   # Live match stats calculated from actual results (not seeded tennis_stats)
   def live_match_count
     matches_played.where.not(result: nil).count
