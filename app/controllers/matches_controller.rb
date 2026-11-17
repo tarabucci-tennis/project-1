@@ -14,6 +14,8 @@ class MatchesController < ApplicationController
     @lineup = @match.lineup
     @is_captain = @team.captain?(current_user) || @team.user_id == current_user.id
     @can_enter_results = @team.can_enter_results?(current_user)
+    # Players on a line enter just their own line; captains use the full form.
+    @can_enter_my_line = !@can_enter_results && @match.started? && @match.on_a_line?(current_user)
     @my_availability = @match.availability_for(current_user)
 
     if @lineup&.published?
@@ -84,6 +86,44 @@ class MatchesController < ApplicationController
     @match_lines = @match.match_lines.includes(:players).order(position: :asc)
   end
 
+  # GET /teams/:team_id/matches/:id/my_line — a player enters just her own
+  # line's score (Tara, Nov 17 2026). Her line = the one she's on in the
+  # saved scores, or in the posted lineup. Captains can still change it all.
+  def edit_my_line
+    @match = @team.matches.find(params[:id])
+    @line = my_line_for(@match, current_user)
+    return redirect_to(team_match_path(@team, @match), alert: "You're not on a line for this match.") unless @line
+    @partner_options = partner_options(@line)
+  end
+
+  def update_my_line
+    @match = @team.matches.find(params[:id])
+    @line = my_line_for(@match, current_user)
+    return redirect_to(team_match_path(@team, @match), alert: "You're not on a line for this match.") unless @line
+
+    data = params[:line] || {}
+    mode = LineScoring.mode_for(@team)
+    ActiveRecord::Base.transaction do
+      sets = (1..3).map { |n| set_string(data, n, @line.public_send("set#{n}_score")) }
+      result = data[:result].presence || LineScoring.line_result(LineScoring.parse_sets(sets), mode)
+      @line.update!(result: result, set1_score: sets[0], set2_score: sets[1], set3_score: sets[2],
+                    opponents: data[:opponents].to_s.strip.presence,
+                    entered_by: current_user, entered_at: Time.current)
+
+      # Players: always her; her partner as picked (doubles).
+      ids = [ current_user.id ]
+      ids << data[:partner_id].to_i if @line.line_type == "doubles" && data[:partner_id].present?
+      @line.match_line_players.where.not(user_id: ids).destroy_all
+      ids.uniq.each { |id| @line.match_line_players.find_or_create_by!(user_id: id) }
+
+      fill_team_result(@match, mode)
+    end
+
+    redirect_to team_match_path(@team, @match), notice: "Saved your line. Thanks!"
+  rescue ActiveRecord::RecordInvalid => e
+    redirect_to my_line_team_match_path(@team, @match), alert: "Couldn't save: #{e.message}"
+  end
+
   def update_results
     @match = @team.matches.find(params[:id])
 
@@ -144,6 +184,63 @@ class MatchesController < ApplicationController
 
   private
 
+  # The line `user` plays on in `match`: from the saved scores, or from the
+  # posted lineup (blank lines are made in the team's format, as Enter
+  # Results does). nil if she isn't on a line.
+  def my_line_for(match, user)
+    line = match.match_lines.joins(:match_line_players).find_by(match_line_players: { user_id: user.id })
+    return line if line
+    return nil unless match.lineup&.published? && match.lineup.lineup_slots.exists?(user_id: user.id)
+
+    rebuild_unused_lines(match) if wrong_layout?(match)
+    build_default_lines(match) if match.match_lines.empty?
+    populate_players_from_lineup(match)
+    match.match_lines.joins(:match_line_players).find_by(match_line_players: { user_id: user.id })
+  end
+
+  # Partner choices: the current partner first, then the roster, then subs.
+  def partner_options(line)
+    current = line.match_line_players.includes(:user).map(&:user).compact
+    roster = @team.team_memberships.active.includes(:user).map(&:user).compact
+    subs = @team.team_subs.includes(:user).map(&:user).compact
+    (current + roster.sort_by { |u| u.name.to_s.downcase } + subs.sort_by { |u| u.name.to_s.downcase })
+      .uniq(&:id).reject { |u| u.id == current_user.id }
+  end
+
+  # Once every line that has players has a W/L, fill in the team result —
+  # but never over a result someone already set.
+  def fill_team_result(match, mode)
+    lines = match.match_lines.reload.includes(:match_line_players).to_a
+    if lines.any? { |l| l.result.present? }
+      match.update!(score_summary: "#{lines.count(&:won?)}-#{lines.count(&:lost?)}")
+    end
+    return if match.result.present?
+    played = lines.select { |l| l.match_line_players.any? || l.scored? }
+    return if played.empty? || played.any? { |l| l.result.blank? }
+    # Wait for the full match: as many decided lines as the league plays
+    # (a half-posted lineup mustn't decide the team result early).
+    return if played.size < default_line_types(match).size
+
+    summary = played.map { |l| { result: l.result, sets: LineScoring.parse_sets([ l.set1_score, l.set2_score, l.set3_score ]) } }
+    result = LineScoring.match_result(summary, mode)
+    match.update!(result: result) if result
+  end
+
+  # One set as "ours-theirs" from the two number boxes (setN_ours /
+  # setN_theirs), falling back to a "6-3" text box (setN_score). Keeps the
+  # saved text (e.g. "7-6(5)") when the numbers weren't changed.
+  def set_string(data, n, saved)
+    ours = data["set#{n}_ours"]
+    theirs = data["set#{n}_theirs"]
+    return data["set#{n}_score"].presence if ours.nil? && theirs.nil?
+    ours = ours.to_s.strip
+    theirs = theirs.to_s.strip
+    return nil if ours.blank? && theirs.blank?
+    typed = "#{ours.presence || 0}-#{theirs.presence || 0}"
+    saved_nums = saved.to_s.scan(/\d+/).first(2)
+    saved.present? && saved_nums == [ ours.presence || "0", theirs.presence || "0" ] ? saved : typed
+  end
+
   # Lines in the team's format. Singles take the first positions, doubles
   # follow (positions are unique per match).
   def build_default_lines(match)
@@ -185,6 +282,11 @@ class MatchesController < ApplicationController
 
     singles_offset = match.match_lines.where(line_type: "singles").count
 
+    # Lines that already had players before we start: those are the
+    # captain's choice and stay as they are. (Checking "has players" inside
+    # the loop skipped every doubles partner: the first name filled the line.)
+    lines_with_players = match.match_lines.joins(:match_line_players).distinct.pluck(:id)
+
     lineup.lineup_slots.where.not(user_id: nil).find_each do |slot|
       match_line_position =
         if slot.line_type == "singles"
@@ -195,7 +297,8 @@ class MatchesController < ApplicationController
 
       match_line = match.match_lines.find_by(line_type: slot.line_type, position: match_line_position)
       next unless match_line
-      next if match_line.match_line_players.any?  # respect captain's edits
+      next if lines_with_players.include?(match_line.id) # respect captain's edits
+      next if match_line.match_line_players.exists?(user_id: slot.user_id)
 
       match_line.match_line_players.create!(user_id: slot.user_id)
     end

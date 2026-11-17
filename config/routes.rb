@@ -83,6 +83,9 @@ Rails.application.routes.draw do
       member do
         get  "results", to: "matches#edit_results", as: :edit_results
         patch "results", to: "matches#update_results", as: :results
+        # A player enters just her own line (captains still use results).
+        get   "my_line", to: "matches#edit_my_line", as: :my_line
+        patch "my_line", to: "matches#update_my_line"
       end
       resource :lineup, only: [ :edit, :update ] do
         get "confirm", on: :member

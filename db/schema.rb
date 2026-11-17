@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_11_17_130000) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_17_140000) do
   create_table "availabilities", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.integer "match_id", null: false
@@ -134,6 +134,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_17_130000) do
 
   create_table "match_lines", force: :cascade do |t|
     t.datetime "created_at", null: false
+    t.datetime "entered_at"
+    t.integer "entered_by_id"
     t.string "line_type", null: false
     t.integer "match_id", null: false
     t.string "opponents"

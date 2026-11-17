@@ -50,6 +50,13 @@ class Match < ApplicationRecord
     scores_entered? ? "Edit scores" : "Enter scores"
   end
 
+  # Is `user` on a line of this match (saved scores or the posted lineup)?
+  def on_a_line?(user)
+    return false unless user
+    match_line_players.exists?(user_id: user.id) ||
+      (lineup&.published? && lineup.lineup_slots.exists?(user_id: user.id)) || false
+  end
+
   # The match day has arrived (scores can be entered).
   def started?
     match_date.present? && match_date.to_date <= Date.current

@@ -6565,3 +6565,44 @@ body.cr-ctx-profiles-player .cr-team-switch { margin: 0 0 14px; }
 .cr-match-scores-head { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
 .cr-match-scores-btn { margin-left: auto; text-transform: none; letter-spacing: 0; }
 .cr-upload-card-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+
+/* Enter Results: number boxes per set, a Tie option, a Save bar that stays put. */
+.cr-se-sets { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+.cr-se-set { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.cr-se-set-label { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.6px; text-transform: uppercase; color: var(--cr-text-muted); }
+.cr-se-set-boxes { display: flex; align-items: center; gap: 4px; }
+.cr-se-box {
+  width: 100%; min-width: 0; height: 44px; text-align: center; font-size: 1.15rem; font-weight: 700;
+  border: 1px solid var(--cr-border); border-radius: 10px; background: var(--cr-white); color: var(--cr-text);
+}
+.cr-se-box::placeholder { font-size: 0.72rem; font-weight: 500; color: var(--cr-text-light); }
+.cr-se-box:focus { outline: none; border-color: var(--cr-teal-deep); box-shadow: 0 0 0 3px rgba(14, 125, 115, 0.15); }
+.cr-se-dash { color: var(--cr-text-light); font-weight: 700; }
+.cr-se-savebar {
+  position: sticky; bottom: 0; z-index: 20; display: flex; align-items: center; gap: 10px;
+  background: var(--cr-white); border-top: 1px solid var(--cr-border); padding: 12px 0; margin-top: 18px;
+}
+.cr-se-savebar-sum { margin-right: auto; font-size: 0.85rem; font-weight: 700; color: var(--cr-text); }
+@media (max-width: 720px) {
+  .cr-se-savebar { bottom: calc(64px + env(safe-area-inset-bottom, 0px)); padding: 10px 0; }
+  .cr-se-sets { gap: 8px; }
+}
+/* Enter Results card: players and opponents fill the card, edges line up. */
+.cr-line-players { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.cr-line-players .cr-line-players-label { grid-column: 1 / -1; }
+.cr-line-players .cr-select { width: 100%; max-width: none; margin: 0; }
+.cr-line-players:has(> select:only-of-type) { grid-template-columns: minmax(0, 1fr); }
+.cr-line-opponents .cr-input {
+  display: block; width: 100%; height: 40px; padding: 0 12px; font-size: 0.95rem;
+  border: 1px solid var(--cr-border); border-radius: 10px; background: var(--cr-white); color: var(--cr-text);
+}
+.cr-se-sets { max-width: 560px; }
+@media (max-width: 480px) { .cr-line-players { grid-template-columns: minmax(0, 1fr); } }
+.cr-line-opponents { margin-top: 12px; }
+/* The player's one-line page reads like Enter Results. */
+body.cr-ctx-matches-edit_my_line .cr-page-title,
+body.cr-ctx-matches-edit_my_line .cr-line-label,
+body.cr-ctx-matches-edit_my_line .cr-line-players-label { color: var(--cr-text); }
+body.cr-ctx-matches-edit_my_line .cr-form-help { color: var(--cr-text-muted); }
+/* "Entered by Jaci · Nov 18" under a line on the scoresheet. */
+.cr-sheet-entered { margin-left: auto; font-size: 0.7rem; font-weight: 500; color: var(--cr-text-light); text-transform: none; letter-spacing: 0; }

@@ -20,6 +20,9 @@
           <% if line.result.present? %>
             <span class="cr-result-badge <%= line.won? ? 'cr-result-badge-win' : 'cr-result-badge-loss' %>"><%= line.won? ? "W" : "L" %></span>
           <% end %>
+          <% if line.entered_by %>
+            <span class="cr-sheet-entered">Entered by <%= line.entered_by.name.to_s.split.first %><%= " · #{line.entered_at.strftime('%b %-d')}" if line.entered_at %></span>
+          <% end %>
         </div>
         <% rows.each do |row| %>
           <div class="cr-sheet-pair <%= 'cr-sheet-pair-win' if row[:won] %>">
