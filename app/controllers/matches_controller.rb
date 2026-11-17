@@ -84,6 +84,7 @@ class MatchesController < ApplicationController
     populate_players_from_lineup(@match) if @match.lineup&.published?
 
     @match_lines = @match.match_lines.includes(:players).order(position: :asc)
+    @player_groups = player_groups(@match)
   end
 
   # GET /teams/:team_id/matches/:id/my_line — a player enters just her own
@@ -127,40 +128,49 @@ class MatchesController < ApplicationController
   def update_results
     @match = @team.matches.find(params[:id])
 
+    mode = LineScoring.mode_for(@team)
     ActiveRecord::Base.transaction do
-      # Update overall match result
-      @match.update!(
-        result: params[:match_result],
-        score_summary: params[:score_summary]
-      )
+      line_summaries = []
 
-      # Update each line
+      # Each line: scores come as two number boxes per set (ours / theirs),
+      # or the older "6-3" text. W/L is what was tapped, or — if nothing was
+      # tapped — worked out from the score by the league's rule.
       if params[:lines].present?
         params[:lines].each do |line_id, line_data|
           line = @match.match_lines.find(line_id)
-          line.update!(
-            result: line_data[:result].presence,
-            set1_score: line_data[:set1_score].presence,
-            set2_score: line_data[:set2_score].presence,
-            set3_score: line_data[:set3_score].presence,
+          sets = (1..3).map { |n| set_string(line_data, n, line.public_send("set#{n}_score")) }
+          result = line_data[:result].presence ||
+                   LineScoring.line_result(LineScoring.parse_sets(sets), mode)
+          line.assign_attributes(
+            result: result,
+            set1_score: sets[0], set2_score: sets[1], set3_score: sets[2],
             opponents: line_data[:opponents].to_s.strip.presence
           )
+          # Who entered it ("Entered by Tara · Nov 18"), only when the score changed.
+          if (line.changed & %w[result set1_score set2_score set3_score]).any?
+            line.entered_by = current_user
+            line.entered_at = Time.current
+          end
+          line.save!
+          line_summaries << { result: result, sets: LineScoring.parse_sets(sets) }
 
           # Update players on this line
           line.match_line_players.destroy_all
           if line_data[:player_ids].present?
-            line_data[:player_ids].reject(&:blank?).each do |player_id|
+            line_data[:player_ids].reject(&:blank?).uniq.each do |player_id|
               line.match_line_players.create!(user_id: player_id)
             end
           end
         end
       end
 
-      # Auto-calculate score summary from lines
+      # Overall result: what was tapped, or worked out from the lines.
+      result = params[:match_result].presence || LineScoring.match_result(line_summaries, mode)
+      @match.update!(result: result)
+
+      # Score summary from the lines ("3-2"), as before.
       if @match.match_lines.where.not(result: nil).any?
-        won = @match.lines_won
-        lost = @match.lines_lost
-        @match.update!(score_summary: "#{won}-#{lost}")
+        @match.update!(score_summary: "#{@match.lines_won}-#{@match.lines_lost}")
       end
     end
 
@@ -183,6 +193,24 @@ class MatchesController < ApplicationController
   end
 
   private
+
+  # Who can be picked on Enter scores, in the order people look for them:
+  # this match's lineup, then the current roster, then subs. Archived
+  # (past-season) players are left out unless they're already on a line.
+  def player_groups(match)
+    lineup_ids = match.lineup ? match.lineup.lineup_slots.where.not(user_id: nil).pluck(:user_id) : []
+    on_lines = match.match_lines.flat_map { |l| l.players.to_a }
+    roster = @team.team_memberships.active.includes(:user).map(&:user).compact
+    subs = @team.team_subs.includes(:user).map(&:user).compact
+    by_name = ->(list) { list.uniq(&:id).sort_by { |u| u.name.to_s.downcase } }
+
+    lineup = by_name.call((roster + subs + on_lines + User.where(id: lineup_ids).to_a).select { |u| lineup_ids.include?(u.id) })
+    seen = lineup.map(&:id)
+    rest_roster = by_name.call(roster).reject { |u| seen.include?(u.id) }
+    seen += rest_roster.map(&:id)
+    rest_subs = by_name.call(subs + on_lines).reject { |u| seen.include?(u.id) }
+    [ [ "In the lineup", lineup ], [ "Roster", rest_roster ], [ "Subs & others", rest_subs ] ].reject { |_, list| list.empty? }
+  end
 
   # The line `user` plays on in `match`: from the saved scores, or from the
   # posted lineup (blank lines are made in the team's format, as Enter

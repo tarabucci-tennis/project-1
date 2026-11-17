@@ -17,9 +17,24 @@ export default class extends Controller {
   scoreChanged(event) {
     const box = event.target
     box.value = box.value.replace(/\D/g, "").slice(0, 2)
+    this.advance(box)
     const line = box.closest("[data-score-entry-target='line']")
     if (line && !this.touchedLines.has(line)) this.setLineResult(line, this.lineResult(this.setsOf(line)))
     this.refreshMatch()
+  }
+
+  // Typing moves to the next box, so "6 3 6 4" goes in without tapping
+  // between boxes. A game score is one digit; only the third-set box waits
+  // after a "1" (a match tiebreak can reach 10), and two digits always move on.
+  advance(box) {
+    const v = box.value
+    if (v === "") return
+    const set = box.dataset.set
+    if (v.length === 1 && set === "3" && v === "1") return
+    const line = box.closest("[data-score-entry-target='line']")
+    const boxes = Array.from(line.querySelectorAll("input[data-set]"))
+    const next = boxes[boxes.indexOf(box) + 1]
+    if (next) { next.focus(); next.select() }
   }
 
   touchLine(event) {
