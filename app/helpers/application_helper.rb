@@ -310,10 +310,21 @@ module ApplicationHelper
     slots = match.lineup ? match.lineup.lineup_slots.includes(:user).sort_by { |s| [ s.line_type == "singles" ? 0 : 1, s.position.to_i, s.id ] } : []
     short = lineup_short_names(slots.filter_map(&:user))
     doubles_only = slots.none? { |s| s.line_type == "singles" }
-    slots.group_by(&:line_label).each do |label, group|
+    rows = slots.group_by(&:line_label).map do |label, group|
       names = group.filter_map { |s| s.user && short[s.user.id] }
       label = "Line #{Regexp.last_match(1)}" if doubles_only && label =~ /\A(\d+)D\z/
-      lines << "#{label}: #{names.any? ? names.join(' + ') : '—'}"
+      { time: group.first.effective_start_time, text: "#{label}: #{names.any? ? names.join(' + ') : '—'}" }
+    end
+    by_time = rows.group_by { |r| r[:time] }
+    if by_time.size > 1
+      # Split court times: one block per start time, earliest first.
+      by_time.sort_by { |time, _| LineStartTime.sort_key(time) }.each_with_index do |(time, group), i|
+        lines << "" if i.positive?
+        lines << "Starting at #{time || 'TBD'}:"
+        lines.concat(group.map { |r| r[:text] })
+      end
+    else
+      lines.concat(rows.map { |r| r[:text] })
     end
     lines.join("\n")
   end

@@ -100,6 +100,22 @@
               <span class="cr-lineup-pair" data-lineup-pick-target="pair" hidden></span>
             <% end %>
           </div>
+          <%# Split court times: this line's start (blank = the match time). %>
+          <% key = "#{line_type}-#{position}" %>
+          <% this_time = @slots.find { |sl| sl.line_type == line_type && sl.position == position }&.start_time %>
+          <div class="cr-lineup-time">
+            <label for="line_time_<%= key %>">Starts</label>
+            <select name="line_times[<%= key %>]" id="line_time_<%= key %>" class="cr-select cr-lineup-time-select"
+                    onchange="var o = this.parentNode.querySelector('.cr-lineup-time-other'); o.hidden = this.value !== '__other'; if (!o.hidden) o.focus()">
+              <option value=""><%= @match_time_label %></option>
+              <% @used_times.each do |t| %>
+                <option value="<%= t %>" <%= "selected" if this_time == t %>><%= t %></option>
+              <% end %>
+              <option value="__other">Other time…</option>
+            </select>
+            <input type="text" name="line_times_other[<%= key %>]" class="cr-lineup-time-other" placeholder="e.g. 10:30 AM"
+                   maxlength="20" hidden aria-label="Start time for <%= line_label %>">
+          </div>
           <% usual = @usual.for_line([ line_type, position ]).first(line_type == "singles" ? 2 : 3) %>
           <% if usual.any? %>
             <p class="cr-lineup-usual">Most often here:
