@@ -6606,3 +6606,11 @@ body.cr-ctx-matches-edit_my_line .cr-line-players-label { color: var(--cr-text);
 body.cr-ctx-matches-edit_my_line .cr-form-help { color: var(--cr-text-muted); }
 /* "Entered by Jaci · Nov 18" under a line on the scoresheet. */
 .cr-sheet-entered { margin-left: auto; font-size: 0.7rem; font-weight: 500; color: var(--cr-text-light); text-transform: none; letter-spacing: 0; }
+
+/* Lineup status: a saved draft (players can't see it) or posted. */
+.cr-lineup-status { font-size: 0.85rem; line-height: 1.45; padding: 10px 14px; border-radius: 10px; margin: 0 0 16px; }
+.cr-lineup-status.is-draft { background: rgba(201, 162, 74, 0.12); color: #6b5216; border: 1px solid rgba(201, 162, 74, 0.35); }
+.cr-lineup-status.is-posted { background: rgba(22, 163, 74, 0.08); color: #166534; border: 1px solid rgba(22, 163, 74, 0.25); }
+.cr-lineup-status a { color: inherit; font-weight: 700; }
+.cr-sched-pill.cr-sched-pill-draft { color: #8a6a1f; background: rgba(201, 162, 74, 0.15); }
+.cr-lu-status.is-draft { background: rgba(201, 162, 74, 0.15); color: #8a6a1f; }

@@ -66,6 +66,11 @@
     </div>
   <% end %>
 
+  <%# Captains see that a saved draft exists (players don't see drafts). %>
+  <% if (@is_captain || @team.can_set_lineup?(current_user) || current_user.admin?) && @lineup&.draft? %>
+    <p class="cr-lineup-status is-draft" style="margin-top: 14px;"><strong>Draft lineup</strong> · saved <%= @lineup.updated_at.in_time_zone(User::ACTIVITY_ZONE).strftime("%b %-d, %-l:%M %p") %> · not posted yet. <%= link_to "Open it", edit_team_match_lineup_path(@team, @match) %></p>
+  <% end %>
+
   <%# ── Lineup table ── %>
   <% if @lineup&.published? && @slots&.any? %>
     <div class="cr-lineup-share-row">

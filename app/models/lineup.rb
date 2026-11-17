@@ -6,6 +6,12 @@ class Lineup < ApplicationRecord
     published && published_at.present?
   end
 
+  # Saved but not posted: at least one player placed. (Opening Set Lineup
+  # makes empty line slots, so an untouched lineup isn't a draft.)
+  def draft?
+    !published? && lineup_slots.where.not(user_id: nil).exists?
+  end
+
   def all_confirmed?
     lineup_slots.any? && lineup_slots.all? { |s| s.confirmation == "confirmed" }
   end

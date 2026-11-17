@@ -4,6 +4,12 @@
   <%= link_to "← #{@team.name}", team_path(@team), class: "cr-back-link" %>
 
   <h1 class="cr-page-title">Set Lineup</h1>
+  <%# Where this lineup stands: a saved draft players can't see yet, or posted. %>
+  <% if @lineup.published? %>
+    <p class="cr-lineup-status is-posted"><strong>Posted</strong> · <%= @lineup.published_at.in_time_zone(User::ACTIVITY_ZONE).strftime("%b %-d, %-l:%M %p") %> · players can see it. Changes you save show right away.</p>
+  <% elsif @lineup.draft? %>
+    <p class="cr-lineup-status is-draft"><strong>Draft</strong> · saved <%= @lineup.updated_at.in_time_zone(User::ACTIVITY_ZONE).strftime("%b %-d, %-l:%M %p") %> · players can't see it until you tap <strong>Post Lineup</strong>.</p>
+  <% end %>
 
   <div class="cr-result-match-info" style="margin-bottom: 24px;">
     <div class="cr-match-date">
@@ -146,8 +152,13 @@
     </div>
 
     <div class="cr-form-actions cr-lineup-actions" style="margin-top: 24px;">
-      <%= button_tag "Save Draft", type: :submit, name: "publish", value: "false", class: "cr-btn cr-btn-outline" %>
-      <%= button_tag "Post Lineup", type: :submit, name: "publish", value: "true", class: "cr-btn cr-btn-gold" %>
+      <% if @lineup.published? %>
+        <%# Already posted: saving keeps it posted, so don't call it a draft. %>
+        <%= button_tag "Save changes", type: :submit, name: "publish", value: "false", class: "cr-btn cr-btn-gold" %>
+      <% else %>
+        <%= button_tag "Save Draft", type: :submit, name: "publish", value: "false", class: "cr-btn cr-btn-outline" %>
+        <%= button_tag "Post Lineup", type: :submit, name: "publish", value: "true", class: "cr-btn cr-btn-gold" %>
+      <% end %>
       <%= link_to "Cancel", team_path(@team), class: "cr-btn cr-btn-outline" %>
       <button type="button" class="cr-lineup-clear-all" data-action="lineup-pick#clearAll">Clear lineup</button>
     </div>
