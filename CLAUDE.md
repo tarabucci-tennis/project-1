@@ -208,6 +208,52 @@ small to read precisely; everything else is captured.
 
 ---
 
+## Current Status (as of Nov 17, 2026 — PRs #302–#308: "numbers that contradict each other" + player profiles)
+
+Tara sent numbered priority lists (Priority 1 = numbers that contradict each other, items 1–6; Priority 2 = player
+profiles, items 7–15) and re-checks each on the live site, by item number. All PRs squash-merged after green CI.
+
+**Decisions (REMEMBER):**
+- **One definition of a player's "match" everywhere on the profile:** one line (court) played with a result.
+  Source = `PlayerRecord` (`app/services/player_record.rb`): Court Report line scores + league-website rows
+  (`player_matches`) that have no Court Report score. A league row is the SAME match as a Court Report line when it's
+  the same day and its "Team vs Team" label names that line's team or opponent (league only if no label). Playing Stats,
+  Overall/per-league tables, Lineup Quick Facts and **Match History** (was "League Match History") all read it.
+- The hand-typed `tennis_stats` seed table (59 matches, 49-10, from April) is no longer shown; rows still in the DB.
+- **Ties:** record shows W-L-T (3-3-1); a tie counts as half a win in win %.
+- **Team page header:** Matches = played + need scores + to play (+ playoff), with a breakdown line; "Starts" only
+  before the first match, then "Next match". Calendar entries a captain added as a match (any kind but Friendly /
+  Clinic) are listed in the schedule and counted; friendlies/clinics are listed and named but not counted.
+- **Calendar entries can't hold scores** → captains have **Make this a match** on the team schedule (#304).
+- **Win % and Best Partner need 3+ matches** together (`ProfilesController::MIN_SAMPLE`); no matches → "No singles yet".
+  Partners group by person ignoring case/spacing/accents (league sites type "Joanne", Court Report has "JoAnne").
+- **Profile:** current teams first, "Past seasons" below (past = team archived, or the player's spot archived). Badge =
+  `league_group`. Subtitle always league · level · season (falls back to flight/league name, start date). "Stats for"
+  lists current teams only. Own page titled "My Profile". Rating caption "USTA rating / year-end 2025" or "date not on
+  file"; no rating → "No USTA rating yet". City is player-entered only (never filled in for them).
+- **Private links live on /settings** (Google Calendar iCal masked like a password; league player-page link). The profile
+  only has a Refresh button. "Remove this account" is only on Site members, never on a profile.
+- **Duplicate people:** admin page **Possible duplicates** (`DuplicatePeople`, `UserMerge`). Merge keeps the record that
+  can sign in, moves everything, refuses when both can sign in, records old id → kept id in `merged_users` so old
+  `/players/:id` links forward. Merged Nov 16: JoAnne Steinberg (26 → 35), Sarah Dougherty (40 → 155). **Kriste/Kristen
+  Davidse was skipped by the data update** (both can sign in, or not exactly 2 records): check Possible duplicates.
+- **Why duplicates appear:** sign-up and the captain's "add player by name + email" create a new person without reusing a
+  same-name roster placeholder. Deliberately NOT auto-claiming (anyone could join a stranger's teams by typing a name).
+- Kiss My Ace and Kiss My Ace Winter are two teams (separate seasons). Tri Hards dropped to Past Seasons on Nov 16–17
+  because someone tapped Archive (nothing archives by date); a captain can tap **Restore to active**.
+
+**Lessons:**
+- **Unclosed `@media` blocks** (#297, #298) made every later style phone-only. After editing application.css, check the
+  braces balance (strip comments, count `{` vs `}`).
+- **League-site dates have no year** ("5/4"): `DeltriPlayerHistory#infer_date` assumed a fall season and filed spring
+  Inter-Club matches under the NEXT year, so they never paired with Court Report scores (Joanne showed 9, not 6). Now the
+  most recent past date; `PlayerRecord.played_date` corrects old rows.
+- A merge **page** merges nothing until the admin taps Merge — say so plainly; Tara expected #306 to merge her pairs.
+- Tara's re-checks can run against the pre-deploy site: quote the new wording ("My Profile", "Match History") so she can
+  tell which version she's seeing.
+- Run Playwright screenshot scripts from the scratchpad (or give absolute output paths), or the PNGs land in the repo.
+- Gems install in this sandbox now (`bundle install`), so `bin/rails test` and `bin/rubocop` run locally.
+
 ## Current Status (as of Oct 21, 2026 — PRs #219–#244)
 
 All squash-merged after green CI. Visual changes were checked in Playwright mocks at 360/390/1280px; Tara confirmed
