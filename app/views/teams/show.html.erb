@@ -231,7 +231,7 @@
                       </div>
                     </div>
                     <div class="cr-sched-right">
-                      <% if lineup&.published? %><span class="cr-sched-pill">Lineup set</span><% else %><span class="cr-sched-upcoming">Scheduled</span><% end %>
+                      <% if lineup&.published? %><span class="cr-sched-pill">Lineup set</span><% elsif @is_captain && lineup&.draft? %><span class="cr-sched-pill cr-sched-pill-draft">Draft</span><% else %><span class="cr-sched-upcoming">Scheduled</span><% end %>
                       <span class="cr-sched-caret" aria-hidden="true">▾</span>
                     </div>
                     <%= render "matches/venue", venue: match.venue, link: false %>

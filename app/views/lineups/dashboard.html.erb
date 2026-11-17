@@ -24,7 +24,8 @@
         <% pending = item[:published] && slot&.confirmation == "pending" %>
         <%
           status, tone =
-            if !item[:published] then [ "Not posted", "muted" ]
+            if !item[:published] && item[:is_captain] && item[:lineup]&.draft? then [ "Draft", "draft" ]
+            elsif !item[:published] then [ "Not posted", "muted" ]
             elsif slot&.confirmation == "confirmed" then [ "You're in ✓", "yes" ]
             elsif slot&.confirmation == "declined" then [ "Can't play", "no" ]
             elsif slot then [ "Please reply", "gold" ]

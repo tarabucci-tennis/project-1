@@ -114,6 +114,9 @@ class LineupsController < ApplicationController
         end
       end
 
+      # When it was last saved (shown as "Draft · saved Nov 17, 3:40 PM").
+      @lineup.touch
+
       # Publish if requested
       @emailed = 0
       if params[:publish] == "true" && !@lineup.published?
