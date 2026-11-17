@@ -49,6 +49,12 @@ class LineupsController < ApplicationController
     # earlier edit session, we'll fill in what's missing instead of
     # only creating slots when the lineup is completely empty.
     ensure_default_slots(@lineup)
+    # Start-time choices: the match time first, then every time already
+    # used on this lineup (so a second line at 10:30 is one tap).
+    match_time = LineStartTime.normalize(@match.match_time)
+    @match_time_label = match_time ? "#{match_time} (match time)" : "Match time"
+    @used_times = @lineup.lineup_slots.where.not(start_time: [ nil, "" ]).distinct.pluck(:start_time)
+                         .reject { |t| t == match_time }.sort_by { |t| LineStartTime.sort_key(t) }
 
     @slots = @lineup.lineup_slots.includes(:user).order(position: :asc)
     load_last_week
@@ -111,6 +117,20 @@ class LineupsController < ApplicationController
             # Unchecked — reset to pending so the player can be asked
             slot.update!(confirmation: "pending", confirmed_at: nil) unless slot.pending?
           end
+        end
+      end
+
+      # Each line's start time (split court times). Blank or the match's own
+      # time = no separate time. Picked fresh every week; never copied.
+      if params[:line_times].present?
+        match_time = LineStartTime.normalize(@match.match_time)
+        params[:line_times].each do |key, picked|
+          line_type, position = key.to_s.split("-", 2)
+          next unless %w[singles doubles].include?(line_type) && position.to_s.match?(/\A\d+\z/)
+          raw = picked == "__other" ? params.dig(:line_times_other, key) : picked
+          time = LineStartTime.normalize(raw)
+          time = nil if time == match_time
+          @lineup.lineup_slots.where(line_type: line_type, position: position.to_i).update_all(start_time: time)
         end
       end
 

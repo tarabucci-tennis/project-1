@@ -6620,3 +6620,9 @@ body.cr-ctx-matches-edit_my_line .cr-form-help { color: var(--cr-text-muted); }
 .cr-result-toggle-3 .cr-result-option { justify-content: center; padding: 14px 8px; }
 .cr-result-tie:has(input:checked) { border-color: #64748b; background: #f1f5f9; color: #475569; }
 body.cr-ctx-matches-edit_results .cr-result-option:has(input:checked) .cr-result-label { color: inherit; }
+
+/* Set Lineup: each line's start time (split court times). */
+.cr-lineup-time { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin: 2px 0 10px; }
+.cr-lineup-time > label { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--cr-text-muted); }
+.cr-lineup-time .cr-lineup-time-select { width: auto; max-width: 220px; margin: 0; }
+.cr-lineup-time-other { width: 130px; height: 36px; padding: 0 10px; border: 1px solid var(--cr-border); border-radius: 8px; font-size: 0.9rem; }

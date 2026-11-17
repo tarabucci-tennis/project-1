@@ -43,7 +43,7 @@
           <div class="cr-lu-info">
             <div class="cr-lu-team"><%= team.name %></div>
             <%= link_to "vs. #{match.opponent.presence || 'TBD'}", team_match_path(team, match), class: "cr-lu-opp" %>
-            <div class="cr-lu-when"><%= when_bits.join(" · ") %><% if slot && item[:published] %> · You're on <strong><%= slot.try(:line_label) || "a line" %></strong><% end %></div>
+            <div class="cr-lu-when"><%= when_bits.join(" · ") %><% if slot && item[:published] %> · You're on <strong><%= slot.try(:line_label) || "a line" %></strong><% if slot.start_time.present? %> at <strong><%= slot.start_time %></strong><% end %><% end %></div>
           </div>
           <span class="cr-lu-status is-<%= tone %>"><%= status %></span>
           <div class="cr-lu-action">

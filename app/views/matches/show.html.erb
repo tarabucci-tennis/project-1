@@ -91,7 +91,8 @@
             <div class="cr-lineup-table-row <%= 'cr-lineup-row-you' if slot.user_id == current_user.id %>">
               <span class="cr-lineup-col-time">
                 <% if idx == 0 %>
-                  <strong><%= @match.match_time&.gsub(" ", "")&.downcase || "TBD" %></strong>
+                  <% t = slot.effective_start_time %>
+                  <strong><%= t&.gsub(" ", "")&.downcase || "TBD" %></strong>
                 <% end %>
               </span>
               <span class="cr-lineup-col-line">
