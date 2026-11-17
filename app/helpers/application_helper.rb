@@ -306,13 +306,30 @@ module ApplicationHelper
       lines << "📍 #{place}"
     end
 
-    lines << "" << "Lineup"
+    lines << "" << "Lineup:"
     slots = match.lineup ? match.lineup.lineup_slots.includes(:user).sort_by { |s| [ s.line_type == "singles" ? 0 : 1, s.position.to_i, s.id ] } : []
+    short = lineup_short_names(slots.filter_map(&:user))
+    doubles_only = slots.none? { |s| s.line_type == "singles" }
     slots.group_by(&:line_label).each do |label, group|
-      names = group.map { |s| s.user&.name }.compact
-      lines << "#{label}: #{names.any? ? names.join(' & ') : '—'}"
+      names = group.filter_map { |s| s.user && short[s.user.id] }
+      label = "Line #{Regexp.last_match(1)}" if doubles_only && label =~ /\A(\d+)D\z/
+      lines << "#{label}: #{names.any? ? names.join(' + ') : '—'}"
     end
     lines.join("\n")
+  end
+
+  # First names, so each court fits on one row of a phone text ("Line 4:
+  # Annie + Denise"). Two players with the same first name get a last
+  # initial ("Sarah B.", "Sarah D."). { user_id => short name }
+  def lineup_short_names(users)
+    users = users.uniq(&:id)
+    firsts = users.map { |u| u.name.to_s.split.first.to_s }
+    users.each_with_index.to_h do |u, i|
+      parts = u.name.to_s.split
+      first = parts.first.to_s
+      short = firsts.count(first) > 1 && parts.size > 1 ? "#{first} #{parts.last[0]}." : first
+      [ u.id, short.presence || u.name.to_s ]
+    end
   end
 
   def google_calendar_url(match)
