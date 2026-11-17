@@ -17,57 +17,50 @@
       </div>
     </div>
 
-    <%= form_tag results_team_match_path(@team, @match), method: :patch, class: "cr-enter-results" do %>
-
-      <%# Overall result %>
-      <div class="cr-form-section">
-        <h2 class="cr-form-section-title">Match Result</h2>
-        <div class="cr-result-toggle">
-          <label class="cr-result-option cr-result-win">
-            <%= radio_button_tag :match_result, "win", @match.result == "win" %>
-            <span class="cr-result-label">WIN</span>
-          </label>
-          <label class="cr-result-option cr-result-loss">
-            <%= radio_button_tag :match_result, "loss", @match.result == "loss" %>
-            <span class="cr-result-label">LOSS</span>
-          </label>
-        </div>
-      </div>
+    <% mode = LineScoring.mode_for(@team) %>
+    <%= form_tag results_team_match_path(@team, @match), method: :patch, class: "cr-enter-results",
+          data: { controller: "score-entry", score_entry_mode_value: mode } do %>
 
       <%# Line scores %>
       <div class="cr-form-section">
         <h2 class="cr-form-section-title">Line Scores</h2>
-        <p class="cr-form-help">Fill in each line's result and players. Leave blank if a line wasn't played.</p>
+        <p class="cr-form-help">Type each set's games: ours first, theirs second. W or L fills in from the score<%= mode == :games ? " (most total games wins the line)" : (mode == :sets ? " (most sets wins the line)" : " when sets and games agree; otherwise tap it") %>. Leave a line blank if it wasn't played.</p>
 
         <% @match_lines.each do |line| %>
-          <div class="cr-line-card">
+          <div class="cr-line-card" data-score-entry-target="line">
             <div class="cr-line-header">
               <span class="cr-line-label"><%= line.line_label %></span>
               <div class="cr-line-result-toggle">
                 <label class="cr-line-result-opt cr-line-win-opt">
-                  <%= radio_button_tag "lines[#{line.id}][result]", "win", line.won?, id: "line_#{line.id}_win" %>
+                  <%= radio_button_tag "lines[#{line.id}][result]", "win", line.won?, id: "line_#{line.id}_win", data: { line_result: "win", action: "change->score-entry#touchLine" } %>
                   <span>W</span>
                 </label>
                 <label class="cr-line-result-opt cr-line-loss-opt">
-                  <%= radio_button_tag "lines[#{line.id}][result]", "loss", line.lost?, id: "line_#{line.id}_loss" %>
+                  <%= radio_button_tag "lines[#{line.id}][result]", "loss", line.lost?, id: "line_#{line.id}_loss", data: { line_result: "loss", action: "change->score-entry#touchLine" } %>
                   <span>L</span>
                 </label>
               </div>
             </div>
 
-            <div class="cr-line-scores">
-              <div class="cr-set-input">
-                <label>Set 1</label>
-                <%= text_field_tag "lines[#{line.id}][set1_score]", line.set1_score, placeholder: "6-3", class: "cr-input-small", maxlength: 7 %>
-              </div>
-              <div class="cr-set-input">
-                <label>Set 2</label>
-                <%= text_field_tag "lines[#{line.id}][set2_score]", line.set2_score, placeholder: "4-6", class: "cr-input-small", maxlength: 7 %>
-              </div>
-              <div class="cr-set-input">
-                <label>Set 3</label>
-                <%= text_field_tag "lines[#{line.id}][set3_score]", line.set3_score, placeholder: "10-7", class: "cr-input-small", maxlength: 7 %>
-              </div>
+            <%# Two number boxes per set (ours | theirs) open the number keypad. %>
+            <div class="cr-line-scores cr-se-sets">
+              <% [ line.set1_score, line.set2_score, line.set3_score ].each_with_index do |saved, i| %>
+                <% n = i + 1; ours, theirs = saved.to_s.scan(/\d+/).first(2) %>
+                <div class="cr-se-set">
+                  <span class="cr-se-set-label"><%= n == 3 ? "Set 3 / TB" : "Set #{n}" %></span>
+                  <div class="cr-se-set-boxes">
+                    <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="2" autocomplete="off"
+                           name="lines[<%= line.id %>][set<%= n %>_ours]" value="<%= ours %>" placeholder="us" class="cr-se-box"
+                           aria-label="<%= line.line_label %> set <%= n %>, our games" data-set="<%= n %>" data-side="ours"
+                           data-action="input->score-entry#scoreChanged">
+                    <span class="cr-se-dash">–</span>
+                    <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="2" autocomplete="off"
+                           name="lines[<%= line.id %>][set<%= n %>_theirs]" value="<%= theirs %>" placeholder="them" class="cr-se-box"
+                           aria-label="<%= line.line_label %> set <%= n %>, their games" data-set="<%= n %>" data-side="theirs"
+                           data-action="input->score-entry#scoreChanged">
+                  </div>
+                </div>
+              <% end %>
             </div>
 
             <div class="cr-line-players">
@@ -81,7 +74,7 @@
                   <option value="">-- Select player --</option>
                   <% @members.each do |member| %>
                     <option value="<%= member.id %>" <%= "selected" if existing_player_ids[i] == member.id %>>
-                      <%= member.name %> (<%= member.ntrp_rating %>)
+                      <%= member.name %><%= " (#{member.ntrp_rating})" if member.ntrp_rating.present? %>
                     </option>
                   <% end %>
                 </select>
@@ -98,9 +91,26 @@
         <% end %>
       </div>
 
-      <div class="cr-form-actions">
-        <%= submit_tag "Save Results", class: "cr-btn cr-btn-gold" %>
+      <%# Overall result — fills in from the lines as you type; tap to change. %>
+      <div class="cr-form-section">
+        <h2 class="cr-form-section-title">Match Result</h2>
+        <p class="cr-form-help" data-score-entry-target="summary">Fills in from the line scores. Tap to change it.</p>
+        <div class="cr-result-toggle cr-result-toggle-3">
+          <% [ [ "win", "WIN", "cr-result-win" ], [ "loss", "LOSS", "cr-result-loss" ], [ "tie", "TIE", "cr-result-tie" ] ].each do |val, label, css| %>
+            <label class="cr-result-option <%= css %>">
+              <%= radio_button_tag :match_result, val, @match.result == val,
+                    data: { score_entry_target: "matchResult", action: "change->score-entry#touchMatch" } %>
+              <span class="cr-result-label"><%= label %></span>
+            </label>
+          <% end %>
+        </div>
+      </div>
+
+      <%# Save stays on screen while scrolling (above the phone's bottom bar). %>
+      <div class="cr-form-actions cr-se-savebar">
+        <span class="cr-se-savebar-sum" data-score-entry-target="barSummary"></span>
         <%= link_to "Cancel", team_path(@team), class: "cr-btn cr-btn-outline" %>
+        <%= submit_tag "Save Results", class: "cr-btn cr-btn-gold" %>
       </div>
     <% end %>
   </div>

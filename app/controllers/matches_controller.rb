@@ -87,40 +87,43 @@ class MatchesController < ApplicationController
   def update_results
     @match = @team.matches.find(params[:id])
 
+    mode = LineScoring.mode_for(@team)
     ActiveRecord::Base.transaction do
-      # Update overall match result
-      @match.update!(
-        result: params[:match_result],
-        score_summary: params[:score_summary]
-      )
+      line_summaries = []
 
-      # Update each line
+      # Each line: scores come as two number boxes per set (ours / theirs),
+      # or the older "6-3" text. W/L is what was tapped, or — if nothing was
+      # tapped — worked out from the score by the league's rule.
       if params[:lines].present?
         params[:lines].each do |line_id, line_data|
           line = @match.match_lines.find(line_id)
+          sets = (1..3).map { |n| set_string(line_data, n, line.public_send("set#{n}_score")) }
+          result = line_data[:result].presence ||
+                   LineScoring.line_result(LineScoring.parse_sets(sets), mode)
           line.update!(
-            result: line_data[:result].presence,
-            set1_score: line_data[:set1_score].presence,
-            set2_score: line_data[:set2_score].presence,
-            set3_score: line_data[:set3_score].presence,
+            result: result,
+            set1_score: sets[0], set2_score: sets[1], set3_score: sets[2],
             opponents: line_data[:opponents].to_s.strip.presence
           )
+          line_summaries << { result: result, sets: LineScoring.parse_sets(sets) }
 
           # Update players on this line
           line.match_line_players.destroy_all
           if line_data[:player_ids].present?
-            line_data[:player_ids].reject(&:blank?).each do |player_id|
+            line_data[:player_ids].reject(&:blank?).uniq.each do |player_id|
               line.match_line_players.create!(user_id: player_id)
             end
           end
         end
       end
 
-      # Auto-calculate score summary from lines
+      # Overall result: what was tapped, or worked out from the lines.
+      result = params[:match_result].presence || LineScoring.match_result(line_summaries, mode)
+      @match.update!(result: result)
+
+      # Score summary from the lines ("3-2"), as before.
       if @match.match_lines.where.not(result: nil).any?
-        won = @match.lines_won
-        lost = @match.lines_lost
-        @match.update!(score_summary: "#{won}-#{lost}")
+        @match.update!(score_summary: "#{@match.lines_won}-#{@match.lines_lost}")
       end
     end
 
@@ -143,6 +146,23 @@ class MatchesController < ApplicationController
   end
 
   private
+
+  # One set as "ours-theirs" from the two number boxes (setN_ours /
+  # setN_theirs), falling back to the older text box (setN_score). Keeps the
+  # saved text (e.g. "7-6(5)") when the numbers weren't changed.
+  def set_string(line_data, n, saved)
+    ours = line_data["set#{n}_ours"]
+    theirs = line_data["set#{n}_theirs"]
+    if ours.nil? && theirs.nil?
+      return line_data["set#{n}_score"].presence
+    end
+    ours = ours.to_s.strip
+    theirs = theirs.to_s.strip
+    return nil if ours.blank? && theirs.blank?
+    typed = "#{ours.presence || 0}-#{theirs.presence || 0}"
+    saved_nums = saved.to_s.scan(/\d+/).first(2)
+    saved.present? && saved_nums == [ ours.presence || "0", theirs.presence || "0" ] ? saved : typed
+  end
 
   # Lines in the team's format. Singles take the first positions, doubles
   # follow (positions are unique per match).
