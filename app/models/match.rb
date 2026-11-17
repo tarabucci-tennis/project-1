@@ -39,6 +39,22 @@ class Match < ApplicationRecord
     result.present?
   end
 
+  # Real scores saved (a line with set scores or W/L, or a team result)?
+  # Opening Enter Results creates blank lines, so "has lines" isn't enough.
+  def scores_entered?
+    result.present? || match_lines.any?(&:scored?)
+  end
+
+  # "Enter scores" until something is saved, then "Edit scores".
+  def scores_button_label
+    scores_entered? ? "Edit scores" : "Enter scores"
+  end
+
+  # The match day has arrived (scores can be entered).
+  def started?
+    match_date.present? && match_date.to_date <= Date.current
+  end
+
   # Captains can now set home_away directly via the Edit Match form.
   # For older rows where the column is blank, fall back to the legacy
   # heuristic: "Home"/"Away" in notes, or a location that matches the

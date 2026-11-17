@@ -27,7 +27,7 @@
   <div class="cr-sched-detail">
     <% if @is_captain %>
       <div class="cr-sched-actions">
-        <%= link_to edit_results_team_match_path(@team, match), class: "cr-chip-btn" do %>Enter Results<% end %>
+        <%= link_to match.scores_button_label, edit_results_team_match_path(@team, match), class: "cr-chip-btn" %>
         <%= link_to edit_team_match_lineup_path(@team, match), class: "cr-chip-btn" do %>Set Lineup<% end %>
         <%= link_to edit_team_match_path(@team, match), class: "cr-chip-btn" do %>Edit Match<% end %>
       </div>
@@ -51,7 +51,7 @@
         </tbody>
       </table>
     <% elsif @is_captain %>
-      <p class="cr-result-detail-empty">No line scores yet — tap “Enter Results”.</p>
+      <p class="cr-result-detail-empty">No line scores yet — tap “Enter scores”.</p>
     <% end %>
   </div>
 </details>

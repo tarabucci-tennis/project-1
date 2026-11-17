@@ -245,7 +245,7 @@
                         <%= render "matches/poll_share_button", match: match %>
                         <%= link_to edit_team_match_path(@team, match), class: "cr-chip-btn" do %>Edit Match<% end %>
                         <%= link_to edit_team_match_lineup_path(@team, match), class: "cr-chip-btn" do %>Set Lineup<% end %>
-                        <%= link_to edit_results_team_match_path(@team, match), class: "cr-chip-btn" do %>Enter Results<% end %>
+                        <%= link_to match.scores_button_label, edit_results_team_match_path(@team, match), class: "cr-chip-btn" %>
                       <% end %>
                     </div>
                     <% if lineup&.published? %>
@@ -306,7 +306,8 @@
                     </div>
                     <div class="cr-sched-right">
                       <% if @is_captain && !auto_synced %>
-                        <%= link_to (usta_team ? "Upload" : "Enter"), (usta_team ? usta_upload_team_path(@team) : edit_results_team_match_path(@team, match)),
+                        <%# Straight to the score form for every league; USTA's file upload stays in the alert above. %>
+                        <%= link_to "Enter scores", edit_results_team_match_path(@team, match),
                               class: "cr-awaiting-badge cr-awaiting-badge-link", title: "Scores needed" %>
                       <% else %>
                         <span class="cr-awaiting-badge">Scores needed</span>
@@ -376,7 +377,7 @@
                       <%# Only captains, co-captains and admins enter or change results. %>
                       <% if @is_captain %>
                         <div class="cr-sched-actions" style="margin-top: 14px;">
-                          <%= link_to edit_results_team_match_path(@team, match), class: "cr-chip-btn" do %><%= match.match_lines.any? ? "Edit Results" : "Enter Results" %><% end %>
+                          <%= link_to match.scores_button_label, edit_results_team_match_path(@team, match), class: "cr-chip-btn" %>
                           <%= link_to edit_team_match_path(@team, match), class: "cr-chip-btn" do %>Edit Match<% end %>
                         </div>
                       <% end %>
@@ -1324,7 +1325,7 @@
           <% else %>
             <div style="text-align: center; padding: 30px 20px; color: var(--cr-text-light); font-size: 0.85rem; margin-top: 24px; background: var(--cr-white); border-radius: 10px; border: 1px solid var(--cr-border);">
               Player analytics will appear here after match results are entered.
-              <div style="margin-top: 6px;">Use "Enter Results" after each match to track who played where.</div>
+              <div style="margin-top: 6px;">Use "Enter scores" after each match to track who played where.</div>
             </div>
           <% end %>
         </section>
