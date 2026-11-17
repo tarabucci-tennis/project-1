@@ -42,17 +42,23 @@
     <div class="cr-lineup-share-row"><%= render "matches/poll_share_button", match: @match %></div>
   <% end %>
 
-  <%# ── Final scores (played match) ── %>
-  <% if @match.match_lines.any?(&:scored?) %>
-    <div class="cr-sched-detail" style="margin-top: 14px;">
-      <div class="cr-sched-detail-title" style="display: flex; align-items: center; gap: 10px;">
-        Final Scores
+  <%# ── Scores: once the match day arrives there's always a place for them,
+      with one "Enter scores" / "Edit scores" button for captains. ── %>
+  <% if @match.match_lines.any?(&:scored?) || @match.started? %>
+    <div class="cr-sched-detail cr-match-scores" style="margin-top: 14px;">
+      <div class="cr-sched-detail-title cr-match-scores-head">
+        <span><%= @match.scores_entered? ? "Final Scores" : "Scores" %></span>
         <% if @match.result.present? %>
           <span class="cr-result-badge <%= @match.won? ? 'cr-result-badge-win' : (@match.tied? ? 'cr-result-badge-tie' : 'cr-result-badge-loss') %>"><%= @match.result_label %></span>
         <% end %>
         <% if @match.score_summary.present? %><span class="cr-sched-score"><%= @match.score_summary %></span><% end %>
+        <% if @can_enter_results %>
+          <%= link_to @match.scores_button_label, edit_results_team_match_path(@team, @match),
+                class: "cr-btn #{@match.scores_entered? ? 'cr-btn-outline' : 'cr-btn-gold'} cr-btn-compact cr-match-scores-btn" %>
+        <% end %>
       </div>
-      <%= render "matches/scoresheet", match: @match, team: @team, is_captain: @is_captain, can_enter_results: @can_enter_results %>
+      <%# The heading already has the button, so the empty state doesn't repeat it. %>
+      <%= render "matches/scoresheet", match: @match, team: @team, is_captain: @is_captain, can_enter_results: @can_enter_results, hide_enter: true %>
     </div>
   <% end %>
 

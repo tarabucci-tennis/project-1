@@ -6560,3 +6560,8 @@ body.cr-ctx-profiles-player .cr-team-switch { margin: 0 0 14px; }
 /* Lineups: current teams with nothing ahead, named under the list. */
 .cr-lu-none { font-size: 0.82rem; color: var(--cr-text-muted); line-height: 1.5; margin: 14px 2px 0; }
 .cr-lu-none a { color: var(--cr-teal-deep); font-weight: 600; text-decoration: none; }
+
+/* Match page: Scores heading with its one Enter / Edit scores button. */
+.cr-match-scores-head { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.cr-match-scores-btn { margin-left: auto; text-transform: none; letter-spacing: 0; }
+.cr-upload-card-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }

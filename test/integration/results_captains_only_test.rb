@@ -27,7 +27,7 @@ class ResultsCaptainsOnlyTest < ActionDispatch::IntegrationTest
     assert_response :success
 
     get team_path(@team)
-    assert_no_match "Enter them now", response.body
+    assert_no_match "Enter scores", response.body
     assert_select "a[href='#{edit_results_team_match_path(@team, @match)}']", count: 0
   end
 

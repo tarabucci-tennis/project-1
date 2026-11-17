@@ -1,10 +1,10 @@
-<% content_for :title, "Enter Results · #{@team.name} · Court Report" %>
+<% content_for :title, "Enter scores · #{@team.name} · Court Report" %>
 
 <div class="cr-page">
   <%= link_to "← #{@team.name}", team_path(@team), class: "cr-back-link" %>
 
   <div class="cr-results-form">
-    <h1 class="cr-page-title">Enter Match Results</h1>
+    <h1 class="cr-page-title"><%= @match.scores_entered? ? "Edit Scores" : "Enter Scores" %></h1>
 
     <div class="cr-result-match-info">
       <div class="cr-match-date">
