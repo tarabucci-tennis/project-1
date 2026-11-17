@@ -28,6 +28,13 @@
         </div>
       </div>
       <div class="cr-field">
+        <%= f.label :ntrp_rating_date, "Rating date (optional)" %>
+        <%= f.date_field :ntrp_rating_date %>
+        <div style="font-size: 12px; color: #666; margin-top: 4px;">
+          When USTA published it. Year-end ratings are dated 12/31 (e.g. 12/31/2025). Leave empty if you don't know; the profile then says "date not on file".
+        </div>
+      </div>
+      <div class="cr-field">
         <label>
           <%= f.check_box :admin %>
           Admin privileges
