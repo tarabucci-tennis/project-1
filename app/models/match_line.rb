@@ -1,4 +1,5 @@
 class MatchLine < ApplicationRecord
+  belongs_to :entered_by, class_name: "User", optional: true
   belongs_to :match
   has_many :match_line_players, dependent: :destroy
   has_many :players, through: :match_line_players, source: :user

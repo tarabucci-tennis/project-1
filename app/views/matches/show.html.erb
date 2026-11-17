@@ -55,6 +55,10 @@
         <% if @can_enter_results %>
           <%= link_to @match.scores_button_label, edit_results_team_match_path(@team, @match),
                 class: "cr-btn #{@match.scores_entered? ? 'cr-btn-outline' : 'cr-btn-gold'} cr-btn-compact cr-match-scores-btn" %>
+        <% elsif @can_enter_my_line %>
+          <% my_scored = @match.match_lines.joins(:match_line_players).where(match_line_players: { user_id: current_user.id }).any?(&:scored?) %>
+          <%= link_to (my_scored ? "Edit my line's score" : "Enter my line's score"), my_line_team_match_path(@team, @match),
+                class: "cr-btn #{my_scored ? 'cr-btn-outline' : 'cr-btn-gold'} cr-btn-compact cr-match-scores-btn" %>
         <% end %>
       </div>
       <%# The heading already has the button, so the empty state doesn't repeat it. %>

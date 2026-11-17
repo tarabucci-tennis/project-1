@@ -309,6 +309,10 @@
                         <%# Straight to the score form for every league; USTA's file upload stays in the alert above. %>
                         <%= link_to "Enter scores", edit_results_team_match_path(@team, match),
                               class: "cr-awaiting-badge cr-awaiting-badge-link", title: "Scores needed" %>
+                      <% elsif !@is_captain && match.on_a_line?(current_user) %>
+                        <%# A player on this match enters her own line. %>
+                        <%= link_to "Enter my line", my_line_team_match_path(@team, match),
+                              class: "cr-awaiting-badge cr-awaiting-badge-link", title: "Scores needed" %>
                       <% else %>
                         <span class="cr-awaiting-badge">Scores needed</span>
                       <% end %>
