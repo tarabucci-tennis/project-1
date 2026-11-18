@@ -49,6 +49,9 @@ class LineStartTimesTest < ActionDispatch::IntegrationTest
     @lineup.update!(published: true, published_at: Time.current)
     text = ApplicationController.helpers.lineup_share_text(@match.reload)
     assert_match(/Starting at 9:00 AM:\nLine 2: Annie2 \+ Denise\nLine 3: Tara \+ Heather\n\nStarting at 10:30 AM:\nLine 1: Tracy \+ Jen/, text)
+    # The date row leaves out the match time when the times are split.
+    assert_includes text, "📅 #{@match.match_date.strftime('%a, %b %-d')}\n"
+    assert_not_includes text, "· 9:00 AM"
   end
 
   test "one start time: no headings" do
@@ -56,6 +59,7 @@ class LineStartTimesTest < ActionDispatch::IntegrationTest
     @lineup.update!(published: true, published_at: Time.current)
     text = ApplicationController.helpers.lineup_share_text(@match.reload)
     assert_no_match(/Starting at/, text)
+    assert_includes text, "· 9:00 AM" # one time: it stays in the date row
   end
 
   test "next week's lineup doesn't copy the times" do
