@@ -50,9 +50,9 @@ class TeamsController < ApplicationController
     # co-captains; admins everywhere) — decides each Upcoming row's button.
     @captain_team_ids = if current_user.admin?
                           team_ids.to_a
-                        else
+    else
                           TeamMembership.where(user: current_user, tennis_team_id: team_ids, role: %w[captain co_captain]).pluck(:tennis_team_id)
-                        end
+    end
 
     # Build a hash of match_id => line_label for the current user's lineup positions
     @my_lineup_lines = {}
