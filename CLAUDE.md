@@ -237,6 +237,15 @@ ball, Enter scores, active states (current tab/menu item, today), and win chips.
 The block lives at the end of application.css ("SITE PALETTE"); courtreport.css and pages/courtreport.html.erb were
 recoloured too (both load on their pages). Emails (LineupMailer, password reset) were NOT recoloured.
 
+**WARM-UP (Tara, Nov 18 2026, #326) on top of the palette:** dusty blush rose `--cr-rose #c48b8e` (tint `#f8ecea`,
+ink `#8c585c`) in TINY doses only (friendlies "Upcoming" pill, the soft tint behind "needs scores" / "confirm your spot"
+cards, the "Next match" label); deeper court blue `--cr-court #78a0b8` (sampled from the photo's net) for the active menu
+item, tab underlines and today; links in `--cr-court-ink #3f6c8a`; the page's PRIMARY button is gold with navy text
+(`.cr-btn-gold`: Set Lineup, Book a friendly, Enter scores, Add Match) — one gold moment per page; headings + team names
+in **Fraunces** (Google Fonts) with `text-transform: none` (body text and scores stay sans; the logo stays Bebas Neue);
+cards cream `--cr-card #fffcf7` (header and menu stay white); faded court at 30%. courtreport.css loads AFTER
+application.css on every page, so overrides of its classes (.cr-btn, .cr-section-title) need `html body` in front.
+
 **Decisions (REMEMBER):**
 - **One definition of a player's "match" everywhere on the profile:** one line (court) played with a result.
   Source = `PlayerRecord` (`app/services/player_record.rb`): Court Report line scores + league-website rows
