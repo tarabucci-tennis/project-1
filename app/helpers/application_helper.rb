@@ -297,8 +297,11 @@ module ApplicationHelper
   def lineup_share_text(match)
     team = match.tennis_team
     side = match.home? ? "Home" : ("Away" if match.away?)
+    # Split court times: the "Starting at…" blocks give the times, so the
+    # date row leaves the match time out (it would be only half true).
+    split = match.lineup && match.lineup.lineup_slots.map(&:effective_start_time).uniq.size > 1
     lines = [ "🎾 #{team.name} vs. #{match.opponent}",
-              "📅 #{[ match.match_date.strftime('%a, %b %-d'), match.match_time.presence, side ].compact.join(' · ')}" ]
+              "📅 #{[ match.match_date.strftime('%a, %b %-d'), (match.match_time.presence unless split), side ].compact.join(' · ')}" ]
     if (venue = match.venue)
       lines << "📍 #{venue.name}"
       lines.concat(venue.address_lines)
