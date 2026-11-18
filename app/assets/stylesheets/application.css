@@ -6665,10 +6665,7 @@ body.cr-ctx-matches-edit_results .cr-result-option:has(input:checked) .cr-result
    Nov 18 2026 (Tara): squiggle pattern, team "⋯" menu, footer.
    ============================================================ */
 
-/* Tennis background (Tara, Nov 18 2026): a light, faded top-down court with
-   its net behind the light pages, and the net in gold on the navy team hero.
-   Drawn as an illustration (no photo) and kept pale so tables and scores
-   stay perfectly readable; cards and tables sit on white on top of it. */
+/* The net in gold on the navy team hero (Tara, Nov 18 2026). */
 .cr-team-hero::after {
   content: ""; position: absolute; top: 0; right: 0; bottom: 0; width: 60%;
   pointer-events: none;
@@ -6681,22 +6678,23 @@ body.cr-ctx-matches-edit_results .cr-result-option:has(input:checked) .cr-result
   /* Phones: the text fills the hero, so keep the net faint. */
   .cr-team-hero::after { width: 55%; opacity: 0.6; }
 }
-:root { --cr-court-bg: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1000 480'%3E%3Crect x='40' y='10' width='920' height='460' rx='26' fill='%23ecf3fb'/%3E%3Crect x='110' y='60' width='780' height='360' fill='%23e4eef9'/%3E%3Crect x='110' y='60' width='780' height='360' stroke='%23fbfdff' stroke-width='4' fill='none'/%3E%3Cpath d='M110 105H890M110 375H890M290 105V375M710 105V375M290 240H710M110 240h12M890 240h-12' stroke='%23fbfdff' stroke-width='4' fill='none'/%3E%3Cpath d='M493 48 h14M493 57 h14M493 66 h14M493 75 h14M493 84 h14M493 93 h14M493 102 h14M493 111 h14M493 120 h14M493 129 h14M493 138 h14M493 147 h14M493 156 h14M493 165 h14M493 174 h14M493 183 h14M493 192 h14M493 201 h14M493 210 h14M493 219 h14M493 228 h14M493 237 h14M493 246 h14M493 255 h14M493 264 h14M493 273 h14M493 282 h14M493 291 h14M493 300 h14M493 309 h14M493 318 h14M493 327 h14M493 336 h14M493 345 h14M493 354 h14M493 363 h14M493 372 h14M493 381 h14M493 390 h14M493 399 h14M493 408 h14M493 417 h14M493 426 h14' stroke='%23a9c3de' stroke-width='1' stroke-opacity='0.32'/%3E%3Cpath d='M493 46V434M507 46V434' stroke='%23a9c3de' stroke-width='1' stroke-opacity='0.4'/%3E%3Cpath d='M500 44V436' stroke='%23fbfdff' stroke-width='3'/%3E%3Ccircle cx='500' cy='42' r='7' fill='%23d2e1f1'/%3E%3Ccircle cx='500' cy='438' r='7' fill='%23d2e1f1'/%3E%3Cg opacity='0.55'%3E%3Ccircle cx='640' cy='170' r='15' fill='%23e6efa8'/%3E%3Cpath d='M627 162c7 5 7 11 0 16M653 162c-7 5-7 11 0 16' stroke='%23fbfdff' stroke-width='2' fill='none'/%3E%3C/g%3E%3C/svg%3E"); --cr-court-bg-tall: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 480 1000'%3E%3Cg transform='translate(480 0) rotate(90)'%3E%3Crect x='40' y='10' width='920' height='460' rx='26' fill='%23ecf3fb'/%3E%3Crect x='110' y='60' width='780' height='360' fill='%23e4eef9'/%3E%3Crect x='110' y='60' width='780' height='360' stroke='%23fbfdff' stroke-width='4' fill='none'/%3E%3Cpath d='M110 105H890M110 375H890M290 105V375M710 105V375M290 240H710M110 240h12M890 240h-12' stroke='%23fbfdff' stroke-width='4' fill='none'/%3E%3Cpath d='M493 48 h14M493 57 h14M493 66 h14M493 75 h14M493 84 h14M493 93 h14M493 102 h14M493 111 h14M493 120 h14M493 129 h14M493 138 h14M493 147 h14M493 156 h14M493 165 h14M493 174 h14M493 183 h14M493 192 h14M493 201 h14M493 210 h14M493 219 h14M493 228 h14M493 237 h14M493 246 h14M493 255 h14M493 264 h14M493 273 h14M493 282 h14M493 291 h14M493 300 h14M493 309 h14M493 318 h14M493 327 h14M493 336 h14M493 345 h14M493 354 h14M493 363 h14M493 372 h14M493 381 h14M493 390 h14M493 399 h14M493 408 h14M493 417 h14M493 426 h14' stroke='%23a9c3de' stroke-width='1' stroke-opacity='0.32'/%3E%3Cpath d='M493 46V434M507 46V434' stroke='%23a9c3de' stroke-width='1' stroke-opacity='0.4'/%3E%3Cpath d='M500 44V436' stroke='%23fbfdff' stroke-width='3'/%3E%3Ccircle cx='500' cy='42' r='7' fill='%23d2e1f1'/%3E%3Ccircle cx='500' cy='438' r='7' fill='%23d2e1f1'/%3E%3Cg opacity='0.55'%3E%3Ccircle cx='640' cy='170' r='15' fill='%23e6efa8'/%3E%3Cpath d='M627 162c7 5 7 11 0 16M653 162c-7 5-7 11 0 16' stroke='%23fbfdff' stroke-width='2' fill='none'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E"); }
+/* Tara's court photo (Nov 18 2026), very faded behind the light pages: a
+   pale wash over the picture keeps tables and scores perfectly readable.
+   Sideways court on computers, upright court on phones and tablets. */
+:root { --cr-court-wash: linear-gradient(rgba(244, 248, 252, 0.78), rgba(244, 248, 252, 0.78)); }
 .cr-has-sb .cr-shell-main {
   min-height: calc(100vh - var(--cr-hh));
-  background-image: var(--cr-court-bg);
+  background-image: var(--cr-court-wash), url("/court-wide.jpg");
   background-repeat: no-repeat;
   background-attachment: fixed;
-  /* Centered in the space beside the left menu. */
-  background-position: calc(50% + var(--cr-sb-w) / 2) 58%;
-  background-size: min(1100px, calc(100vw - var(--cr-sb-w) - 80px)) auto;
+  background-position: center, calc(50% + var(--cr-sb-w) / 2) 55%;
+  background-size: cover, min(1200px, calc(100vw - var(--cr-sb-w) - 60px)) auto;
 }
 @media (max-width: 900px) {
-  /* Phones and tablets: an upright court that fits the narrow screen. */
   .cr-has-sb .cr-shell-main {
-    background-image: var(--cr-court-bg-tall);
-    background-position: center 60%;
-    background-size: auto min(86vh, 900px);
+    background-image: var(--cr-court-wash), url("/court-tall.jpg");
+    background-position: center, center 55%;
+    background-size: cover, auto min(92vh, 1000px);
   }
 }
 /* Dark pages keep their own background. */
