@@ -224,7 +224,7 @@ friendlies with / How friendlies work.
 **Nov 18 2026 (#322, wasted-space follow-up):** standings rows = # | Team (250px) | W | L | Win% | Last result | Next
 match (date · time / vs opponent · Home); team banner right half = Next match + last 5 results; Ratings hero = your USTA
 record + last 5, table has a Last 5 column; profile Win % by Line / Partner / Team side by side; calendar entries show
-the time on its own line; upcoming friendlies two across; court background sized to the page's content (`contain`);
+the time on its own line; upcoming friendlies two across; court background = ONE full-page layer (#323): `.cr-shell-main::before` (and `body::before` on the public home page), position: fixed, the WHOLE court `contain`-ed to the screen at 20% opacity, sideways on wide screens / upright when the screen is taller than wide. Never a cropped band (Tara: a top band read as a fragment);
 time ranges print "12:00 – 1:30 PM" and bare times in titles get AM/PM (`LineStartTime.normalize_range`, `mark_times`).
 
 **Decisions (REMEMBER):**

@@ -6680,25 +6680,28 @@ body.cr-ctx-matches-edit_results .cr-result-option:has(input:checked) .cr-result
   /* Phones: the text fills the hero, so keep the net faint. */
   .cr-team-hero::after { width: 55%; opacity: 0.6; }
 }
-/* Tara's court photo (Nov 18 2026), very faded behind the light pages: a
-   pale wash over the picture keeps tables and scores perfectly readable.
-   Sideways court on computers, upright court on phones and tablets. */
-:root { --cr-court-wash: linear-gradient(rgba(244, 248, 252, 0.78), rgba(244, 248, 252, 0.78)); }
-.cr-has-sb .cr-shell-main {
-  /* The court scales to the page's own content (whole court visible, never
-     stretching a short page like Friendlies to fill the screen). */
-  background-image: var(--cr-court-wash), url("/court-wide.jpg");
-  background-repeat: no-repeat;
-  background-position: center, center;
-  background-size: cover, contain;
+/* Tara's court photo as one full-page background (Nov 18 2026, 3rd try):
+   the WHOLE court, very faded, pinned behind the content and sized to fit
+   the screen, so it always reads as a court (never a cropped band) and
+   stays put while the page scrolls. A fixed layer (not background-
+   attachment: fixed) so it also works on iPhones. Sideways court on wide
+   screens, upright court on tall ones. */
+.cr-has-sb .cr-shell-main { position: relative; isolation: isolate; }
+.cr-has-sb .cr-shell-main::before {
+  content: ""; position: fixed; z-index: -1; pointer-events: none;
+  inset: var(--cr-hh) 0 0 0;
+  background: url("/court-wide.jpg") center 58% / contain no-repeat;
+  opacity: 0.2;
 }
-@media (max-width: 900px) {
-  .cr-has-sb .cr-shell-main {
-    background-image: var(--cr-court-wash), url("/court-tall.jpg");
-  }
+@media (min-width: 1000px) {
+  .cr-has-sb .cr-shell-main::before { left: var(--cr-sb-w); inset-block: calc(var(--cr-hh) + 36px) 24px; }
+}
+@media (max-aspect-ratio: 1/1) {
+  /* Phones and upright tablets; leave room for the bottom tab bar. */
+  .cr-has-sb .cr-shell-main::before { background-image: url("/court-tall.jpg"); inset: calc(var(--cr-hh) + 24px) 8px 84px 8px; }
 }
 /* Dark pages keep their own background. */
-body.cr-ctx-division_teams-show .cr-shell-main { background-image: none; }
+body.cr-ctx-division_teams-show .cr-shell-main::before { display: none; }
 
 /* Team options "⋯" menu (Archive team / Delete team). */
 .cr-team-menu { position: relative; }
