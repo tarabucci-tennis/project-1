@@ -197,12 +197,12 @@ body::before{content:"";position:fixed;inset:96px 0 24px 0;z-index:-1;pointer-ev
 /* Each icon has its own colour on a soft matching circle (same colours as the sign-in page). */
 .cr-feature-icon{display:inline-flex;align-items:center;justify-content:center;width:42px;height:42px;border-radius:50%;margin-bottom:8px;flex-shrink:0;}
 .cr-feature-icon svg{width:22px;height:22px;}
-.cr-tone-red{color:#e5484d;background:#fdecec;}
-.cr-tone-green{color:#2e9d5b;background:#e6f6ec;}
-.cr-tone-blue{color:#3b6fd8;background:#e8effc;}
-.cr-tone-lime{color:#7a9a14;background:#f2f8dc;}
-.cr-tone-orange{color:#d97706;background:#fdf1e1;}
-.cr-tone-purple{color:#7c4dce;background:#f1ebfb;}
+.cr-tone-red{color:#6b7688;background:#eef1f5;}
+.cr-tone-green{color:#182740;background:#e3f1fb;}
+.cr-tone-blue{color:#182740;background:#e3f1fb;}
+.cr-tone-lime{color:#182740;background:#e3f1fb;}
+.cr-tone-orange{color:#c9a24a;background:#f6eed8;}
+.cr-tone-purple{color:#182740;background:#e3f1fb;}
 .cr-feature h3{
   font-family:'Bebas Neue',sans-serif;
   font-size:1.05rem;
@@ -305,7 +305,7 @@ body::before{content:"";position:fixed;inset:96px 0 24px 0;z-index:-1;pointer-ev
   font-weight:500;
 }
 .cr-flash-notice{background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.25);color:#8b6914;}
-.cr-flash-alert{background:rgba(220,38,38,.08);border:1px solid rgba(220,38,38,.25);color:#dc2626;}
+.cr-flash-alert{background:rgba(107, 118, 136,.08);border:1px solid rgba(107, 118, 136,.25);color:#6b7688;}
 
 /* Mobile */
 @media(max-width:768px){
@@ -337,6 +337,33 @@ body::before{content:"";position:fixed;inset:96px 0 24px 0;z-index:-1;pointer-ev
   .cr-hero h1{font-size:2.2rem;}
   .cr-btn-pill{font-size:.62rem;padding:5px 10px;}
 }
+
+/* ===== Site palette (Tara, Nov 18 2026): light blue page, white header with a
+   navy wordmark + gold ball tile, navy text and buttons, white cards; gold only
+   on the ball and active states. No dark blocks. ===== */
+:root{--navy:#182740;--page:#eaf5fc;--hero:#d6ecf9;--accent:#c9a24a;--sub:#5f6b7e;--border:#dbe3ec;--text:#182740;--off:#eaf5fc;}
+body{background-color:var(--page);color:var(--text);}
+.cr-header{background:#fff;border-bottom:1px solid var(--border);box-shadow:0 1px 8px rgba(24,39,64,.05);}
+.cr-logo-name,.cr-logo-name span{color:var(--navy);}
+.cr-logo-your{color:#7d8899;}
+.cr-logo-mark{background:linear-gradient(135deg,#c9a24a,#e2c57e);}
+.cr-btn-pill{color:var(--navy);border-color:var(--border);background:#fff;}
+.cr-btn-pill:hover{background:#f3f8fc;border-color:var(--navy);}
+.cr-btn-pill.cr-btn-primary{background:var(--navy);color:#fff;border-color:var(--navy);box-shadow:none;}
+.cr-btn-pill.cr-btn-primary:hover{opacity:1;background:#24344f;}
+.cr-hero h1{color:var(--navy);}
+.cr-hero h1 .gold{color:var(--navy);}
+.cr-hero p{color:var(--sub);}
+.cr-how{background:var(--hero);color:var(--navy);}
+.cr-how h2,.cr-step-num{color:var(--navy);}
+.cr-step h4{color:var(--navy);}
+.cr-step p{color:var(--sub);}
+.cr-final-cta h2{color:var(--navy);}
+.cr-footer{background:#fff;color:#7d8899;border-top:1px solid var(--border);}
+.cr-footer strong{color:var(--navy);}
+.cr-flash-notice{background:#fff;border-color:var(--border);color:var(--navy);}
+.cr-flash-alert{background:#fff;border-color:var(--border);color:var(--navy);}
+.cr-feature-icon{color:var(--navy)!important;background:#e3f1fb!important;}
 </style>
 </head>
 <body>

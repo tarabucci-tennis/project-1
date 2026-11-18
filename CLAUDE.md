@@ -227,6 +227,16 @@ record + last 5, table has a Last 5 column; profile Win % by Line / Partner / Te
 the time on its own line; upcoming friendlies two across; court background = ONE full-page layer (#323): `.cr-shell-main::before` (and `body::before` on the public home page), position: fixed, the WHOLE court `contain`-ed to the screen at 20% opacity, sideways on wide screens / upright when the screen is taller than wide. Never a cropped band (Tara: a top band read as a fragment);
 time ranges print "12:00 – 1:30 PM" and bare times in titles get AM/PM (`LineStartTime.normalize_range`, `mark_times`).
 
+**SITE PALETTE (Tara, Nov 18 2026, #325) — follow on every page:** light-blue page `#eaf5fc` (from the court photo)
+with the faded court; banners `#d6ecf9` with navy text (NO dark navy hero/header blocks); white header with a navy
+wordmark + gold ball tile; white left menu; navy `#182740` text, headings and primary buttons (white text); soft grey
+`#5f6b7e` secondary text, `#dbe3ec` borders; white rounded cards. **Gold `#c9a24a` (`--cr-accent`) ONLY for the logo
+ball, Enter scores, active states (current tab/menu item, today), and win chips.** `--cr-gold` is now soft slate for old
+"gold" spots. Results: **W = gold chip `#dcb862` + navy W; L = light grey `#e6eaf0` + navy L; T = white + navy outline
++ navy T.** **No red, green or bright yellow anywhere; no grid/squares patterns** (the hero grid and gold net SVG are off).
+The block lives at the end of application.css ("SITE PALETTE"); courtreport.css and pages/courtreport.html.erb were
+recoloured too (both load on their pages). Emails (LineupMailer, password reset) were NOT recoloured.
+
 **Decisions (REMEMBER):**
 - **One definition of a player's "match" everywhere on the profile:** one line (court) played with a result.
   Source = `PlayerRecord` (`app/services/player_record.rb`): Court Report line scores + league-website rows
