@@ -70,7 +70,8 @@
                 <td class="cr-st-n" style="color: var(--cr-green);"><%= p[:won] %></td>
                 <td class="cr-st-n" style="color: var(--cr-red);"><%= p[:lost] %></td>
                 <td class="cr-lookup-wide cr-lookup-muted">
-                  <%= p[:teams].join(", ") %>
+                  <%# Each team name stays whole; the list wraps between names, never inside one. %>
+                  <% p[:teams].each_with_index do |t, ti| %><span class="cr-lookup-team"><%= t %><%= "," if ti < p[:teams].size - 1 %></span> <% end %>
                 </td>
               </tr>
             <% end %>

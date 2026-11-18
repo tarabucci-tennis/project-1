@@ -66,7 +66,10 @@ class MyTeamsFriendliesTest < ActionDispatch::IntegrationTest
   test "calendar days show each event's name and link it" do
     today = Friendly.create!(organizer: @user, starts_at: Time.zone.now.beginning_of_day + 12.hours, title: "Noon hit")
     get teams_path
-    assert_select ".cr-dash-cal-day .cr-dash-cal-chip-friendly[data-url=?]", friendly_path(today), text: "Noon hit"
+    assert_select ".cr-dash-cal-day .cr-dash-cal-chip-friendly[data-url=?]", friendly_path(today) do
+      assert_select ".cr-dash-cal-chip-time", text: "12:00 PM"
+      assert_select ".cr-dash-cal-chip-text", text: "Noon hit"
+    end
     assert_select ".cr-dash-cal-hover[hidden]"
   end
 

@@ -7,6 +7,23 @@
       <h1 class="cr-rp-name">Player Ratings</h1>
       <div class="cr-rp-sub">USTA match history for every player we've seen: teammates, partners and opponents. Updates on its own as scores are entered.</div>
     </div>
+    <%# Right half: your own USTA form (Tara, Nov 18). %>
+    <% if @me %>
+      <div class="cr-rp-hero-side">
+        <div class="cr-hero-side-label">Your USTA record</div>
+        <div class="cr-rp-hero-rec">
+          <span class="cr-rp-hero-num"><%= @me.wins %>–<%= @me.losses %></span>
+          <span class="cr-rp-hero-pct"><%= @me.ranked? ? "#{@me.win_pct.round}% of #{pluralize(@me.lines, 'line')}" : "#{pluralize(@me.lines, 'line')} · % from #{RatingsHistory::MIN_LINES_TO_RANK}" %></span>
+        </div>
+        <% if @me.recent.any? %>
+          <div class="cr-hero-side-label cr-hero-side-label-form">Last <%= @me.recent.size %> lines</div>
+          <div class="cr-hero-form">
+            <% @me.recent.each do |r| %><span class="cr-hero-form-dot cr-hero-form-<%= r.downcase %>"><%= r %></span><% end %>
+          </div>
+        <% end %>
+        <%= link_to "See all your USTA matches →", ratings_player_path(name: @me.name), class: "cr-rp-hero-link" %>
+      </div>
+    <% end %>
   </section>
 
   <% if can_upload? %>

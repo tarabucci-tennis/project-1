@@ -149,6 +149,7 @@ class ProfilesController < ApplicationController
       singles:        { won: 0, total: 0, pct: 0 },
       doubles:        { won: 0, total: 0, pct: 0 },
       by_line:        {},
+      by_team:        [],  # [{ name:, won:, total:, pct: }]
       partners:       [],
       best_partner:   nil,
       recent:         [],
@@ -183,6 +184,12 @@ class ProfilesController < ApplicationController
     stats[:matches_played_by_team] = team_counts.map { |name, count| { team_name: name, count: count } }
                                                 .sort_by { |t| -t[:count] }
     stats[:matches_played_total] = entries.size
+
+    # Win % by team (same one-line-per-match definition), most matches first.
+    stats[:by_team] = entries.group_by { |e| e.team_name.presence || e.league }.map do |name, group|
+      w = group.count(&:won?)
+      { name: name, won: w, total: group.size, pct: pct(w, group.size) }
+    end.sort_by { |t| [ -t[:total], t[:name].to_s ] }
 
     # Doubles partner stats
     # Grouped by person, not by spelling: league websites type partner names

@@ -107,7 +107,7 @@
             <span class="cr-standings-head-title">Team Standings</span>
             <span class="cr-standings-head-season">2026 Season</span>
           </div>
-          <table class="cr-standings">
+          <table class="cr-standings cr-home-st">
             <thead>
               <tr>
                 <th class="cr-st-n">#</th>
@@ -115,14 +115,15 @@
                 <th class="cr-st-n"><span class="cr-st-dot cr-st-dot-w" title="Wins">W</span></th>
                 <th class="cr-st-n"><span class="cr-st-dot cr-st-dot-l" title="Losses">L</span></th>
                 <th class="cr-st-n">Win%</th>
-                <th>Next</th>
+                <th class="cr-st-last-h">Last</th>
+                <th>Next match</th>
               </tr>
             </thead>
             <tbody>
               <%# One section per league (USTA, Del-Tri, Bux-Mont, Cup) — records
                   from different leagues aren't comparable, so each ranks on its own. %>
               <% @teams_by_league.each do |league, league_teams| %>
-              <tr class="cr-st-league"><td colspan="6"><%= league %></td></tr>
+              <tr class="cr-st-league"><td colspan="7"><%= league %></td></tr>
               <% standings = league_teams.sort_by { |t| [ (t.wins_count + t.losses_count + t.ties_count).positive? ? 0 : 1, -(t.win_pct || 0), -t.wins_count, t.name.to_s.downcase ] } %>
               <% standings.each_with_index do |team, i| %>
                 <tr class="cr-st-row" onclick="if (!event.target.closest('a')) window.location='<%= team_path(team) %>'">
@@ -140,10 +141,21 @@
                       <span class="<%= team.win_pct >= 50 ? "cr-st-pct-good" : "cr-st-pct-bad" %>"><%= team.win_pct %>%</span>
                     <% else %>—<% end %>
                   </td>
+                  <td class="cr-st-last">
+                    <% last = team.matches.select(&:played?).max_by(&:match_date) %>
+                    <% if last %>
+                      <span class="cr-st-last-badge cr-st-last-<%= last.result_label.downcase %>"><%= last.result_label %></span>
+                      <span class="cr-st-last-score"><%= last.score_summary %></span>
+                      <span class="cr-st-last-opp">vs <%= last.opponent %></span>
+                    <% else %>
+                      <span class="cr-st-muted">—</span>
+                    <% end %>
+                  </td>
                   <td class="cr-st-next">
                     <% nm = team.next_match %>
                     <% if nm %>
-                      <span class="cr-st-next-date"><%= nm.match_date.strftime("%-m/%-d") %></span> vs <%= nm.opponent %>
+                      <span class="cr-st-next-date"><%= nm.match_date.strftime("%a %b %-d") %><%= " · #{nm.time_label}" if nm.time_label.present? %></span>
+                      <span class="cr-st-next-opp">vs <%= nm.opponent %><% if nm.home? %> · Home<% elsif nm.away? %> · Away<% end %></span>
                     <% elsif team.start_date && team.start_date > Date.current %>
                       <span class="cr-st-muted">Starts <%= team.start_date.strftime("%-m/%-d") %></span>
                     <% elsif team.matches.none? %>
@@ -200,7 +212,7 @@
                        { opponent: m.opponent, time: m.time_label, location: m.location, team: m.tennis_team.name, team_url: team_path(m.tennis_team), url: team_match_path(m.tennis_team, m) }
                      },
                      events: events_today.map { |e|
-                       { title: e.title, kind: e.display_kind, kind_label: e.kind_label, time: e.time_label, location: e.location, team: e.tennis_team.name, team_url: team_path(e.tennis_team), id: e.id, team_id: e.tennis_team_id }
+                       { title: LineStartTime.mark_times(e.title), kind: e.display_kind, kind_label: e.kind_label, time: e.time_label, location: e.location, team: e.tennis_team.name, team_url: team_path(e.tennis_team), id: e.id, team_id: e.tennis_team_id }
                      },
                      friendlies: friendlies_today.map { |f|
                        { title: f.title, time: f.time_label, location: f.location,
@@ -208,9 +220,10 @@
                      }
                    }.to_json %>
 
-                <% chips = matches_today.map { |m| { kind: "match", label: m.opponent.presence || "TBD", url: team_match_path(m.tennis_team, m) } } +
-                           events_today.map { |e| { kind: e.display_kind, label: e.title.presence || e.kind_label, url: nil } } +
-                           friendlies_today.map { |f| { kind: "friendly", label: f.title.presence || "Friendly", url: friendly_path(f) } } %>
+                <%# Each entry: its time on one line, who/what on the next. %>
+                <% chips = matches_today.map { |m| { kind: "match", time: m.time_label, label: m.opponent.presence || "TBD", url: team_match_path(m.tennis_team, m) } } +
+                           events_today.map { |e| { kind: e.display_kind, time: e.time_label, label: LineStartTime.mark_times(e.title.presence || e.kind_label), url: nil } } +
+                           friendlies_today.map { |f| { kind: "friendly", time: f.starts_at.strftime("%-l:%M %p"), label: f.title.presence || "Friendly", url: friendly_path(f) } } %>
                 <button type="button"
                         class="cr-dash-cal-day <%= 'cr-dash-cal-day-has' if has_items %> <%= 'cr-dash-cal-day-today' if is_today %>"
                         aria-label="<%= day.strftime('%A, %B %-d') %><%= ": #{pluralize(chips.size, 'item')}" if has_items %>"
@@ -218,7 +231,7 @@
                         data-dashboard-calendar-payload-param='<%= payload %>'>
                   <span class="cr-dash-cal-day-num"><%= day.day %></span>
                   <% chips.first(3).each do |c| %>
-                    <span class="cr-dash-cal-chip cr-dash-cal-chip-<%= c[:kind] %>"<% if c[:url] %> data-url="<%= c[:url] %>"<% end %>><%= c[:label] %></span>
+                    <span class="cr-dash-cal-chip cr-dash-cal-chip-<%= c[:kind] %>"<% if c[:url] %> data-url="<%= c[:url] %>"<% end %>><% if c[:time].present? %><span class="cr-dash-cal-chip-time"><%= c[:time] %></span><% end %><span class="cr-dash-cal-chip-text"><%= c[:label] %></span></span>
                   <% end %>
                   <% if chips.size > 3 %>
                     <span class="cr-dash-cal-more">+<%= chips.size - 3 %> more</span>
@@ -380,7 +393,7 @@
         <% fc_items = @upcoming_friendlies.to_a + @upcoming_team_events.select { |e| e.display_kind == "friendly" } %>
         <% fc_items = fc_items.sort_by { |i| i.is_a?(Friendly) ? i.starts_at : i.event_date.in_time_zone } %>
         <% if fc_items.any? %>
-          <div class="cr-my-week-list">
+          <div class="cr-my-week-list cr-fr-list">
             <% fc_items.each do |item| %>
               <%= render "teams/event_card", item: item %>
             <% end %>
