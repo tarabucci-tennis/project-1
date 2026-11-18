@@ -95,6 +95,11 @@ class TeamsController < ApplicationController
     # Friendlies & Clinics tab: everything coming up, not just this month.
     @upcoming_friendlies = Friendly.involving(current_user).upcoming.includes(:spots, :organizer).order(:starts_at)
     @upcoming_team_events = TeamEvent.where(tennis_team_id: team_ids).upcoming.includes(:tennis_team).to_a
+    # Friendlies tab, below what's coming up: the last few played, and who
+    # you play friendlies with most.
+    @past_friendlies = Friendly.involving(current_user).where("starts_at < ?", Time.current.beginning_of_day)
+                               .includes(:spots).order(starts_at: :desc).limit(40).to_a
+    @friendly_partners = friendly_partner_counts(@past_friendlies)
 
     # Coming Up: matches, friendlies and clinics together, soonest first.
     @coming_up_items = (@full_upcoming_matches + @upcoming_friendlies.to_a + @upcoming_team_events)
@@ -958,5 +963,21 @@ class TeamsController < ApplicationController
       clinics: other_events.count { |e| e.display_kind == "clinic" },
       next_date: [ team.next_match&.match_date&.to_date, match_events.map(&:event_date).min ].compact.min,
       started: team.matches.any? { |m| m.match_date < now } }
+  end
+
+  # [[name, times], ...] — the people you shared a friendly with, most first.
+  def friendly_partner_counts(friendlies)
+    counts = Hash.new(0)
+    names = {}
+    me = current_user.name.to_s.squish.downcase
+    friendlies.each do |f|
+      f.active_spots.each do |spot|
+        next if spot.user_id == current_user.id || spot.name.to_s.squish.downcase == me
+        key = spot.user_id ? "u#{spot.user_id}" : spot.name.to_s.squish.downcase
+        names[key] ||= spot.name.to_s.squish
+        counts[key] += 1
+      end
+    end
+    counts.sort_by { |k, n| [ -n, names[k].downcase ] }.first(6).map { |k, n| [ names[k], n ] }
   end
 end

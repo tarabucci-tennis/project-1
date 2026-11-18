@@ -1,0 +1,11 @@
+<%# Simple footer at the bottom of every signed-in page. %>
+<footer class="cr-app-footer">
+  <div class="cr-app-footer-inner">
+    <span class="cr-app-footer-brand">Your Court Report <span class="cr-app-footer-year">© <%= Date.current.year %></span></span>
+    <nav class="cr-app-footer-links" aria-label="Footer">
+      <%= link_to "My Teams", teams_path %>
+      <%= link_to "Players & Teams", lookup_path %>
+      <%= link_to "Settings", settings_path %>
+    </nav>
+  </div>
+</footer>

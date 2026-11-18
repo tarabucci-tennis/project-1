@@ -57,8 +57,9 @@
   Keep buttons in rows aligned (reserve space for a missing button). Check at 1280px, not just phones.
 - **One centered column per page** (Tara, Oct 23 2026; repeated Oct 30 2026 — she has had to ask about this
   MANY times, so treat it as a hard rule): every page and every new piece sits in one centered column with matching
-  left/right edges, never stretched across a wide screen. Single-column pages, My Teams (tab bar, Standings,
-  Upcoming, Past Seasons) and the team page all use **760px**; only the full calendar uses 880px.
+  left/right edges, never stretched across a wide screen. **Widened Nov 18 2026 (Tara: "760px left ~450px of grey
+  each side")**: every page column (My Teams, team page, calendar, lookup, lineups, ratings…) is now **1040px**, set once
+  as `--cr-col` in application.css. Forms stay narrow (`.cr-rp-narrow` 680px). Check at 1920px too, not just 1280px.
   **Before shipping ANY visual change, check the 1280px screenshot against this list:**
   1. Is the content as wide as (not wider than) the tab bar / header above it? Same left and right edges?
   2. Does any row have a name or title at the far left and its details/tags far away? → Put details right after
@@ -212,6 +213,11 @@ small to read precisely; everything else is captured.
 
 Tara sent numbered priority lists (Priority 1 = numbers that contradict each other, items 1–6; Priority 2 = player
 profiles, items 7–15) and re-checks each on the live site, by item number. All PRs squash-merged after green CI.
+
+**Nov 18 2026 (#320):** column widened to 1040px; gold squiggle pattern on the team hero's right half + a faint one on
+the page background (Tara's idea); team "⋯" menu holds Archive team + Delete team (Delete is greyed out with a reason
+when the team has results); simple footer on every signed-in page; Friendlies tab gained Recent friendlies / You play
+friendlies with / How friendlies work.
 
 **Decisions (REMEMBER):**
 - **One definition of a player's "match" everywhere on the profile:** one line (court) played with a result.
