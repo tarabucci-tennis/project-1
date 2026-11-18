@@ -32,8 +32,9 @@ module ApplicationHelper
     @sidebar_teams ||= TennisTeam.group_by_league(current_user.member_teams.distinct.reject(&:archived?)).values.flatten
   end
 
-  # A soft colour dot per league in the left column.
-  SIDEBAR_LEAGUE_DOTS = { "USTA" => "#4f8df5", "Del-Tri" => "#9b7bf0", "Bux-Mont" => "#f2a93b", "Cup" => "#34c3a3" }.freeze
+  # A dot per league in the left column, in shades of the site's navy/blue
+  # (Tara's palette, Nov 18 2026: no red, green or yellow anywhere).
+  SIDEBAR_LEAGUE_DOTS = { "USTA" => "#182740", "Del-Tri" => "#476a94", "Bux-Mont" => "#7799bd", "Cup" => "#a9c8e2" }.freeze
 
   def sidebar_league_dot(team)
     SIDEBAR_LEAGUE_DOTS.fetch(team.league_group, "#9fb0c8")
