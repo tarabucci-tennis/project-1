@@ -6665,24 +6665,42 @@ body.cr-ctx-matches-edit_results .cr-result-option:has(input:checked) .cr-result
    Nov 18 2026 (Tara): squiggle pattern, team "⋯" menu, footer.
    ============================================================ */
 
-/* Gold squiggle: strong-ish on the right half of the navy team hero (fades
-   out before the text), and a much lighter version on the page background. */
+/* Tennis background (Tara, Nov 18 2026): a light, faded top-down court with
+   its net behind the light pages, and the net in gold on the navy team hero.
+   Drawn as an illustration (no photo) and kept pale so tables and scores
+   stay perfectly readable; cards and tables sit on white on top of it. */
 .cr-team-hero::after {
-  content: ""; position: absolute; top: 0; right: 0; bottom: 0; width: 58%;
+  content: ""; position: absolute; top: 0; right: 0; bottom: 0; width: 60%;
   pointer-events: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='40' viewBox='0 0 160 40'%3E%3Cpath d='M0 20 C20 4 60 4 80 20 S140 36 160 20' fill='none' stroke='%23e2bd62' stroke-opacity='0.26' stroke-width='1.6' stroke-linecap='round'/%3E%3C/svg%3E");
-  background-size: 160px 40px;
-  -webkit-mask-image: linear-gradient(to right, transparent 0%, #000 45%);
-          mask-image: linear-gradient(to right, transparent 0%, #000 45%);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 640 300' preserveAspectRatio='xMaxYMid slice'%3E%3Cpath d='M0 46V262M16 46V262M32 46V262M48 46V262M64 46V262M80 46V262M96 46V262M112 46V262M128 46V262M144 46V262M160 46V262M176 46V262M192 46V262M208 46V262M224 46V262M240 46V262M256 46V262M272 46V262M288 46V262M304 46V262M320 46V262M336 46V262M352 46V262M368 46V262M384 46V262M400 46V262M416 46V262M432 46V262M448 46V262M464 46V262M480 46V262M496 46V262M512 46V262M528 46V262M544 46V262M560 46V262M576 46V262M592 46V262M0 60H600M0 76H600M0 92H600M0 108H600M0 124H600M0 140H600M0 156H600M0 172H600M0 188H600M0 204H600M0 220H600M0 236H600M0 252H600' stroke='%23e2bd62' stroke-opacity='0.22' stroke-width='1.2'/%3E%3Cpath d='M0 46H600' stroke='%23e2bd62' stroke-opacity='0.55' stroke-width='9'/%3E%3Cpath d='M0 262H600' stroke='%23e2bd62' stroke-opacity='0.3' stroke-width='2'/%3E%3Crect x='600' y='28' width='10' height='272' rx='3' fill='%23e2bd62' fill-opacity='0.5'/%3E%3Ccircle cx='605' cy='28' r='8' fill='%23e2bd62' fill-opacity='0.55'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right center; background-size: cover;
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, #000 50%);
+          mask-image: linear-gradient(to right, transparent 0%, #000 50%);
 }
 @media (max-width: 720px) {
-  /* Phones: the text fills the hero, so keep the pattern to a faint corner. */
-  .cr-team-hero::after { width: 45%; opacity: 0.5; }
+  /* Phones: the text fills the hero, so keep the net faint. */
+  .cr-team-hero::after { width: 55%; opacity: 0.6; }
 }
+:root { --cr-court-bg: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1000 480'%3E%3Crect x='40' y='10' width='920' height='460' rx='26' fill='%23ecf3fb'/%3E%3Crect x='110' y='60' width='780' height='360' fill='%23e4eef9'/%3E%3Crect x='110' y='60' width='780' height='360' stroke='%23fbfdff' stroke-width='4' fill='none'/%3E%3Cpath d='M110 105H890M110 375H890M290 105V375M710 105V375M290 240H710M110 240h12M890 240h-12' stroke='%23fbfdff' stroke-width='4' fill='none'/%3E%3Cpath d='M493 48 h14M493 57 h14M493 66 h14M493 75 h14M493 84 h14M493 93 h14M493 102 h14M493 111 h14M493 120 h14M493 129 h14M493 138 h14M493 147 h14M493 156 h14M493 165 h14M493 174 h14M493 183 h14M493 192 h14M493 201 h14M493 210 h14M493 219 h14M493 228 h14M493 237 h14M493 246 h14M493 255 h14M493 264 h14M493 273 h14M493 282 h14M493 291 h14M493 300 h14M493 309 h14M493 318 h14M493 327 h14M493 336 h14M493 345 h14M493 354 h14M493 363 h14M493 372 h14M493 381 h14M493 390 h14M493 399 h14M493 408 h14M493 417 h14M493 426 h14' stroke='%23a9c3de' stroke-width='1' stroke-opacity='0.32'/%3E%3Cpath d='M493 46V434M507 46V434' stroke='%23a9c3de' stroke-width='1' stroke-opacity='0.4'/%3E%3Cpath d='M500 44V436' stroke='%23fbfdff' stroke-width='3'/%3E%3Ccircle cx='500' cy='42' r='7' fill='%23d2e1f1'/%3E%3Ccircle cx='500' cy='438' r='7' fill='%23d2e1f1'/%3E%3Cg opacity='0.55'%3E%3Ccircle cx='640' cy='170' r='15' fill='%23e6efa8'/%3E%3Cpath d='M627 162c7 5 7 11 0 16M653 162c-7 5-7 11 0 16' stroke='%23fbfdff' stroke-width='2' fill='none'/%3E%3C/g%3E%3C/svg%3E"); --cr-court-bg-tall: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 480 1000'%3E%3Cg transform='translate(480 0) rotate(90)'%3E%3Crect x='40' y='10' width='920' height='460' rx='26' fill='%23ecf3fb'/%3E%3Crect x='110' y='60' width='780' height='360' fill='%23e4eef9'/%3E%3Crect x='110' y='60' width='780' height='360' stroke='%23fbfdff' stroke-width='4' fill='none'/%3E%3Cpath d='M110 105H890M110 375H890M290 105V375M710 105V375M290 240H710M110 240h12M890 240h-12' stroke='%23fbfdff' stroke-width='4' fill='none'/%3E%3Cpath d='M493 48 h14M493 57 h14M493 66 h14M493 75 h14M493 84 h14M493 93 h14M493 102 h14M493 111 h14M493 120 h14M493 129 h14M493 138 h14M493 147 h14M493 156 h14M493 165 h14M493 174 h14M493 183 h14M493 192 h14M493 201 h14M493 210 h14M493 219 h14M493 228 h14M493 237 h14M493 246 h14M493 255 h14M493 264 h14M493 273 h14M493 282 h14M493 291 h14M493 300 h14M493 309 h14M493 318 h14M493 327 h14M493 336 h14M493 345 h14M493 354 h14M493 363 h14M493 372 h14M493 381 h14M493 390 h14M493 399 h14M493 408 h14M493 417 h14M493 426 h14' stroke='%23a9c3de' stroke-width='1' stroke-opacity='0.32'/%3E%3Cpath d='M493 46V434M507 46V434' stroke='%23a9c3de' stroke-width='1' stroke-opacity='0.4'/%3E%3Cpath d='M500 44V436' stroke='%23fbfdff' stroke-width='3'/%3E%3Ccircle cx='500' cy='42' r='7' fill='%23d2e1f1'/%3E%3Ccircle cx='500' cy='438' r='7' fill='%23d2e1f1'/%3E%3Cg opacity='0.55'%3E%3Ccircle cx='640' cy='170' r='15' fill='%23e6efa8'/%3E%3Cpath d='M627 162c7 5 7 11 0 16M653 162c-7 5-7 11 0 16' stroke='%23fbfdff' stroke-width='2' fill='none'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E"); }
 .cr-has-sb .cr-shell-main {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='56' viewBox='0 0 220 56'%3E%3Cpath d='M0 28 C27.5 8 82.5 8 110 28 S192.5 48 220 28' fill='none' stroke='%23c9a24a' stroke-opacity='0.11' stroke-width='1.3' stroke-linecap='round'/%3E%3C/svg%3E");
-  background-size: 220px 56px;
+  min-height: calc(100vh - var(--cr-hh));
+  background-image: var(--cr-court-bg);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  /* Centered in the space beside the left menu. */
+  background-position: calc(50% + var(--cr-sb-w) / 2) 58%;
+  background-size: min(1100px, calc(100vw - var(--cr-sb-w) - 80px)) auto;
 }
+@media (max-width: 900px) {
+  /* Phones and tablets: an upright court that fits the narrow screen. */
+  .cr-has-sb .cr-shell-main {
+    background-image: var(--cr-court-bg-tall);
+    background-position: center 60%;
+    background-size: auto min(86vh, 900px);
+  }
+}
+/* Dark pages keep their own background. */
+body.cr-ctx-division_teams-show .cr-shell-main { background-image: none; }
 
 /* Team options "⋯" menu (Archive team / Delete team). */
 .cr-team-menu { position: relative; }
