@@ -36,7 +36,7 @@ body{
   min-height:100vh;
 }
 /* Tara's court photo: the whole court, very faded, pinned behind the page (same as the signed-in pages). */
-body::before{content:"";position:fixed;inset:96px 0 24px 0;z-index:-1;pointer-events:none;background:url("<%= asset_path('court-wide.jpg') %>") center/contain no-repeat;opacity:.2;}
+body::before{content:"";position:fixed;inset:96px 0 24px 0;z-index:-1;pointer-events:none;background:url("<%= asset_path('court-tall.jpg') %>") center/contain no-repeat;opacity:.2;}
 @media (max-aspect-ratio:1/1){body::before{background-image:url("<%= asset_path('court-tall.jpg') %>");inset:84px 8px 24px 8px;}}
 
 

@@ -1,0 +1,32 @@
+<%# Upcoming row, right side: the lineup status, then ONE real action button.
+    Locals: match. Started and not scored → Enter scores (captains) / Enter my
+    line (a player on a line); otherwise Set lineup (captains) or View lineup. %>
+<% team = match.tennis_team %>
+<% captain = @captain_team_ids.include?(team.id) %>
+<% lineup = match.lineup %>
+<% my_line = @my_lineup_lines[match.id] %>
+<% needs_scores = match.started? && !match.scores_entered? %>
+<div class="cr-cu-status">
+  <% if needs_scores %>
+    <span class="cr-cu-pill cr-cu-pill-attn">Needs scores</span>
+  <% elsif my_line %>
+    <span class="cr-cu-pill cr-cu-pill-you">You're on <%= my_line %></span>
+  <% elsif lineup&.published? %>
+    <span class="cr-cu-pill">Lineup posted</span>
+  <% elsif captain && lineup %>
+    <span class="cr-cu-pill">Draft</span>
+  <% else %>
+    <span class="cr-cu-pill cr-cu-pill-muted">No lineup yet</span>
+  <% end %>
+</div>
+<div class="cr-cu-action">
+  <% if needs_scores && captain %>
+    <%= link_to "Enter scores", edit_results_team_match_path(team, match), class: "cr-cu-btn cr-cu-btn-gold", onclick: "event.stopPropagation();" %>
+  <% elsif needs_scores && match.on_a_line?(current_user) %>
+    <%= link_to "Enter my line", my_line_team_match_path(team, match), class: "cr-cu-btn cr-cu-btn-gold", onclick: "event.stopPropagation();" %>
+  <% elsif captain %>
+    <%= link_to "Set lineup", edit_team_match_lineup_path(team, match), class: "cr-cu-btn", onclick: "event.stopPropagation();" %>
+  <% else %>
+    <%= link_to(lineup&.published? ? "View lineup" : "View match", team_match_path(team, match), class: "cr-cu-btn cr-cu-btn-outline", onclick: "event.stopPropagation();") %>
+  <% end %>
+</div>

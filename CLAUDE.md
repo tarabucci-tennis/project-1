@@ -58,8 +58,8 @@
 - **One centered column per page** (Tara, Oct 23 2026; repeated Oct 30 2026 — she has had to ask about this
   MANY times, so treat it as a hard rule): every page and every new piece sits in one centered column with matching
   left/right edges, never stretched across a wide screen. **Widened Nov 18 2026 (Tara: "760px left ~450px of grey
-  each side")**: every page column (My Teams, team page, calendar, lookup, lineups, ratings…) is now **1040px**, and **1200px on
-  screens 1600px+** (#322), set once as `--cr-col` in application.css. Forms stay narrow (`.cr-rp-narrow` 680px). Check at 1920px too, not just 1280px.
+  each side")**: every page column (My Teams, team page, calendar, lookup, lineups, ratings…) is **920px** (Tara, Nov 18 2026, later
+  the same day: 1040/1200 felt too wide on her computer — "make it thinner"), set once as `--cr-col` in application.css. Forms stay narrow (`.cr-rp-narrow` 680px). Check at 1920px too, not just 1280px.
   **Before shipping ANY visual change, check the 1280px screenshot against this list:**
   1. Is the content as wide as (not wider than) the tab bar / header above it? Same left and right edges?
   2. Does any row have a name or title at the far left and its details/tags far away? → Put details right after
@@ -224,7 +224,7 @@ friendlies with / How friendlies work.
 **Nov 18 2026 (#322, wasted-space follow-up):** standings rows = # | Team (250px) | W | L | Win% | Last result | Next
 match (date · time / vs opponent · Home); team banner right half = Next match + last 5 results; Ratings hero = your USTA
 record + last 5, table has a Last 5 column; profile Win % by Line / Partner / Team side by side; calendar entries show
-the time on its own line; upcoming friendlies two across; court background = ONE full-page layer (#323): `.cr-shell-main::before` (and `body::before` on the public home page), position: fixed, the WHOLE court `contain`-ed to the screen at 20% opacity, sideways on wide screens / upright when the screen is taller than wide. Never a cropped band (Tara: a top band read as a fragment);
+the time on its own line; upcoming friendlies two across; court background = ONE full-page layer (#323): `.cr-shell-main::before` (and `body::before` on the public home page), position: fixed, the WHOLE court `contain`-ed to the screen at 20% opacity, ALWAYS the upright court (`court-tall.jpg`, Tara: "up and down, not side to side"). Never a cropped band (Tara: a top band read as a fragment);
 time ranges print "12:00 – 1:30 PM" and bare times in titles get AM/PM (`LineStartTime.normalize_range`, `mark_times`).
 
 **SITE PALETTE (Tara, Nov 18 2026, #325) — follow on every page:** light-blue page `#eaf5fc` (from the court photo)
@@ -245,6 +245,13 @@ item, tab underlines and today; links in `--cr-court-ink #3f6c8a`; the page's PR
 in **Fraunces** (Google Fonts) with `text-transform: none` (body text and scores stay sans; the logo stays Bebas Neue);
 cards cream `--cr-card #fffcf7` (header and menu stay white); faded court at 30%. courtreport.css loads AFTER
 application.css on every page, so overrides of its classes (.cr-btn, .cr-section-title) need `html body` in front.
+
+**Rows fill the wide column (Tara, Nov 18 2026, #327):** every My Teams Upcoming row and team-schedule row is date |
+match info | venue (or "Place TBD") | status pill | ONE real action button | icons/▾. The button: Enter scores (gold) once
+a match has started with no scores and you're a captain; Enter my line for a player on a line; otherwise Set lineup
+(captains/co-captains/admins) or View lineup / View match. Friendlies: Open / Sign up / See lineup. `_cu_match_action`
+partial; `@captain_team_ids` in teams#index. /friendlies uses the full column with cards two-across (forms stay
+`.cr-rp-narrow`). Footer sits right under the content (main padding-bottom 12px). Fill the column with content.
 
 **Decisions (REMEMBER):**
 - **One definition of a player's "match" everywhere on the profile:** one line (court) played with a result.
