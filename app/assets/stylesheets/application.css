@@ -7152,3 +7152,92 @@ html body .cr-st-team, html body .cr-my-week-team, html body .cr-sb-team-name, h
 html body .cr-sb-team-name { font-size: 0.9rem; }
 html body .cr-rp-name { font-size: 2.1rem; line-height: 1.1; }
 html body .cr-pp-head-title, html body .cr-pp-name-text { font-family: var(--cr-serif); text-transform: none; letter-spacing: -0.01em; font-weight: 600; color: var(--cr-navy); }
+
+/* =====================================================================
+   Rows fill the wide column (Tara, Nov 18 2026): every Upcoming /
+   Friendlies row is date | match info | venue | status | ONE real action
+   button | calendar + share — no half-empty card. Phones stack it.
+   ===================================================================== */
+.cr-cu-status, .cr-cu-action { grid-area: auto; min-width: 0; }
+.cr-cu-pill {
+  display: inline-flex; align-items: center; padding: 4px 10px; border-radius: 999px; white-space: nowrap;
+  font-size: 0.74rem; font-weight: 700; background: var(--cr-court-tint); color: var(--cr-navy);
+}
+.cr-cu-pill-muted { background: #eef1f5; color: var(--cr-text-muted); font-weight: 600; }
+.cr-cu-pill-you { background: var(--cr-navy); color: #fff; }
+.cr-cu-pill-attn, .cr-cu-pill-rose { background: var(--cr-rose-tint); color: var(--cr-rose-ink); }
+.cr-cu-btn {
+  display: inline-flex; align-items: center; justify-content: center; width: 100%; min-height: 36px; padding: 0 12px;
+  border-radius: 10px; border: 1px solid var(--cr-navy); background: var(--cr-navy); color: #fff !important;
+  font-size: 0.84rem; font-weight: 700; text-decoration: none; white-space: nowrap;
+}
+.cr-cu-btn:hover { background: var(--cr-black-soft); }
+.cr-cu-btn-outline { background: var(--cr-card); color: var(--cr-navy) !important; border-color: var(--cr-border); }
+.cr-cu-btn-outline:hover { background: #fff; border-color: var(--cr-navy); }
+.cr-cu-btn-gold { background: var(--cr-accent); border-color: var(--cr-accent); color: var(--cr-navy) !important; }
+.cr-cu-btn-gold:hover { background: #bb9440; }
+
+@media (min-width: 900px) {
+  .cr-cu-phone-only { display: none !important; }
+  html body .cr-cu-row {
+    grid-template-columns: 52px minmax(0, 1.25fr) minmax(0, 1fr) 128px 132px 76px;
+    grid-template-areas: "date info place status action right";
+    column-gap: 18px; align-items: center; padding: 12px 18px;
+  }
+  html body .cr-cu-row > .cr-cu-status { grid-area: status; }
+  html body .cr-cu-row > .cr-cu-action { grid-area: action; }
+  html body .cr-cu-row > .cr-cu-place:empty::after { content: "Place TBD"; font-size: 0.8rem; font-style: italic; color: var(--cr-text-light); }
+  /* Friendlies two-across: info | status / place | action, icons on the right. */
+  html body .cr-fr-list .cr-cu-row {
+    grid-template-columns: 52px minmax(0, 1fr) 120px 76px;
+    grid-template-areas: "date info status right" "date place action right";
+    row-gap: 8px;
+  }
+  html body .cr-fr-list > .cr-cu-row:only-child {
+    grid-template-columns: 52px minmax(0, 1.25fr) minmax(0, 1fr) 128px 132px 76px;
+    grid-template-areas: "date info place status action right";
+  }
+}
+@media (max-width: 899px) {
+  /* Phones: the button sits under the details, full width of that column. */
+  html body .cr-cu-row { grid-template-areas: "date info right" "date place right" "date action right"; }
+  html body .cr-cu-row > .cr-cu-status { display: none; }
+  html body .cr-cu-row > .cr-cu-action { grid-area: action; margin-top: 8px; }
+  html body .cr-cu-row > .cr-cu-action .cr-cu-btn { width: auto; min-height: 34px; padding: 0 16px; }
+}
+/* Friendlies page: the full column, cards two-across on computers. */
+@media (min-width: 900px) {
+  .cr-fr-index-page .cr-fr-index { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+  .cr-fr-index-page .cr-fr-index > .cr-fr-index-row { margin: 0; height: 100%; box-sizing: border-box; }
+  .cr-fr-index-page .cr-fr-index > .cr-fr-index-row:only-child { grid-column: 1 / -1; }
+}
+/* The footer sits right under the content. */
+.cr-has-sb .cr-main { padding-bottom: 12px; }
+.cr-app-footer { padding-top: 4px; }
+.cr-app-footer-inner { padding-top: 14px; }
+@media (max-width: 720px) { .cr-has-sb .cr-main { padding-bottom: 8px; } }
+.cr-rp-page { padding-bottom: 16px; }
+/* Team schedule rows fill the card: date | opponent & time | place | status | action | ▾ */
+.cr-sched-row-full { display: grid; grid-template-columns: 50px minmax(0, 1fr) 22px; grid-template-areas: "date main caret" "date place caret" "date action caret"; column-gap: 12px; row-gap: 4px; align-items: center; }
+.cr-sched-row-full > .cr-sched-date { grid-area: date; }
+.cr-sched-row-full > .cr-sched-main { grid-area: main; }
+.cr-sched-row-full > .cr-sched-place { grid-area: place; min-width: 0; font-size: 0.82rem; }
+.cr-sched-row-full > .cr-sched-status { display: none; }
+.cr-sched-row-full > .cr-sched-action { grid-area: action; margin-top: 4px; }
+.cr-sched-row-full > .cr-sched-action .cr-cu-btn { width: auto; min-height: 34px; padding: 0 16px; }
+.cr-sched-row-full > .cr-sched-caret { grid-area: caret; justify-self: end; }
+.cr-sched-row-full .cr-venue { margin-top: 0; }
+.cr-sched-place-text { color: var(--cr-text); font-weight: 600; }
+.cr-sched-place-tbd { color: var(--cr-text-light); font-style: italic; }
+@media (min-width: 900px) {
+  .cr-sched-row-full {
+    grid-template-columns: 50px minmax(0, 1.1fr) minmax(0, 1fr) 120px 128px 20px;
+    grid-template-areas: "date main place status action caret";
+    column-gap: 18px;
+  }
+  .cr-sched-row-full > .cr-sched-status { display: block; grid-area: status; }
+  .cr-sched-row-full > .cr-sched-action { margin-top: 0; }
+  .cr-sched-row-full > .cr-sched-action .cr-cu-btn { width: 100%; padding: 0 10px; }
+}
+.cr-cu-pill.cr-sched-pill, .cr-cu-pill.cr-sched-pill-draft { text-transform: none; letter-spacing: 0; font-size: 0.74rem; padding: 4px 10px; }
+.cr-team-page { padding-bottom: 12px; }

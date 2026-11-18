@@ -46,6 +46,14 @@ class TeamsController < ApplicationController
     # Schedule" button reveals all of @full_upcoming_matches in a modal.
     @upcoming_matches = @full_upcoming_matches.first(4)
 
+    # Teams where this person can set lineups and enter scores (captains,
+    # co-captains; admins everywhere) — decides each Upcoming row's button.
+    @captain_team_ids = if current_user.admin?
+                          team_ids.to_a
+                        else
+                          TeamMembership.where(user: current_user, tennis_team_id: team_ids, role: %w[captain co_captain]).pluck(:tennis_team_id)
+                        end
+
     # Build a hash of match_id => line_label for the current user's lineup positions
     @my_lineup_lines = {}
     @upcoming_matches.each do |match|

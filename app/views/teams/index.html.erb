@@ -350,9 +350,9 @@
                     <% elsif match.away? %>
                       <span class="cr-my-week-badge-away">Away</span>
                     <% end %>
-                    <%# Your line sits with the details (it used to dangle under the buttons). %>
+                    <%# Phones: your line sits with the details (computers show it in the status column). %>
                     <% if @my_lineup_lines[match.id] %>
-                      <span class="cr-my-week-line-badge">You're on <%= @my_lineup_lines[match.id] %></span>
+                      <span class="cr-my-week-line-badge cr-cu-phone-only">You're on <%= @my_lineup_lines[match.id] %></span>
                     <% end %>
                     <% if match.time_label.nil? && match_place_block(match).nil? %>
                       <span class="cr-my-week-tbd">Time &amp; place TBD</span>
@@ -360,6 +360,7 @@
                   </div>
                 </div>
                 <div class="cr-cu-place"><%= render "matches/venue", venue: match_place_block(match), link: false %></div>
+                <%= render "teams/cu_match_action", match: match %>
                 <div class="cr-my-week-right">
                   <a href="<%= google_calendar_url(match) %>" target="_blank" rel="noopener"
                      class="cr-cal-btn" title="Add to Google Calendar"

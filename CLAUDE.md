@@ -246,6 +246,13 @@ in **Fraunces** (Google Fonts) with `text-transform: none` (body text and scores
 cards cream `--cr-card #fffcf7` (header and menu stay white); faded court at 30%. courtreport.css loads AFTER
 application.css on every page, so overrides of its classes (.cr-btn, .cr-section-title) need `html body` in front.
 
+**Rows fill the wide column (Tara, Nov 18 2026, #327):** every My Teams Upcoming row and team-schedule row is date |
+match info | venue (or "Place TBD") | status pill | ONE real action button | icons/▾. The button: Enter scores (gold) once
+a match has started with no scores and you're a captain; Enter my line for a player on a line; otherwise Set lineup
+(captains/co-captains/admins) or View lineup / View match. Friendlies: Open / Sign up / See lineup. `_cu_match_action`
+partial; `@captain_team_ids` in teams#index. /friendlies uses the full column with cards two-across (forms stay
+`.cr-rp-narrow`). Footer sits right under the content (main padding-bottom 12px). Never narrow the column back — fill it.
+
 **Decisions (REMEMBER):**
 - **One definition of a player's "match" everywhere on the profile:** one line (court) played with a result.
   Source = `PlayerRecord` (`app/services/player_record.rb`): Court Report line scores + league-website rows
