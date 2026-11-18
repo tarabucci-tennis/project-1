@@ -9,8 +9,8 @@
     <div style="display: flex; align-items: center; gap: 12px; flex: 1;">
       <span style="font-weight: 800; font-size: 1.05rem;">
         <%= @match.match_date.strftime("%b %-d").upcase %>
-        <% if @match.match_time.present? %>
-          <span style="font-weight: 400; color: var(--cr-text-muted);"> - <%= @match.match_time.gsub(" ", "").downcase %></span>
+        <% if @match.time_label %>
+          <span style="font-weight: 400; color: var(--cr-text-muted);"> · <%= @match.time_label %></span>
         <% end %>
       </span>
       <% if @match.home? %>
@@ -92,7 +92,7 @@
               <span class="cr-lineup-col-time">
                 <% if idx == 0 %>
                   <% t = slot.effective_start_time %>
-                  <strong><%= t&.gsub(" ", "")&.downcase || "TBD" %></strong>
+                  <strong><%= t || "TBD" %></strong>
                 <% end %>
               </span>
               <span class="cr-lineup-col-line">

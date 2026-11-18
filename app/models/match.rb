@@ -35,6 +35,12 @@ class Match < ApplicationRecord
     { in: in_count, out: out_count, no_response: no_response }
   end
 
+  # The match time as "9:00 AM", however it was typed or imported
+  # ("01:30 pm", "10:30am"); nil if none. One format everywhere.
+  def time_label
+    LineStartTime.normalize(match_time)
+  end
+
   def played?
     result.present?
   end

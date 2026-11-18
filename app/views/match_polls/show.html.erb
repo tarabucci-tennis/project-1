@@ -11,7 +11,7 @@
         <div class="cr-poll-team"><%= @team.name %></div>
         <h2 class="cr-rp-card-title">vs. <%= @match.opponent %></h2>
         <div class="cr-poll-when">
-          <%= @match.match_date.strftime("%a, %b %-d") %><%= " · #{@match.match_time}" if @match.match_time.present? %>
+          <%= @match.match_date.strftime("%a, %b %-d") %><%= " · #{@match.time_label}" if @match.time_label %>
           <% if @match.home? %><span class="cr-tag cr-tag-home">Home</span><% elsif @match.away? %><span class="cr-tag cr-tag-away">Away</span><% end %>
         </div>
         <% if (place = match_place_block(@match)) %>

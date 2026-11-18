@@ -6,7 +6,7 @@ MATCH DETAILS
 =============
 <%= @team.name %> vs. <%= @match.opponent %>
 <%= @match.match_date.strftime("%A, %B %-d, %Y") %>
-<% if @match.match_time.present? %>Time: <%= @match.match_time %>
+<% if @match.time_label %>Time: <%= @match.time_label %>
 <% end %>Location: <%= @match.location %>
 
 YOUR POSITION: <%= @line_label %>

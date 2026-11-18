@@ -161,8 +161,9 @@
           <div class="cr-lineup-fact-label">Best Partner</div>
           <div class="cr-lineup-fact-value">
             <% if @playing_stats[:best_partner] %>
-              <%= @playing_stats[:best_partner][:name] %>
-              <span style="color: var(--cr-text-muted); font-weight: 500; font-size: 0.85rem;">(<%= @playing_stats[:best_partner][:pct] %>%, <%= @playing_stats[:best_partner][:total] %> matches)</span>
+              <%# Name on one line, the numbers neatly on the next (not a ragged wrap). %>
+              <span class="cr-fact-name"><%= @playing_stats[:best_partner][:name] %></span>
+              <span class="cr-fact-sub"><%= @playing_stats[:best_partner][:pct] %>% · <%= pluralize(@playing_stats[:best_partner][:total], "match") %></span>
             <% else %>
               <span style="color: var(--cr-text-muted); font-weight: 500; font-size: 0.85rem;">Needs <%= ProfilesController::MIN_SAMPLE %>+ matches together</span>
             <% end %>
@@ -269,7 +270,7 @@
           <div class="cr-playing-stats-header">
             <span class="cr-ps-col-name">Opponent</span>
             <span class="cr-ps-col-line">Line</span>
-            <span class="cr-ps-col-stat">Score</span>
+            <span class="cr-ps-col-stat cr-ps-col-score">Score</span>
             <span class="cr-ps-col-detail">Result</span>
           </div>
           <% @playing_stats[:recent].each do |match| %>
@@ -280,7 +281,7 @@
                   <div style="font-size: 0.7rem; color: var(--cr-text-light);"><%= match[:team] %> · <%= match[:date].strftime("%-m/%-d/%y") %></div>
                 </span>
                 <span class="cr-ps-col-line"><%= match[:line_label] %></span>
-                <span class="cr-ps-col-stat"><%= match[:score].presence || "—" %></span>
+                <span class="cr-ps-col-stat cr-ps-col-score"><%= match[:score].presence || "—" %></span>
                 <span class="cr-ps-col-detail">
                   <span class="cr-result-badge <%= match[:result] == 'win' ? 'cr-result-badge-win' : 'cr-result-badge-loss' %>">
                     <%= match[:result] == 'win' ? 'W' : 'L' %>

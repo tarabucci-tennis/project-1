@@ -72,7 +72,9 @@ class LookupsController < ApplicationController
       key = normalize(dt.name)
       next if my_team_names.include?(key)
       opponents[key] ||= {
-        name: dt.name,
+        name: helpers.tidy_team_name(dt.name),
+        # Del-Tri / Cup publish points only (the sync stores them as wins).
+        points_only: parent.standings_layout == "points",
         league: parent.league_label,
         points: dt.points,
         wins: dt.wins,

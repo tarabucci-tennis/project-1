@@ -21,6 +21,11 @@ class TeamEvent < ApplicationRecord
     KINDS.include?(kind) ? kind : "other"
   end
 
+  # "6:30 PM", however it was typed; nil if none.
+  def time_label
+    LineStartTime.normalize(start_time)
+  end
+
   def kind_label
     case display_kind
     when "clinic"   then "Clinic"

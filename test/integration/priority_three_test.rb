@@ -67,3 +67,19 @@ class PriorityThreeTest < ActionDispatch::IntegrationTest
     assert_equal "Over Served", m.reload.opponent
   end
 end
+
+class PriorityFourBatchOneTest < ActiveSupport::TestCase
+  test "one time format: however a time was typed, it reads 9:00 AM" do
+    m = Match.new(match_time: "01:30 pm")
+    assert_equal "1:30 PM", m.time_label
+    assert_equal "9:00 AM", Match.new(match_time: "09:00 am").time_label
+    assert_equal "10:30 AM", TeamEvent.new(start_time: "10:30 am").time_label
+    assert_nil Match.new(match_time: "").time_label
+  end
+
+  test "league-site team names get a space before #" do
+    helper = ApplicationController.helpers
+    assert_equal "Delsea #2", helper.tidy_team_name("Delsea#2")
+    assert_equal "Penn Oaks #1", helper.tidy_team_name("Penn Oaks #1")
+  end
+end

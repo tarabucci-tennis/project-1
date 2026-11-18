@@ -11,7 +11,7 @@
     <div class="cr-sched-opp"><%= event.title %></div>
     <div class="cr-sched-sub">
       <% if event.location.present? %><span><%= event.location %></span><% end %>
-      <% if event.start_time.present? %><span><%= "· " if event.location.present? %><%= event.start_time %></span><% end %>
+      <% if event.time_label %><span><%= "· " if event.location.present? %><%= event.time_label %></span><% end %>
     </div>
   </div>
 <% end %>

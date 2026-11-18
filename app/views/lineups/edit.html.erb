@@ -20,8 +20,8 @@
       <div class="cr-match-opponent">vs. <%= @match.opponent %></div>
       <div class="cr-match-location">
         <%= @match.location %>
-        <% if @match.match_time.present? %>
-          · <%= @match.match_time %>
+        <% if @match.time_label %>
+          · <%= @match.time_label %>
         <% end %>
       </div>
     </div>
