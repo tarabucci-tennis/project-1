@@ -109,6 +109,34 @@
         </div>
       <% end %>
     </div>
+
+    <%# Right half of the banner: the next match and recent form (Tara, Nov 18). %>
+    <% hero_next = @team.next_match %>
+    <% hero_form = @team.recent_form(5) %>
+    <% if hero_next || hero_form.any? %>
+      <div class="cr-hero-side">
+        <% if hero_next %>
+          <div class="cr-hero-side-label">Next match</div>
+          <%= link_to team_match_path(@team, hero_next), class: "cr-hero-side-match" do %>
+            <span class="cr-hero-side-date"><%= hero_next.match_date.strftime("%a, %b %-d") %><%= " · #{hero_next.time_label}" if hero_next.time_label.present? %></span>
+            <span class="cr-hero-side-opp">vs. <%= hero_next.opponent %></span>
+            <span class="cr-hero-side-where">
+              <% if hero_next.home? %><span class="cr-hero-side-tag">Home</span><% elsif hero_next.away? %><span class="cr-hero-side-tag cr-hero-side-tag-away">Away</span><% end %>
+              <%= hero_next.location.to_s.split(",").first.presence %>
+            </span>
+          <% end %>
+        <% else %>
+          <div class="cr-hero-side-label">Season</div>
+          <div class="cr-hero-side-opp">No matches left to play</div>
+        <% end %>
+        <% if hero_form.any? %>
+          <div class="cr-hero-side-label cr-hero-side-label-form">Last <%= hero_form.size %> results</div>
+          <div class="cr-hero-form">
+            <% hero_form.each do |r| %><span class="cr-hero-form-dot cr-hero-form-<%= r.downcase %>" title="<%= { 'W' => 'Win', 'L' => 'Loss', 'T' => 'Tie' }[r] %>"><%= r %></span><% end %>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
   </div>
 
   <%# ── Playoff banner ───────────────────────────────── %>

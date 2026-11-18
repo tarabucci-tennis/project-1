@@ -6194,6 +6194,8 @@ body.cr-ctx-admin-members { background: var(--cr-navy-page); }
 /* One centered column on every page. Widened Nov 18 2026 (Tara: 760px left
    ~450px of grey each side on a big monitor). */
 :root { --cr-col: 1040px; }
+/* Big monitors (1600px+): a wider column, so ~230px of margin each side instead of ~310px (Tara, Nov 18). */
+@media (min-width: 1600px) { :root { --cr-col: 1200px; } }
 .cr-has-sb .cr-header-inner { max-width: none; height: var(--cr-hh); padding-top: 0; padding-bottom: 0; box-sizing: border-box; }
 .cr-sb-burger {
   display: none; flex: none; align-items: center; justify-content: center; width: 38px; height: 38px;
@@ -6683,18 +6685,16 @@ body.cr-ctx-matches-edit_results .cr-result-option:has(input:checked) .cr-result
    Sideways court on computers, upright court on phones and tablets. */
 :root { --cr-court-wash: linear-gradient(rgba(244, 248, 252, 0.78), rgba(244, 248, 252, 0.78)); }
 .cr-has-sb .cr-shell-main {
-  min-height: calc(100vh - var(--cr-hh));
+  /* The court scales to the page's own content (whole court visible, never
+     stretching a short page like Friendlies to fill the screen). */
   background-image: var(--cr-court-wash), url("/court-wide.jpg");
   background-repeat: no-repeat;
-  background-attachment: fixed;
-  background-position: center, calc(50% + var(--cr-sb-w) / 2) 55%;
-  background-size: cover, min(1200px, calc(100vw - var(--cr-sb-w) - 60px)) auto;
+  background-position: center, center;
+  background-size: cover, contain;
 }
 @media (max-width: 900px) {
   .cr-has-sb .cr-shell-main {
     background-image: var(--cr-court-wash), url("/court-tall.jpg");
-    background-position: center, center 55%;
-    background-size: cover, auto min(92vh, 1000px);
   }
 }
 /* Dark pages keep their own background. */
@@ -6774,3 +6774,132 @@ body.cr-ctx-division_teams-show .cr-shell-main { background-image: none; }
 .cr-fr-steps { margin: 0; padding-left: 20px; font-size: 0.86rem; line-height: 1.45; color: var(--cr-text-muted); }
 .cr-fr-steps li + li { margin-top: 8px; }
 .cr-fr-steps strong { color: var(--cr-text); }
+
+/* ============================================================
+   Nov 18 2026, wasted-space follow-up (Tara).
+   ============================================================ */
+
+/* Calendar entries: the time on its own line, then who/what (up to 2 lines). */
+.cr-dash-cal-chip, .cr-dash-cal-full .cr-dash-cal-chip {
+  display: flex; flex-direction: column; gap: 0; -webkit-line-clamp: unset; white-space: normal;
+}
+.cr-dash-cal-chip-time { display: block; font-size: 0.62rem; font-weight: 800; letter-spacing: 0.2px; opacity: 0.85; white-space: nowrap; }
+.cr-dash-cal-chip-text {
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+  overflow-wrap: anywhere; line-height: 1.25;
+}
+@media (max-width: 720px) {
+  /* Phone cells are ~40px wide: a short time ("10:30") and one line of name. */
+  .cr-dash-cal-chip-time { font-size: 0.5rem; letter-spacing: 0; }
+  .cr-dash-cal-chip-text { overflow-wrap: normal; word-break: normal; -webkit-line-clamp: 2; }
+}
+
+/* My Teams standings (computers): the team name column is capped so W/L sit
+   right after it, then the last result, then the next match on two lines. */
+.cr-st-last { white-space: nowrap; font-size: 0.84rem; color: var(--cr-text-muted); }
+.cr-st-last-badge {
+  display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px; margin-right: 6px;
+  border-radius: 6px; font-size: 0.7rem; font-weight: 800; color: #fff; background: var(--cr-text-muted); vertical-align: 1px;
+}
+.cr-st-last-w { background: #16a34a; }
+.cr-st-last-l { background: #dc2626; }
+.cr-st-last-t { background: #d4a017; }
+.cr-st-last-score { font-weight: 700; color: var(--cr-text); margin-right: 4px; }
+.cr-st-last-opp { display: block; margin: 2px 0 0 26px; font-size: 0.78rem; overflow: hidden; text-overflow: ellipsis; }
+.cr-home-st .cr-st-next { white-space: normal; }
+.cr-st-next-date { display: block; }
+.cr-st-next-opp { display: block; margin-top: 2px; font-size: 0.8rem; color: var(--cr-text-muted); }
+@media (min-width: 900px) {
+  .cr-home-st th:nth-child(2) { width: 250px; }
+  .cr-home-st th:nth-child(6) { width: 210px; }
+  .cr-home-st th:nth-child(7) { width: auto; }
+  .cr-home-st .cr-st-next { overflow: visible; }
+}
+/* Phones: no room for Last; Next keeps its two short lines. */
+@media (max-width: 899px) {
+  .cr-home-st .cr-st-last-h, .cr-home-st .cr-st-last { display: none; }
+}
+@media (max-width: 640px) {
+  /* As before on phones: Win% and the next match stay hidden (Upcoming has them). */
+  .cr-home-st thead th:nth-child(7), .cr-home-st tbody td:nth-child(7) { display: none; }
+}
+
+/* Friendlies tab (computers): upcoming friendlies two across; inside each
+   card the place sits under the details so nothing is squeezed. */
+@media (min-width: 900px) {
+  .cr-my-week-list.cr-fr-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+  .cr-my-week-list.cr-fr-list > .cr-cu-row { margin: 0; }
+  .cr-fr-list .cr-cu-row {
+    grid-template-columns: 52px minmax(0, 1fr) 76px;
+    grid-template-areas: "date info right" "date place right";
+    column-gap: 16px; align-items: center;
+  }
+  .cr-fr-list .cr-cu-place:empty { display: none; }
+  .cr-fr-list .cr-cu-place .cr-venue { margin-top: 6px; }
+  /* A single friendly still fills the row instead of leaving half of it empty. */
+  .cr-fr-list > .cr-cu-row:only-child { grid-column: 1 / -1; }
+}
+
+/* Profile: Win % by Line / Partner / Team side by side on computers. */
+.cr-ps-cols { display: grid; grid-template-columns: minmax(0, 1fr); gap: 0 18px; align-items: start; }
+@media (min-width: 900px) {
+  .cr-ps-cols { grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+  .cr-ps-col-card .cr-playing-stats-header, .cr-ps-col-card .cr-playing-stats-row { padding-left: 12px; padding-right: 12px; }
+}
+
+/* Team banner: the next match + recent form fill the right half on computers. */
+.cr-hero-side {
+  position: relative; z-index: 1; margin-top: 20px; padding: 16px 18px;
+  background: rgba(10, 22, 40, 0.55); border: 1px solid rgba(226, 189, 98, 0.35); border-radius: 14px;
+  -webkit-backdrop-filter: blur(2px); backdrop-filter: blur(2px);
+}
+.cr-hero-side-label { font-size: 0.68rem; font-weight: 800; letter-spacing: 1.2px; text-transform: uppercase; color: var(--cr-gold-soft, #e2bd62); }
+.cr-hero-side-label-form { margin-top: 14px; }
+.cr-hero-side-match { display: block; margin-top: 6px; color: #fff; text-decoration: none; }
+.cr-hero-side-match:hover .cr-hero-side-opp { text-decoration: underline; }
+.cr-hero-side-date { display: block; font-size: 0.86rem; font-weight: 700; color: rgba(255, 255, 255, 0.85); }
+.cr-hero-side-opp { display: block; margin-top: 2px; font-size: 1.12rem; font-weight: 800; color: #fff; line-height: 1.25; }
+.cr-hero-side-where { display: flex; align-items: center; gap: 8px; margin-top: 6px; font-size: 0.82rem; color: rgba(255, 255, 255, 0.75); }
+.cr-hero-side-tag { padding: 2px 8px; border-radius: 999px; font-size: 0.66rem; font-weight: 800; letter-spacing: 0.6px; text-transform: uppercase; background: rgba(22, 163, 74, 0.25); color: #86efac; }
+.cr-hero-side-tag-away { background: rgba(255, 255, 255, 0.14); color: rgba(255, 255, 255, 0.85); }
+.cr-hero-form { display: flex; gap: 6px; margin-top: 8px; }
+.cr-hero-form-dot {
+  display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: 8px;
+  font-size: 0.74rem; font-weight: 800; color: #fff;
+}
+.cr-hero-form-w { background: #16a34a; }
+.cr-hero-form-l { background: #dc2626; }
+.cr-hero-form-t { background: #d4a017; color: #1f1600; }
+@media (min-width: 900px) {
+  .cr-team-hero { display: grid; grid-template-columns: minmax(0, 1fr) minmax(260px, 340px); gap: 28px; align-items: center; }
+  .cr-hero-side { margin-top: 0; }
+}
+
+/* Ratings: a "Last 5" column of W/L dots, and your own USTA form in the hero. */
+.cr-rp-form { white-space: nowrap; }
+.cr-rp-form-dot {
+  display: inline-flex; align-items: center; justify-content: center; width: 18px; height: 18px; margin-right: 3px;
+  border-radius: 5px; font-size: 0.62rem; font-weight: 800; color: #fff;
+}
+.cr-rp-form-w { background: #16a34a; }
+.cr-rp-form-l { background: #dc2626; }
+.cr-rp-unranked td .cr-rp-form-dot { opacity: 0.75; }
+@media (max-width: 600px) {
+  .cr-rp-ranked th:nth-child(7), .cr-rp-ranked td:nth-child(7) { display: none; }
+}
+.cr-rp-hero-side {
+  flex: 0 0 auto; min-width: 250px; padding: 14px 18px;
+  background: rgba(10, 22, 40, 0.45); border: 1px solid rgba(226, 189, 98, 0.35); border-radius: 14px;
+}
+.cr-rp-hero-rec { display: flex; align-items: baseline; gap: 10px; margin-top: 4px; }
+.cr-rp-hero-num { font-size: 1.6rem; font-weight: 800; color: #fff; }
+.cr-rp-hero-pct { font-size: 0.82rem; color: rgba(255, 255, 255, 0.75); }
+.cr-rp-hero-link { display: inline-block; margin-top: 12px; font-size: 0.8rem; font-weight: 700; color: var(--cr-gold); text-decoration: none; }
+.cr-rp-hero-link:hover { text-decoration: underline; }
+@media (max-width: 720px) {
+  .cr-rp-hero { flex-direction: column; align-items: stretch; }
+  .cr-rp-hero-side { min-width: 0; }
+}
+/* Lookup: team names never cut off; each wraps as a whole. */
+.cr-lookup-team { display: inline-block; white-space: nowrap; max-width: 100%; overflow: visible; text-overflow: clip; }
+.cr-lookup-tbl td.cr-lookup-wide { white-space: normal !important; overflow: visible !important; text-overflow: clip !important; max-width: none !important; }

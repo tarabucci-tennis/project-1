@@ -58,8 +58,8 @@
 - **One centered column per page** (Tara, Oct 23 2026; repeated Oct 30 2026 — she has had to ask about this
   MANY times, so treat it as a hard rule): every page and every new piece sits in one centered column with matching
   left/right edges, never stretched across a wide screen. **Widened Nov 18 2026 (Tara: "760px left ~450px of grey
-  each side")**: every page column (My Teams, team page, calendar, lookup, lineups, ratings…) is now **1040px**, set once
-  as `--cr-col` in application.css. Forms stay narrow (`.cr-rp-narrow` 680px). Check at 1920px too, not just 1280px.
+  each side")**: every page column (My Teams, team page, calendar, lookup, lineups, ratings…) is now **1040px**, and **1200px on
+  screens 1600px+** (#322), set once as `--cr-col` in application.css. Forms stay narrow (`.cr-rp-narrow` 680px). Check at 1920px too, not just 1280px.
   **Before shipping ANY visual change, check the 1280px screenshot against this list:**
   1. Is the content as wide as (not wider than) the tab bar / header above it? Same left and right edges?
   2. Does any row have a name or title at the far left and its details/tags far away? → Put details right after
@@ -220,6 +220,12 @@ the public home page under a 78% pale wash (`--cr-court-wash`); `court-net.jpg` 
 in the public home page hero, words on a white panel above the net. Gold net SVG on the navy team hero. Keep it pale; team "⋯" menu holds Archive team + Delete team (Delete is greyed out with a reason
 when the team has results); simple footer on every signed-in page; Friendlies tab gained Recent friendlies / You play
 friendlies with / How friendlies work.
+
+**Nov 18 2026 (#322, wasted-space follow-up):** standings rows = # | Team (250px) | W | L | Win% | Last result | Next
+match (date · time / vs opponent · Home); team banner right half = Next match + last 5 results; Ratings hero = your USTA
+record + last 5, table has a Last 5 column; profile Win % by Line / Partner / Team side by side; calendar entries show
+the time on its own line; upcoming friendlies two across; court background sized to the page's content (`contain`);
+time ranges print "12:00 – 1:30 PM" and bare times in titles get AM/PM (`LineStartTime.normalize_range`, `mark_times`).
 
 **Decisions (REMEMBER):**
 - **One definition of a player's "match" everywhere on the profile:** one line (court) played with a result.

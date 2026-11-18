@@ -1,4 +1,4 @@
-<%# A ranked list of players: rank | player | USTA level | record | win % | last played.
+<%# A ranked list of players: rank | player | USTA level | record | win % | last 5 | last played.
     rows come from RatingsHistory.rank, so ranked players are already first. %>
 <div class="cr-rp-scroll">
   <table class="cr-rp-tbl cr-rp-tbl-compact cr-rp-ranked">
@@ -9,6 +9,7 @@
         <th class="cr-rp-c">USTA level</th>
         <th class="cr-rp-c">USTA record</th>
         <th class="cr-rp-c">USTA win %</th>
+        <th class="cr-rp-form-h">Last 5</th>
         <th>Last USTA match</th>
       </tr>
     </thead>
@@ -29,6 +30,11 @@
           <td class="cr-rp-c"><%= user&.ntrp_rating.present? ? format("%.1f", user.ntrp_rating) : "—" %></td>
           <td class="cr-rp-c cr-rp-nowrap"><%= p.lines.positive? ? "#{p.wins}–#{p.losses}" : "—" %></td>
           <td class="cr-rp-c"><%= p.ranked? ? "#{p.win_pct.round}%" : "—" %></td>
+          <td class="cr-rp-form">
+            <% if p.recent.any? %>
+              <% p.recent.each do |r| %><span class="cr-rp-form-dot cr-rp-form-<%= r.downcase %>" title="<%= r == "W" ? "Win" : "Loss" %>"><%= r %></span><% end %>
+            <% else %>—<% end %>
+          </td>
           <td class="cr-rp-nowrap"><%= p.last_date&.strftime("%-m/%-d/%y") || "No matches yet" %></td>
         </tr>
       <% end %>

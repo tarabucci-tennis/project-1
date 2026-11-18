@@ -21,6 +21,8 @@ class RatingsController < ApplicationController
     summaries = RatingsHistory.player_summaries
     @players = RatingsHistory.rank(summaries)
     by_key = summaries.index_by { |s| s.name.downcase.squish }
+    @me = by_key[current_user.name.to_s.downcase.squish]
+    @me = nil unless @me&.lines&.positive?
 
     # USTA only: that's all the Ratings history covers.
     teams = TennisTeam.usta.where(id: current_user.team_memberships.active.select(:tennis_team_id))

@@ -27,7 +27,13 @@ class RatingsHistory
   # 2-0 start can't sit above a 10-3 season.
   MIN_LINES_TO_RANK = 5
 
-  PlayerSummary = Struct.new(:name, :wins, :losses, :last_date, keyword_init: true) do
+  PlayerSummary = Struct.new(:name, :wins, :losses, :last_date, :results, keyword_init: true) do
+    # "W"/"L" for every line, oldest first.
+    def results = self[:results] || []
+
+    # The last few lines, oldest → newest (for the "Last 5" dots).
+    def recent(count = 5) = results.last(count)
+
     def lines
       wins + losses
     end
@@ -69,10 +75,13 @@ class RatingsHistory
       winner_keys = line.winners.filter_map { |n| RatedLine.name_key(n) }
       line.players.each do |nm|
         s = (by_key[nm.downcase.squish] ||= PlayerSummary.new(name: nm, wins: 0, losses: 0))
+        s[:results] ||= []
         if winner_keys.include?(nm.downcase)
           s.wins += 1
+          s[:results] << "W"
         else
           s.losses += 1
+          s[:results] << "L"
         end
         s.last_date = line.match_date if line.match_date
       end
