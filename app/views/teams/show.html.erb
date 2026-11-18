@@ -14,19 +14,33 @@
       <% end %>
     </div>
   <% end %>
-  <% can_delete = (current_user.admin? || @team.user_id == current_user.id) && !@team.matches.completed.exists? %>
-  <% if (can_archive && !@team.archived?) || can_delete %>
+  <% can_remove = current_user.admin? || @team.user_id == current_user.id %>
+  <% has_results = @team.matches.completed.exists? %>
+  <% if (can_archive && !@team.archived?) || can_remove %>
+    <%# Team settings live in one "⋯" menu at the top right: Archive and Delete together. %>
     <div class="cr-team-archive-action">
-      <% if can_archive && !@team.archived? %>
-        <%= button_to "Archive team", archive_team_path(@team), method: :post,
-              class: "cr-chip-btn", form: { style: "display:inline;" },
-              data: { turbo_confirm: "Move #{@team.name} to Past Seasons? Its schedule, results, and standings stay saved and viewable — you can restore it any time." } %>
-      <% end %>
-      <% if can_delete %>
-        <%= button_to "Delete team", team_path(@team), method: :delete,
-              class: "cr-chip-btn cr-chip-danger", form: { style: "display:inline;" },
-              data: { turbo_confirm: "Delete #{@team.name} for everyone? Its roster, schedule and standings are removed and can't be brought back. (Players' accounts stay.)" } %>
-      <% end %>
+      <details class="cr-team-menu">
+        <summary class="cr-team-menu-btn" aria-label="Team options" title="Team options">⋯</summary>
+        <div class="cr-team-menu-list">
+          <% if can_archive && !@team.archived? %>
+            <%= button_to "Archive team", archive_team_path(@team), method: :post,
+                  class: "cr-team-menu-item",
+                  data: { turbo_confirm: "Move #{@team.name} to Past Seasons? Its schedule, results, and standings stay saved and viewable — you can restore it any time." } %>
+            <p class="cr-team-menu-note">Moves the team to Past Seasons. Nothing is lost.</p>
+          <% end %>
+          <% if can_remove %>
+            <% if has_results %>
+              <span class="cr-team-menu-item cr-team-menu-off" aria-disabled="true">Delete team</span>
+              <p class="cr-team-menu-note">Not available: this team has match results. Archive it instead so the results stay.</p>
+            <% else %>
+              <%= button_to "Delete team", team_path(@team), method: :delete,
+                    class: "cr-team-menu-item cr-team-menu-danger",
+                    data: { turbo_confirm: "Delete #{@team.name} for everyone? Its roster, schedule and standings are removed and can't be brought back. (Players' accounts stay.)" } %>
+              <p class="cr-team-menu-note">Removes the team for everyone. Can't be undone.</p>
+            <% end %>
+          <% end %>
+        </div>
+      </details>
     </div>
   <% end %>
 

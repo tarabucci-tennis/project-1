@@ -64,7 +64,7 @@
     <main class="cr-main">
       <%= yield %>
     </main>
-    <% if current_user %></div></div><% end %>
+    <% if current_user %><%= render "shared/app_footer" %></div></div><% end %>
 
     <%# Tiny inline scripts: password eye toggle + join-link copy button %>
     <script>
