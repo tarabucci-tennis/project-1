@@ -214,10 +214,10 @@ small to read precisely; everything else is captured.
 Tara sent numbered priority lists (Priority 1 = numbers that contradict each other, items 1–6; Priority 2 = player
 profiles, items 7–15) and re-checks each on the live site, by item number. All PRs squash-merged after green CI.
 
-**Nov 18 2026 (#320):** column widened to 1040px; **tennis background** (Tara replaced the squiggle idea): a pale, faded
-top-down light-blue court with its net + a small ball behind the light pages and the public home page (upright court
-on phones/tablets), and a gold net on the right half of the navy team hero. Inline SVGs in application.css
-(`--cr-court-bg`, `--cr-court-bg-tall`) and in `pages/courtreport.html.erb`. Keep it pale: text must stay readable; team "⋯" menu holds Archive team + Delete team (Delete is greyed out with a reason
+**Nov 18 2026 (#320):** column widened to 1040px; **tennis background = Tara's own court photo** (#321; replaced the squiggle and then my drawn
+court): `app/assets/images/court-wide.jpg` (rotated, computers) / `court-tall.jpg` (phones) behind the light pages and
+the public home page under a 78% pale wash (`--cr-court-wash`); `court-net.jpg` (cropped to the net) at full strength
+in the public home page hero, words on a white panel above the net. Gold net SVG on the navy team hero. Keep it pale; team "⋯" menu holds Archive team + Delete team (Delete is greyed out with a reason
 when the team has results); simple footer on every signed-in page; Friendlies tab gained Recent friendlies / You play
 friendlies with / How friendlies work.
 
