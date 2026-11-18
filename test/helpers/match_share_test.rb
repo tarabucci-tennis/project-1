@@ -15,7 +15,7 @@ class MatchShareTest < ActionView::TestCase
     text = match_share_text(match)
     assert_equal <<~TEXT.chomp, text
       🎾 Advantage Us vs. Frog Hollow Platinum
-      📅 Mon, Oct 19 · 10:30 am
+      📅 Mon, Oct 19 · 10:30 AM
       Away · Bux-Mont
 
       📍 Frog Hollow Racquet Club

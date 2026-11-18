@@ -1,4 +1,9 @@
 module ApplicationHelper
+  # League sites write "Delsea#2"; show "Delsea #2".
+  def tidy_team_name(name)
+    name.to_s.gsub(/(\S)#(\d)/, '\1 #\2')
+  end
+
   # Small line icons (stroke = currentColor) used instead of emoji, so the UI
   # reads as one clean, professional set. icon(:home), icon(:pin, size: 14)…
   ICON_PATHS = {
@@ -227,7 +232,7 @@ module ApplicationHelper
   # a match.
   def team_event_share_text(event)
     lines = [ "🎾 #{event.kind_label}: #{event.title}",
-              "📅 #{[ event.event_date.strftime('%a, %b %-d'), event.start_time.presence ].compact.join(' · ')}",
+              "📅 #{[ event.event_date.strftime('%a, %b %-d'), event.time_label ].compact.join(' · ')}",
               event.tennis_team.name ]
     if event.location.present?
       name, rest = event.location.split(/,\s*/, 2)
@@ -262,7 +267,7 @@ module ApplicationHelper
     team = match.tennis_team
     side = match.home? ? "Home" : ("Away" if match.away?)
     lines = [ "🎾 #{team.name} vs. #{match.opponent}",
-              "📅 #{[ match.match_date.strftime('%a, %b %-d'), match.match_time.presence ].compact.join(' · ')}",
+              "📅 #{[ match.match_date.strftime('%a, %b %-d'), match.time_label ].compact.join(' · ')}",
               [ side, team.league_label ].compact.join(" · ") ]
     lines << "👕 Wear: #{team.team_colors}" if team.team_colors.present?
 
@@ -282,7 +287,7 @@ module ApplicationHelper
     team = match.tennis_team
     side = match.home? ? "Home" : ("Away" if match.away?)
     lines = [ "🎾 #{team.name} vs. #{match.opponent}",
-              "📅 #{[ match.match_date.strftime('%a, %b %-d'), match.match_time.presence, side ].compact.join(' · ')}" ]
+              "📅 #{[ match.match_date.strftime('%a, %b %-d'), match.time_label, side ].compact.join(' · ')}" ]
     if (venue = match.venue)
       lines << "📍 #{venue.name}"
     elsif (place = match_place(match))
@@ -301,7 +306,7 @@ module ApplicationHelper
     # date row leaves the match time out (it would be only half true).
     split = match.lineup && match.lineup.lineup_slots.map(&:effective_start_time).uniq.size > 1
     lines = [ "🎾 #{team.name} vs. #{match.opponent}",
-              "📅 #{[ match.match_date.strftime('%a, %b %-d'), (match.match_time.presence unless split), side ].compact.join(' · ')}" ]
+              "📅 #{[ match.match_date.strftime('%a, %b %-d'), (match.time_label unless split), side ].compact.join(' · ')}" ]
     if (venue = match.venue)
       lines << "📍 #{venue.name}"
       lines.concat(venue.address_lines)
@@ -358,7 +363,7 @@ module ApplicationHelper
     dates = "#{start_time.strftime(date_format)}/#{end_time.strftime(date_format)}"
 
     details = "Tennis match: #{title}"
-    details += "\n#{match.match_time}" if match.match_time.present?
+    details += "\n#{match.time_label}" if match.time_label
     details += "\n#{match.location}" if match.location.present?
 
     params = {

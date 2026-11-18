@@ -6626,3 +6626,34 @@ body.cr-ctx-matches-edit_results .cr-result-option:has(input:checked) .cr-result
 .cr-lineup-time > label { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--cr-text-muted); }
 .cr-lineup-time .cr-lineup-time-select { width: auto; max-width: 220px; margin: 0; }
 .cr-lineup-time-other { width: 130px; height: 36px; padding: 0 10px; border: 1px solid var(--cr-border); border-radius: 8px; font-size: 0.9rem; }
+/* Upcoming card: "Time & place TBD" when neither is known yet. */
+.cr-my-week-tbd { font-size: 0.75rem; color: var(--cr-text-light); font-style: italic; }
+
+/* Names are never cut off with "…" (Tara, Nov 18): they wrap to a second line. */
+.cr-sb-team-name { white-space: normal; overflow: visible; text-overflow: clip; line-height: 1.25; overflow-wrap: anywhere; }
+.cr-dash-cal-chip, .cr-dash-cal-full .cr-dash-cal-chip {
+  white-space: normal; overflow: hidden; text-overflow: clip; overflow-wrap: anywhere;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; line-height: 1.25;
+}
+@media (max-width: 720px) {
+  /* Phone cells are ~40px: keep words whole (no "Oppon / ent"); tap a day for the full list. */
+  .cr-dash-cal-chip, .cr-dash-cal-full .cr-dash-cal-chip { overflow-wrap: normal; word-break: normal; -webkit-line-clamp: 2; }
+}
+.cr-lookup-tbl td.cr-lookup-wide { white-space: normal; overflow: visible; text-overflow: clip; }
+/* Profile: three-set scores fit on one line; Best Partner name + numbers on two tidy lines. */
+.cr-ps-col-score { width: 112px; white-space: nowrap; font-size: 0.85rem; }
+.cr-fact-name { display: block; }
+.cr-fact-sub { display: block; margin-top: 2px; color: var(--cr-text-muted); font-weight: 500; font-size: 0.8rem; }
+@media (max-width: 400px) { .cr-ps-col-score { width: 92px; font-size: 0.78rem; } }
+/* Sidebar league tags read like the league headings (DEL-TRI, BUX-MONT). */
+.cr-sb-team small { text-transform: uppercase; letter-spacing: 0.4px; }
+
+/* Calendar (Tara's review, Nov 18): shorter day cells, the colour key at
+   the top, today's number inside its cell. */
+.cr-dash-cal-full .cr-dash-cal-day { min-height: 70px; }
+.cr-dash-cal-legend.cr-dash-cal-legend-top { margin: 4px 0 10px; justify-content: center; font-size: 0.74rem; gap: 16px; }
+.cr-dash-cal-full .cr-dash-cal-day-today .cr-dash-cal-day-num { margin: 1px 1px 0 0; }
+@media (max-width: 720px) {
+  .cr-dash-cal-full .cr-dash-cal-day { min-height: 58px; }
+  .cr-dash-cal-legend.cr-dash-cal-legend-top { font-size: 0.7rem; gap: 12px; }
+}

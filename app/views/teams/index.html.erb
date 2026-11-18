@@ -5,7 +5,8 @@
   <div class="cr-page-header cr-page-header-row">
     <div>
       <h1 class="cr-page-title">My Teams</h1>
-      <p class="cr-home-subtitle">2026 Season · standings, calendar &amp; upcoming</p>
+      <%# Changes with the tab (home_tabs_controller reads each panel's data-subtitle). %>
+      <p class="cr-home-subtitle" id="cr-home-subtitle">How your teams stand, league by league</p>
     </div>
     <div class="cr-page-header-actions">
       <%= link_to "Players & Teams", lookup_path, class: "cr-btn cr-btn-outline cr-btn-compact" %>
@@ -100,7 +101,7 @@
       </div>
 
       <%# ── Panel 1: Standings (the landing view) ───────────────── %>
-      <div data-home-tabs-target="panel">
+      <div data-home-tabs-target="panel" data-subtitle="How your teams stand, league by league">
         <div class="cr-standings-wrap">
           <div class="cr-standings-head">
             <span class="cr-standings-head-title">Team Standings</span>
@@ -161,7 +162,7 @@
       </div>
 
       <%# ── Panel 2: Calendar ───────────────────────────────────── %>
-      <div data-home-tabs-target="panel" style="display: none;">
+      <div data-home-tabs-target="panel" data-subtitle="Your matches, clinics and friendlies by month" style="display: none;">
         <div data-controller="dashboard-calendar"
              data-dashboard-calendar-teams-value='<%= @my_teams.map { |t| { id: t.id, name: t.name, can_manage: (@team_can_manage ||= {})[t.id] ||= (t.can_set_lineup?(current_user) || current_user.admin?) } }.to_json %>'>
           <div class="cr-dash-cal cr-dash-cal-full">
@@ -169,6 +170,12 @@
               <%= link_to "‹", teams_path(month: @calendar_prev_month, tab: "calendar"), class: "cr-dash-cal-nav", title: "Previous month" %>
               <h3 class="cr-dash-cal-title"><%= @calendar_month.strftime("%B %Y") %></h3>
               <%= link_to "›", teams_path(month: @calendar_next_month, tab: "calendar"), class: "cr-dash-cal-nav", title: "Next month" %>
+            </div>
+            <%# The colour key sits under the month name, where it's seen first. %>
+            <div class="cr-dash-cal-legend cr-dash-cal-legend-top">
+              <span><span class="cr-dash-cal-dot cr-dash-cal-dot-match"></span> Match</span>
+              <span><span class="cr-dash-cal-dot cr-dash-cal-dot-clinic"></span> Clinic</span>
+              <span><span class="cr-dash-cal-dot cr-dash-cal-dot-friendly"></span> Friendly</span>
             </div>
 
             <div class="cr-dash-cal-weekdays">
@@ -190,10 +197,10 @@
                      date: day.strftime("%Y-%m-%d"),
                      label: day.strftime("%A, %B %-d, %Y"),
                      matches: matches_today.map { |m|
-                       { opponent: m.opponent, time: m.match_time, location: m.location, team: m.tennis_team.name, team_url: team_path(m.tennis_team), url: team_match_path(m.tennis_team, m) }
+                       { opponent: m.opponent, time: m.time_label, location: m.location, team: m.tennis_team.name, team_url: team_path(m.tennis_team), url: team_match_path(m.tennis_team, m) }
                      },
                      events: events_today.map { |e|
-                       { title: e.title, kind: e.display_kind, kind_label: e.kind_label, time: e.start_time, location: e.location, team: e.tennis_team.name, team_url: team_path(e.tennis_team), id: e.id, team_id: e.tennis_team_id }
+                       { title: e.title, kind: e.display_kind, kind_label: e.kind_label, time: e.time_label, location: e.location, team: e.tennis_team.name, team_url: team_path(e.tennis_team), id: e.id, team_id: e.tennis_team_id }
                      },
                      friendlies: friendlies_today.map { |f|
                        { title: f.title, time: f.time_label, location: f.location,
@@ -227,11 +234,6 @@
               <div class="cr-dash-cal-hover-body" data-dashboard-calendar-target="hoverBody"></div>
             </div>
 
-            <div class="cr-dash-cal-legend">
-              <span><span class="cr-dash-cal-dot cr-dash-cal-dot-match"></span> Match</span>
-              <span><span class="cr-dash-cal-dot cr-dash-cal-dot-clinic"></span> Clinic</span>
-              <span><span class="cr-dash-cal-dot cr-dash-cal-dot-friendly"></span> Friendly</span>
-            </div>
           </div>
 
           <div class="cr-cal-sync">
@@ -306,7 +308,7 @@
       </div>
 
       <%# ── Panel 3: Coming Up ──────────────────────────────────── %>
-      <div data-home-tabs-target="panel" style="display: none;">
+      <div data-home-tabs-target="panel" data-subtitle="Everything coming up, soonest first" style="display: none;">
         <% if @coming_up_items.any? %>
           <div class="cr-my-week-list">
             <% @coming_up_items.each do |match| %>
@@ -327,13 +329,20 @@
                   <div class="cr-my-week-team"><%= team.name %></div>
                   <div class="cr-my-week-opponent">vs. <%= match.opponent %></div>
                   <div class="cr-my-week-detail">
-                    <% if match.match_time.present? %>
-                      <span style="font-weight: 600; color: var(--cr-text);"><%= match.match_time %></span>
+                    <% if match.time_label %>
+                      <span style="font-weight: 600; color: var(--cr-text);"><%= match.time_label %></span>
                     <% end %>
                     <% if match.home? %>
                       <span class="cr-my-week-badge-home">Home</span>
                     <% elsif match.away? %>
                       <span class="cr-my-week-badge-away">Away</span>
+                    <% end %>
+                    <%# Your line sits with the details (it used to dangle under the buttons). %>
+                    <% if @my_lineup_lines[match.id] %>
+                      <span class="cr-my-week-line-badge">You're on <%= @my_lineup_lines[match.id] %></span>
+                    <% end %>
+                    <% if match.time_label.nil? && match_place_block(match).nil? %>
+                      <span class="cr-my-week-tbd">Time &amp; place TBD</span>
                     <% end %>
                   </div>
                 </div>
@@ -347,9 +356,6 @@
                     </svg>
                   </a>
                   <%= render "matches/share_button", match: match, icon_only: true %>
-                  <% if @my_lineup_lines[match.id] %>
-                    <span class="cr-my-week-line-badge"><%= @my_lineup_lines[match.id] %></span>
-                  <% end %>
                 </div>
               </div>
             <% end %>
@@ -363,7 +369,7 @@
           Booked friendlies plus captain-added team friendlies. Clinics and
           other calendar events ("League match", "Team dinner") stay on
           Upcoming and Calendar; this tab is blank when there are no friendlies. %>
-      <div class="cr-fr-panel" data-home-tabs-target="panel" style="display: none;">
+      <div class="cr-fr-panel" data-home-tabs-target="panel" data-subtitle="Friendlies you've booked or joined" style="display: none;">
         <%# Computers hide the tab bar (the left column replaces it), so the
             Book a friendly menu isn't there: offer the same two links here.
             Phones keep the tab-bar menu and never see this row. %>

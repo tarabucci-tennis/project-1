@@ -60,7 +60,7 @@
           <div class="match-detail">
             <div class="match-opponent"><%= @team.name %> vs. <%= @match.opponent %></div>
             <div class="match-meta">
-              <% if @match.match_time.present? %><%= @match.match_time %> · <% end %>
+              <% if @match.time_label %><%= @match.time_label %> · <% end %>
               <%= @match.location %>
             </div>
           </div>

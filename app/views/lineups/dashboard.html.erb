@@ -31,7 +31,7 @@
             elsif slot then [ "Please reply", "gold" ]
             else [ "Posted", "gold" ]
             end
-          when_bits = [ match.match_date.strftime("%a, %b %-d, %Y"), match.match_time.presence,
+          when_bits = [ match.match_date.strftime("%a, %b %-d, %Y"), match.time_label,
                         (match.home? ? "Home" : ("Away" if match.away?)), item[:meeting] ].compact
         %>
         <div class="cr-lu-row<%= ' has-reply' if pending %>"

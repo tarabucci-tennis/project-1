@@ -11,6 +11,6 @@ class ExternalEvent < ApplicationRecord
 
   def time_label
     return nil if all_day || starts_at.blank?
-    starts_at.in_time_zone.strftime("%-l:%M %p").sub(":00", "")
+    starts_at.in_time_zone(User::ACTIVITY_ZONE).strftime("%-l:%M %p")
   end
 end
