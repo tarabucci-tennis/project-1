@@ -7536,3 +7536,10 @@ html body .cr-brand-ball-inner {
   50% { transform: translateY(-55%) scale(.96, 1.04); }
   88% { transform: translateY(-6%) scale(1, 1); }
 }
+
+/* Card buttons in deep court blue with white letters (Tara picked option C, Nov 19 2026).
+   The "You're on 6D" / "You're in" tag goes navy with white letters (no gold on the cards). */
+:root { --cr-card-btn: #3F6C8A; --cr-card-btn-hover: #335a74; }
+html body .cr-band-btn { background: var(--cr-card-btn) !important; color: #fff !important; border: 0; }
+html body .cr-band-btn:hover { background: var(--cr-card-btn-hover) !important; }
+html body .cr-band-chip { background: var(--cr-navy); color: #fff !important; }
