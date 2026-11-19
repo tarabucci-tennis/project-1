@@ -7481,3 +7481,13 @@ html body .cr-band-actions { margin-top: auto; }
 html body .cr-band-venue + .cr-band-actions, html body .cr-band-note + .cr-band-actions { margin-top: auto; }
 html body .cr-band-body > .cr-band-actions { margin-top: auto; padding-top: 14px; }
 html body .cr-band-body > :nth-last-child(2) { margin-bottom: 10px; }
+
+/* Logo wordmark in the site's heading font, Fraunces (Tara, Nov 19 2026). */
+html body .cr-brand-text {
+  font-family: var(--cr-serif); font-weight: 700; font-size: 1.95rem; letter-spacing: 0; text-transform: none; line-height: 1;
+}
+html body .cr-brand-your {
+  font-family: Inter, system-ui, -apple-system, sans-serif; font-weight: 800; font-size: 0.6rem; letter-spacing: 0.32em;
+  margin: 0 0 3px 1px; color: var(--cr-slate);
+}
+@media (max-width: 720px) { html body .cr-brand-text { font-size: 1.3rem; letter-spacing: 0; } }
