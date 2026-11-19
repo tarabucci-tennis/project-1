@@ -7239,3 +7239,16 @@ html body .cr-pp-head-title, html body .cr-pp-name-text { font-family: var(--cr-
 }
 .cr-cu-pill.cr-sched-pill, .cr-cu-pill.cr-sched-pill-draft { text-transform: none; letter-spacing: 0; font-size: 0.74rem; padding: 4px 10px; }
 .cr-team-page { padding-bottom: 12px; }
+
+/* Court in the margins (Tara, Nov 19 2026): on computers the one court sat
+   hidden behind the 920px column and the sides were plain blue. Now a row of
+   whole, upright courts runs across the screen (like a row of courts at a
+   club), so the margins on both sides read as tennis court. A touch stronger. */
+@media (min-width: 1000px) and (min-aspect-ratio: 1/1) {
+  .cr-has-sb .cr-shell-main::before {
+    background-size: auto 100%;
+    background-repeat: repeat-x;
+    background-position: center top;
+    opacity: 0.38;
+  }
+}
