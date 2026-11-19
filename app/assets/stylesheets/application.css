@@ -27,7 +27,7 @@
    pop · crisp win/loss. Muted text is deliberately dark for legibility.
    Division of accents: teal = interaction, amber = pop/brand highlight. */
 :root {
-  --cr-black: #182740;              /* ink navy — text, dark surfaces, hero */
+  --cr-black: #1b2a4a;              /* ink navy — text, dark surfaces, hero */
   --cr-black-soft: #24344f;
   --cr-navy-page: #f4f8fc;          /* cool near-white page canvas */
   --cr-header-bg: #101d33;          /* deep navy header bar */
@@ -37,16 +37,16 @@
   --cr-gold: #7d8899;               /* sunny amber — pop / brand highlight */
   --cr-gold-soft: #7d8899;
   --cr-gold-bright: #7d8899;
-  --cr-teal: #182740;              /* teal — the lead accent (fills) */
-  --cr-teal-deep: #182740;         /* readable teal for link text on light */
+  --cr-teal: #1b2a4a;              /* teal — the lead accent (fills) */
+  --cr-teal-deep: #1b2a4a;         /* readable teal for link text on light */
   --cr-teal-tint: rgba(24, 39, 64, 0.14);
   --cr-white: #ffffff;
   --cr-bg: #eef3f9;                 /* cool light for subtle inset fills */
   --cr-border: #e1e8f1;
-  --cr-text: #182740;
+  --cr-text: #1b2a4a;
   --cr-text-muted: #4d5a72;         /* darker slate — reads clearly on light */
   --cr-text-light: #6f7c92;
-  --cr-green: #182740;              /* win green */
+  --cr-green: #1b2a4a;              /* win green */
   --cr-red: #6b7688;               /* loss red */
 }
 
@@ -333,13 +333,13 @@ button.cr-header-pill {
 
 .cr-flash-notice {
   background: #e3f1fb;
-  color: #182740;
+  color: #1b2a4a;
   border: 1px solid #e3f1fb;
 }
 
 .cr-flash-alert {
   background: #eef1f5;
-  color: #182740;
+  color: #1b2a4a;
   border: 1px solid #d5dbe4;
 }
 
@@ -659,7 +659,7 @@ button.cr-header-pill {
 
 .cr-match-home {
   background: #e3f1fb;
-  color: #182740;
+  color: #1b2a4a;
 }
 
 .cr-match-away {
@@ -933,13 +933,13 @@ button.cr-header-pill {
 .cr-avail-in.avail-btn-active {
   background: #e3f1fb;
   border-color: #d6ecf9;
-  color: #182740;
+  color: #1b2a4a;
 }
 
 .cr-avail-out.avail-btn-active {
   background: #eef1f5;
   border-color: #d5dbe4;
-  color: #182740;
+  color: #1b2a4a;
 }
 
 .cr-avail-message {
@@ -1112,8 +1112,8 @@ button.cr-header-pill {
 .cr-mins-note { margin: -4px 0 12px; font-size: 0.82rem; line-height: 1.45; color: var(--cr-text-muted); }
 .cr-mins-note-sub { display: block; font-size: 0.78rem; }
 .cr-mins { flex: 0 0 auto; font-size: 0.72rem; font-weight: 700; padding: 3px 9px; border-radius: 999px; white-space: nowrap; }
-.cr-mins-ok { color: #182740; background: rgba(24, 39, 64,0.10); }
-.cr-mins-short { color: #182740; background: #eef4fa; }
+.cr-mins-ok { color: #1b2a4a; background: rgba(24, 39, 64,0.10); }
+.cr-mins-short { color: #1b2a4a; background: #eef4fa; }
 /* Roster as a table on computers: the name, then fixed columns for rating,
    matches played, role and buttons, so tags sit next to the name and every
    row lines up. */
@@ -1913,7 +1913,7 @@ button.cr-header-pill {
 
 .cr-result-badge-tie {
   background: #eef4fa;
-  color: #182740;
+  color: #1b2a4a;
   border: 1px solid #eef4fa;
 }
 
@@ -2109,7 +2109,7 @@ button.cr-header-pill {
   padding: 2px 0;
 }
 
-.cr-sheet-pair-win .cr-sheet-set { color: var(--cr-green, #182740); }
+.cr-sheet-pair-win .cr-sheet-set { color: var(--cr-green, #1b2a4a); }
 
 .cr-result-detail-empty {
   font-size: 0.85rem;
@@ -2656,12 +2656,12 @@ button.cr-header-pill {
 .cr-landing-feature-icon svg { width: 22px; height: 22px; }
 
 /* Feature icon colours (same as the public home page). */
-.cr-landing-feature-icon.cr-tone-red{color:#182740;background:#eef1f5;}
-.cr-landing-feature-icon.cr-tone-green{color:#182740;background:#e3f1fb;}
-.cr-landing-feature-icon.cr-tone-blue{color:#182740;background:#e3f1fb;}
-.cr-landing-feature-icon.cr-tone-lime{color:#182740;background:#e3f1fb;}
-.cr-landing-feature-icon.cr-tone-orange{color:#182740;background:#eef4fa;}
-.cr-landing-feature-icon.cr-tone-purple{color:#182740;background:#e3f1fb;}
+.cr-landing-feature-icon.cr-tone-red{color:#1b2a4a;background:#eef1f5;}
+.cr-landing-feature-icon.cr-tone-green{color:#1b2a4a;background:#e3f1fb;}
+.cr-landing-feature-icon.cr-tone-blue{color:#1b2a4a;background:#e3f1fb;}
+.cr-landing-feature-icon.cr-tone-lime{color:#1b2a4a;background:#e3f1fb;}
+.cr-landing-feature-icon.cr-tone-orange{color:#1b2a4a;background:#eef4fa;}
+.cr-landing-feature-icon.cr-tone-purple{color:#1b2a4a;background:#e3f1fb;}
 
 .cr-landing-feature-title {
   font-family: 'Bebas Neue', sans-serif;
@@ -3361,7 +3361,7 @@ button.cr-header-pill {
 /* Line name with the picked pair's record right beside it (wraps under it on
    narrow phones). */
 .cr-lineup-line-head { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; margin-bottom: 10px; }
-.cr-lineup-pair { font-size: 0.74rem; font-weight: 600; color: #182740; background: rgba(24, 39, 64, 0.10); border-radius: 999px; padding: 2px 10px; white-space: nowrap; }
+.cr-lineup-pair { font-size: 0.74rem; font-weight: 600; color: #1b2a4a; background: rgba(24, 39, 64, 0.10); border-radius: 999px; padding: 2px 10px; white-space: nowrap; }
 .cr-lineup-pair.is-new { color: var(--cr-text-muted); background: var(--cr-bg); }
 .cr-lineup-pair[hidden] { display: none; }
 /* Each player slot: the dropdown with "Already confirmed" beside it (stacked
@@ -3386,14 +3386,14 @@ button.cr-header-pill {
 .cr-lineup-pickrow { display: flex; align-items: center; gap: 8px; min-width: 0; }
 .cr-lineup-pickrow .cr-select { flex: 1 1 auto; min-width: 0; }
 .cr-lineup-clear { flex: 0 0 auto; width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--cr-border); background: var(--cr-card); font-size: 1.25rem; line-height: 1; color: var(--cr-text-muted); cursor: pointer; }
-.cr-lineup-clear:hover { color: #182740; border-color: #6b7688; }
+.cr-lineup-clear:hover { color: #1b2a4a; border-color: #6b7688; }
 .cr-lineup-actions { flex-wrap: wrap; align-items: center; }
 .cr-lineup-actions .cr-btn { white-space: nowrap; }
 @media (max-width: 480px) {
   .cr-lineup-actions .cr-btn { flex: 1 1 0; min-width: 0; padding-left: 8px; padding-right: 8px; font-size: 0.85rem; text-align: center; justify-content: center; }
   .cr-lineup-actions .cr-lineup-clear-all { flex-basis: 100%; margin-left: 0; text-align: center; }
 }
-.cr-lineup-clear-all { margin-left: auto; background: none; border: none; font: inherit; font-size: 0.88rem; font-weight: 700; color: #182740; text-decoration: underline; cursor: pointer; padding: 10px 4px; }
+.cr-lineup-clear-all { margin-left: auto; background: none; border: none; font: inherit; font-size: 0.88rem; font-weight: 700; color: #1b2a4a; text-decoration: underline; cursor: pointer; padding: 10px 4px; }
 /* Set Lineup: tap a name, then "Put … here" (lineup_pick_controller) */
 .cr-lp-panel { background: var(--cr-card); border: 1px solid var(--cr-border); border-radius: 10px; padding: 14px 16px; margin-bottom: 12px; }
 .cr-lp-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 2px 10px; margin-bottom: 10px; }
@@ -3412,7 +3412,7 @@ button.cr-header-pill {
 .cr-lp-line { flex: 0 0 auto; font-size: 0.68rem; font-weight: 800; letter-spacing: 0.3px; padding: 2px 6px; border-radius: 4px; background: var(--cr-black); color: var(--cr-white); }
 .cr-lp-line[hidden] { display: none; }
 .cr-lp-dot { flex: 0 0 auto; display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #cfd4dc; }
-.cr-lp-chip.is-yes .cr-lp-dot, .cr-lp-dot.is-yes { background: #182740; }
+.cr-lp-chip.is-yes .cr-lp-dot, .cr-lp-dot.is-yes { background: #1b2a4a; }
 .cr-lp-chip.is-no .cr-lp-dot, .cr-lp-dot.is-no { background: #6b7688; }
 .cr-lp-chip.is-no .cr-lp-name { color: var(--cr-text-muted); }
 .cr-lp-key { display: flex; flex-wrap: wrap; gap: 4px 16px; margin-top: 10px; font-size: 0.74rem; color: var(--cr-text-muted); }
@@ -3423,7 +3423,7 @@ button.cr-header-pill {
   .cr-lp-chip { gap: 6px; height: 48px; padding: 0 8px; font-size: 0.8rem; line-height: 1.2; }
   .cr-lp-name { white-space: normal; overflow-wrap: normal; word-break: normal; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
 }
-.cr-lineup-spot { grid-column: 1 / -1; min-height: 40px; border: 1.5px dashed var(--cr-gold); border-radius: 8px; background: rgba(24,39,64,0.10); font: inherit; font-size: 0.86rem; font-weight: 700; color: #182740; cursor: pointer; }
+.cr-lineup-spot { grid-column: 1 / -1; min-height: 40px; border: 1.5px dashed var(--cr-gold); border-radius: 8px; background: rgba(24,39,64,0.10); font: inherit; font-size: 0.86rem; font-weight: 700; color: #1b2a4a; cursor: pointer; }
 .cr-lineup-spot[hidden] { display: none; }
 
 
@@ -3535,7 +3535,7 @@ button.cr-header-pill {
   font-size: 0.65rem;
   font-weight: 700;
   background: #e3f1fb;
-  color: #182740;
+  color: #1b2a4a;
   letter-spacing: 0.5px;
   text-transform: uppercase;
 }
@@ -4215,10 +4215,10 @@ button.cr-header-pill {
 }
 
 .cr-dash-cal-dot-match    { background: var(--cr-gold); }
-.cr-dash-cal-dot-practice { background: #182740; }
-.cr-dash-cal-dot-clinic   { background: #182740; }
+.cr-dash-cal-dot-practice { background: #1b2a4a; }
+.cr-dash-cal-dot-clinic   { background: #1b2a4a; }
 .cr-dash-cal-dot-friendly { background: #7d8899; }
-.cr-dash-cal-dot-other    { background: #182740; }
+.cr-dash-cal-dot-other    { background: #1b2a4a; }
 
 .cr-dash-cal-legend {
   margin-top: 10px;
@@ -4320,10 +4320,10 @@ button.cr-header-pill {
   border-left: 3px solid var(--cr-gold);
 }
 
-.cr-dash-cal-item-practice { border-left: 3px solid #182740; }
-.cr-dash-cal-item-clinic   { border-left: 3px solid #182740; }
+.cr-dash-cal-item-practice { border-left: 3px solid #1b2a4a; }
+.cr-dash-cal-item-clinic   { border-left: 3px solid #1b2a4a; }
 .cr-dash-cal-item-friendly { border-left: 3px solid #7d8899; }
-.cr-dash-cal-item-other    { border-left: 3px solid #182740; }
+.cr-dash-cal-item-other    { border-left: 3px solid #1b2a4a; }
 
 .cr-dash-cal-item-row {
   display: flex;
@@ -4566,12 +4566,12 @@ button.cr-header-pill {
 
 /* — Badges: soft pills — */
 .cr-match-badge { border-radius: 999px; padding: 4px 11px; font-size: 0.64rem; }
-.cr-match-home { background: rgba(24, 39, 64,0.10); color: #182740; }
+.cr-match-home { background: rgba(24, 39, 64,0.10); color: #1b2a4a; }
 .cr-match-away { background: var(--cr-bg); color: var(--cr-text-muted); }
 .cr-result-badge { border-radius: 999px; padding: 3px 11px; font-weight: 700; }
-.cr-result-badge-win  { background: rgba(24, 39, 64,0.12); color: #182740; }
-.cr-result-badge-loss { background: rgba(107, 118, 136,0.10); color: #182740; }
-.cr-result-badge-tie  { background: rgba(24,39,64,0.14); color: #182740; }
+.cr-result-badge-win  { background: rgba(24, 39, 64,0.12); color: #1b2a4a; }
+.cr-result-badge-loss { background: rgba(107, 118, 136,0.10); color: #1b2a4a; }
+.cr-result-badge-tie  { background: rgba(24,39,64,0.14); color: #1b2a4a; }
 .cr-result-score { color: var(--cr-text-muted); font-weight: 700; }
 
 /* — Captain actions: clean full-width pill row (stack the split) — */
@@ -4758,10 +4758,10 @@ button.cr-header-pill {
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
 .cr-dash-cal-chip-match    { background: var(--cr-black); color: var(--cr-gold-bright); border-left-color: var(--cr-gold); }
-.cr-dash-cal-chip-practice { background: #e3f1fb; color: #182740; border-left-color: #182740; }
-.cr-dash-cal-chip-clinic   { background: #e3f1fb; color: #182740; border-left-color: #182740; }
-.cr-dash-cal-chip-friendly { background: #eef4fa; color: #182740; border-left-color: #7d8899; }
-.cr-dash-cal-chip-other    { background: #e3f1fb; color: #182740; border-left-color: #182740; }
+.cr-dash-cal-chip-practice { background: #e3f1fb; color: #1b2a4a; border-left-color: #1b2a4a; }
+.cr-dash-cal-chip-clinic   { background: #e3f1fb; color: #1b2a4a; border-left-color: #1b2a4a; }
+.cr-dash-cal-chip-friendly { background: #eef4fa; color: #1b2a4a; border-left-color: #7d8899; }
+.cr-dash-cal-chip-other    { background: #e3f1fb; color: #1b2a4a; border-left-color: #1b2a4a; }
 .cr-dash-cal-form-other[hidden] { display: none; }
 @media (hover: hover) and (pointer: fine) {
   .cr-dash-cal-chip[data-url]:hover { text-decoration: underline; }
@@ -4885,8 +4885,8 @@ a.cr-dash-cal-item-title { display: block; color: var(--cr-text); text-decoratio
 
 /* Lighter, warmer W/L circles (soft mint / soft rose, dark text) */
 .cr-st-dot { box-shadow: none; font-weight: 800; }
-.cr-st-dot-w { background: #e3f1fb; color: #182740; }
-.cr-st-dot-l { background: #d5dbe4; color: #182740; }
+.cr-st-dot-w { background: #e3f1fb; color: #1b2a4a; }
+.cr-st-dot-l { background: #d5dbe4; color: #1b2a4a; }
 .cr-st-dot-t { background: #7d8899; color: #5c4708; }
 
 /* Rank medallion on ivory — keep it crisp */
@@ -5016,8 +5016,8 @@ body.cr-ctx-division_teams-show { background: var(--cr-black); }
 .cr-dt-pop-note { font-size: 0.72rem; color: var(--cr-text-light); margin-top: 10px; }
 .cr-dt-date { font-weight: 700; color: var(--cr-text-muted); width: 48px; flex-shrink: 0; font-size: 0.85rem; }
 .cr-dt-ha { font-size: 0.66rem; font-weight: 800; border-radius: 5px; padding: 2px 6px; flex-shrink: 0; }
-.cr-dt-ha-home { background: rgba(24, 39, 64,0.12); color: #182740; }
-.cr-dt-ha-away { background: rgba(24,39,64,0.16); color: #182740; }
+.cr-dt-ha-home { background: rgba(24, 39, 64,0.12); color: #1b2a4a; }
+.cr-dt-ha-away { background: rgba(24,39,64,0.16); color: #1b2a4a; }
 .cr-dt-opp { flex: 1 1 auto; min-width: 0; font-weight: 600; color: var(--cr-text); }
 .cr-dt-score { font-weight: 800; color: var(--cr-text-muted); font-variant-numeric: tabular-nums; }
 .cr-dt-empty { color: rgba(255, 255, 255, 0.7); background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 18px; text-align: center; }
@@ -5046,13 +5046,13 @@ body.cr-ctx-division_teams-show { background: var(--cr-black); }
 .cr-sched-right { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
 .cr-sched-score { font-weight: 700; color: var(--cr-text-muted); font-size: 0.9rem; }
 .cr-sched-upcoming { font-size: 0.72rem; color: var(--cr-text-light); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
-.cr-sched-pill { font-size: 0.66rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #182740; background: rgba(24, 39, 64,0.10); padding: 3px 9px; border-radius: 999px; }
+.cr-sched-pill { font-size: 0.66rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #1b2a4a; background: rgba(24, 39, 64,0.10); padding: 3px 9px; border-radius: 999px; }
 .cr-sched-caret { color: var(--cr-text-light); font-size: 0.8rem; transition: transform 0.15s; }
 .cr-sched-item[open] .cr-sched-caret { transform: rotate(180deg); }
 .cr-tag { font-size: 0.62rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px; padding: 3px 9px; border-radius: 999px; }
-.cr-tag-home { background: rgba(24, 39, 64,0.10); color: #182740; }
+.cr-tag-home { background: rgba(24, 39, 64,0.10); color: #1b2a4a; }
 .cr-tag-away { background: #eceef1; color: var(--cr-text-muted); }
-.cr-tag-playoff { background: rgba(24,39,64,0.18); color: #182740; }
+.cr-tag-playoff { background: rgba(24,39,64,0.18); color: #1b2a4a; }
 
 /* Edit opponent standings */
 .cr-stand-edit-card { background: var(--cr-card); border: 1px solid var(--cr-border); border-radius: 10px; padding: 14px 16px; margin-bottom: 12px; }
@@ -5115,7 +5115,7 @@ body.cr-ctx-division_teams-show { background: var(--cr-black); }
 /* Team page Upcoming / Results switch: same clean segmented look as the
    My Teams tabs (grey track, white pill for the selected one, no icons). */
 body.cr-ctx-teams-show .cr-seg { background: #e6ebf2; border: none; border-radius: 12px; padding: 4px; }
-body.cr-ctx-teams-show .cr-seg-btn { color: #182740; font-weight: 600; font-size: 0.88rem; border-radius: 9px; min-height: 40px; padding: 8px 22px; }
+body.cr-ctx-teams-show .cr-seg-btn { color: #1b2a4a; font-weight: 600; font-size: 0.88rem; border-radius: 9px; min-height: 40px; padding: 8px 22px; }
 body.cr-ctx-teams-show .cr-seg-btn:hover { color: var(--cr-black); }
 body.cr-ctx-teams-show .cr-seg-btn-active { background: var(--cr-card); color: var(--cr-black); box-shadow: 0 1px 2px rgba(10, 22, 40, 0.10), 0 1px 6px rgba(10, 22, 40, 0.06); }
 
@@ -5194,7 +5194,7 @@ body.cr-ctx-lineups-edit .cr-field > span { color: var(--cr-text); }
   padding: 16px 22px;
   border-bottom: 1px solid var(--cr-border);
 }
-.cr-pp-head-title { font-size: 1.25rem; font-weight: 800; color: #182740; letter-spacing: 0.3px; }
+.cr-pp-head-title { font-size: 1.25rem; font-weight: 800; color: #1b2a4a; letter-spacing: 0.3px; }
 .cr-pp-head-link { font-size: 0.9rem; font-weight: 600; color: var(--cr-teal-deep); text-decoration: none; }
 .cr-pp-head-link:hover { text-decoration: underline; }
 
@@ -5225,7 +5225,7 @@ body.cr-ctx-lineups-edit .cr-field > span { color: var(--cr-text); }
 .cr-pp-city-form { display: flex; gap: 8px; margin-top: 8px; max-width: 320px; }
 .cr-pp-city-form .cr-deltri-input { flex: 1 1 auto; }
 .cr-pp-city-note { font-size: 0.72rem; color: var(--cr-text-muted); margin: 4px 0 0; }
-.cr-pp-sub { font-size: 0.85rem; color: #182740; margin-top: 3px; }
+.cr-pp-sub { font-size: 0.85rem; color: #1b2a4a; margin-top: 3px; }
 .cr-pp-label { font-size: 1rem; font-weight: 600; color: var(--cr-text); }
 .cr-pp-live {
   font-size: 0.62rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;
@@ -5238,7 +5238,7 @@ body.cr-ctx-lineups-edit .cr-field > span { color: var(--cr-text); }
 .cr-pp-metric-val.cr-pp-gold { color: var(--cr-gold); }
 .cr-pp-metric-cap { font-size: 0.68rem; color: var(--cr-text-muted); margin-top: 2px; }
 
-.cr-pp-meter-title { font-size: 0.8rem; color: #182740; margin-bottom: 2px; }
+.cr-pp-meter-title { font-size: 0.8rem; color: #1b2a4a; margin-bottom: 2px; }
 .cr-pp-meter { width: 100%; max-width: 240px; height: auto; }
 .cr-pp-meter-scale {
   display: flex; justify-content: space-between; width: 100%; max-width: 200px;
@@ -5271,7 +5271,7 @@ body.cr-ctx-lineups-edit .cr-field > span { color: var(--cr-text); }
 .cr-adv { width: 100%; border-collapse: collapse; font-size: 0.9rem; min-width: 640px; }
 .cr-adv.cr-adv-compact { min-width: 360px; }
 .cr-adv th, .cr-adv td { padding: 12px 10px; text-align: center; white-space: nowrap; color: var(--cr-text); }
-.cr-adv thead th { background: #f7f9fc; color: #182740; font-weight: 700; font-size: 0.8rem; border-bottom: 1px solid var(--cr-border); }
+.cr-adv thead th { background: #f7f9fc; color: #1b2a4a; font-weight: 700; font-size: 0.8rem; border-bottom: 1px solid var(--cr-border); }
 .cr-adv tbody tr { border-bottom: 1px solid #eef1f5; }
 .cr-adv tbody tr:last-child { border-bottom: none; }
 .cr-adv-rowhead { text-align: left !important; padding-left: 18px !important; font-weight: 700; }
@@ -5602,7 +5602,7 @@ body.cr-ctx-friendlies-index, body.cr-ctx-friendlies-edit, body.cr-ctx-friendlie
 .cr-fr-index-title { font-weight: 800; font-size: 1rem; color: var(--cr-black); }
 .cr-fr-index-sub { font-size: 0.85rem; color: var(--cr-text); margin-top: 2px; }
 .cr-fr-badge { flex-shrink: 0; font-size: 0.75rem; font-weight: 800; padding: 4px 10px; border-radius: 999px; }
-.cr-fr-badge-up { background: #e3f1fb; color: #182740; }
+.cr-fr-badge-up { background: #e3f1fb; color: #1b2a4a; }
 .cr-fr-badge-done { background: #e5e7eb; color: #1f2937; }
 .cr-fr-hint-block { margin: 0; font-size: 0.85rem; color: var(--cr-text); background: var(--cr-bg); border-radius: 8px; padding: 10px 12px; }
 .cr-fr-big-btn { min-height: 44px; padding-left: 18px; padding-right: 18px; font-size: 0.95rem; }
@@ -5619,14 +5619,14 @@ body.cr-ctx-friendlies-index, body.cr-ctx-friendlies-edit, body.cr-ctx-friendlie
 .cr-fr-generate { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-bottom: 12px; }
 .cr-fr-generate .cr-fr-courts-summary { padding: 0; color: var(--cr-text); }
 .cr-fr-sets-link { color: var(--cr-teal-deep); font-weight: 600; font-size: 0.88rem; }
-.cr-fr-warn { flex-basis: 100%; margin: 0; padding: 10px 14px; border-radius: 10px; background: #eef4fa; color: #182740; font-weight: 600; font-size: 0.9rem; }
+.cr-fr-warn { flex-basis: 100%; margin: 0; padding: 10px 14px; border-radius: 10px; background: #eef4fa; color: #1b2a4a; font-weight: 600; font-size: 0.9rem; }
 .cr-fr-swap-hint { color: var(--cr-text-muted); font-size: 0.88rem; margin: 0 0 10px; }
 .cr-fr-sets { display: grid; gap: 12px; }
 .cr-fr-set { background: var(--cr-card); border: 2px solid var(--cr-border); border-radius: 14px; padding: 12px 14px; }
 .cr-fr-set-done { border-color: #d6ecf9; }
 .cr-fr-set-head { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 6px; }
 .cr-fr-set-head h3 { margin: 0; font-size: 1.15rem; font-weight: 800; color: var(--cr-black); }
-.cr-fr-played { font-size: 0.8rem; color: #182740; background: #e3f1fb; border-radius: 999px; padding: 2px 8px; vertical-align: middle; }
+.cr-fr-played { font-size: 0.8rem; color: #1b2a4a; background: #e3f1fb; border-radius: 999px; padding: 2px 8px; vertical-align: middle; }
 .cr-fr-court-row { padding: 10px 0; border-top: 1px solid var(--cr-border); }
 .cr-fr-court-label { display: block; font-size: 0.72rem; font-weight: 800; letter-spacing: 0.8px; text-transform: uppercase; color: var(--cr-black); margin-bottom: 6px; }
 .cr-fr-match { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
@@ -5636,12 +5636,12 @@ body.cr-ctx-friendlies-index, body.cr-ctx-friendlies-edit, body.cr-ctx-friendlie
 span.cr-fr-chip { cursor: default; }
 .cr-fr-chip.is-picked { background: var(--cr-gold); border-color: var(--cr-gold); color: var(--cr-black); }
 /* Friendly lineup: partners match, each pair on the court in its own colour. */
-.cr-fr-pair-tone-0 .cr-fr-chip { border-color: #182740; background: #e3f1fb; color: #182740; }
-.cr-fr-pair-tone-1 .cr-fr-chip { border-color: #6b7688; background: #eef1f5; color: #182740; }
-.cr-fr-pair-tone-2 .cr-fr-chip { border-color: #182740; background: #e3f1fb; color: #182740; }
-.cr-fr-pair-tone-3 .cr-fr-chip { border-color: #182740; background: #e3f1fb; color: #182740; }
-.cr-fr-pair-tone-4 .cr-fr-chip { border-color: #7d8899; background: #eef4fa; color: #182740; }
-.cr-fr-pair-tone-5 .cr-fr-chip { border-color: #182740; background: #e3f1fb; color: #182740; }
+.cr-fr-pair-tone-0 .cr-fr-chip { border-color: #1b2a4a; background: #e3f1fb; color: #1b2a4a; }
+.cr-fr-pair-tone-1 .cr-fr-chip { border-color: #6b7688; background: #eef1f5; color: #1b2a4a; }
+.cr-fr-pair-tone-2 .cr-fr-chip { border-color: #1b2a4a; background: #e3f1fb; color: #1b2a4a; }
+.cr-fr-pair-tone-3 .cr-fr-chip { border-color: #1b2a4a; background: #e3f1fb; color: #1b2a4a; }
+.cr-fr-pair-tone-4 .cr-fr-chip { border-color: #7d8899; background: #eef4fa; color: #1b2a4a; }
+.cr-fr-pair-tone-5 .cr-fr-chip { border-color: #1b2a4a; background: #e3f1fb; color: #1b2a4a; }
 .cr-lineup-share-row { display: flex; justify-content: flex-end; margin: 14px 0 8px; }
 
 /* "Can you play?" page (/a/:token) */
@@ -5651,28 +5651,28 @@ span.cr-fr-chip { cursor: default; }
 .cr-poll-place { margin-top: 2px; }
 .cr-poll-ask { padding: 14px 18px 4px; font-size: 0.95rem; color: var(--cr-text); }
 .cr-poll-counts { margin-top: 4px; font-size: 0.82rem; color: var(--cr-text-muted); }
-.cr-poll-yes-count { color: #182740; font-weight: 700; } .cr-poll-no-count { color: #182740; font-weight: 700; }
+.cr-poll-yes-count { color: #1b2a4a; font-weight: 700; } .cr-poll-no-count { color: #1b2a4a; font-weight: 700; }
 .cr-poll-list { list-style: none; margin: 8px 0 0; padding: 0 18px; }
 .cr-poll-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 0; border-top: 1px solid var(--cr-border); }
 .cr-poll-row-me { background: rgba(24,39,64,0.08); margin: 0 -18px; padding: 10px 18px; }
 .cr-poll-name { font-weight: 700; color: var(--cr-text); min-width: 0; overflow-wrap: anywhere; }
-.cr-poll-you { font-size: 0.66rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; color: #182740; background: rgba(24,39,64,0.2); padding: 2px 7px; border-radius: 999px; margin-left: 4px; }
+.cr-poll-you { font-size: 0.66rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; color: #1b2a4a; background: rgba(24,39,64,0.2); padding: 2px 7px; border-radius: 999px; margin-left: 4px; }
 .cr-poll-btns { display: flex; gap: 8px; flex-shrink: 0; }
 .cr-poll-form { margin: 0; }
 .cr-poll-btn { min-width: 64px; min-height: 44px; padding: 0 14px; border-radius: 999px; border: 1.5px solid var(--cr-border); background: var(--cr-card); font: inherit; font-weight: 800; font-size: 0.9rem; color: var(--cr-text-muted); cursor: pointer; }
 /* Picked answer: the same light green / light red as the friendly name chips */
-.cr-poll-btn-yes.is-on { background: #e3f1fb; border-color: #182740; color: #182740; }
-.cr-poll-btn-no.is-on { background: #eef1f5; border-color: #6b7688; color: #182740; }
+.cr-poll-btn-yes.is-on { background: #e3f1fb; border-color: #1b2a4a; color: #1b2a4a; }
+.cr-poll-btn-no.is-on { background: #eef1f5; border-color: #6b7688; color: #1b2a4a; }
 .cr-lineup-said { display: grid; gap: 4px; margin: 0 0 14px; font-size: 0.85rem; color: var(--cr-text); }
-.cr-lineup-said-yes { color: #182740; } .cr-lineup-said-no { color: #182740; }
+.cr-lineup-said-yes { color: #1b2a4a; } .cr-lineup-said-no { color: #1b2a4a; }
 
 /* Optional court score under each match on a friendly */
 .cr-fr-score { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 12px; margin-top: 8px; }
 .cr-fr-score-val { display: inline-flex; align-items: baseline; gap: 6px; font-size: 1.05rem; font-weight: 600; }
 .cr-fr-score-win { font-weight: 900; }
 .cr-fr-score-dash { color: var(--cr-text-muted); font-weight: 600; }
-.cr-fr-score-tone-0 { color: #182740; } .cr-fr-score-tone-1 { color: #182740; } .cr-fr-score-tone-2 { color: #182740; }
-.cr-fr-score-tone-3 { color: #182740; } .cr-fr-score-tone-4 { color: #182740; } .cr-fr-score-tone-5 { color: #182740; }
+.cr-fr-score-tone-0 { color: #1b2a4a; } .cr-fr-score-tone-1 { color: #1b2a4a; } .cr-fr-score-tone-2 { color: #1b2a4a; }
+.cr-fr-score-tone-3 { color: #1b2a4a; } .cr-fr-score-tone-4 { color: #1b2a4a; } .cr-fr-score-tone-5 { color: #1b2a4a; }
 .cr-fr-score-edit summary { cursor: pointer; list-style: none; font-size: 0.85rem; font-weight: 700; color: var(--cr-teal-deep); }
 .cr-fr-score-edit summary::-webkit-details-marker { display: none; }
 .cr-fr-score-edit[open] { flex-basis: 100%; }
@@ -5895,7 +5895,7 @@ body.cr-ctx-admin-members { background: var(--cr-navy-page); }
 .cr-mem-remove-form { flex: none; margin: 0; }
 .cr-mem-edit { flex: none; font-size: 0.72rem; font-weight: 700; color: var(--cr-text-muted); text-decoration: none; border: 1px solid var(--cr-border); border-radius: 999px; padding: 2px 10px; }
 .cr-mem-edit:hover { color: var(--cr-text); border-color: var(--cr-text-light); }
-.cr-mem-remove { font: inherit; font-size: 0.72rem; font-weight: 700; color: #182740; background: transparent; border: 1px solid rgba(107, 118, 136, 0.35); border-radius: 999px; padding: 2px 10px; cursor: pointer; }
+.cr-mem-remove { font: inherit; font-size: 0.72rem; font-weight: 700; color: #1b2a4a; background: transparent; border: 1px solid rgba(107, 118, 136, 0.35); border-radius: 999px; padding: 2px 10px; cursor: pointer; }
 .cr-mem-remove:hover { background: rgba(107, 118, 136, 0.06); }
 .cr-mem-email, .cr-mem-teams { font-size: 0.76rem; color: var(--cr-text-light); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .cr-mem-cell { font-size: 0.86rem; color: var(--cr-text); white-space: nowrap; }
@@ -5977,8 +5977,8 @@ body.cr-ctx-admin-members { background: var(--cr-navy-page); }
 }
 
 /* Delete team: same chip, red so it never looks like a routine action. */
-.cr-chip-btn.cr-chip-danger { color: #182740; border-color: rgba(107, 118, 136, 0.35); }
-.cr-chip-btn.cr-chip-danger:hover { background: rgba(107, 118, 136, 0.07); border-color: #6b7688; color: #182740; }
+.cr-chip-btn.cr-chip-danger { color: #1b2a4a; border-color: rgba(107, 118, 136, 0.35); }
+.cr-chip-btn.cr-chip-danger:hover { background: rgba(107, 118, 136, 0.07); border-color: #6b7688; color: #1b2a4a; }
 
 /* My Teams: the tab bar and the capped Upcoming / Friendlies lists sit in
    the middle of the page, not hugging the left edge. */
@@ -6023,18 +6023,18 @@ body.cr-ctx-admin-members { background: var(--cr-navy-page); }
   display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
   margin: 0 0 14px; padding: 11px 14px;
   background: #eef4fa; border: 1px solid #eef4fa; border-radius: 12px;
-  color: #182740; font-size: 0.86rem; line-height: 1.4;
+  color: #1b2a4a; font-size: 0.86rem; line-height: 1.4;
 }
 .cr-awaiting-alert-icon { font-size: 1rem; }
 .cr-awaiting-alert-text { flex: 1 1 220px; min-width: 0; }
-.cr-awaiting-alert-text strong { color: #182740; }
+.cr-awaiting-alert-text strong { color: #1b2a4a; }
 .cr-awaiting-alert-btn { flex-shrink: 0; }
 .cr-awaiting-list { margin-bottom: 12px; }
 .cr-awaiting-row { cursor: default; background: var(--cr-card); }
 .cr-awaiting-badge {
   display: inline-flex; align-items: center; white-space: nowrap;
   padding: 4px 10px; border-radius: 999px;
-  background: #eef4fa; color: #182740; border: 1px solid #eef4fa;
+  background: #eef4fa; color: #1b2a4a; border: 1px solid #eef4fa;
   font-size: 0.74rem; font-weight: 700; text-decoration: none;
 }
 .cr-awaiting-badge-link:hover { background: #eef4fa; }
@@ -6071,12 +6071,12 @@ body.cr-ctx-admin-members { background: var(--cr-navy-page); }
 .cr-sheet-tr-link { color: var(--cr-text-light); margin-left: 3px; }
 .cr-sheet-tr-link:hover { color: var(--cr-teal-deep); }
 .cr-opp-link-icon { color: var(--cr-text-light); margin-left: 2px; }
-.cr-awaiting-alert-icon { color: #182740; display: inline-flex; }
+.cr-awaiting-alert-icon { color: #1b2a4a; display: inline-flex; }
 .cr-playoff-trophy { color: var(--cr-gold); display: inline-flex; }
 .cr-password-toggle { font-size: 0.75rem; font-weight: 600; color: var(--cr-text-muted); }
 /* Availability dots on the captain view (were emoji). */
 .dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; vertical-align: middle; }
-.dot-in { background: #182740; }
+.dot-in { background: #1b2a4a; }
 .dot-out { background: #6b7688; }
 .dot-none { background: var(--cr-card); border: 1.5px solid #cbd5e1; }
 .cr-sc-sub { color: var(--cr-text-muted); font-size: 0.9rem; margin: 6px 0 10px; }
@@ -6100,7 +6100,7 @@ body.cr-ctx-admin-members { background: var(--cr-navy-page); }
 .cr-dp-count { color: var(--cr-text-muted); font-size: 0.74rem; margin-top: 2px; white-space: nowrap; }
 .cr-dp-tag { display: inline-block; margin-left: 6px; padding: 1px 8px; border-radius: 999px; font-size: 0.66rem; font-weight: 700; letter-spacing: 0.4px; text-transform: uppercase; vertical-align: 2px; }
 .cr-dp-tag-regular { background: var(--cr-teal-tint); color: var(--cr-teal-deep); }
-.cr-dp-tag-sub { background: #eef4fa; color: #182740; }
+.cr-dp-tag-sub { background: #eef4fa; color: #1b2a4a; }
 .cr-dp-more { margin-top: 8px; }
 .cr-dp-more > summary { cursor: pointer; color: var(--cr-teal-deep); font-weight: 600; font-size: 0.86rem; padding: 6px 2px; list-style: none; }
 .cr-dp-more[open] > summary { margin-bottom: 8px; }
@@ -6114,7 +6114,7 @@ body.cr-ctx-admin-members { background: var(--cr-navy-page); }
 
 /* Sign-up bot trap: off-screen, never seen or tabbed to by people. */
 .cr-hp { position: absolute; left: -10000px; top: auto; width: 1px; height: 1px; overflow: hidden; }
-.cr-btn-danger-text { color: #182740; border-color: rgba(107, 118, 136, 0.35); }
+.cr-btn-danger-text { color: #1b2a4a; border-color: rgba(107, 118, 136, 0.35); }
 
 /* Player Ratings list: names, level, record and win % sit together; only the
    last column takes the leftover width, so no gap opens after the names. */
@@ -6222,41 +6222,41 @@ body.cr-ctx-admin-members { background: var(--cr-navy-page); }
   background: linear-gradient(135deg, #7d8899, #7d8899); color: #12213d; font-size: 0.78rem; font-weight: 800; letter-spacing: 0.3px;
 }
 .cr-sb-who { display: grid; min-width: 0; }
-.cr-sb-name { font-size: 0.92rem; font-weight: 700; color: #182740; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.cr-sb-meta { font-size: 0.72rem; color: #182740; }
-.cr-sb-caret { margin-left: auto; font-size: 0.7rem; color: #182740; }
+.cr-sb-name { font-size: 0.92rem; font-weight: 700; color: #1b2a4a; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cr-sb-meta { font-size: 0.72rem; color: #1b2a4a; }
+.cr-sb-caret { margin-left: auto; font-size: 0.7rem; color: #1b2a4a; }
 .cr-sb-menu .cr-menu-panel { left: 0; right: 0; min-width: 0; }
 .cr-sb-menu .cr-menu-item { flex-direction: column; align-items: flex-start; gap: 1px; }
 .cr-sb-menu .cr-menu-item small { font-size: 0.73rem; font-weight: 500; color: var(--cr-text-muted); }
 .cr-sb-signout-form { margin: 0; }
-.cr-sb-signout { color: #182740; }
+.cr-sb-signout { color: #1b2a4a; }
 
 .cr-sb-search {
   display: flex; align-items: center; gap: 8px; margin: 10px 0 6px; padding: 0 12px; height: 36px;
-  border-radius: 10px; background: rgba(255, 255, 255, 0.07); border: 1px solid transparent; color: #182740;
+  border-radius: 10px; background: rgba(255, 255, 255, 0.07); border: 1px solid transparent; color: #1b2a4a;
 }
 .cr-sb-search:focus-within { border-color: rgba(24, 39, 64, 0.6); background: rgba(255, 255, 255, 0.1); }
 .cr-sb-search input { flex: 1; min-width: 0; border: 0; background: transparent; color: #fff; font: inherit; font-size: 0.84rem; outline: none; }
 .cr-sb-search input::placeholder { color: #8d9db5; }
 .cr-sb-search input::-webkit-search-cancel-button { -webkit-appearance: none; }
 
-.cr-sb-h { margin: 14px 10px 4px; font-size: 0.64rem; font-weight: 800; letter-spacing: 1.2px; text-transform: uppercase; color: #182740; }
+.cr-sb-h { margin: 14px 10px 4px; font-size: 0.64rem; font-weight: 800; letter-spacing: 1.2px; text-transform: uppercase; color: #1b2a4a; }
 .cr-sb-link {
   display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 9px;
   color: #dbe3ef; text-decoration: none; font-size: 0.88rem; font-weight: 600;
 }
 .cr-sb-link:hover { background: rgba(255, 255, 255, 0.06); color: #fff; }
 .cr-sb-link .cr-icon { flex: none; opacity: 0.85; }
-.cr-sb-link.is-on { background: rgba(24, 39, 64, 0.16); color: #182740; box-shadow: inset 3px 0 0 #182740; }
+.cr-sb-link.is-on { background: rgba(24, 39, 64, 0.16); color: #1b2a4a; box-shadow: inset 3px 0 0 #1b2a4a; }
 .cr-sb-dot { flex: none; width: 8px; height: 8px; margin: 0 4px 0 5px; border-radius: 50%; }
 .cr-sb-team-name { min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.cr-sb-team small { margin-left: auto; padding-left: 8px; font-size: 0.68rem; font-weight: 600; color: #182740; white-space: nowrap; }
+.cr-sb-team small { margin-left: auto; padding-left: 8px; font-size: 0.68rem; font-weight: 600; color: #1b2a4a; white-space: nowrap; }
 
 /* + New Team: opens upward. */
 .cr-sb-new { margin-top: 16px; }
 .cr-sb-newbtn {
   display: flex; align-items: center; justify-content: center; gap: 6px; width: 100%; height: 40px; border: 0; border-radius: 10px;
-  background: linear-gradient(135deg, #182740, #182740); color: #fff; font: inherit; font-size: 0.88rem; font-weight: 700; cursor: pointer;
+  background: linear-gradient(135deg, #1b2a4a, #1b2a4a); color: #fff; font: inherit; font-size: 0.88rem; font-weight: 700; cursor: pointer;
 }
 .cr-sb-newbtn:hover { filter: brightness(1.06); }
 .cr-sb-new .cr-menu-panel { top: auto; bottom: calc(100% + 6px); }
@@ -6316,10 +6316,10 @@ body.cr-ctx-admin-members { background: var(--cr-navy-page); }
 .cr-lu-status {
   justify-self: start; padding: 4px 10px; border-radius: 999px; font-size: 0.7rem; font-weight: 700; white-space: nowrap;
 }
-.cr-lu-status.is-muted { background: #eef1f5; color: #182740; }
-.cr-lu-status.is-gold { background: rgba(24, 39, 64, 0.15); color: #182740; }
-.cr-lu-status.is-yes { background: rgba(24, 39, 64, 0.12); color: #182740; }
-.cr-lu-status.is-no { background: rgba(107, 118, 136, 0.1); color: #182740; }
+.cr-lu-status.is-muted { background: #eef1f5; color: #1b2a4a; }
+.cr-lu-status.is-gold { background: rgba(24, 39, 64, 0.15); color: #1b2a4a; }
+.cr-lu-status.is-yes { background: rgba(24, 39, 64, 0.12); color: #1b2a4a; }
+.cr-lu-status.is-no { background: rgba(107, 118, 136, 0.1); color: #1b2a4a; }
 .cr-lu-action { justify-self: stretch; }
 .cr-lu-btn {
   display: inline-flex; align-items: center; justify-content: center; width: 100%; height: 34px; padding: 0 12px; box-sizing: border-box;
@@ -6329,8 +6329,8 @@ body.cr-ctx-admin-members { background: var(--cr-navy-page); }
 .cr-lu-btn:hover { border-color: var(--cr-text-light); }
 .cr-lu-btn.is-primary { background: var(--cr-black); border-color: var(--cr-black); color: #fff; }
 .cr-lu-btn.is-primary:hover { background: var(--cr-black-soft); }
-.cr-lu-btn.is-yes { width: auto; background: rgba(24, 39, 64, 0.1); border-color: rgba(24, 39, 64, 0.35); color: #182740; }
-.cr-lu-btn.is-no { width: auto; background: rgba(107, 118, 136, 0.06); border-color: rgba(107, 118, 136, 0.3); color: #182740; }
+.cr-lu-btn.is-yes { width: auto; background: rgba(24, 39, 64, 0.1); border-color: rgba(24, 39, 64, 0.35); color: #1b2a4a; }
+.cr-lu-btn.is-no { width: auto; background: rgba(107, 118, 136, 0.06); border-color: rgba(107, 118, 136, 0.3); color: #1b2a4a; }
 .cr-lu-reply { grid-column: 2 / -1; display: flex; align-items: center; gap: 8px; margin-top: 6px; font-size: 0.8rem; color: var(--cr-text-muted); }
 .cr-lu-reply span { margin-right: auto; }
 @media (max-width: 600px) {
@@ -6613,15 +6613,15 @@ body.cr-ctx-matches-edit_my_line .cr-form-help { color: var(--cr-text-muted); }
 /* Lineup status: a saved draft (players can't see it) or posted. */
 .cr-lineup-status { font-size: 0.85rem; line-height: 1.45; padding: 10px 14px; border-radius: 10px; margin: 0 0 16px; }
 .cr-lineup-status.is-draft { background: rgba(24, 39, 64, 0.12); color: #6b5216; border: 1px solid rgba(24, 39, 64, 0.35); }
-.cr-lineup-status.is-posted { background: rgba(24, 39, 64, 0.08); color: #182740; border: 1px solid rgba(24, 39, 64, 0.25); }
+.cr-lineup-status.is-posted { background: rgba(24, 39, 64, 0.08); color: #1b2a4a; border: 1px solid rgba(24, 39, 64, 0.25); }
 .cr-lineup-status a { color: inherit; font-weight: 700; }
-.cr-sched-pill.cr-sched-pill-draft { color: #182740; background: rgba(24, 39, 64, 0.15); }
-.cr-lu-status.is-draft { background: rgba(24, 39, 64, 0.15); color: #182740; }
+.cr-sched-pill.cr-sched-pill-draft { color: #1b2a4a; background: rgba(24, 39, 64, 0.15); }
+.cr-lu-status.is-draft { background: rgba(24, 39, 64, 0.15); color: #1b2a4a; }
 
 /* Enter scores: Win / Loss / Tie as three even buttons. */
 .cr-result-toggle.cr-result-toggle-3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
 .cr-result-toggle-3 .cr-result-option { justify-content: center; padding: 14px 8px; }
-.cr-result-tie:has(input:checked) { border-color: #64748b; background: #f1f5f9; color: #182740; }
+.cr-result-tie:has(input:checked) { border-color: #64748b; background: #f1f5f9; color: #1b2a4a; }
 body.cr-ctx-matches-edit_results .cr-result-option:has(input:checked) .cr-result-label { color: inherit; }
 
 /* Set Lineup: each line's start time (split court times). */
@@ -6721,8 +6721,8 @@ body.cr-ctx-division_teams-show .cr-shell-main::before { display: none; }
   font: inherit; font-size: 0.9rem; font-weight: 700; color: var(--cr-text); cursor: pointer; border-radius: 8px;
 }
 .cr-team-menu-item:hover { color: var(--cr-teal); }
-.cr-team-menu-danger { color: #182740; }
-.cr-team-menu-danger:hover { color: #182740; }
+.cr-team-menu-danger { color: #1b2a4a; }
+.cr-team-menu-danger:hover { color: #1b2a4a; }
 .cr-team-menu-off { color: var(--cr-text-light); cursor: default; }
 .cr-team-menu-off:hover { color: var(--cr-text-light); }
 .cr-team-menu-note { margin: 0; padding: 2px 10px 9px; font-size: 0.76rem; line-height: 1.35; color: var(--cr-text-muted); }
@@ -6802,7 +6802,7 @@ body.cr-ctx-division_teams-show .cr-shell-main::before { display: none; }
   display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px; margin-right: 6px;
   border-radius: 6px; font-size: 0.7rem; font-weight: 800; color: #fff; background: var(--cr-text-muted); vertical-align: 1px;
 }
-.cr-st-last-w { background: #182740; }
+.cr-st-last-w { background: #1b2a4a; }
 .cr-st-last-l { background: #6b7688; }
 .cr-st-last-t { background: #7d8899; }
 .cr-st-last-score { font-weight: 700; color: var(--cr-text); margin-right: 4px; }
@@ -6868,7 +6868,7 @@ body.cr-ctx-division_teams-show .cr-shell-main::before { display: none; }
   display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: 8px;
   font-size: 0.74rem; font-weight: 800; color: #fff;
 }
-.cr-hero-form-w { background: #182740; }
+.cr-hero-form-w { background: #1b2a4a; }
 .cr-hero-form-l { background: #6b7688; }
 .cr-hero-form-t { background: #7d8899; color: #1f1600; }
 @media (min-width: 900px) {
@@ -6882,7 +6882,7 @@ body.cr-ctx-division_teams-show .cr-shell-main::before { display: none; }
   display: inline-flex; align-items: center; justify-content: center; width: 18px; height: 18px; margin-right: 3px;
   border-radius: 5px; font-size: 0.62rem; font-weight: 800; color: #fff;
 }
-.cr-rp-form-w { background: #182740; }
+.cr-rp-form-w { background: #1b2a4a; }
 .cr-rp-form-l { background: #6b7688; }
 .cr-rp-unranked td .cr-rp-form-dot { opacity: 0.75; }
 @media (max-width: 600px) {
@@ -6916,10 +6916,10 @@ body.cr-ctx-division_teams-show .cr-shell-main::before { display: none; }
    no grid or squares patterns.
    ===================================================================== */
 :root {
-  --cr-navy: #182740;
+  --cr-navy: #1b2a4a;
   --cr-page: #eaf5fc;          /* the court blue, very light */
   --cr-hero: #d6ecf9;          /* banners: the court blue, lighter */
-  --cr-black: #182740;
+  --cr-black: #1b2a4a;
   --cr-black-soft: #24344f;
   --cr-navy-page: #eaf5fc;
   --cr-bg: #eaf5fc;
@@ -6930,16 +6930,16 @@ body.cr-ctx-division_teams-show .cr-shell-main::before { display: none; }
   --cr-gold: #7d8899;
   --cr-gold-soft: #9aa5b4;
   --cr-gold-bright: #ffffff;
-  --cr-accent: #c9a24a;
+  --cr-accent: #c9a227;
   --cr-accent-tint: #f6eed8;
-  --cr-teal: #182740;
-  --cr-teal-deep: #182740;
+  --cr-teal: #1b2a4a;
+  --cr-teal-deep: #1b2a4a;
   --cr-teal-tint: rgba(24, 39, 64, 0.07);
-  --cr-text: #182740;
+  --cr-text: #1b2a4a;
   --cr-text-muted: #5f6b7e;
   --cr-text-light: #7d8899;
   --cr-border: #dbe3ec;
-  --cr-green: #182740;
+  --cr-green: #1b2a4a;
   --cr-red: #6b7688;
   --cr-win-bg: #dcb862;        /* W chip: gold, navy letter */
   --cr-loss-bg: #e6eaf0;       /* L chip: light grey, navy letter */
@@ -7045,7 +7045,7 @@ body.cr-ctx-sessions-new .cr-admin-reset-note, .cr-dt-page .cr-back-link a { col
 /* Sidebar league dots and team colour dots stay (they're the team's own colours). */
 
 /* The logo ball tile keeps its gold. */
-.cr-brand-ball, .cr-logo-mark { background: linear-gradient(135deg, #c9a24a, #e2c57e); box-shadow: 0 3px 12px rgba(201, 162, 74, 0.35); }
+.cr-brand-ball, .cr-logo-mark { background: linear-gradient(135deg, #c9a227, #e2c57e); box-shadow: 0 3px 12px rgba(201, 162, 74, 0.35); }
 /* Table header rows: light blue, not cream. */
 .cr-standings thead th, .cr-standings thead tr { background: #f3f8fc; }
 .cr-standings tbody tr.cr-st-row:first-child td { background: transparent; }
@@ -7073,7 +7073,7 @@ body.cr-ctx-sessions-new .cr-admin-reset-note, .cr-dt-page .cr-back-link a { col
 .cr-header-signup { background: var(--cr-navy) !important; color: #fff !important; }
 .cr-popup-confirm, .cr-auth-submit, .cr-match-date, .cr-badge-admin, .cr-standings-you-badge, .cr-player-avatar { background: var(--cr-navy); color: #fff; }
 .cr-popup-confirm:hover, .cr-auth-submit:hover { background: var(--cr-black-soft); color: #fff; }
-.cr-auth-logo { background: linear-gradient(135deg, #c9a24a, #e2c57e); }
+.cr-auth-logo { background: linear-gradient(135deg, #c9a227, #e2c57e); }
 .cr-roster-role-captain { background: #e3f1fb; color: var(--cr-navy); }
 .cr-chart-split-left, .cr-bar-fill { background: var(--cr-navy); }
 .cr-cal-btn:hover { background: #e3f1fb; color: var(--cr-navy); }
@@ -7278,10 +7278,10 @@ html body .cr-tone-purple { color: #7c4dce !important; background: #f1ebfb !impo
   /* The old blush accent now uses the court green. Text on it stays navy. */
   --cr-rose: #6CAF7E;
   --cr-rose-tint: #E4F3E8;
-  --cr-rose-ink: #182740;
+  --cr-rose-ink: #1b2a4a;
   /* Secondary text is dark navy too. */
-  --cr-text-muted: #182740;
-  --cr-text-light: #182740;
+  --cr-text-muted: #1b2a4a;
+  --cr-text-light: #1b2a4a;
 }
 html body .cr-awaiting-alert, html body .cr-lineup-confirm-prompt { border-color: var(--cr-court-green-line) !important; }
 .cr-hero-side-label:first-child, .cr-lookup-tbl .cr-you, .cr-you-tag, .cr-st-you { color: var(--cr-navy) !important; }
@@ -7347,3 +7347,74 @@ html body .cr-deltri-record, html body .cr-st-n, html body .cr-roster-rating, ht
 html body .cr-main [style*="--cr-gold"], html body .cr-main [style*="--cr-text-light"] { color: var(--cr-navy) !important; }
 html body .cr-main a:not([class]), html body .cr-rp-hero-link, html body .cr-pp-head-link { text-decoration: underline; text-decoration-color: var(--cr-court-green); text-underline-offset: 3px; }
 html body .cr-roster-history-link, html body button.cr-roster-history-link { color: var(--cr-navy) !important; background: #fff; border: 1px solid #cfd9e4; }
+
+/* ================================================================
+   DESIGN SYSTEM (Tara, Nov 19 2026) — one system on every page.
+   Navy #1B2A4A for ALL text; gold #C9A227 primary buttons with navy text;
+   Court Green #6CAF7E the only other accent (tint #E4F3E8 for your own row);
+   every card solid cream/white, 1px visible border, same radius + padding.
+   ================================================================ */
+:root {
+  --cr-navy: #1b2a4a; --cr-text: #1b2a4a; --cr-black: #1b2a4a;
+  --cr-text-muted: #1b2a4a; --cr-text-light: #1b2a4a; --cr-rose-ink: #1b2a4a;
+  --cr-accent: #c9a227; --cr-gold-btn: #c9a227; --cr-gold-btn-hover: #b8931f;
+  --cr-card-border: #cfd9e4;
+  --cr-card-radius: 14px;
+  --cr-card-pad: 16px 18px;
+}
+
+/* Header Band match card. */
+.cr-band-grid { display: grid !important; grid-template-columns: 1fr; gap: 14px; }
+@media (min-width: 900px) { .cr-band-grid { grid-template-columns: 1fr 1fr; } }
+.cr-band-card {
+  display: flex; flex-direction: column; min-width: 0;
+  background: var(--cr-card); border: 1px solid var(--cr-card-border); border-radius: var(--cr-card-radius);
+  overflow: hidden; color: var(--cr-navy);
+  transition: box-shadow .15s ease;
+}
+@media (hover: hover) { .cr-band-card[onclick]:hover { box-shadow: 0 4px 14px rgba(27, 42, 74, 0.10); } }
+.cr-band-head {
+  display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+  background: var(--cr-court-green-tint); border-bottom: 1px solid var(--cr-court-green-line);
+  padding: 10px 18px; font-size: 0.86rem; font-weight: 700; color: var(--cr-navy);
+}
+.cr-band-dot { font-weight: 700; }
+.cr-band-pill, .cr-band-status {
+  display: inline-flex; align-items: center; height: 22px; padding: 0 9px; border-radius: 999px;
+  font-size: 0.7rem; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase;
+  background: #fff; border: 1px solid var(--cr-court-green); color: var(--cr-navy);
+}
+.cr-band-status { margin-left: auto; text-transform: none; letter-spacing: 0; font-size: 0.74rem; border-color: var(--cr-card-border); }
+.cr-band-status-you { border-color: var(--cr-court-green); }
+.cr-band-body { padding: 14px 18px 12px; display: flex; flex-direction: column; gap: 3px; flex: 1; }
+.cr-band-league { font-size: 0.7rem; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: var(--cr-navy); }
+html body .cr-band-title {
+  margin: 2px 0 2px; font-family: var(--cr-serif); font-weight: 600; font-size: 1.12rem; line-height: 1.25;
+  color: var(--cr-navy); text-transform: none; letter-spacing: 0; overflow-wrap: anywhere;
+}
+.cr-band-teams { font-size: 0.84rem; color: var(--cr-navy); }
+.cr-band-venue { margin-top: 6px; font-size: 0.84rem; color: var(--cr-navy); }
+.cr-band-venue .cr-venue, .cr-band-venue .cr-venue-name, .cr-band-venue .cr-venue-line { color: var(--cr-navy) !important; }
+.cr-band-venue-tbd { font-style: italic; }
+.cr-band-actions {
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  border-top: 1px solid var(--cr-card-border); padding: 12px 18px;
+}
+html body .cr-band-btn {
+  display: inline-flex; align-items: center; justify-content: center; min-height: 38px; padding: 0 18px;
+  border-radius: 10px; background: var(--cr-gold-btn); color: var(--cr-navy) !important;
+  font-weight: 800; font-size: 0.88rem; text-decoration: none !important; border: 1px solid var(--cr-gold-btn); white-space: nowrap;
+}
+html body .cr-band-btn:hover { background: var(--cr-gold-btn-hover); }
+.cr-band-actions .cr-my-week-right { display: flex; gap: 8px; margin: 0; flex-direction: row; }
+.cr-band-actions .cr-cal-btn { width: 36px; height: 36px; border: 1px solid var(--cr-card-border); background: #fff; color: var(--cr-navy); border-radius: 10px; }
+/* The old row grid must not apply to band cards. */
+.cr-band-grid > .cr-band-card.cr-cu-row { display: flex !important; grid-template-columns: none !important; padding: 0 !important; }
+html body .cr-band-card { align-items: stretch; text-align: left; padding: 0; margin: 0; }
+html body .cr-band-card > * { width: 100%; box-sizing: border-box; }
+.cr-band-head .cr-band-status { margin-left: auto; }
+html body .cr-band-grid { max-width: var(--cr-col); width: 100%; margin-left: auto; margin-right: auto; box-sizing: border-box; }
+html body .cr-band-actions .cr-cal-btn, html body .cr-band-actions .cr-share-icon {
+  display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; padding: 0; margin: 0;
+  border: 1px solid var(--cr-card-border); background: #fff; color: var(--cr-navy); border-radius: 10px; box-sizing: border-box;
+}

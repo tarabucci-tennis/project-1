@@ -1,0 +1,44 @@
+<%# One match as a Header Band card (My Teams Upcoming). Locals: match.
+    One gold button, labelled by state: Enter scores (started, no scores,
+    captain) / Enter my line (a player on a line) / Set lineup (captains) /
+    View lineup (posted) / View match. %>
+<% team = match.tennis_team %>
+<% captain = @captain_team_ids.include?(team.id) %>
+<% lineup = match.lineup %>
+<% my_line = @my_lineup_lines[match.id] %>
+<% needs_scores = match.started? && !match.scores_entered? %>
+<%
+  label, url =
+    if needs_scores && captain then [ "Enter scores", edit_results_team_match_path(team, match) ]
+    elsif needs_scores && match.on_a_line?(current_user) then [ "Enter my line", my_line_team_match_path(team, match) ]
+    elsif captain then [ "Set lineup", edit_team_match_lineup_path(team, match) ]
+    elsif lineup&.published? then [ "View lineup", team_match_path(team, match) ]
+    else [ "View match", team_match_path(team, match) ]
+    end
+  status =
+    if needs_scores then "Needs scores"
+    elsif my_line then "You're on #{my_line}"
+    elsif lineup&.published? then "Lineup posted"
+    elsif captain && lineup then "Draft"
+    end
+  pill = match.home? ? "Home" : (match.away? ? "Away" : nil)
+  place = match_place_block(match)
+%>
+<% icons = capture do %>
+  <div class="cr-my-week-right">
+    <a href="<%= google_calendar_url(match) %>" target="_blank" rel="noopener" class="cr-cal-btn" title="Add to Google Calendar"
+       onclick="event.stopPropagation(); window.open(this.href, '_blank'); return false;">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+      </svg>
+    </a>
+    <%= render "matches/share_button", match: match, icon_only: true %>
+  </div>
+<% end %>
+<%= render "shared/band_card", date: match.match_date, time: match.time_label, pill: pill,
+      status: status, status_you: my_line.present?,
+      league: team.league_label, title: "#{team.name} vs. #{match.opponent}",
+      teams: [ team.flight.presence || team.league_name, team.season_name ].compact_blank.join(" · ").presence,
+      venue: place, venue_tbd: (place ? nil : "Place TBD"),
+      action_label: label, action_url: url, href: team_match_path(team, match),
+      icons: icons, extra_class: "" %>
