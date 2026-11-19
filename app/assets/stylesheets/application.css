@@ -7342,7 +7342,7 @@ html body .cr-chart-section, html body .cr-ps-col-card { border-radius: 12px; pa
 html body .cr-main a:not([class]), html body .cr-back-link, html body .cr-back-link a, html body .cr-rp-plink,
 html body .cr-fr-box-link, html body .cr-rp-hero-link, html body .cr-enter-results-link, html body .cr-ps-playerlink,
 html body .cr-pp-head-link, html body .cr-archive-row-record, html body .cr-dp-tag, html body .cr-pp-city-edit summary, html body .cr-pp-city-edit > summary,
-html body .cr-archive-league-name, html body .cr-archive-count, html body .cr-sched-date-mon, html body .cr-captain-col-stat,
+html body .cr-archive-league-name, html body .cr-archive-count, html body .cr-captain-col-stat,
 html body .cr-deltri-record, html body .cr-st-n, html body .cr-roster-rating, html body .cr-roster a,
 html body .cr-main [style*="--cr-gold"], html body .cr-main [style*="--cr-text-light"] { color: var(--cr-navy) !important; }
 html body .cr-main a:not([class]), html body .cr-rp-hero-link, html body .cr-pp-head-link { text-decoration: underline; text-decoration-color: var(--cr-court-green); text-underline-offset: 3px; }
@@ -7543,3 +7543,6 @@ html body .cr-brand-ball-inner {
 html body .cr-band-btn { background: var(--cr-card-btn) !important; color: #fff !important; border: 0; }
 html body .cr-band-btn:hover { background: var(--cr-card-btn-hover) !important; }
 html body .cr-band-chip { background: var(--cr-navy); color: #fff !important; }
+
+/* Month on the navy date squares must show (it went navy-on-navy in #330). */
+html body .cr-sched-date-mon { color: #fff !important; opacity: .85; }
