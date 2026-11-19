@@ -3,6 +3,7 @@
 <details class="cr-sched-item">
   <summary class="cr-sched-row">
     <div class="cr-sched-date">
+      <div class="cr-sched-date-dow"><%= match.match_date.strftime("%a").upcase %></div>
       <div class="cr-sched-date-mon"><%= match.match_date.strftime("%b").upcase %></div>
       <div class="cr-sched-date-day"><%= match.match_date.strftime("%-d") %></div>
     </div>

@@ -4,6 +4,7 @@
     into a real match, which can then get a score. %>
 <% row = capture do %>
   <div class="cr-sched-date">
+    <div class="cr-sched-date-dow"><%= event.event_date.strftime("%a").upcase %></div>
     <div class="cr-sched-date-mon"><%= event.event_date.strftime("%b").upcase %></div>
     <div class="cr-sched-date-day"><%= event.event_date.strftime("%-d") %></div>
   </div>

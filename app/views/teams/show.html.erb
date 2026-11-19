@@ -261,6 +261,7 @@
                   <%# Row across the full card: date | opponent & time | place | status | action | ▾ %>
                   <summary class="cr-sched-row cr-sched-row-full">
                     <div class="cr-sched-date">
+                      <div class="cr-sched-date-dow"><%= match.match_date.strftime("%a").upcase %></div>
                       <div class="cr-sched-date-mon"><%= match.match_date.strftime("%b").upcase %></div>
                       <div class="cr-sched-date-day"><%= match.match_date.strftime("%-d") %></div>
                     </div>
@@ -349,6 +350,7 @@
                 <div class="cr-sched-item">
                   <div class="cr-sched-row cr-awaiting-row <%= 'cr-has-venue' if match.venue %>">
                     <div class="cr-sched-date">
+                      <div class="cr-sched-date-dow"><%= match.match_date.strftime("%a").upcase %></div>
                       <div class="cr-sched-date-mon"><%= match.match_date.strftime("%b").upcase %></div>
                       <div class="cr-sched-date-day"><%= match.match_date.strftime("%-d") %></div>
                     </div>
@@ -392,6 +394,7 @@
                   <button type="button" class="cr-sched-row cr-sched-row-btn <%= 'cr-has-venue' if match.venue %>"
                           onclick="document.getElementById('<%= dialog_id %>').showModal()">
                     <div class="cr-sched-date">
+                      <div class="cr-sched-date-dow"><%= match.match_date.strftime("%a").upcase %></div>
                       <div class="cr-sched-date-mon"><%= match.match_date.strftime("%b").upcase %></div>
                       <div class="cr-sched-date-day"><%= match.match_date.strftime("%-d") %></div>
                     </div>
@@ -518,6 +521,7 @@
                    data-availability-status-value="<%= current_status %>"
                    data-availability-message-value="<%= current_message %>">
                 <div class="cr-sched-date">
+                  <div class="cr-sched-date-dow"><%= match.match_date.strftime("%a").upcase %></div>
                   <div class="cr-sched-date-mon"><%= match.match_date.strftime("%b").upcase %></div>
                   <div class="cr-sched-date-day"><%= match.match_date.strftime("%-d") %></div>
                 </div>
