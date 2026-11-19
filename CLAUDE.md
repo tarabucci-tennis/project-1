@@ -233,7 +233,7 @@ wordmark + gold ball tile; white left menu; navy `#182740` text, headings and pr
 `#5f6b7e` secondary text, `#dbe3ec` borders; white rounded cards. **Gold `#c9a24a` (`--cr-accent`) ONLY for the logo
 ball, Enter scores, active states (current tab/menu item, today), and win chips.** `--cr-gold` is now soft slate for old
 "gold" spots. Results: **W = gold chip `#dcb862` + navy W; L = light grey `#e6eaf0` + navy L; T = white + navy outline
-+ navy T.** **No red, green or bright yellow anywhere; no grid/squares patterns** (the hero grid and gold net SVG are off).
++ navy T.** **No red, green or bright yellow anywhere; no grid/squares patterns** (the hero grid and gold net SVG are off). **One exception (Tara, Nov 19 2026, #329):** the six feature tiles on the sign-in and public home pages keep their original colourful icons (`cr-tone-*`: red, green, blue, lime, orange, purple).
 The block lives at the end of application.css ("SITE PALETTE"); courtreport.css and pages/courtreport.html.erb were
 recoloured too (both load on their pages). Emails (LineupMailer, password reset) were NOT recoloured.
 
