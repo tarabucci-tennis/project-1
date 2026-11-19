@@ -7252,3 +7252,13 @@ html body .cr-pp-head-title, html body .cr-pp-name-text { font-family: var(--cr-
     opacity: 0.38;
   }
 }
+
+/* Feature tiles keep their original colourful icons (Tara, Nov 19 2026): the
+   six "See your week / Set availability / …" tiles on the sign-in and home
+   pages. The ONLY place these colours are allowed; everything else stays navy. */
+html body .cr-tone-red    { color: #e5484d !important; background: #fdecec !important; }
+html body .cr-tone-green  { color: #2e9d5b !important; background: #e6f6ec !important; }
+html body .cr-tone-blue   { color: #3b6fd8 !important; background: #e8effc !important; }
+html body .cr-tone-lime   { color: #7a9a14 !important; background: #f2f8dc !important; }
+html body .cr-tone-orange { color: #d97706 !important; background: #fdf1e1 !important; }
+html body .cr-tone-purple { color: #7c4dce !important; background: #f1ebfb !important; }
