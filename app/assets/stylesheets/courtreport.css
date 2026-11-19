@@ -94,7 +94,7 @@ body{font-family:'Inter',sans-serif;background:var(--off);color:var(--text);-web
 .cr-match-meta{font-size:.72rem;color:var(--sub);}
 .cr-match-badge{font-size:.62rem;font-weight:700;padding:2px 8px;border-radius:5px;white-space:nowrap;flex-shrink:0;}
 .cr-match-home{background:#e3f1fb;color:#182740;}
-.cr-match-away{background:#eef1f5;color:#6b7688;}
+.cr-match-away{background:#eef1f5;color:#182740;}
 .cr-match-result{font-family:'Bebas Neue',sans-serif;font-size:1.1rem;flex-shrink:0;}
 .cr-match-win{color:var(--green);}
 .cr-match-loss{color:var(--red);}

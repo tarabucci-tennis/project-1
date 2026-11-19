@@ -227,6 +227,18 @@ record + last 5, table has a Last 5 column; profile Win % by Line / Partner / Te
 the time on its own line; upcoming friendlies two across; court background = ONE full-page layer (#323): `.cr-shell-main::before` (and `body::before` on the public home page), position: fixed, the WHOLE court `contain`-ed to the screen at 20% opacity, ALWAYS the upright court (`court-tall.jpg`, Tara: "up and down, not side to side"); on computers (#328) a ROW of whole upright courts (`repeat-x`, 38%) so the margins beside the 920px column read as court. Never a cropped band (Tara: a top band read as a fragment);
 time ranges print "12:00 – 1:30 PM" and bare times in titles get AM/PM (`LineStartTime.normalize_range`, `mark_times`).
 
+**FINAL LOCKED PALETTE (Tara, Nov 19 2026, #330) — "do not change them again".** Light blue page, Fraunces headings,
+cream cards (all kept). Accent = **tennis-court light green** (the green surround of a blue hard court): `--cr-court-green
+#6CAF7E` for small accents (section markers, the rank-1 ring, underlines), `--cr-court-green-tint #E4F3E8` for YOUR OWN row
+(`.cr-me-row`: ratings table, roster, Players & Teams; `.cr-standings-tbl-self`). Small doses only. **Green is NOT the win
+colour** (W gold, L grey, no red/yellow/traffic-light chips). **ALL text dark navy #182740**, secondary text and links too
+(links underlined); no pale text on pale blue, no green text. The blush rose (#326) is GONE (its vars now = green/navy). Never
+use clay/terracotta (Tara rejected it). Tables, stat tiles and bars sit on solid cream/white cards with a visible border;
+bars = white track + `#b9c6d4` border + navy fill, the value (`60% · 3/5`) in navy at the end. The court shows only in the
+margins: `.cr-shell-main::after` is a solid light-blue band behind the column on computers. Win % shows the real number
+whenever there's ≥1 match (Tara asked; no more "% from 3"); Best Partner still needs 3+. Block: end of application.css,
+"FINAL LOCKED PALETTE".
+
 **SITE PALETTE (Tara, Nov 18 2026, #325) — follow on every page:** light-blue page `#eaf5fc` (from the court photo)
 with the faded court; banners `#d6ecf9` with navy text (NO dark navy hero/header blocks); white header with a navy
 wordmark + gold ball tile; white left menu; navy `#182740` text, headings and primary buttons (white text); soft grey
