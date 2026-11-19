@@ -7522,3 +7522,17 @@ html body .cr-fr-past-title { max-width: var(--cr-col); width: 100%; box-sizing:
 
 /* Logo tile: solid court green with the bouncing ball, no court lines (Tara, Nov 19 2026). */
 html body .cr-brand-ball { background: #6CAF7E; }
+
+/* Logo: solid court green with a bouncing yellow tennis ball (drawn, so every phone shows the same ball). */
+html body .cr-brand-ball { position: relative; overflow: hidden; background: #6CAF7E; }
+html body .cr-brand-ball-inner {
+  position: absolute; left: 50%; bottom: 16%; width: 46%; height: 46%; margin-left: -23%;
+  background: url("/logo-ball.svg") center / contain no-repeat;
+  animation: cr-logo-hop 1.1s cubic-bezier(.3, 0, .5, 1) infinite;
+}
+@keyframes cr-logo-hop {
+  0%, 100% { transform: translateY(0) scale(1.08, .9); }
+  12% { transform: translateY(-6%) scale(1, 1); }
+  50% { transform: translateY(-55%) scale(.96, 1.04); }
+  88% { transform: translateY(-6%) scale(1, 1); }
+}
