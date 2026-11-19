@@ -7418,3 +7418,10 @@ html body .cr-band-actions .cr-cal-btn, html body .cr-band-actions .cr-share-ico
   display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; padding: 0; margin: 0;
   border: 1px solid var(--cr-card-border); background: #fff; color: var(--cr-navy); border-radius: 10px; box-sizing: border-box;
 }
+
+/* Logo tile (Tara, Nov 19 2026): a tennis court in the site palette (court-blue court, court-green surround,
+   white lines) with the same bouncing ball. */
+html body .cr-brand-ball {
+  background: #6CAF7E url("/logo-court.svg") center / cover no-repeat;
+  box-shadow: 0 2px 8px rgba(27, 42, 74, 0.22); border: 1px solid rgba(27, 42, 74, 0.12);
+}
