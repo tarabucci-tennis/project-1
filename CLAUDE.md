@@ -227,6 +227,17 @@ record + last 5, table has a Last 5 column; profile Win % by Line / Partner / Te
 the time on its own line; upcoming friendlies two across; court background = ONE full-page layer (#323): `.cr-shell-main::before` (and `body::before` on the public home page), position: fixed, the WHOLE court `contain`-ed to the screen at 20% opacity, ALWAYS the upright court (`court-tall.jpg`, Tara: "up and down, not side to side"); on computers (#328) a ROW of whole upright courts (`repeat-x`, 38%) so the margins beside the 920px column read as court. Never a cropped band (Tara: a top band read as a fragment);
 time ranges print "12:00 – 1:30 PM" and bare times in titles get AM/PM (`LineStartTime.normalize_range`, `mark_times`).
 
+**DESIGN SYSTEM (Tara, Nov 19 2026, #331+, one PR per page):** navy **#1B2A4A** for all text, gold **#C9A227** primary
+buttons with navy text, Court Green #6CAF7E / tint #E4F3E8 as the only other accent. Every card: solid cream/white, 1px
+`--cr-card-border #cfd9e4`, `--cr-card-radius 14px`. **Every match/friendly/calendar-entry card = Header Band card**
+(`shared/_band_card`): green-tint band with date · time · HOME/AWAY/kind pill (+ status pill right), then league label,
+serif title, teams line, venue, divider, ONE gold button left (label by state) + calendar/share icons right. Matches:
+`teams/_match_band_card`. Two across ≥900px (`.cr-band-grid`). Page-by-page plan Tara sent: Home (Up next hero, Needs
+your attention, This week, Your teams, Recent results), My Teams (team cards grid + standings), Team page (hero stat
+tiles, tabs, band cards), Calendar (bordered cells, palette-only pills, this-week band strip, convert button), Friendlies,
+Lookup (big search bar), Ratings (Top 5 strip), Profile (stat tiles, bars, match timeline), Match/score entry (per-line
+cards, auto W/L, one Save). Done so far: #331 tokens + band cards on My Teams Upcoming/Friendlies.
+
 **FINAL LOCKED PALETTE (Tara, Nov 19 2026, #330) — "do not change them again".** Light blue page, Fraunces headings,
 cream cards (all kept). Accent = **tennis-court light green** (the green surround of a blue hard court): `--cr-court-green
 #6CAF7E` for small accents (section markers, the rank-1 ring, underlines), `--cr-court-green-tint #E4F3E8` for YOUR OWN row
