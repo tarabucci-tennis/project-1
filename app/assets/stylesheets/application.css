@@ -7546,3 +7546,5 @@ html body .cr-band-chip { background: var(--cr-navy); color: #fff !important; }
 
 /* Month on the navy date squares must show (it went navy-on-navy in #330). */
 html body .cr-sched-date-mon { color: #fff !important; opacity: .85; }
+/* Weekday above the month on the schedule date squares (Tara: "month, and day"). */
+html body .cr-sched-date-dow { font-size: 0.58rem; font-weight: 800; letter-spacing: 1px; color: #fff; opacity: .75; line-height: 1.2; }
