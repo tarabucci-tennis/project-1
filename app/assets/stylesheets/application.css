@@ -7491,3 +7491,31 @@ html body .cr-brand-your {
   margin: 0 0 3px 1px; color: var(--cr-slate);
 }
 @media (max-width: 720px) { html body .cr-brand-text { font-size: 1.3rem; letter-spacing: 0; } }
+
+/* Header Band fixes (Tara, Nov 19 2026, #334): TWO pills on every band (date · time, and status);
+   ALL secondary text navy #1B2A4A; only the team / event name in the serif. */
+:root { --cr-slate: #1b2a4a; --cr-text-muted: #1b2a4a; --cr-text-light: #1b2a4a; }
+html body .cr-band-head { justify-content: space-between; }
+html body .cr-band-when {
+  display: inline-flex; align-items: center; padding: 5px 12px; border-radius: 999px; background: #fff;
+  border: 1px solid var(--cr-court-green); font-size: 0.92rem; font-weight: 700; color: var(--cr-navy);
+}
+html body .cr-band-pill {
+  padding: 5px 11px; border-radius: 999px; background: #fff; border: 1px solid var(--cr-court-green);
+  font-size: 0.74rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: var(--cr-navy);
+}
+html body .cr-band-league, html body .cr-band-title-vs, html body .cr-band-teams, html body .cr-band-note,
+html body .cr-band-venue-addr, html body .cr-band-venue-name { color: var(--cr-navy) !important; }
+html body .cr-band-title-main { font-family: var(--cr-serif); }
+html body .cr-band-title-vs { font-family: Inter, system-ui, -apple-system, sans-serif; font-weight: 500; }
+html body .cr-band-teams { font-size: 0.86rem; font-weight: 600; }
+html body .cr-band-note { font-weight: 700; }
+html body .cr-fr-past-title { margin: 26px 0 12px; }
+.cr-fr-past-more { margin: 10px 0 0; font-size: 0.9rem; }
+@media (min-width: 900px) { html body .cr-fr-more.cr-fr-more-two { grid-template-columns: 1fr 1fr; } }
+html body .cr-fr-past-title { max-width: var(--cr-col); width: 100%; box-sizing: border-box; margin-left: auto; margin-right: auto; padding-left: 0; padding-right: 0; }
+@media (max-width: 720px) {
+  html body .cr-band-head { padding: 12px 14px; gap: 8px; flex-wrap: wrap; }
+  html body .cr-band-when { font-size: 0.82rem; padding: 4px 10px; white-space: nowrap; overflow: visible; text-overflow: clip; }
+  html body .cr-band-pill { font-size: 0.66rem; padding: 4px 9px; }
+}

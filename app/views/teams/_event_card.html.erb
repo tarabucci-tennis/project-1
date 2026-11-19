@@ -7,12 +7,13 @@
     <%= render "teams/cu_buttons", cal_url: friendly_google_calendar_url(item, share_url: fr_url),
           share_text: friendly_invite_text(item), share_url: fr_url %>
   <% end %>
-  <%= render "shared/band_card", date: item.starts_at, time: item.time_label, pill: "Friendly",
+  <% done = item.starts_at < Time.current %>
+  <%= render "shared/band_card", date: item.starts_at, time: item.time_label, pill: (done ? "Completed" : "Upcoming"),
         chip: (mine ? "You're in" : nil),
         league: "Friendly", title: item.title.presence || "Friendly",
         note: "#{friendly_signup_status(item)}#{" · lineup ready" if item.lineup?}",
         venue: item.place, venue_tbd: (item.place ? nil : "Place TBD"),
-        action_label: (item.lineup? ? "See lineup" : (mine ? "Open" : "Sign up")), action_url: friendly_path(item),
+        action_label: (done ? "View results" : (item.lineup? ? "See lineup" : (mine ? "Open" : "Sign up"))), action_url: friendly_path(item),
         href: friendly_path(item), icons: icons, extra_class: "cr-my-week-card-event" %>
 <% else %>
   <% venue = nil %>
@@ -23,8 +24,9 @@
   <% icons = capture do %>
     <%= render "teams/cu_buttons", cal_url: team_event_google_calendar_url(item), share_text: team_event_share_text(item) %>
   <% end %>
-  <%= render "shared/band_card", date: item.event_date, time: item.time_label, pill: item.kind_label,
-        league: item.tennis_team.league_label, title: LineStartTime.mark_times(item.title),
+  <% ev_status = item.event_date < Date.current ? "Completed" : (item.kind_label.to_s =~ /playoff/i ? "Playoffs" : "Upcoming") %>
+  <%= render "shared/band_card", date: item.event_date, time: item.time_label, pill: ev_status,
+        league: "#{item.tennis_team.league_label} · #{item.kind_label}", title: LineStartTime.mark_times(item.title),
         note: item.tennis_team.name, venue: venue, venue_tbd: (venue ? nil : "Place TBD"),
         action_label: "View team", action_url: team_path(item.tennis_team, tab: "schedule"),
         icons: icons, extra_class: "cr-my-week-card-event" %>
