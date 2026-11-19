@@ -7519,3 +7519,6 @@ html body .cr-fr-past-title { max-width: var(--cr-col); width: 100%; box-sizing:
   html body .cr-band-when { font-size: 0.82rem; padding: 4px 10px; white-space: nowrap; overflow: visible; text-overflow: clip; }
   html body .cr-band-pill { font-size: 0.66rem; padding: 4px 9px; }
 }
+
+/* Logo tile: solid court green with the bouncing ball, no court lines (Tara, Nov 19 2026). */
+html body .cr-brand-ball { background: #6CAF7E; }
