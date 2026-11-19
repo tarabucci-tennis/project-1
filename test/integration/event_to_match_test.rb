@@ -9,7 +9,7 @@ class EventToMatchTest < ActionDispatch::IntegrationTest
     TeamMembership.create!(user: @captain, tennis_team: @team, role: "captain")
     TeamMembership.create!(user: @player, tennis_team: @team, role: "player")
     @event = @team.team_events.create!(title: "Over Served vs Smashers", kind: "Match",
-                                       event_date: Date.new(2026, 11, 18), start_time: "6:30 PM",
+                                       event_date: @date = Date.current + 7, start_time: "6:30 PM",
                                        location: "Legacy Tennis", notes: "Bring balls")
   end
 
@@ -28,7 +28,7 @@ class EventToMatchTest < ActionDispatch::IntegrationTest
     match = @team.matches.last
     assert_redirected_to edit_team_match_path(@team, match)
     assert_equal "Smashers", match.opponent
-    assert_equal Time.zone.local(2026, 11, 18, 18, 30), match.match_date
+    assert_equal Time.zone.local(@date.year, @date.month, @date.day, 18, 30), match.match_date
     assert_equal "6:30 PM", match.match_time
     assert_equal "Legacy Tennis", match.location
     assert_equal "Bring balls", match.notes
