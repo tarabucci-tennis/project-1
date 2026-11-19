@@ -201,10 +201,10 @@
         <% [ [ :overall, "Overall Win %", "matches" ], [ :singles, "Singles Win %", "singles" ], [ :doubles, "Doubles Win %", "doubles" ] ].each do |key, label, noun| %>
           <% d = @playing_stats[key] %>
           <div class="cr-playing-stat-card">
-            <div class="cr-playing-stat-value<%= " cr-playing-stat-value-none" if d[:total] < min %>"><%= d[:total] >= min ? "#{d[:pct]}%" : "—" %></div>
+            <div class="cr-playing-stat-value<%= " cr-playing-stat-value-none" if d[:total].zero? %>"><%= d[:total].positive? ? "#{d[:pct]}%" : "—" %></div>
             <div class="cr-playing-stat-label"><%= label %></div>
             <div class="cr-playing-stat-detail">
-              <% if d[:total].zero? %>No <%= noun %> yet<% else %><%= d[:won] %> of <%= pluralize(d[:total], "match") %><%= " · % from #{min}" if d[:total] < min %><% end %>
+              <% if d[:total].zero? %>No <%= noun %> yet<% else %><%= d[:won] %> of <%= pluralize(d[:total], "match") %><% end %>
             </div>
           </div>
         <% end %>
@@ -225,8 +225,8 @@
           <% @playing_stats[:by_line].sort_by { |k, _| k }.each do |label, data| %>
             <div class="cr-playing-stats-row">
               <span class="cr-ps-col-line"><%= label %></span>
-              <% if data[:total] >= min %>
-                <span class="cr-ps-col-stat" style="font-weight: 700; color: <%= data[:pct] >= 50 ? 'var(--cr-green)' : 'var(--cr-red)' %>;"><%= data[:pct] %>%</span>
+              <% if data[:total].positive? %>
+                <span class="cr-ps-col-stat" style="font-weight: 700; color: var(--cr-navy);"><%= data[:pct] %>%</span>
               <% else %>
                 <span class="cr-ps-col-stat cr-ps-col-muted">—</span>
               <% end %>
@@ -250,8 +250,8 @@
           <% @playing_stats[:partners].each do |partner| %>
             <div class="cr-playing-stats-row">
               <span class="cr-ps-col-name"><%= partner[:name] %></span>
-              <% if partner[:qualified] %>
-                <span class="cr-ps-col-stat" style="font-weight: 700; color: <%= partner[:pct] >= 50 ? 'var(--cr-green)' : 'var(--cr-red)' %>;"><%= partner[:pct] %>%</span>
+              <% if partner[:total].positive? %>
+                <span class="cr-ps-col-stat" style="font-weight: 700; color: var(--cr-navy);"><%= partner[:pct] %>%</span>
               <% else %>
                 <span class="cr-ps-col-stat cr-ps-col-muted">—</span>
               <% end %>
@@ -275,8 +275,8 @@
           <% @playing_stats[:by_team].each do |t| %>
             <div class="cr-playing-stats-row">
               <span class="cr-ps-col-name"><%= t[:name] %></span>
-              <% if t[:total] >= min %>
-                <span class="cr-ps-col-stat" style="font-weight: 700; color: <%= t[:pct] >= 50 ? 'var(--cr-green)' : 'var(--cr-red)' %>;"><%= t[:pct] %>%</span>
+              <% if t[:total].positive? %>
+                <span class="cr-ps-col-stat" style="font-weight: 700; color: var(--cr-navy);"><%= t[:pct] %>%</span>
               <% else %>
                 <span class="cr-ps-col-stat cr-ps-col-muted">—</span>
               <% end %>
@@ -292,7 +292,7 @@
           <% if @playing_stats[:best_partner] %>
             Best Doubles Partner: <strong><%= @playing_stats[:best_partner][:name] %></strong> (<%= @playing_stats[:best_partner][:pct] %>%, <%= @playing_stats[:best_partner][:won] %>–<%= @playing_stats[:best_partner][:lost] %>)
           <% end %>
-          <div class="cr-ps-min-note">Win % and Best Partner need <%= min %>+ matches together.</div>
+          <div class="cr-ps-min-note">Best Partner needs <%= min %>+ matches together.</div>
         </div>
       <% end %>
 

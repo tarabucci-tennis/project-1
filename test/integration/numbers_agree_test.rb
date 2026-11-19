@@ -205,8 +205,8 @@ class ProfileCleanupTest < ActionDispatch::IntegrationTest
     assert_match(/Best Doubles Partner: <strong>Clean Partner 1<\/strong>/, response.body)
     assert_select ".cr-playing-stat-card", text: /No singles yet/
     assert_no_match(/0 of 0 matches/, response.body)
-    # A 1-0 partner shows a record but no %.
-    assert_select ".cr-playing-stats-row", text: /Clean Partner 2\s*—\s*1–0 \(1 match\)/
+    # A 1-0 partner shows the real % next to the record (Tara, Nov 19 2026), but isn't Best Partner.
+    assert_select ".cr-playing-stats-row", text: /Clean Partner 2\s*100%\s*1–0 \(1 match\)/
   end
 
   test "no best partner when nobody has 3 matches together" do

@@ -50,11 +50,11 @@
           </thead>
           <tbody>
             <% @players.each do |p| %>
-              <tr class="cr-st-row">
+              <tr class="cr-st-row<%= ' cr-me-row' if p[:user].id == current_user.id %>">
                 <td>
                   <%= link_to p[:user].name, player_path(p[:user].id), class: "cr-st-team" %>
                   <% if p[:user].id == current_user.id %>
-                    <span style="color: var(--cr-gold); font-size: 0.72rem;">(you)</span>
+                    <span class="cr-you-tag" style="font-size: 0.72rem;">(you)</span>
                   <% end %>
                 </td>
                 <% if User::SHOW_COURT_REPORT_RATING %>

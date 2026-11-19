@@ -18,7 +18,7 @@
       <% rows.each do |p| %>
         <% user = @users_by_name[p.name.downcase.squish] %>
         <% rank += 1 if p.ranked? %>
-        <tr data-rp-name="<%= p.name.downcase %>" class="<%= "cr-rp-unranked" unless p.ranked? %>">
+        <tr data-rp-name="<%= p.name.downcase %>" class="<%= "cr-rp-unranked" unless p.ranked? %><%= " cr-me-row" if p.name.downcase.squish == current_user.name.to_s.downcase.squish %>">
           <td class="cr-rp-c cr-rp-rank"><%= p.ranked? ? rank : "—" %></td>
           <td>
             <% if p.lines.positive? %>

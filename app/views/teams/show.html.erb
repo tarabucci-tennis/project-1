@@ -582,7 +582,7 @@
         <% if @roster.any? %>
           <div class="cr-roster cr-roster-table <%= 'has-mins' if mins %>">
             <% @roster.each do |membership| %>
-              <div class="cr-roster-row">
+              <div class="cr-roster-row<%= ' cr-me-row' if membership.user_id == current_user.id %>">
                 <span class="cr-roster-who">
                   <%= link_to membership.user.name + (membership.user_id == current_user.id ? " (you)" : ""),
                               tennis_record_url(membership.user),
@@ -750,7 +750,7 @@
                 </div>
                 <div class="cr-bar-value">
                   <% if data[:total] > 0 %>
-                    <%= data[:wins] %>/<%= data[:total] %>
+                    <%= data[:pct] %>% · <%= data[:wins] %>/<%= data[:total] %>
                   <% else %>
                     <span style="color: var(--cr-text-light);">—</span>
                   <% end %>
@@ -797,7 +797,7 @@
                       <span><%= p[:pct] %>%</span>
                     </div>
                   </div>
-                  <div class="cr-bar-value"><%= p[:wins] %>/<%= p[:total] %></div>
+                  <div class="cr-bar-value"><%= p[:pct] %>% · <%= p[:wins] %>/<%= p[:total] %></div>
                 </div>
               <% end %>
             </div>
