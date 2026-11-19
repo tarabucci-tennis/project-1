@@ -1,42 +1,44 @@
-<%# Header Band match card (Tara's design system, Nov 19 2026) — used for every
-    match / friendly / calendar entry card on the site.
+<%# Header Band match card (Tara's mockup "C. Header Band", Nov 19 2026) — used for
+    every match / friendly / calendar entry card on the site.
 
-      ┌─ green band: date · time · HOME/AWAY pill ............ status pill ─┐
-      │ LEAGUE LABEL                                                       │
-      │ Match title (serif)                                                │
-      │ teams line                                                         │
-      │ venue                                                              │
-      ├────────────────────────────────────────────────────────────────────┤
-      │ [ Gold button ]                                    [cal] [share]   │
-      └────────────────────────────────────────────────────────────────────┘
+      ┌─ green band: Fri, Nov 20 · 9:00 AM ............................ AWAY ─┐
+      │ DEL-TRI                                                              │
+      │ Legacy 1 vs. Penn Oaks 1        (serif team name, sans "vs." line)   │
+      │ [You're on 6D]                  (navy chip, gold text — optional)    │
+      │ Club name (bold)                                                     │
+      │ street, town (grey)                                                  │
+      │ ──────────────────────────────────────────────                       │
+      │ ( Set lineup )                                        [cal] [share]  │
+      └──────────────────────────────────────────────────────────────────────┘
 
-    Locals: date (Date/Time), time (string or nil), pill (string or nil), status (string or nil),
-    status_you (bool), league, title, teams (string or nil), venue (Friendly::Place / Club or nil),
-    venue_tbd (string or nil), action_label, action_url, href (whole card, optional),
-    icons (HTML for the right side), extra_class (optional). %>
+    Locals: date, time, pill, league, title, subtitle ("vs. …"), chip (e.g. "You're on 6D"),
+    note (small grey line, optional), venue (Friendly::Place / Club), venue_tbd,
+    action_label, action_url, href, icons, extra_class. %>
 <% href = local_assigns[:href] %>
 <article class="cr-band-card <%= local_assigns[:extra_class] %>"
          <% if href %>onclick="if (!event.target.closest('a,button')) window.location='<%= href %>'" style="cursor: pointer;"<% end %>>
   <header class="cr-band-head">
-    <span class="cr-band-date"><%= date.strftime("%a, %b %-d") %></span>
-    <% if local_assigns[:time].present? %><span class="cr-band-dot" aria-hidden="true">·</span><span class="cr-band-time"><%= time %></span><% end %>
+    <span class="cr-band-when"><%= date.strftime("%a, %b %-d") %><% if local_assigns[:time].present? %> · <%= time %><% end %></span>
     <% if local_assigns[:pill].present? %><span class="cr-band-pill"><%= pill %></span><% end %>
-    <% if local_assigns[:status].present? %>
-      <span class="cr-band-status<%= " cr-band-status-you" if local_assigns[:status_you] %>"><%= status %></span>
-    <% end %>
   </header>
   <div class="cr-band-body">
     <div class="cr-band-league"><%= league %></div>
-    <h3 class="cr-band-title"><%= title %></h3>
-    <% if local_assigns[:teams].present? %><div class="cr-band-teams"><%= teams %></div><% end %>
+    <h3 class="cr-band-title"><span class="cr-band-title-main"><%= title %></span><% if local_assigns[:subtitle].present? %> <span class="cr-band-title-vs"><%= subtitle %></span><% end %></h3>
+    <% if local_assigns[:chip].present? %><div><span class="cr-band-chip"><%= chip %></span></div><% end %>
+    <% if local_assigns[:note].present? %><div class="cr-band-note"><%= note %></div><% end %>
     <% if local_assigns[:venue] %>
-      <div class="cr-band-venue"><%= render "matches/venue", venue: venue, link: false %></div>
+      <% v = venue %>
+      <div class="cr-band-venue">
+        <% if v.name.present? %><div class="cr-band-venue-name"><%= v.name %></div><% end %>
+        <% lines = v.address_lines %>
+        <% if lines.any? %><div class="cr-band-venue-addr"><%= lines.join(", ") %></div><% end %>
+      </div>
     <% elsif local_assigns[:venue_tbd].present? %>
-      <div class="cr-band-venue cr-band-venue-tbd"><%= venue_tbd %></div>
+      <div class="cr-band-venue"><div class="cr-band-venue-addr"><%= venue_tbd %></div></div>
     <% end %>
+    <div class="cr-band-actions">
+      <%= link_to action_label, action_url, class: "cr-band-btn", onclick: "event.stopPropagation();" %>
+      <%= icons %>
+    </div>
   </div>
-  <footer class="cr-band-actions">
-    <%= link_to action_label, action_url, class: "cr-band-btn", onclick: "event.stopPropagation();" %>
-    <%= icons %>
-  </footer>
 </article>

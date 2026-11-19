@@ -8,9 +8,9 @@
           share_text: friendly_invite_text(item), share_url: fr_url %>
   <% end %>
   <%= render "shared/band_card", date: item.starts_at, time: item.time_label, pill: "Friendly",
-        status: (mine ? "You're in" : nil), status_you: mine.present?,
+        chip: (mine ? "You're in" : nil),
         league: "Friendly", title: item.title.presence || "Friendly",
-        teams: "#{friendly_signup_status(item)}#{" · lineup ready" if item.lineup?}",
+        note: "#{friendly_signup_status(item)}#{" · lineup ready" if item.lineup?}",
         venue: item.place, venue_tbd: (item.place ? nil : "Place TBD"),
         action_label: (item.lineup? ? "See lineup" : (mine ? "Open" : "Sign up")), action_url: friendly_path(item),
         href: friendly_path(item), icons: icons, extra_class: "cr-my-week-card-event" %>
@@ -25,7 +25,7 @@
   <% end %>
   <%= render "shared/band_card", date: item.event_date, time: item.time_label, pill: item.kind_label,
         league: item.tennis_team.league_label, title: LineStartTime.mark_times(item.title),
-        teams: item.tennis_team.name, venue: venue, venue_tbd: (venue ? nil : "Place TBD"),
+        note: item.tennis_team.name, venue: venue, venue_tbd: (venue ? nil : "Place TBD"),
         action_label: "View team", action_url: team_path(item.tennis_team, tab: "schedule"),
         icons: icons, extra_class: "cr-my-week-card-event" %>
 <% end %>
