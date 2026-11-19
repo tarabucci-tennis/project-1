@@ -17,14 +17,19 @@
 <% href = local_assigns[:href] %>
 <article class="cr-band-card <%= local_assigns[:extra_class] %>"
          <% if href %>onclick="if (!event.target.closest('a,button')) window.location='<%= href %>'" style="cursor: pointer;"<% end %>>
+  <%# Two pills on the band: when (date · time) and the status (Upcoming / Completed / Playoffs). %>
   <header class="cr-band-head">
     <span class="cr-band-when"><%= date.strftime("%a, %b %-d") %><% if local_assigns[:time].present? %> · <%= time %><% end %></span>
-    <% if local_assigns[:pill].present? %><span class="cr-band-pill"><%= pill %></span><% end %>
+    <span class="cr-band-pill"><%= local_assigns[:pill].presence || "Upcoming" %></span>
   </header>
   <div class="cr-band-body">
     <div class="cr-band-league"><%= league %></div>
-    <h3 class="cr-band-title"><span class="cr-band-title-main"><%= title %></span><% if local_assigns[:subtitle].present? %> <span class="cr-band-title-vs"><%= subtitle %></span><% end %></h3>
+    <%# Only the team / event name is in the serif; "vs. …" stays in the body sans. %>
+    <% main, vs = title.to_s, local_assigns[:subtitle].presence %>
+    <% if vs.nil? && (m = main.match(/\A(.+?)\s+(vs\.?\s+.+)\z/i)) %><% main, vs = m[1], m[2] %><% end %>
+    <h3 class="cr-band-title"><span class="cr-band-title-main"><%= main %></span><% if vs %> <span class="cr-band-title-vs"><%= vs %></span><% end %></h3>
     <% if local_assigns[:chip].present? %><div><span class="cr-band-chip"><%= chip %></span></div><% end %>
+    <% if local_assigns[:teams].present? %><div class="cr-band-teams"><%= teams %></div><% end %>
     <% if local_assigns[:note].present? %><div class="cr-band-note"><%= note %></div><% end %>
     <% if local_assigns[:venue] %>
       <% v = venue %>

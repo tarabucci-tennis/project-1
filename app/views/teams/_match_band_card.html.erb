@@ -15,7 +15,8 @@
     elsif lineup&.published? then [ "View lineup", team_match_path(team, match) ]
     else [ "View match", team_match_path(team, match) ]
     end
-  pill = match.home? ? "Home" : (match.away? ? "Away" : nil)
+  side = match.home? ? "Home" : (match.away? ? "Away" : nil)
+  status = if match.playoff? then "Playoffs" elsif match.started? then "Completed" else "Upcoming" end
   place = match_place_block(match)
 %>
 <% icons = capture do %>
@@ -29,9 +30,10 @@
     <%= render "matches/share_button", match: match, icon_only: true %>
   </div>
 <% end %>
-<%= render "shared/band_card", date: match.match_date, time: match.time_label, pill: pill,
+<%= render "shared/band_card", date: match.match_date, time: match.time_label, pill: status,
       league: team.league_label, title: team.name, subtitle: "vs. #{match.opponent}",
       chip: (my_line ? "You're on #{my_line}" : nil),
+      teams: [ side, (match.playoff? ? match.playoff_level : nil) ].compact_blank.join(" · ").presence,
       note: (needs_scores ? "Needs scores" : (lineup&.published? && !my_line ? "Lineup posted" : nil)),
       venue: place, venue_tbd: (place ? nil : "Place TBD"),
       action_label: label, action_url: url, href: team_match_path(team, match),
