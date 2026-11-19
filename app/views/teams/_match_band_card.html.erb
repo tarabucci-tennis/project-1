@@ -15,12 +15,6 @@
     elsif lineup&.published? then [ "View lineup", team_match_path(team, match) ]
     else [ "View match", team_match_path(team, match) ]
     end
-  status =
-    if needs_scores then "Needs scores"
-    elsif my_line then "You're on #{my_line}"
-    elsif lineup&.published? then "Lineup posted"
-    elsif captain && lineup then "Draft"
-    end
   pill = match.home? ? "Home" : (match.away? ? "Away" : nil)
   place = match_place_block(match)
 %>
@@ -36,9 +30,9 @@
   </div>
 <% end %>
 <%= render "shared/band_card", date: match.match_date, time: match.time_label, pill: pill,
-      status: status, status_you: my_line.present?,
-      league: team.league_label, title: "#{team.name} vs. #{match.opponent}",
-      teams: [ team.flight.presence || team.league_name, team.season_name ].compact_blank.join(" · ").presence,
+      league: team.league_label, title: team.name, subtitle: "vs. #{match.opponent}",
+      chip: (my_line ? "You're on #{my_line}" : nil),
+      note: (needs_scores ? "Needs scores" : (lineup&.published? && !my_line ? "Lineup posted" : nil)),
       venue: place, venue_tbd: (place ? nil : "Place TBD"),
       action_label: label, action_url: url, href: team_match_path(team, match),
       icons: icons, extra_class: "" %>

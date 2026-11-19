@@ -236,7 +236,7 @@ serif title, teams line, venue, divider, ONE gold button left (label by state) +
 your attention, This week, Your teams, Recent results), My Teams (team cards grid + standings), Team page (hero stat
 tiles, tabs, band cards), Calendar (bordered cells, palette-only pills, this-week band strip, convert button), Friendlies,
 Lookup (big search bar), Ratings (Top 5 strip), Profile (stat tiles, bars, match timeline), Match/score entry (per-line
-cards, auto W/L, one Save). Done so far: #331 tokens + band cards on My Teams Upcoming/Friendlies.
+cards, auto W/L, one Save). Done so far: #331 tokens + band cards on My Teams Upcoming/Friendlies; #332 cards match Tara's "C. Header Band" mockup exactly (WHITE cards site-wide, border #dde3ea, radius 16, band date left + white AWAY tag right, serif team name + slate "vs. Opponent", navy chip with gold text "You're on 6D", venue name bold + slate address line, inset divider, pill gold button, plain outline icons). Secondary lines use slate `--cr-slate #5d6b85` (Tara's mockup), not navy.
 
 **FINAL LOCKED PALETTE (Tara, Nov 19 2026, #330) — "do not change them again".** Light blue page, Fraunces headings,
 cream cards (all kept). Accent = **tennis-court light green** (the green surround of a blue hard court): `--cr-court-green

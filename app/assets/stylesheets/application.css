@@ -7425,3 +7425,59 @@ html body .cr-brand-ball {
   background: #6CAF7E url("/logo-court.svg") center / cover no-repeat;
   box-shadow: 0 2px 8px rgba(27, 42, 74, 0.22); border: 1px solid rgba(27, 42, 74, 0.12);
 }
+
+/* ================================================================
+   MOCKUP LOOK (Tara's "C. Header Band" mockup, Nov 19 2026) — the model
+   for every page: white cards with a soft 1px border, a green-tint band,
+   navy headings, soft slate for secondary lines, pill-shaped gold button,
+   plain outline icons.
+   ================================================================ */
+:root {
+  --cr-card: #ffffff;
+  --cr-card-border: #dde3ea;
+  --cr-slate: #5d6b85;          /* secondary lines (league label, "vs.", address) */
+  --cr-text-muted: #5d6b85;
+  --cr-text-light: #5d6b85;
+}
+html body .cr-band-card { background: #fff; border: 1px solid var(--cr-card-border); border-radius: 16px; box-shadow: none; }
+html body .cr-band-head {
+  justify-content: space-between; flex-wrap: nowrap; gap: 10px;
+  background: var(--cr-court-green-tint); border-bottom: 0; padding: 14px 20px;
+}
+html body .cr-band-when { font-size: 1.02rem; font-weight: 700; color: var(--cr-navy); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+html body .cr-band-pill {
+  height: auto; padding: 4px 10px; border: 0; border-radius: 6px; background: #fff;
+  font-size: 0.78rem; font-weight: 800; letter-spacing: 0.06em; color: var(--cr-navy); flex-shrink: 0;
+}
+html body .cr-band-body { padding: 16px 20px 16px; gap: 6px; }
+html body .cr-band-league { font-size: 0.74rem; font-weight: 800; letter-spacing: 0.14em; color: var(--cr-slate); }
+html body .cr-band-title { margin: 0; font-family: var(--cr-serif); font-size: 1.45rem; font-weight: 700; line-height: 1.2; }
+html body .cr-band-title-vs { font-family: Inter, system-ui, -apple-system, sans-serif; font-size: 1rem; font-weight: 500; color: var(--cr-slate); }
+.cr-band-chip {
+  display: inline-block; padding: 3px 9px; border-radius: 6px; background: var(--cr-navy); color: var(--cr-gold-btn);
+  font-size: 0.82rem; font-weight: 700;
+}
+.cr-band-note { font-size: 0.84rem; font-weight: 600; color: var(--cr-slate); }
+html body .cr-band-venue { margin-top: 4px; }
+.cr-band-venue-name { font-size: 0.98rem; font-weight: 700; color: var(--cr-navy); }
+.cr-band-venue-addr { font-size: 0.92rem; color: var(--cr-slate); }
+html body .cr-band-actions {
+  margin-top: 10px; padding: 14px 0 0; border-top: 1px solid var(--cr-card-border);
+  display: flex; align-items: center; justify-content: space-between;
+}
+html body .cr-band-btn {
+  min-height: 44px; padding: 0 26px; border-radius: 999px; border: 0; background: var(--cr-gold-btn);
+  color: var(--cr-navy) !important; font-size: 0.98rem; font-weight: 700;
+}
+html body .cr-band-actions .cr-cal-btn, html body .cr-band-actions .cr-share-icon {
+  width: 36px; height: 36px; border: 0; background: transparent; color: var(--cr-navy);
+}
+html body .cr-band-actions .cr-cal-btn svg, html body .cr-band-actions .cr-share-icon svg { width: 22px; height: 22px; stroke-width: 1.8; }
+@media (max-width: 720px) {
+  html body .cr-band-title { font-size: 1.3rem; }
+}
+html body .cr-band-body { flex: 1 1 auto; }
+html body .cr-band-actions { margin-top: auto; }
+html body .cr-band-venue + .cr-band-actions, html body .cr-band-note + .cr-band-actions { margin-top: auto; }
+html body .cr-band-body > .cr-band-actions { margin-top: auto; padding-top: 14px; }
+html body .cr-band-body > :nth-last-child(2) { margin-bottom: 10px; }
