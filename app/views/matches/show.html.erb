@@ -29,7 +29,9 @@
         </svg>
       </a>
       <% if @is_captain %>
-        <%= link_to "Set Lineup", edit_team_match_lineup_path(@team, @match), class: "cr-btn cr-btn-gold cr-set-lineup-btn" %>
+        <%# Once anyone is on a line (posted or draft), the same button edits it. %>
+        <% lineup_started = @lineup&.lineup_slots&.where&.not(user_id: nil)&.exists? %>
+        <%= link_to (lineup_started ? "Edit Lineup" : "Set Lineup"), edit_team_match_lineup_path(@team, @match), class: "cr-btn cr-btn-gold cr-set-lineup-btn" %>
       <% end %>
     </div>
   </div>
