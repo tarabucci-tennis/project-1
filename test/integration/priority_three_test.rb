@@ -27,7 +27,7 @@ class PriorityThreeTest < ActionDispatch::IntegrationTest
     f.spots.create!(name: "P3 Tara", user: @tara) if f.respond_to?(:spots)
     sign_in(@tara)
     get friendlies_path
-    assert_select ".cr-fr-index-sub", text: /signed up · \d more for a court/
+    assert_select ".cr-band-note", text: /signed up · \d more for a court/
     assert_no_match(/0 courts/, response.body)
     assert_select "a", text: "+ Book a friendly"
     assert_select "a", text: "+ New friendly", count: 0

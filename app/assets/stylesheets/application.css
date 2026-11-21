@@ -7548,3 +7548,8 @@ html body .cr-band-chip { background: var(--cr-navy); color: #fff !important; }
 html body .cr-sched-date-mon { color: #fff !important; opacity: .85; }
 /* Weekday above the month on the schedule date squares (Tara: "month, and day"). */
 html body .cr-sched-date-dow { font-size: 0.58rem; font-weight: 800; letter-spacing: 1px; color: #fff; opacity: .75; line-height: 1.2; }
+
+/* Section A (Tara, Nov 21 2026): split titles — only the team / event name is
+   in the serif; "vs Smashers" stays in the body sans (team schedule rows). */
+html body .cr-title-main { font-family: var(--cr-serif); }
+html body .cr-title-vs { font-family: Inter, system-ui, -apple-system, sans-serif; font-weight: 500; letter-spacing: 0; }

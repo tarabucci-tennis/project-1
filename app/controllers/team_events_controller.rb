@@ -61,7 +61,8 @@ class TeamEventsController < ApplicationController
     match = nil
     TeamEvent.transaction do
       match = @team.matches.create!(
-        opponent:   self.class.opponent_from(event.title, @team.name),
+        opponent:   self.class.opponent_from(event.title_without_side, @team.name),
+        home_away:  event.side&.downcase,
         match_date: self.class.match_time_for(event.event_date, event.start_time),
         match_time: event.start_time,
         location:   event.location,
@@ -77,9 +78,7 @@ class TeamEventsController < ApplicationController
 
   # "Over Served vs Smashers" / "vs. Smashers" → "Smashers"; anything else as is.
   def self.opponent_from(title, team_name)
-    t = title.to_s.squish
-    t = t.sub(/\A#{Regexp.escape(team_name.to_s.squish)}\s*/i, "") if team_name.present?
-    t.sub(/\A.*?\bvs?\.?\s+/i, "").presence || t
+    TeamEvent.opponent_from(title, team_name)
   end
 
   # Stored as the wall-clock time typed, like matches added with Add Match.

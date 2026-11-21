@@ -7,6 +7,9 @@
 <% lineup = match.lineup %>
 <% my_line = @my_lineup_lines[match.id] %>
 <% needs_scores = match.started? && !match.scores_entered? %>
+<%# The pill and the "Needs scores" note wait until the match is over (its end
+    time, Eastern), so a 9:30 match reads Upcoming at 9:00 and Completed after. %>
+<% over = match.over? %>
 <%
   label, url =
     if needs_scores && captain then [ "Enter scores", edit_results_team_match_path(team, match) ]
@@ -15,8 +18,11 @@
     elsif lineup&.published? then [ "View lineup", team_match_path(team, match) ]
     else [ "View match", team_match_path(team, match) ]
     end
-  side = match.home? ? "Home" : (match.away? ? "Away" : nil)
-  status = if match.playoff? then "Playoffs" elsif match.started? then "Completed" else "Upcoming" end
+  # "Ball Busters (Away)" typed as the opponent: Home/Away goes on its own line.
+  opp = match.opponent.to_s.sub(/\s*\((home|away)\)\s*\z/i, "")
+  typed_side = Regexp.last_match(1)&.capitalize
+  side = match.home_away.present? ? (match.home? ? "Home" : "Away") : (typed_side || (match.home? ? "Home" : (match.away? ? "Away" : nil)))
+  status = if match.playoff_like? then "Playoffs" elsif over then "Completed" else "Upcoming" end
   place = match_place_block(match)
 %>
 <% icons = capture do %>
@@ -31,10 +37,10 @@
   </div>
 <% end %>
 <%= render "shared/band_card", date: match.match_date, time: match.time_label, pill: status,
-      league: team.league_label, title: team.name, subtitle: "vs. #{match.opponent}",
+      league: team.league_label, title: team.name, subtitle: "vs. #{opp}",
       chip: (my_line ? "You're on #{my_line}" : nil),
       teams: [ side, (match.playoff? ? match.playoff_level : nil) ].compact_blank.join(" · ").presence,
-      note: (needs_scores ? "Needs scores" : (lineup&.published? && !my_line ? "Lineup posted" : nil)),
+      note: (over && !match.scores_entered? ? "Needs scores" : (lineup&.published? && !my_line ? "Lineup posted" : nil)),
       venue: place, venue_tbd: (place ? nil : "Place TBD"),
       action_label: label, action_url: url, href: team_match_path(team, match),
       icons: icons, extra_class: "" %>

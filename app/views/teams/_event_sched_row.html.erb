@@ -9,7 +9,7 @@
     <div class="cr-sched-date-day"><%= event.event_date.strftime("%-d") %></div>
   </div>
   <div class="cr-sched-main">
-    <div class="cr-sched-opp"><%= event.title %></div>
+    <div class="cr-sched-opp"><%= vs_title_tag(event.title) %></div>
     <div class="cr-sched-sub">
       <% if event.location.present? %><span><%= event.location %></span><% end %>
       <% if event.time_label %><span><%= "· " if event.location.present? %><%= event.time_label %></span><% end %>

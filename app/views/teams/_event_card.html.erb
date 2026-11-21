@@ -7,7 +7,8 @@
     <%= render "teams/cu_buttons", cal_url: friendly_google_calendar_url(item, share_url: fr_url),
           share_text: friendly_invite_text(item), share_url: fr_url %>
   <% end %>
-  <% done = item.starts_at < Time.current %>
+  <%# Completed once it has ended (times are wall-clock Eastern), not at its start. %>
+  <% done = (item.ends_at || item.starts_at + 2.hours) <= PlayClock.now %>
   <%= render "shared/band_card", date: item.starts_at, time: item.time_label, pill: (done ? "Completed" : "Upcoming"),
         chip: (mine ? "You're in" : nil),
         league: "Friendly", title: item.title.presence || "Friendly",
@@ -24,10 +25,22 @@
   <% icons = capture do %>
     <%= render "teams/cu_buttons", cal_url: team_event_google_calendar_url(item), share_text: team_event_share_text(item) %>
   <% end %>
-  <% ev_status = item.event_date < Date.current ? "Completed" : (item.kind_label.to_s =~ /playoff/i ? "Playoffs" : "Upcoming") %>
+  <%# Calendar entries a captain added as a match read like match cards: the
+      team name in the serif, "vs. Opponent" in sans, Home/Away on its own line,
+      and the pill flips to Completed once the end time has passed. %>
+  <% team = item.tennis_team %>
+  <% over = item.over? %>
+  <% ev_status = item.playoff? ? "Playoffs" : (over ? "Completed" : "Upcoming") %>
+  <% opp = item.match_like? ? item.opponent : nil %>
+  <% title = opp ? team.name : LineStartTime.mark_times(item.match_like? ? item.title_without_side : item.title) %>
+  <% notes = [] %>
+  <% notes << "Needs scores" if over && item.match_like? %>
+  <% notes << team.name unless opp %>
   <%= render "shared/band_card", date: item.event_date, time: item.time_label, pill: ev_status,
-        league: "#{item.tennis_team.league_label} · #{item.kind_label}", title: LineStartTime.mark_times(item.title),
-        note: item.tennis_team.name, venue: venue, venue_tbd: (venue ? nil : "Place TBD"),
-        action_label: "View team", action_url: team_path(item.tennis_team, tab: "schedule"),
+        league: "#{team.league_label} · #{item.kind_label}", title: title,
+        subtitle: (opp ? "vs. #{opp}" : nil),
+        teams: (item.match_like? ? item.side : nil),
+        note: notes.join(" · ").presence, venue: venue, venue_tbd: (venue ? nil : "Place TBD"),
+        action_label: "View team", action_url: team_path(team, tab: "schedule"),
         icons: icons, extra_class: "cr-my-week-card-event" %>
 <% end %>
