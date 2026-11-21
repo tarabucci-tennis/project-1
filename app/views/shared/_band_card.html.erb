@@ -26,7 +26,7 @@
     <div class="cr-band-league"><%= league %></div>
     <%# Only the team / event name is in the serif; "vs. …" stays in the body sans. %>
     <% main, vs = title.to_s, local_assigns[:subtitle].presence %>
-    <% if vs.nil? && (m = main.match(/\A(.+?)\s+(vs\.?\s+.+)\z/i)) %><% main, vs = m[1], m[2] %><% end %>
+    <% main, vs = split_vs_title(main) if vs.nil? %>
     <h3 class="cr-band-title"><span class="cr-band-title-main"><%= main %></span><% if vs %> <span class="cr-band-title-vs"><%= vs %></span><% end %></h3>
     <% if local_assigns[:chip].present? %><div><span class="cr-band-chip"><%= chip %></span></div><% end %>
     <% if local_assigns[:teams].present? %><div class="cr-band-teams"><%= teams %></div><% end %>

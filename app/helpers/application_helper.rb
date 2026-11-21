@@ -1,4 +1,19 @@
 module ApplicationHelper
+  # "Over Served vs Smashers" → ["Over Served", "vs Smashers"]: only the team /
+  # event name goes in the serif, the "vs …" part stays in the body sans.
+  def split_vs_title(text)
+    t = text.to_s
+    m = t.match(/\A(.+?)\s+((?:vs?\.?|versus|@)\s+.+)\z/i)
+    m ? [ m[1], m[2] ] : [ t, nil ]
+  end
+
+  # The split title as two spans (.cr-title-main serif, .cr-title-vs sans).
+  def vs_title_tag(text)
+    main, vs = split_vs_title(text)
+    return content_tag(:span, main, class: "cr-title-main") unless vs
+    safe_join([ content_tag(:span, main, class: "cr-title-main"), " ", content_tag(:span, vs, class: "cr-title-vs") ])
+  end
+
   # League sites write "Delsea#2"; show "Delsea #2".
   def tidy_team_name(name)
     name.to_s.gsub(/(\S)#(\d)/, '\1 #\2')

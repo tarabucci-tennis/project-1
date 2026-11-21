@@ -109,6 +109,13 @@ class TeamsController < ApplicationController
                                .includes(:spots).order(starts_at: :desc).limit(40).to_a
     @friendly_partners = friendly_partner_counts(@past_friendlies)
 
+    # Standings "Next match": calendar entries a captain added as a match
+    # count too (Over Served's schedule is all calendar entries), and a team
+    # with any of them has a schedule.
+    @next_event_by_team = @upcoming_team_events.select(&:match_like?).reject(&:over?)
+                                               .group_by(&:tennis_team_id).transform_values(&:first)
+    @teams_with_events = TeamEvent.where(tennis_team_id: team_ids).where.not(kind: TeamEvent::KINDS).distinct.pluck(:tennis_team_id).to_set
+
     # Coming Up: matches, friendlies and clinics together, soonest first.
     @coming_up_items = (@full_upcoming_matches + @upcoming_friendlies.to_a + @upcoming_team_events)
                          .sort_by { |item| coming_up_time(item) }

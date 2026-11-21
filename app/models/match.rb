@@ -124,6 +124,20 @@ class Match < ApplicationRecord
     playoff_level.present?
   end
 
+  # A playoff stage, or a calendar entry turned into a match whose opponent
+  # or notes say "Playoffs" — shown with the PLAYOFFS pill.
+  def playoff_like?
+    playoff? || "#{opponent} #{notes}".match?(/playoff/i)
+  end
+
+  # Over once its end time has passed on the players' (Eastern) clock: the end
+  # of a typed range, else the start plus two hours.
+  def over?
+    return false if match_date.blank?
+    text = match_time.presence || (match_date.strftime("%-l:%M %p") unless match_date.hour.zero? && match_date.min.zero?)
+    PlayClock.over?(match_date.to_date, text)
+  end
+
   def result_label
     return nil unless played?
     return "T" if tied?

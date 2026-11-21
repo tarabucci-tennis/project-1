@@ -153,12 +153,17 @@
                   </td>
                   <td class="cr-st-next">
                     <% nm = team.next_match %>
-                    <% if nm %>
+                    <% ne = @next_event_by_team[team.id] %>
+                    <% ne = nil if nm && ne && nm.match_date.to_date <= ne.event_date %>
+                    <% if ne %>
+                      <span class="cr-st-next-date"><%= ne.event_date.strftime("%a %b %-d") %><%= " · #{ne.time_label}" if ne.time_label.present? %></span>
+                      <span class="cr-st-next-opp"><% if ne.opponent %>vs <%= ne.opponent %><% else %><%= ne.title_without_side %><% end %><% if ne.side %> · <%= ne.side %><% end %></span>
+                    <% elsif nm %>
                       <span class="cr-st-next-date"><%= nm.match_date.strftime("%a %b %-d") %><%= " · #{nm.time_label}" if nm.time_label.present? %></span>
                       <span class="cr-st-next-opp">vs <%= nm.opponent %><% if nm.home? %> · Home<% elsif nm.away? %> · Away<% end %></span>
                     <% elsif team.start_date && team.start_date > Date.current %>
                       <span class="cr-st-muted">Starts <%= team.start_date.strftime("%-m/%-d") %></span>
-                    <% elsif team.matches.none? %>
+                    <% elsif team.matches.none? && !@teams_with_events.include?(team.id) %>
                       <span class="cr-st-muted">No schedule yet</span>
                     <% else %>
                       <span class="cr-st-muted">Season complete</span>
@@ -212,7 +217,7 @@
                        { opponent: m.opponent, time: m.time_label, location: m.location, team: m.tennis_team.name, team_url: team_path(m.tennis_team), url: team_match_path(m.tennis_team, m) }
                      },
                      events: events_today.map { |e|
-                       { title: LineStartTime.mark_times(e.title), kind: e.display_kind, kind_label: e.kind_label, time: e.time_label, location: e.location, team: e.tennis_team.name, team_url: team_path(e.tennis_team), id: e.id, team_id: e.tennis_team_id }
+                       { title: LineStartTime.mark_times(e.match_like? ? e.title_without_side : e.title), side: (e.side if e.match_like?), kind: e.display_kind, kind_label: e.kind_label, time: e.time_label, location: e.location, team: e.tennis_team.name, team_url: team_path(e.tennis_team), id: e.id, team_id: e.tennis_team_id }
                      },
                      friendlies: friendlies_today.map { |f|
                        { title: f.title, time: f.time_label, location: f.location,
@@ -222,7 +227,7 @@
 
                 <%# Each entry: its time on one line, who/what on the next. %>
                 <% chips = matches_today.map { |m| { kind: "match", time: m.time_label, label: m.opponent.presence || "TBD", url: team_match_path(m.tennis_team, m) } } +
-                           events_today.map { |e| { kind: e.display_kind, time: e.time_label, label: LineStartTime.mark_times(e.title.presence || e.kind_label), url: nil } } +
+                           events_today.map { |e| { kind: e.display_kind, time: e.time_label, label: LineStartTime.mark_times((e.match_like? ? e.title_without_side : e.title).presence || e.kind_label), url: nil } } +
                            friendlies_today.map { |f| { kind: "friendly", time: f.starts_at.strftime("%-l:%M %p"), label: f.title.presence || "Friendly", url: friendly_path(f) } } %>
                 <button type="button"
                         class="cr-dash-cal-day <%= 'cr-dash-cal-day-has' if has_items %> <%= 'cr-dash-cal-day-today' if is_today %>"
