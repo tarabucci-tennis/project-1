@@ -269,6 +269,12 @@ decisions were NOT built** (asked Tara): 1200px column (#8), all-gold primaries 
 accents (#35), gold court net (#9/#29), flagging timed/total-games scores as invalid (#40/#41/#61/#63 — Bux-Mont and
 Del-Tri lines are won on total games; USTA stores a match tiebreak as 1-0).
 
+**Tara's answers, Nov 22 2026:** KEEP the 920px column (#8), the blue card buttons / no all-gold primaries (#28/#94), and
+the small court-green accents (#35). CHANGE the court net (#9/#29) → **gold, up and down**: `court-side-gold.jpg` (the
+sideways court photo with its net drawn in gold). ≥1536px: one sideways court per margin, its gold net standing up the
+middle of the margin; 1000–1535px: one sideways court centered on the page (net behind the column, margins show court
+lines, never the old horizontal net). Phones unchanged. Not answered (left as is): W/L chips (#30), score flagging (#40…).
+
 **FINAL LOCKED PALETTE (Tara, Nov 19 2026, #330) — "do not change them again".** Light blue page, Fraunces headings,
 cream cards (all kept). Accent = **tennis-court light green** (the green surround of a blue hard court): `--cr-court-green
 #6CAF7E` for small accents (section markers, the rank-1 ring, underlines), `--cr-court-green-tint #E4F3E8` for YOUR OWN row
