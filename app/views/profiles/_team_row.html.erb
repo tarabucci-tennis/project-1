@@ -1,0 +1,25 @@
+<%# One team on a profile. The badge is the team's real league (USTA,
+    Del-Tri, Bux-Mont, Cup), the same one My Teams groups it under; the
+    subtitle never shows empty separators. %>
+<%
+  gender_word = { "F" => "Women's", "M" => "Men's" }[team.gender.to_s.upcase]
+  level = [ team.rating.presence && format("%.1f", team.rating), gender_word ].compact.join(" ").presence
+  # Every row reads league · level · season: the league part falls back to
+  # the flight, then the league's name; the season to its start date.
+  league = team.team_type.presence || team.flight.presence || team.league_label
+  season = team.season_name.presence || (team.start_date && "Season from #{team.start_date.strftime('%b %-d, %Y')}")
+  parts = [ league, level, season ].map { |p| p.to_s.squish }.reject(&:blank?).uniq
+  membership = team.team_memberships.find { |m| m.user_id == user.id }
+%>
+<%= link_to team_path(team), class: "cr-match-row", style: "text-decoration: none; color: inherit;" do %>
+  <div class="cr-match-date cr-pp-team-badge">
+    <div class="cr-match-date-month" style="font-size: 0.6rem;"><%= team.league_group.to_s.upcase %></div>
+  </div>
+  <div class="cr-match-info">
+    <div class="cr-match-opponent" style="font-size: 0.95rem;"><%= team.name %></div>
+    <% if parts.any? %><div class="cr-match-location"><%= parts.join(" · ") %></div><% end %>
+  </div>
+  <% if membership&.captain? %>
+    <div class="cr-roster-role cr-roster-role-captain">Captain</div>
+  <% end %>
+<% end %>

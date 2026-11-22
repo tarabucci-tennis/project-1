@@ -14,19 +14,33 @@
       <% end %>
     </div>
   <% end %>
-  <% can_delete = (current_user.admin? || @team.user_id == current_user.id) && !@team.matches.completed.exists? %>
-  <% if (can_archive && !@team.archived?) || can_delete %>
+  <% can_remove = current_user.admin? || @team.user_id == current_user.id %>
+  <% has_results = @team.matches.completed.exists? %>
+  <% if (can_archive && !@team.archived?) || can_remove %>
+    <%# Team settings live in one "⋯" menu at the top right: Archive and Delete together. %>
     <div class="cr-team-archive-action">
-      <% if can_archive && !@team.archived? %>
-        <%= button_to "Archive team", archive_team_path(@team), method: :post,
-              class: "cr-chip-btn", form: { style: "display:inline;" },
-              data: { turbo_confirm: "Move #{@team.name} to Past Seasons? Its schedule, results, and standings stay saved and viewable — you can restore it any time." } %>
-      <% end %>
-      <% if can_delete %>
-        <%= button_to "Delete team", team_path(@team), method: :delete,
-              class: "cr-chip-btn cr-chip-danger", form: { style: "display:inline;" },
-              data: { turbo_confirm: "Delete #{@team.name} for everyone? Its roster, schedule and standings are removed and can't be brought back. (Players' accounts stay.)" } %>
-      <% end %>
+      <details class="cr-team-menu">
+        <summary class="cr-team-menu-btn" aria-label="Team options" title="Team options">⋯</summary>
+        <div class="cr-team-menu-list">
+          <% if can_archive && !@team.archived? %>
+            <%= button_to "Archive team", archive_team_path(@team), method: :post,
+                  class: "cr-team-menu-item",
+                  data: { turbo_confirm: "Move #{@team.name} to Past Seasons? Its schedule, results, and standings stay saved and viewable — you can restore it any time." } %>
+            <p class="cr-team-menu-note">Moves the team to Past Seasons. Nothing is lost.</p>
+          <% end %>
+          <% if can_remove %>
+            <% if has_results %>
+              <span class="cr-team-menu-item cr-team-menu-off" aria-disabled="true">Delete team</span>
+              <p class="cr-team-menu-note">Not available: this team has match results. Archive it instead so the results stay.</p>
+            <% else %>
+              <%= button_to "Delete team", team_path(@team), method: :delete,
+                    class: "cr-team-menu-item cr-team-menu-danger",
+                    data: { turbo_confirm: "Delete #{@team.name} for everyone? Its roster, schedule and standings are removed and can't be brought back. (Players' accounts stay.)" } %>
+              <p class="cr-team-menu-note">Removes the team for everyone. Can't be undone.</p>
+            <% end %>
+          <% end %>
+        </div>
+      </details>
     </div>
   <% end %>
 
@@ -44,12 +58,15 @@
       </div>
 
       <h1 class="cr-team-hero-name"><%= @team.name %></h1>
-      <% if @team.team_colors.present? %>
-        <div class="cr-team-colors" title="Team colors">
+      <%# Always shown, in navy, so every team page reads the same (Tara's list #19/#75). %>
+      <div class="cr-team-colors" title="Team colors">
+        <% if @team.team_colors.present? %>
           <% @team.color_swatches.each do |hex| %><span class="cr-color-dot" style="background: <%= hex %>;"></span><% end %>
           <span class="cr-team-colors-text"><span class="cr-team-colors-label">Team colors:</span> <%= @team.team_colors %></span>
-        </div>
-      <% end %>
+        <% else %>
+          <span class="cr-team-colors-text"><span class="cr-team-colors-label">Team colors:</span> not set</span>
+        <% end %>
+      </div>
 
       <div class="cr-team-hero-sub">
         <% if @team.home_court.present? %>
@@ -57,7 +74,7 @@
         <% end %>
         <% if @team.rating.present? %>
           · <%= @team.section %> <%= @team.rating %> <%= @team.gender == "F" ? "Women's" : "Men's" %>
-        <% else %>
+        <% elsif @team.section.present? %>
           · <%= @team.section %>
         <% end %>
         <% if @team.season_name.present? %>
@@ -67,21 +84,66 @@
 
       <div class="cr-team-hero-stats">
         <div class="cr-hero-stat">
-          <div class="cr-hero-stat-value"><%= @wins %>-<%= @losses %></div>
-          <div class="cr-hero-stat-label">Record</div>
+          <div class="cr-hero-stat-value"><%= @wins %>-<%= @losses %><%= "-#{@ties}" if @ties.positive? %></div>
+          <div class="cr-hero-stat-label">Record<%= " (W-L-T)" if @ties.positive? %></div>
         </div>
         <div class="cr-hero-stat">
-          <div class="cr-hero-stat-value"><%= @upcoming_matches.count + @past_matches.count %></div>
-          <div class="cr-hero-stat-label">Matches</div>
+          <div class="cr-hero-stat-value"><%= @sched[:total] %></div>
+          <%# The season total, not matches played: the line below splits it up (Tara, #27). %>
+          <div class="cr-hero-stat-label">Scheduled</div>
         </div>
-        <% if @team.next_match %>
+        <%# The next match shows once: in the card on the right when there is one
+            (Tara, #27/#50). The tile stays for "Starts" and for a next date that's
+            a calendar entry the card can't show. %>
+        <% if @sched[:next_date] && !(@sched[:started] && @team.next_match&.match_date&.to_date == @sched[:next_date]) %>
           <div class="cr-hero-stat">
-            <div class="cr-hero-stat-value"><%= @team.next_match.match_date.strftime("%b %-d").upcase %></div>
-            <div class="cr-hero-stat-label">Starts</div>
+            <div class="cr-hero-stat-value"><%= @sched[:next_date].strftime("%b %-d").upcase %></div>
+            <%# "Starts" only before the season's first match; after that it's the next one. %>
+            <div class="cr-hero-stat-label"><%= @sched[:started] ? "Next match" : "Starts" %></div>
           </div>
         <% end %>
       </div>
+      <% if @sched[:total].positive? || @sched[:friendlies].positive? || @sched[:clinics].positive? %>
+        <%# The parts always add up to Matches, so the count can be checked at a glance. %>
+        <div class="cr-hero-breakdown">
+          <%= [ ("#{@sched[:played]} played" if @sched[:played].positive?),
+                ("#{@sched[:awaiting]} #{@sched[:awaiting] == 1 ? 'needs' : 'need'} scores" if @sched[:awaiting].positive?),
+                ("#{@sched[:to_play]} to play" if @sched[:to_play].positive?),
+                ("#{@sched[:playoff]} playoff" if @sched[:playoff].positive?),
+                (pluralize(@sched[:friendlies], "friendly") if @sched[:friendlies].positive?),
+                (pluralize(@sched[:clinics], "clinic") if @sched[:clinics].positive?) ].compact.join(" · ") %>
+          <% if @ties.positive? %><div class="cr-hero-breakdown-note">A tie counts as half a win in win %.</div><% end %>
+        </div>
+      <% end %>
     </div>
+
+    <%# Right half of the banner: the next match and recent form (Tara, Nov 18). %>
+    <% hero_next = @team.next_match %>
+    <% hero_form = @team.recent_form(5) %>
+    <% if hero_next || hero_form.any? %>
+      <div class="cr-hero-side">
+        <% if hero_next %>
+          <div class="cr-hero-side-label">Next match</div>
+          <%= link_to team_match_path(@team, hero_next), class: "cr-hero-side-match" do %>
+            <span class="cr-hero-side-date"><%= hero_next.match_date.strftime("%a, %b %-d") %><%= " · #{hero_next.time_label}" if hero_next.time_label.present? %></span>
+            <span class="cr-hero-side-opp">vs. <%= hero_next.opponent %></span>
+            <span class="cr-hero-side-where">
+              <% if hero_next.home? %><span class="cr-hero-side-tag">Home</span><% elsif hero_next.away? %><span class="cr-hero-side-tag cr-hero-side-tag-away">Away</span><% end %>
+              <%= hero_next.location.to_s.split(",").first.presence %>
+            </span>
+          <% end %>
+        <% else %>
+          <div class="cr-hero-side-label">Season</div>
+          <div class="cr-hero-side-opp">No matches left to play</div>
+        <% end %>
+        <% if hero_form.any? %>
+          <div class="cr-hero-side-label cr-hero-side-label-form">Last <%= hero_form.size %> results · newest first</div>
+          <div class="cr-hero-form">
+            <% hero_form.reverse.each do |r| %><span class="cr-hero-form-dot cr-hero-form-<%= r.downcase %>" title="<%= { 'W' => 'Win', 'L' => 'Loss', 'T' => 'Tie' }[r] %>"><%= r %></span><% end %>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
   </div>
 
   <%# ── Playoff banner ───────────────────────────────── %>
@@ -106,8 +168,8 @@
       <div class="cr-stat-card-label">Losses</div>
     </div>
     <div class="cr-stat-card">
-      <div class="cr-stat-card-value"><%= @upcoming_matches.count %></div>
-      <div class="cr-stat-card-label">Scheduled</div>
+      <div class="cr-stat-card-value"><%= @sched[:to_play] %></div>
+      <div class="cr-stat-card-label">To play</div>
     </div>
     <div class="cr-stat-card">
       <div class="cr-stat-card-value"><%= @player_count %></div>
@@ -196,13 +258,17 @@
 
         <%# ── Schedule (upcoming) ── %>
         <div data-seg-target="panel">
-          <% if upcoming.any? %>
+          <% sched_items = (upcoming + @upcoming_events).sort_by { |i| i.is_a?(TeamEvent) ? [ i.event_date, 1 ] : [ i.match_date.to_date, 0 ] } %>
+          <% if sched_items.any? %>
             <div class="cr-sched-list">
-              <% upcoming.each do |match| %>
+              <% sched_items.each do |match| %>
+                <% if match.is_a?(TeamEvent) %><%= render "teams/event_sched_row", event: match, team: @team, can_convert: @team.captain?(current_user) || current_user.admin? %><% next %><% end %>
                 <% lineup = match.lineup %>
                 <details class="cr-sched-item">
-                  <summary class="cr-sched-row <%= 'cr-has-venue' if match.venue %>">
+                  <%# Row across the full card: date | opponent & time | place | status | action | ▾ %>
+                  <summary class="cr-sched-row cr-sched-row-full">
                     <div class="cr-sched-date">
+                      <div class="cr-sched-date-dow"><%= match.match_date.strftime("%a").upcase %></div>
                       <div class="cr-sched-date-mon"><%= match.match_date.strftime("%b").upcase %></div>
                       <div class="cr-sched-date-day"><%= match.match_date.strftime("%-d") %></div>
                     </div>
@@ -211,15 +277,30 @@
                       <div class="cr-sched-sub">
                         <% if match.playoff? %><span class="cr-tag cr-tag-playoff"><%= match.playoff_level %></span><% end %>
                         <% if match.home? %><span class="cr-tag cr-tag-home">Home</span><% elsif match.away? %><span class="cr-tag cr-tag-away">Away</span><% end %>
-                        <% if match.location.present? && !match.venue %><span><%= match.location %></span><% end %>
-                        <% if match.match_time.present? %><span>· <%= match.match_time %></span><% end %>
+                        <% if match.time_label %><span><%= match.time_label %></span><% end %>
                       </div>
                     </div>
-                    <div class="cr-sched-right">
-                      <% if lineup&.published? %><span class="cr-sched-pill">Lineup set</span><% else %><span class="cr-sched-upcoming">Scheduled</span><% end %>
-                      <span class="cr-sched-caret" aria-hidden="true">▾</span>
+                    <div class="cr-sched-place">
+                      <% place = match_place_block(match) %>
+                      <% if place %><%= render "matches/venue", venue: place, link: false %>
+                      <% elsif match.location.present? %><span class="cr-sched-place-text"><%= match.location %></span>
+                      <% else %><span class="cr-sched-place-tbd">Place TBD</span><% end %>
                     </div>
-                    <%= render "matches/venue", venue: match.venue, link: false %>
+                    <div class="cr-sched-status">
+                      <% if lineup&.published? %><span class="cr-cu-pill cr-sched-pill">Lineup set</span><% elsif @is_captain && lineup&.draft? %><span class="cr-cu-pill cr-sched-pill-draft">Draft</span><% else %><span class="cr-cu-pill cr-cu-pill-muted">No lineup yet</span><% end %>
+                    </div>
+                    <div class="cr-sched-action">
+                      <% if match.over? && !match.scores_entered? && @is_captain %>
+                        <%= link_to "Enter scores", edit_results_team_match_path(@team, match), class: "cr-cu-btn cr-cu-btn-gold" %>
+                      <% elsif match.finished? && @is_captain %>
+                        <%= link_to "Edit scores", edit_results_team_match_path(@team, match), class: "cr-cu-btn" %>
+                      <% elsif @is_captain %>
+                        <%= link_to "Set lineup", edit_team_match_lineup_path(@team, match), class: "cr-cu-btn" %>
+                      <% else %>
+                        <%= link_to (lineup&.published? ? "View lineup" : "View match"), team_match_path(@team, match), class: "cr-cu-btn cr-cu-btn-outline" %>
+                      <% end %>
+                    </div>
+                    <span class="cr-sched-caret" aria-hidden="true">▾</span>
                   </summary>
                   <div class="cr-sched-detail">
                     <div class="cr-sched-actions">
@@ -227,10 +308,10 @@
                       <% if lineup&.published? %><%= render "matches/lineup_share_button", match: match %><% end %>
                       <a href="<%= google_calendar_url(match) %>" target="_blank" rel="noopener" class="cr-chip-btn">Calendar</a>
                       <% if @is_captain %>
-                        <%= render "matches/poll_share_button", match: match %>
+                        <% unless match.finished? %><%= render "matches/poll_share_button", match: match %><% end %>
                         <%= link_to edit_team_match_path(@team, match), class: "cr-chip-btn" do %>Edit Match<% end %>
-                        <%= link_to edit_team_match_lineup_path(@team, match), class: "cr-chip-btn" do %>Set Lineup<% end %>
-                        <%= link_to edit_results_team_match_path(@team, match), class: "cr-chip-btn" do %>Enter Results<% end %>
+                        <% unless match.finished? %><%= link_to edit_team_match_lineup_path(@team, match), class: "cr-chip-btn" do %>Set Lineup<% end %><% end %>
+                        <%= link_to match.scores_button_label, edit_results_team_match_path(@team, match), class: "cr-chip-btn" %>
                       <% end %>
                     </div>
                     <% if lineup&.published? %>
@@ -265,7 +346,7 @@
             </div>
           <% else %>
             <div class="cr-empty" style="padding: 40px 20px; text-align: center; color: var(--cr-text-light);">
-              No upcoming matches<% if @team.next_match %> — next up <%= @team.next_match.match_date.strftime("%B %-d") %><% end %>.
+              No upcoming matches or events<% if @team.next_match %> — next up <%= @team.next_match.match_date.strftime("%B %-d") %><% end %>.
             </div>
           <% end %>
         </div>
@@ -278,6 +359,7 @@
                 <div class="cr-sched-item">
                   <div class="cr-sched-row cr-awaiting-row <%= 'cr-has-venue' if match.venue %>">
                     <div class="cr-sched-date">
+                      <div class="cr-sched-date-dow"><%= match.match_date.strftime("%a").upcase %></div>
                       <div class="cr-sched-date-mon"><%= match.match_date.strftime("%b").upcase %></div>
                       <div class="cr-sched-date-day"><%= match.match_date.strftime("%-d") %></div>
                     </div>
@@ -291,7 +373,12 @@
                     </div>
                     <div class="cr-sched-right">
                       <% if @is_captain && !auto_synced %>
-                        <%= link_to (usta_team ? "Upload" : "Enter"), (usta_team ? usta_upload_team_path(@team) : edit_results_team_match_path(@team, match)),
+                        <%# Straight to the score form for every league; USTA's file upload stays in the alert above. %>
+                        <%= link_to "Enter scores", edit_results_team_match_path(@team, match),
+                              class: "cr-awaiting-badge cr-awaiting-badge-link", title: "Scores needed" %>
+                      <% elsif !@is_captain && match.on_a_line?(current_user) %>
+                        <%# A player on this match enters her own line. %>
+                        <%= link_to "Enter my line", my_line_team_match_path(@team, match),
                               class: "cr-awaiting-badge cr-awaiting-badge-link", title: "Scores needed" %>
                       <% else %>
                         <span class="cr-awaiting-badge">Scores needed</span>
@@ -316,6 +403,7 @@
                   <button type="button" class="cr-sched-row cr-sched-row-btn <%= 'cr-has-venue' if match.venue %>"
                           onclick="document.getElementById('<%= dialog_id %>').showModal()">
                     <div class="cr-sched-date">
+                      <div class="cr-sched-date-dow"><%= match.match_date.strftime("%a").upcase %></div>
                       <div class="cr-sched-date-mon"><%= match.match_date.strftime("%b").upcase %></div>
                       <div class="cr-sched-date-day"><%= match.match_date.strftime("%-d") %></div>
                     </div>
@@ -361,7 +449,7 @@
                       <%# Only captains, co-captains and admins enter or change results. %>
                       <% if @is_captain %>
                         <div class="cr-sched-actions" style="margin-top: 14px;">
-                          <%= link_to edit_results_team_match_path(@team, match), class: "cr-chip-btn" do %><%= match.match_lines.any? ? "Edit Results" : "Enter Results" %><% end %>
+                          <%= link_to match.scores_button_label, edit_results_team_match_path(@team, match), class: "cr-chip-btn" %>
                           <%= link_to edit_team_match_path(@team, match), class: "cr-chip-btn" do %>Edit Match<% end %>
                         </div>
                       <% end %>
@@ -442,6 +530,7 @@
                    data-availability-status-value="<%= current_status %>"
                    data-availability-message-value="<%= current_message %>">
                 <div class="cr-sched-date">
+                  <div class="cr-sched-date-dow"><%= match.match_date.strftime("%a").upcase %></div>
                   <div class="cr-sched-date-mon"><%= match.match_date.strftime("%b").upcase %></div>
                   <div class="cr-sched-date-day"><%= match.match_date.strftime("%-d") %></div>
                 </div>
@@ -506,7 +595,7 @@
         <% if @roster.any? %>
           <div class="cr-roster cr-roster-table <%= 'has-mins' if mins %>">
             <% @roster.each do |membership| %>
-              <div class="cr-roster-row">
+              <div class="cr-roster-row<%= ' cr-me-row' if membership.user_id == current_user.id %>">
                 <span class="cr-roster-who">
                   <%= link_to membership.user.name + (membership.user_id == current_user.id ? " (you)" : ""),
                               tennis_record_url(membership.user),
@@ -628,7 +717,7 @@
           <div class="cr-chart-summary-card">
             <div class="cr-chart-summary-label">Team Record</div>
             <div class="cr-chart-summary-value">
-              <%= charts[:overall][:wins] %>–<%= charts[:overall][:losses] %>
+              <%= charts[:overall][:wins] %>–<%= charts[:overall][:losses] %><%= "–#{charts[:overall][:ties]}" if charts[:overall][:ties].positive? %>
             </div>
             <div class="cr-chart-summary-detail">
               <%= charts[:overall][:pct] %>% win rate
@@ -674,7 +763,7 @@
                 </div>
                 <div class="cr-bar-value">
                   <% if data[:total] > 0 %>
-                    <%= data[:wins] %>/<%= data[:total] %>
+                    <%= data[:pct] %>% · <%= data[:wins] %>/<%= data[:total] %>
                   <% else %>
                     <span style="color: var(--cr-text-light);">—</span>
                   <% end %>
@@ -721,7 +810,7 @@
                       <span><%= p[:pct] %>%</span>
                     </div>
                   </div>
-                  <div class="cr-bar-value"><%= p[:wins] %>/<%= p[:total] %></div>
+                  <div class="cr-bar-value"><%= p[:pct] %>% · <%= p[:wins] %>/<%= p[:total] %></div>
                 </div>
               <% end %>
             </div>
@@ -739,8 +828,8 @@
                 <div class="cr-chart-recent-row">
                   <span class="cr-chart-recent-date"><%= m[:date].strftime("%b %-d") %></span>
                   <span class="cr-chart-recent-opponent">vs. <%= m[:opponent] %></span>
-                  <span class="cr-chart-recent-badge <%= m[:result] == 'win' ? 'cr-chart-recent-win' : 'cr-chart-recent-loss' %>">
-                    <%= m[:result] == 'win' ? 'W' : 'L' %>
+                  <span class="cr-chart-recent-badge <%= { 'win' => 'cr-chart-recent-win', 'tie' => 'cr-chart-recent-tie' }[m[:result]] || 'cr-chart-recent-loss' %>">
+                    <%= { 'win' => 'W', 'tie' => 'T' }[m[:result]] || 'L' %>
                   </span>
                   <% if m[:score].present? %>
                     <span class="cr-chart-recent-score"><%= m[:score] %></span>
@@ -768,8 +857,11 @@
                 <span class="cr-captain-col-stat">W</span>
                 <span class="cr-captain-col-stat">L</span>
                 <span class="cr-captain-col-stat">Win%</span>
-                <span class="cr-captain-col-stat">S%</span>
-                <span class="cr-captain-col-stat">D%</span>
+                <% if @team.lineup_slot_plan.keys.any? { |t, _| t == "singles" } %>
+                  <%# Singles / doubles split: only meaningful when the team plays singles. %>
+                  <span class="cr-captain-col-stat">S%</span>
+                  <span class="cr-captain-col-stat">D%</span>
+                <% end %>
                 <span class="cr-captain-col-stat">Line</span>
               </div>
               <% @player_stats_data.each do |ps| %>
@@ -792,8 +884,10 @@
                   <span class="cr-captain-col-stat" style="color: var(--cr-green);"><%= ps[:wins] %></span>
                   <span class="cr-captain-col-stat" style="color: var(--cr-red);"><%= ps[:losses] %></span>
                   <span class="cr-captain-col-stat" style="font-weight: 700;"><%= ps[:win_pct] %>%</span>
-                  <span class="cr-captain-col-stat"><%= ps[:singles_pct] %>%</span>
-                  <span class="cr-captain-col-stat"><%= ps[:doubles_pct] %>%</span>
+                  <% if @team.lineup_slot_plan.keys.any? { |t, _| t == "singles" } %>
+                    <span class="cr-captain-col-stat"><%= ps[:singles_pct] %>%</span>
+                    <span class="cr-captain-col-stat"><%= ps[:doubles_pct] %>%</span>
+                  <% end %>
                   <span class="cr-captain-col-stat"><%= ps[:most_common_line] || "—" %></span>
                 </div>
               <% end %>
@@ -1032,7 +1126,7 @@
                           <div class="cr-spotlight-match">
                             <span class="cr-spotlight-date"><%= m.match_date&.strftime("%-m/%-d") %><% if m.home? %> (H)<% elsif m.away? %> (A)<% end %></span>
                             <span class="cr-spotlight-opp"><%= m.opponent %></span>
-                            <span class="cr-spotlight-score"><% if m.played? && m.score_summary.present? %><%= m.score_summary %><% elsif m.match_time.present? %><%= m.match_time.gsub(" ", "").downcase %><% end %></span>
+                            <span class="cr-spotlight-score"><% if m.played? && m.score_summary.present? %><%= m.score_summary %><% elsif m.time_label %><%= m.time_label %><% end %></span>
                           </div>
                         <% end %>
                       <% else %>
@@ -1184,10 +1278,10 @@
                   method="post"
                   accept-charset="UTF-8"
                   data-turbo="false"
-                  onsubmit="return (function(f){ var r=f.roster.value||''; alert('Submitting '+r.length+' characters to '+f.action); return true; })(this);">
+                  >
               <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
               <textarea name="roster" rows="8"
-                        placeholder="Jaclyn Groenen (4.0)&#10;Amanda Neill (3.5)&#10;Rachel Chadwin (4.0)&#10;..."
+                        placeholder="One player per line, e.g. Jaclyn Groenen (4.0)"
                         style="width: 100%; padding: 10px 12px; font-size: 0.85rem; border: 1px solid var(--cr-border); border-radius: 6px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; resize: vertical;"></textarea>
               <div style="display: flex; justify-content: flex-end; margin-top: 8px;">
                 <button type="submit" class="cr-btn cr-btn-gold" style="padding: 8px 18px; font-size: 0.82rem;">Add These Players</button>
@@ -1267,8 +1361,11 @@
               <div class="cr-captain-analytics-header">
                 <span class="cr-captain-col-name">Player</span>
                 <span class="cr-captain-col-stat">Played</span>
-                <span class="cr-captain-col-stat">S%</span>
-                <span class="cr-captain-col-stat">D%</span>
+                <% if @team.lineup_slot_plan.keys.any? { |t, _| t == "singles" } %>
+                  <%# Singles / doubles split: only meaningful when the team plays singles. %>
+                  <span class="cr-captain-col-stat">S%</span>
+                  <span class="cr-captain-col-stat">D%</span>
+                <% end %>
                 <span class="cr-captain-col-stat">Line</span>
                 <span class="cr-captain-col-stat">W-L</span>
                 <span class="cr-captain-col-stat">Win%</span>
@@ -1277,8 +1374,10 @@
                 <div class="cr-captain-analytics-row">
                   <span class="cr-captain-col-name"><%= pa[:name] %></span>
                   <span class="cr-captain-col-stat"><%= pa[:matches_played] %></span>
-                  <span class="cr-captain-col-stat"><%= pa[:singles_pct] %>%</span>
-                  <span class="cr-captain-col-stat"><%= pa[:doubles_pct] %>%</span>
+                  <% if @team.lineup_slot_plan.keys.any? { |t, _| t == "singles" } %>
+                    <span class="cr-captain-col-stat"><%= pa[:singles_pct] %>%</span>
+                    <span class="cr-captain-col-stat"><%= pa[:doubles_pct] %>%</span>
+                  <% end %>
                   <span class="cr-captain-col-stat"><%= pa[:most_common_line] || "—" %></span>
                   <span class="cr-captain-col-stat"><%= pa[:wins] %>-<%= pa[:losses] %></span>
                   <span class="cr-captain-col-stat"><%= pa[:win_pct] %>%</span>
@@ -1309,7 +1408,7 @@
           <% else %>
             <div style="text-align: center; padding: 30px 20px; color: var(--cr-text-light); font-size: 0.85rem; margin-top: 24px; background: var(--cr-white); border-radius: 10px; border: 1px solid var(--cr-border);">
               Player analytics will appear here after match results are entered.
-              <div style="margin-top: 6px;">Use "Enter Results" after each match to track who played where.</div>
+              <div style="margin-top: 6px;">Use "Enter scores" after each match to track who played where.</div>
             </div>
           <% end %>
         </section>

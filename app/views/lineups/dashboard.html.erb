@@ -24,14 +24,15 @@
         <% pending = item[:published] && slot&.confirmation == "pending" %>
         <%
           status, tone =
-            if !item[:published] then [ "Not posted", "muted" ]
+            if !item[:published] && item[:is_captain] && item[:lineup]&.draft? then [ "Draft", "draft" ]
+            elsif !item[:published] then [ "Not posted", "muted" ]
             elsif slot&.confirmation == "confirmed" then [ "You're in ✓", "yes" ]
             elsif slot&.confirmation == "declined" then [ "Can't play", "no" ]
             elsif slot then [ "Please reply", "gold" ]
             else [ "Posted", "gold" ]
             end
-          when_bits = [ match.match_date.strftime("%a"), match.match_time.presence,
-                        (match.home? ? "Home" : ("Away" if match.away?)) ].compact
+          when_bits = [ match.match_date.strftime("%a, %b %-d, %Y"), match.time_label,
+                        (match.home? ? "Home" : ("Away" if match.away?)), item[:meeting] ].compact
         %>
         <div class="cr-lu-row<%= ' has-reply' if pending %>"
              onclick="if (!event.target.closest('a,button,form')) window.location='<%= team_match_path(team, match) %>'">
@@ -42,11 +43,13 @@
           <div class="cr-lu-info">
             <div class="cr-lu-team"><%= team.name %></div>
             <%= link_to "vs. #{match.opponent.presence || 'TBD'}", team_match_path(team, match), class: "cr-lu-opp" %>
-            <div class="cr-lu-when"><%= when_bits.join(" · ") %><% if slot && item[:published] %> · You're on <strong><%= slot.try(:line_label) || "a line" %></strong><% end %></div>
+            <div class="cr-lu-when"><%= when_bits.join(" · ") %><% if slot && item[:published] %> · You're on <strong><%= slot.try(:line_label) || "a line" %></strong><% if slot.start_time.present? %> at <strong><%= slot.start_time %></strong><% end %><% end %></div>
           </div>
           <span class="cr-lu-status is-<%= tone %>"><%= status %></span>
           <div class="cr-lu-action">
-            <% if item[:is_captain] %>
+            <% if item[:is_captain] && match.finished? %>
+              <%= link_to "Edit scores", edit_results_team_match_path(team, match), class: "cr-lu-btn" %>
+            <% elsif item[:is_captain] %>
               <%= link_to item[:published] ? "Edit lineup" : "Set lineup", edit_team_match_lineup_path(team, match),
                     class: "cr-lu-btn#{' is-primary' unless item[:published]}" %>
             <% else %>
@@ -63,5 +66,15 @@
         </div>
       <% end %>
     </div>
+  <% end %>
+
+  <% if @teams_without_upcoming.any? %>
+    <%# Every current team shows up: those with no match ahead are named, so a
+        team never just seems to be missing. %>
+    <p class="cr-lu-none">
+      <strong>No upcoming matches:</strong>
+      <% @teams_without_upcoming.each_with_index do |t, i| %><%= link_to t.name, team_path(t) %><%= ", " unless i == @teams_without_upcoming.size - 1 %><% end %>.
+      Calendar entries don't show here until a captain taps <em>Make this a match</em> on the team's schedule.
+    </p>
   <% end %>
 </div>

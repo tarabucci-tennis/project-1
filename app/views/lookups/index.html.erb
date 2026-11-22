@@ -25,7 +25,7 @@
     <p class="cr-lookup-result-note">
       Showing matches for “<strong><%= @query %></strong>” —
       <%= pluralize(@players.size, "player") %>,
-      <%= pluralize(@my_teams_list.size + @opponent_teams.size, "team") %>.
+      <%= pluralize(@my_teams_list.size + @my_past_teams.size + @opponent_teams.size, "team") %>.
     </p>
   <% end %>
 
@@ -50,11 +50,11 @@
           </thead>
           <tbody>
             <% @players.each do |p| %>
-              <tr class="cr-st-row">
+              <tr class="cr-st-row<%= ' cr-me-row' if p[:user].id == current_user.id %>">
                 <td>
                   <%= link_to p[:user].name, player_path(p[:user].id), class: "cr-st-team" %>
                   <% if p[:user].id == current_user.id %>
-                    <span style="color: var(--cr-gold); font-size: 0.72rem;">(you)</span>
+                    <span class="cr-you-tag" style="font-size: 0.72rem;">(you)</span>
                   <% end %>
                 </td>
                 <% if User::SHOW_COURT_REPORT_RATING %>
@@ -70,7 +70,8 @@
                 <td class="cr-st-n" style="color: var(--cr-green);"><%= p[:won] %></td>
                 <td class="cr-st-n" style="color: var(--cr-red);"><%= p[:lost] %></td>
                 <td class="cr-lookup-wide cr-lookup-muted">
-                  <%= p[:teams].join(", ") %>
+                  <%# Each team name stays whole; the list wraps between names, never inside one. %>
+                  <% p[:teams].each_with_index do |t, ti| %><span class="cr-lookup-team"><%= t %><%= "," if ti < p[:teams].size - 1 %></span> <% end %>
                 </td>
               </tr>
             <% end %>
@@ -121,6 +122,26 @@
     <% end %>
   </div>
 
+  <%# ── Past seasons: teams you were on before (archived) ─────── %>
+  <% if @my_past_teams.any? %>
+    <details class="cr-standings-wrap cr-lookup-past" style="margin-bottom: 26px;">
+      <summary class="cr-standings-head">
+        <span class="cr-standings-head-title">Your Past Seasons (<%= @my_past_teams.size %>)</span>
+      </summary>
+      <table class="cr-standings cr-lookup-tbl">
+        <tbody>
+          <% @my_past_teams.each do |team| %>
+            <tr class="cr-st-row" onclick="if (!event.target.closest('a')) window.location='<%= team_path(team) %>'">
+              <td><%= link_to team.name, team_path(team), class: "cr-st-team" %></td>
+              <td class="cr-st-n"><%= team.record_label %></td>
+              <td class="cr-lookup-wide cr-lookup-muted"><%= [ team.league_label, team.season_name.presence ].compact.join(" · ") %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </details>
+  <% end %>
+
   <%# ── Opponent teams in your divisions ───────────────────────── %>
   <div class="cr-standings-wrap">
     <div class="cr-standings-head">
@@ -144,15 +165,16 @@
             <tr class="cr-st-row">
               <td class="cr-st-n"><%= t[:position] || "—" %></td>
               <td><%= t[:name] %></td>
-              <td class="cr-st-n" style="color: var(--cr-green);"><%= t[:wins].to_i %></td>
-              <td class="cr-st-n" style="color: var(--cr-red);"><%= t[:losses].to_i %></td>
+              <%# Points-only leagues (Del-Tri, Cup) have no W/L: the number is points. %>
+              <td class="cr-st-n" style="color: var(--cr-green);"><%= t[:points_only] ? "—" : t[:wins].to_i %></td>
+              <td class="cr-st-n" style="color: var(--cr-red);"><%= t[:points_only] ? "—" : t[:losses].to_i %></td>
               <td class="cr-st-n"><%= t[:points].to_i.positive? ? t[:points] : "—" %></td>
               <td class="cr-lookup-wide cr-lookup-muted"><%= t[:league] %></td>
             </tr>
           <% end %>
         </tbody>
       </table>
-      <p class="cr-lookup-note">From each league's public standings.</p>
+      <p class="cr-lookup-note">From each league's public standings. Del-Tri and Cup count points (total games won), not wins and losses, so they show "—" for W and L.</p>
     <% else %>
       <p class="cr-chart-empty-inline" style="padding: 18px;">
         <% if @query.present? %>No opponent teams match “<%= @query %>”.<% else %>No opponent standings pulled yet.<% end %>

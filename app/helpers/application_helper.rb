@@ -1,4 +1,24 @@
 module ApplicationHelper
+  # "Over Served vs Smashers" → ["Over Served", "vs Smashers"]: only the team /
+  # event name goes in the serif, the "vs …" part stays in the body sans.
+  def split_vs_title(text)
+    t = text.to_s
+    m = t.match(/\A(.+?)\s+((?:vs?\.?|versus|@)\s+.+)\z/i)
+    m ? [ m[1], m[2] ] : [ t, nil ]
+  end
+
+  # The split title as two spans (.cr-title-main serif, .cr-title-vs sans).
+  def vs_title_tag(text)
+    main, vs = split_vs_title(text)
+    return content_tag(:span, main, class: "cr-title-main") unless vs
+    safe_join([ content_tag(:span, main, class: "cr-title-main"), " ", content_tag(:span, vs, class: "cr-title-vs") ])
+  end
+
+  # League sites write "Delsea#2"; show "Delsea #2".
+  def tidy_team_name(name)
+    name.to_s.gsub(/(\S)#(\d)/, '\1 #\2')
+  end
+
   # Small line icons (stroke = currentColor) used instead of emoji, so the UI
   # reads as one clean, professional set. icon(:home), icon(:pin, size: 14)…
   ICON_PATHS = {
@@ -27,8 +47,9 @@ module ApplicationHelper
     @sidebar_teams ||= TennisTeam.group_by_league(current_user.member_teams.distinct.reject(&:archived?)).values.flatten
   end
 
-  # A soft colour dot per league in the left column.
-  SIDEBAR_LEAGUE_DOTS = { "USTA" => "#4f8df5", "Del-Tri" => "#9b7bf0", "Bux-Mont" => "#f2a93b", "Cup" => "#34c3a3" }.freeze
+  # A dot per league in the left column, in shades of the site's navy/blue
+  # (Tara's palette, Nov 18 2026: no red, green or yellow anywhere).
+  SIDEBAR_LEAGUE_DOTS = { "USTA" => "#182740", "Del-Tri" => "#476a94", "Bux-Mont" => "#7799bd", "Cup" => "#a9c8e2" }.freeze
 
   def sidebar_league_dot(team)
     SIDEBAR_LEAGUE_DOTS.fetch(team.league_group, "#9fb0c8")
@@ -116,6 +137,22 @@ module ApplicationHelper
       needle_x: (130 + 88 * Math.cos(angle)).round(2),
       needle_y: (130 - 88 * Math.sin(angle)).round(2)
     }
+  end
+
+  # "1 signed up · 3 more for a court", "8 signed up · 2 courts · 1 waiting".
+  # Courts come from names (every 4 = 1 court), so with fewer than 4 say how
+  # many more are needed instead of "0 courts".
+  def friendly_signup_status(friendly)
+    n = friendly.active_spots.size
+    courts = friendly.courts_needed
+    bits = [ "#{n} signed up" ]
+    if courts.zero?
+      bits << "#{friendly.players_for_next_court} more for a court"
+    else
+      bits << pluralize(courts, "court")
+      bits << "#{friendly.waitlist.size} waiting" if friendly.waitlist.any?
+    end
+    bits.join(" · ")
   end
 
   # The friendly invite text (the link itself is shared separately):
@@ -211,7 +248,7 @@ module ApplicationHelper
   # a match.
   def team_event_share_text(event)
     lines = [ "🎾 #{event.kind_label}: #{event.title}",
-              "📅 #{[ event.event_date.strftime('%a, %b %-d'), event.start_time.presence ].compact.join(' · ')}",
+              "📅 #{[ event.event_date.strftime('%a, %b %-d'), event.time_label ].compact.join(' · ')}",
               event.tennis_team.name ]
     if event.location.present?
       name, rest = event.location.split(/,\s*/, 2)
@@ -246,7 +283,7 @@ module ApplicationHelper
     team = match.tennis_team
     side = match.home? ? "Home" : ("Away" if match.away?)
     lines = [ "🎾 #{team.name} vs. #{match.opponent}",
-              "📅 #{[ match.match_date.strftime('%a, %b %-d'), match.match_time.presence ].compact.join(' · ')}",
+              "📅 #{[ match.match_date.strftime('%a, %b %-d'), match.time_label ].compact.join(' · ')}",
               [ side, team.league_label ].compact.join(" · ") ]
     lines << "👕 Wear: #{team.team_colors}" if team.team_colors.present?
 
@@ -266,7 +303,7 @@ module ApplicationHelper
     team = match.tennis_team
     side = match.home? ? "Home" : ("Away" if match.away?)
     lines = [ "🎾 #{team.name} vs. #{match.opponent}",
-              "📅 #{[ match.match_date.strftime('%a, %b %-d'), match.match_time.presence, side ].compact.join(' · ')}" ]
+              "📅 #{[ match.match_date.strftime('%a, %b %-d'), match.time_label, side ].compact.join(' · ')}" ]
     if (venue = match.venue)
       lines << "📍 #{venue.name}"
     elsif (place = match_place(match))
@@ -281,8 +318,11 @@ module ApplicationHelper
   def lineup_share_text(match)
     team = match.tennis_team
     side = match.home? ? "Home" : ("Away" if match.away?)
+    # Split court times: the "Starting at…" blocks give the times, so the
+    # date row leaves the match time out (it would be only half true).
+    split = match.lineup && match.lineup.lineup_slots.map(&:effective_start_time).uniq.size > 1
     lines = [ "🎾 #{team.name} vs. #{match.opponent}",
-              "📅 #{[ match.match_date.strftime('%a, %b %-d'), match.match_time.presence, side ].compact.join(' · ')}" ]
+              "📅 #{[ match.match_date.strftime('%a, %b %-d'), (match.time_label unless split), side ].compact.join(' · ')}" ]
     if (venue = match.venue)
       lines << "📍 #{venue.name}"
       lines.concat(venue.address_lines)
@@ -290,13 +330,41 @@ module ApplicationHelper
       lines << "📍 #{place}"
     end
 
-    lines << "" << "Lineup"
+    lines << "" << "Lineup:"
     slots = match.lineup ? match.lineup.lineup_slots.includes(:user).sort_by { |s| [ s.line_type == "singles" ? 0 : 1, s.position.to_i, s.id ] } : []
-    slots.group_by(&:line_label).each do |label, group|
-      names = group.map { |s| s.user&.name }.compact
-      lines << "#{label}: #{names.any? ? names.join(' & ') : '—'}"
+    short = lineup_short_names(slots.filter_map(&:user))
+    doubles_only = slots.none? { |s| s.line_type == "singles" }
+    rows = slots.group_by(&:line_label).map do |label, group|
+      names = group.filter_map { |s| s.user && short[s.user.id] }
+      label = "Line #{Regexp.last_match(1)}" if doubles_only && label =~ /\A(\d+)D\z/
+      { time: group.first.effective_start_time, text: "#{label}: #{names.any? ? names.join(' + ') : '—'}" }
+    end
+    by_time = rows.group_by { |r| r[:time] }
+    if by_time.size > 1
+      # Split court times: one block per start time, earliest first.
+      by_time.sort_by { |time, _| LineStartTime.sort_key(time) }.each_with_index do |(time, group), i|
+        lines << "" if i.positive?
+        lines << "Starting at #{time || 'TBD'}:"
+        lines.concat(group.map { |r| r[:text] })
+      end
+    else
+      lines.concat(rows.map { |r| r[:text] })
     end
     lines.join("\n")
+  end
+
+  # First names, so each court fits on one row of a phone text ("Line 4:
+  # Annie + Denise"). Two players with the same first name get a last
+  # initial ("Sarah B.", "Sarah D."). { user_id => short name }
+  def lineup_short_names(users)
+    users = users.uniq(&:id)
+    firsts = users.map { |u| u.name.to_s.split.first.to_s }
+    users.each_with_index.to_h do |u, i|
+      parts = u.name.to_s.split
+      first = parts.first.to_s
+      short = firsts.count(first) > 1 && parts.size > 1 ? "#{first} #{parts.last[0]}." : first
+      [ u.id, short.presence || u.name.to_s ]
+    end
   end
 
   def google_calendar_url(match)
@@ -311,7 +379,7 @@ module ApplicationHelper
     dates = "#{start_time.strftime(date_format)}/#{end_time.strftime(date_format)}"
 
     details = "Tennis match: #{title}"
-    details += "\n#{match.match_time}" if match.match_time.present?
+    details += "\n#{match.time_label}" if match.time_label
     details += "\n#{match.location}" if match.location.present?
 
     params = {

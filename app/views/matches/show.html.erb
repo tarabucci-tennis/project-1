@@ -9,8 +9,8 @@
     <div style="display: flex; align-items: center; gap: 12px; flex: 1;">
       <span style="font-weight: 800; font-size: 1.05rem;">
         <%= @match.match_date.strftime("%b %-d").upcase %>
-        <% if @match.match_time.present? %>
-          <span style="font-weight: 400; color: var(--cr-text-muted);"> - <%= @match.match_time.gsub(" ", "").downcase %></span>
+        <% if @match.time_label %>
+          <span style="font-weight: 400; color: var(--cr-text-muted);"> · <%= @match.time_label %></span>
         <% end %>
       </span>
       <% if @match.home? %>
@@ -28,7 +28,7 @@
           <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
         </svg>
       </a>
-      <% if @is_captain %>
+      <% if @is_captain && !@match.finished? %>
         <%# Once anyone is on a line (posted or draft), the same button edits it. %>
         <% lineup_started = @lineup&.lineup_slots&.where&.not(user_id: nil)&.exists? %>
         <%= link_to (lineup_started ? "Edit Lineup" : "Set Lineup"), edit_team_match_lineup_path(@team, @match), class: "cr-btn cr-btn-gold cr-set-lineup-btn" %>
@@ -40,22 +40,37 @@
     <div style="margin-top: 8px;"><%= render "matches/venue", venue: @match.venue %></div>
   <% end %>
 
-  <% if @is_captain && @match.match_date >= Date.current.beginning_of_day %>
+  <% if @is_captain && !@match.finished? %>
     <div class="cr-lineup-share-row"><%= render "matches/poll_share_button", match: @match %></div>
   <% end %>
 
-  <%# ── Final scores (played match) ── %>
-  <% if @match.match_lines.any?(&:scored?) %>
-    <div class="cr-sched-detail" style="margin-top: 14px;">
-      <div class="cr-sched-detail-title" style="display: flex; align-items: center; gap: 10px;">
-        Final Scores
+  <%# ── Scores: once the match day arrives there's always a place for them,
+      with one "Enter scores" / "Edit scores" button for captains. ── %>
+  <% if @match.match_lines.any?(&:scored?) || @match.started? %>
+    <div class="cr-sched-detail cr-match-scores" style="margin-top: 14px;">
+      <div class="cr-sched-detail-title cr-match-scores-head">
+        <span><%= @match.scores_entered? ? "Final Scores" : "Scores" %></span>
         <% if @match.result.present? %>
           <span class="cr-result-badge <%= @match.won? ? 'cr-result-badge-win' : (@match.tied? ? 'cr-result-badge-tie' : 'cr-result-badge-loss') %>"><%= @match.result_label %></span>
         <% end %>
         <% if @match.score_summary.present? %><span class="cr-sched-score"><%= @match.score_summary %></span><% end %>
+        <% if @can_enter_results %>
+          <%= link_to @match.scores_button_label, edit_results_team_match_path(@team, @match),
+                class: "cr-btn #{@match.scores_entered? ? 'cr-btn-outline' : 'cr-btn-gold'} cr-btn-compact cr-match-scores-btn" %>
+        <% elsif @can_enter_my_line %>
+          <% my_scored = @match.match_lines.joins(:match_line_players).where(match_line_players: { user_id: current_user.id }).any?(&:scored?) %>
+          <%= link_to (my_scored ? "Edit my line's score" : "Enter my line's score"), my_line_team_match_path(@team, @match),
+                class: "cr-btn #{my_scored ? 'cr-btn-outline' : 'cr-btn-gold'} cr-btn-compact cr-match-scores-btn" %>
+        <% end %>
       </div>
-      <%= render "matches/scoresheet", match: @match, team: @team, is_captain: @is_captain, can_enter_results: @can_enter_results %>
+      <%# The heading already has the button, so the empty state doesn't repeat it. %>
+      <%= render "matches/scoresheet", match: @match, team: @team, is_captain: @is_captain, can_enter_results: @can_enter_results, hide_enter: true %>
     </div>
+  <% end %>
+
+  <%# Captains see that a saved draft exists (players don't see drafts). %>
+  <% if (@is_captain || @team.can_set_lineup?(current_user) || current_user.admin?) && @lineup&.draft? %>
+    <p class="cr-lineup-status is-draft" style="margin-top: 14px;"><strong>Draft lineup</strong> · saved <%= @lineup.updated_at.in_time_zone(User::ACTIVITY_ZONE).strftime("%b %-d, %-l:%M %p") %> · not posted yet. <%= link_to "Open it", edit_team_match_lineup_path(@team, @match) %></p>
   <% end %>
 
   <%# ── Lineup table ── %>
@@ -78,7 +93,8 @@
             <div class="cr-lineup-table-row <%= 'cr-lineup-row-you' if slot.user_id == current_user.id %>">
               <span class="cr-lineup-col-time">
                 <% if idx == 0 %>
-                  <strong><%= @match.match_time&.gsub(" ", "")&.downcase || "TBD" %></strong>
+                  <% t = slot.effective_start_time %>
+                  <strong><%= t || "TBD" %></strong>
                 <% end %>
               </span>
               <span class="cr-lineup-col-line">

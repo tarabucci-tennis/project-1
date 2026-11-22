@@ -1,0 +1,47 @@
+<%# A team event (friendly, clinic, or anything a captain added from the
+    calendar) in the team's schedule, so the team page lists the same things
+    as Calendar and Upcoming on My Teams. Captains can open it and turn it
+    into a real match, which can then get a score. %>
+<% row = capture do %>
+  <div class="cr-sched-date">
+    <div class="cr-sched-date-dow"><%= event.event_date.strftime("%a").upcase %></div>
+    <div class="cr-sched-date-mon"><%= event.event_date.strftime("%b").upcase %></div>
+    <div class="cr-sched-date-day"><%= event.event_date.strftime("%-d") %></div>
+  </div>
+  <div class="cr-sched-main">
+    <div class="cr-sched-opp"><%= vs_title_tag(event.title) %></div>
+    <div class="cr-sched-sub">
+      <% if event.location.present? %><span><%= event.location %></span><% end %>
+      <% if event.time_label %><span><%= "· " if event.location.present? %><%= event.time_label %></span><% end %>
+    </div>
+  </div>
+<% end %>
+<% if can_convert %>
+  <details class="cr-sched-item cr-sched-event">
+    <summary class="cr-sched-row">
+      <%= row %>
+      <div class="cr-sched-right">
+        <span class="cr-sched-upcoming"><%= event.kind_label %></span>
+        <span class="cr-sched-caret" aria-hidden="true">▾</span>
+      </div>
+    </summary>
+    <div class="cr-sched-detail">
+      <p class="cr-sched-event-note">This was added from the calendar, so it can't get a score. Make it a match to enter results and count it in the record.</p>
+      <div class="cr-sched-actions">
+        <%= button_to "Make this a match", make_match_team_event_path(team, event), method: :post,
+              class: "cr-chip-btn cr-chip-btn-primary",
+              form: { data: { turbo_confirm: "Turn \"#{event.title}\" into a match? The calendar entry is replaced by the match." } } %>
+      </div>
+    </div>
+  </details>
+<% else %>
+  <div class="cr-sched-item cr-sched-event">
+    <div class="cr-sched-row" style="cursor: default;">
+      <%= row %>
+      <div class="cr-sched-right">
+        <span class="cr-sched-upcoming"><%= event.kind_label %></span>
+        <span class="cr-sched-caret" aria-hidden="true" style="visibility: hidden;">▾</span>
+      </div>
+    </div>
+  </div>
+<% end %>

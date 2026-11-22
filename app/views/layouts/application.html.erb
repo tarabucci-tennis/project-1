@@ -15,7 +15,7 @@
     <link rel="icon" href="/icon.svg?v=3" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/icon.png?v=3">
 
-    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
   </head>
@@ -24,8 +24,8 @@
     <nav class="cr-header">
       <div class="cr-header-inner">
         <%= link_to (current_user ? teams_path : root_path), class: "cr-brand" do %>
-          <span class="cr-brand-ball"><span class="cr-brand-ball-inner">🎾</span></span>
-          <span class="cr-brand-text"><span class="cr-brand-your">YOUR</span>COURT <span class="cr-brand-gold">REPORT</span></span>
+          <span class="cr-brand-ball"><span class="cr-brand-ball-inner" aria-hidden="true"></span></span>
+          <span class="cr-brand-text"><span class="cr-brand-your">YOUR</span>Court <span class="cr-brand-gold">Report</span></span>
         <% end %>
 
         <div class="cr-header-right">
@@ -64,7 +64,7 @@
     <main class="cr-main">
       <%= yield %>
     </main>
-    <% if current_user %></div></div><% end %>
+    <% if current_user %><%= render "shared/app_footer" %></div></div><% end %>
 
     <%# Tiny inline scripts: password eye toggle + join-link copy button %>
     <script>

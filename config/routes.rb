@@ -21,6 +21,8 @@ Rails.application.routes.draw do
 
   # Admin: TennisLink fetch POC (Session 15)
   get "admin/members", to: "admin#members", as: :admin_members
+  get "admin/duplicates", to: "admin#duplicates", as: :admin_duplicates
+  post "admin/merge", to: "admin#merge", as: :admin_merge
   get "admin/tennislink_test", to: "admin#tennislink_test", as: :admin_tennislink_test
   get "admin/usta_import", to: "admin#usta_import", as: :admin_usta_import
   post "admin/usta_import", to: "admin#usta_import"
@@ -72,12 +74,18 @@ Rails.application.routes.draw do
 
   # Core app
   resources :teams, only: [ :index, :show, :destroy ] do
-    resources :events, only: [ :create, :destroy ], controller: "team_events"
+    resources :events, only: [ :create, :destroy ], controller: "team_events" do
+      # Captains: turn a calendar entry into a real match (so it can get a score).
+      post :make_match, on: :member
+    end
     resources :subs, only: [ :create, :destroy ], controller: "team_subs"
     resources :matches, only: [ :index, :new, :create, :show, :edit, :update ] do
       member do
         get  "results", to: "matches#edit_results", as: :edit_results
         patch "results", to: "matches#update_results", as: :results
+        # A player enters just her own line (captains still use results).
+        get   "my_line", to: "matches#edit_my_line", as: :my_line
+        patch "my_line", to: "matches#update_my_line"
       end
       resource :lineup, only: [ :edit, :update ] do
         get "confirm", on: :member
@@ -117,6 +125,10 @@ Rails.application.routes.draw do
   post "profile/deltri", to: "profiles#connect_deltri", as: :connect_deltri
   post "profile/city",   to: "profiles#update_city",    as: :profile_city
   post "profile/calendar", to: "profiles#connect_calendar", as: :connect_calendar
+  post "profile/deltri/refresh", to: "profiles#refresh_deltri", as: :refresh_deltri
+  # Settings: private links (Google Calendar iCal, league player page). Kept
+  # off the profile page, which teammates can see.
+  get "settings", to: "profiles#settings", as: :settings
   get "players/:id",  to: "profiles#player", as: :player
 
   # Stats test page (pulls from Google Sheets)

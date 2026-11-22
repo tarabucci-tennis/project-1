@@ -7,6 +7,23 @@
       <h1 class="cr-rp-name">Player Ratings</h1>
       <div class="cr-rp-sub">USTA match history for every player we've seen: teammates, partners and opponents. Updates on its own as scores are entered.</div>
     </div>
+    <%# Right half: your own USTA form (Tara, Nov 18). %>
+    <% if @me %>
+      <div class="cr-rp-hero-side">
+        <div class="cr-hero-side-label">Your USTA record</div>
+        <div class="cr-rp-hero-rec">
+          <span class="cr-rp-hero-num"><%= @me.wins %>–<%= @me.losses %></span>
+          <span class="cr-rp-hero-pct"><%= @me.ranked? ? "#{@me.win_pct.round}% of #{pluralize(@me.lines, 'line')}" : "#{pluralize(@me.lines, 'line')} · % from #{RatingsHistory::MIN_LINES_TO_RANK}" %></span>
+        </div>
+        <% if @me.recent.any? %>
+          <div class="cr-hero-side-label cr-hero-side-label-form">Last <%= @me.recent.size %> lines</div>
+          <div class="cr-hero-form">
+            <% @me.recent.each do |r| %><span class="cr-hero-form-dot cr-hero-form-<%= r.downcase %>"><%= r %></span><% end %>
+          </div>
+        <% end %>
+        <%= link_to "See all your USTA matches →", ratings_player_path(name: @me.name), class: "cr-rp-hero-link" %>
+      </div>
+    <% end %>
   </section>
 
   <% if can_upload? %>
@@ -19,7 +36,7 @@
     <div data-controller="home-tabs">
       <div class="cr-home-tabs cr-rp-tabs">
         <button class="cr-home-tab cr-home-tab-active" data-home-tabs-target="tab" data-tab-key="players" data-action="click->home-tabs#switch">All players</button>
-        <button class="cr-home-tab" data-home-tabs-target="tab" data-tab-key="teams" data-action="click->home-tabs#switch">Teams</button>
+        <button class="cr-home-tab" data-home-tabs-target="tab" data-tab-key="teams" data-action="click->home-tabs#switch">USTA teams</button>
       </div>
 
       <%# ── Players: everyone, ranked by win % ── %>
@@ -29,6 +46,7 @@
           <input type="search" class="cr-rp-filter" placeholder="Find a player…" aria-label="Find a player"
                  oninput="var q=this.value.toLowerCase();document.querySelectorAll('.cr-rp-panel-players [data-rp-name]').forEach(function(r){r.style.display=r.dataset.rpName.indexOf(q)>-1?'':'none'})">
         </div>
+        <p class="cr-rp-rule">Ranked by USTA win % (lines won ÷ lines played). A player needs <%= RatingsHistory::MIN_LINES_TO_RANK %>+ lines for a rank and a win %; until then both show "—".</p>
         <%= render "ranked_table", rows: @players %>
       </section>
 
@@ -41,15 +59,16 @@
                 <span class="cr-rp-card-title"><%= team.name %></span>
                 <span class="cr-rp-team-count"><%= rows.size %> <%= "player".pluralize(rows.size) %></span>
               </summary>
+              <p class="cr-rp-rule">Everyone on this team's Court Report roster, with her whole USTA record (not just this team). <%= RatingsHistory::MIN_LINES_TO_RANK %>+ lines for a rank.</p>
               <%= render "ranked_table", rows: rows %>
             </details>
           <% end %>
         <% else %>
-          <section class="cr-rp-card cr-rp-empty"><p>You're not on any USTA teams yet.</p></section>
+          <section class="cr-rp-card cr-rp-empty"><p>You're not on any current USTA teams.</p></section>
         <% end %>
       </div>
 
-      <p class="cr-rp-foot">Ranked by win % (lines won ÷ lines played). A player needs <%= RatingsHistory::MIN_LINES_TO_RANK %>+ lines to get a rank, so a 2–0 start can't sit above a 10–3 season; players with fewer are listed after, unranked. On the Teams tab each player's record is her whole USTA record, not just that team. Fills in automatically from the scores entered on Court Report for USTA teams.</p>
+      <p class="cr-rp-foot">USTA lines only: Bux-Mont, Del-Tri and Cup matches don't count toward USTA ratings. Fills in automatically from the scores entered on Court Report for USTA teams.</p>
     </div>
   <% else %>
     <section class="cr-rp-card cr-rp-empty">

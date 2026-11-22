@@ -57,8 +57,9 @@
   Keep buttons in rows aligned (reserve space for a missing button). Check at 1280px, not just phones.
 - **One centered column per page** (Tara, Oct 23 2026; repeated Oct 30 2026 — she has had to ask about this
   MANY times, so treat it as a hard rule): every page and every new piece sits in one centered column with matching
-  left/right edges, never stretched across a wide screen. Single-column pages, My Teams (tab bar, Standings,
-  Upcoming, Past Seasons) and the team page all use **760px**; only the full calendar uses 880px.
+  left/right edges, never stretched across a wide screen. **Widened Nov 18 2026 (Tara: "760px left ~450px of grey
+  each side")**: every page column (My Teams, team page, calendar, lookup, lineups, ratings…) is **920px** (Tara, Nov 18 2026, later
+  the same day: 1040/1200 felt too wide on her computer — "make it thinner"), set once as `--cr-col` in application.css. Forms stay narrow (`.cr-rp-narrow` 680px). Check at 1920px too, not just 1280px.
   **Before shipping ANY visual change, check the 1280px screenshot against this list:**
   1. Is the content as wide as (not wider than) the tab bar / header above it? Same left and right edges?
   2. Does any row have a name or title at the far left and its details/tags far away? → Put details right after
@@ -207,6 +208,131 @@ small to read precisely; everything else is captured.
   sample size next to every percentage. Suppress percentages under 5 lines played.
 
 ---
+
+## Current Status (as of Nov 17, 2026 — PRs #302–#308: "numbers that contradict each other" + player profiles)
+
+Tara sent numbered priority lists (Priority 1 = numbers that contradict each other, items 1–6; Priority 2 = player
+profiles, items 7–15) and re-checks each on the live site, by item number. All PRs squash-merged after green CI.
+
+**Nov 18 2026 (#320):** column widened to 1040px; **tennis background = Tara's own court photo** (#321; replaced the squiggle and then my drawn
+court): `app/assets/images/court-wide.jpg` (rotated, computers) / `court-tall.jpg` (phones) behind the light pages and
+the public home page under a 78% pale wash (`--cr-court-wash`); `court-net.jpg` (cropped to the net) at full strength
+in the public home page hero, words on a white panel above the net. Gold net SVG on the navy team hero. Keep it pale; team "⋯" menu holds Archive team + Delete team (Delete is greyed out with a reason
+when the team has results); simple footer on every signed-in page; Friendlies tab gained Recent friendlies / You play
+friendlies with / How friendlies work.
+
+**Nov 18 2026 (#322, wasted-space follow-up):** standings rows = # | Team (250px) | W | L | Win% | Last result | Next
+match (date · time / vs opponent · Home); team banner right half = Next match + last 5 results; Ratings hero = your USTA
+record + last 5, table has a Last 5 column; profile Win % by Line / Partner / Team side by side; calendar entries show
+the time on its own line; upcoming friendlies two across; court background = ONE full-page layer (#323): `.cr-shell-main::before` (and `body::before` on the public home page), position: fixed, the WHOLE court `contain`-ed to the screen at 20% opacity, ALWAYS the upright court (`court-tall.jpg`, Tara: "up and down, not side to side"); on computers (#328) a ROW of whole upright courts (`repeat-x`, 38%) so the margins beside the 920px column read as court. Never a cropped band (Tara: a top band read as a fragment);
+time ranges print "12:00 – 1:30 PM" and bare times in titles get AM/PM (`LineStartTime.normalize_range`, `mark_times`).
+
+**DESIGN SYSTEM (Tara, Nov 19 2026, #331+, one PR per page):** navy **#1B2A4A** for all text, gold **#C9A227** primary
+buttons with navy text, Court Green #6CAF7E / tint #E4F3E8 as the only other accent. Every card: solid cream/white, 1px
+`--cr-card-border #cfd9e4`, `--cr-card-radius 14px`. **Every match/friendly/calendar-entry card = Header Band card**
+(`shared/_band_card`): green-tint band with date · time · HOME/AWAY/kind pill (+ status pill right), then league label,
+serif title, teams line, venue, divider, ONE gold button left (label by state) + calendar/share icons right. Matches:
+`teams/_match_band_card`. Two across ≥900px (`.cr-band-grid`). Page-by-page plan Tara sent: Home (Up next hero, Needs
+your attention, This week, Your teams, Recent results), My Teams (team cards grid + standings), Team page (hero stat
+tiles, tabs, band cards), Calendar (bordered cells, palette-only pills, this-week band strip, convert button), Friendlies,
+Lookup (big search bar), Ratings (Top 5 strip), Profile (stat tiles, bars, match timeline), Match/score entry (per-line
+cards, auto W/L, one Save). Done so far: #331 tokens + band cards on My Teams Upcoming/Friendlies; #332 cards match Tara's "C. Header Band" mockup exactly (WHITE cards site-wide, border #dde3ea, radius 16, band date left + white AWAY tag right, serif team name + slate "vs. Opponent", navy chip with gold text "You're on 6D", venue name bold + slate address line, inset divider, pill gold button, plain outline icons). Secondary lines use slate `--cr-slate #5d6b85` (Tara's mockup), not navy. #334: band = TWO pills (date · time pill left, status pill right: Upcoming / Completed / Playoffs); Home/Away moved to a navy line under the title; ALL card text navy (--cr-slate is now navy, overriding #332); only the team/event name is serif ("vs. …" split off in sans, also for calendar-entry titles); "Needs scores" note on started unscored matches; Friendlies tab shows Past friendlies as band cards. Logo tile = SOLID court green #6CAF7E + a DRAWN yellow tennis ball (`logo-ball.svg`) with a clear hop + squash (`cr-logo-hop`), replacing the 🎾 emoji (Android/Windows showed a racket) — Tara Nov 19: "just green with a bouncing yellow tennis ball". #336: card buttons (`.cr-band-btn`) deep court blue #3F6C8A + white text (Tara picked option C over gold); "You're on 6D" chip navy + white. Other gold buttons (+ New Team, Book a friendly…) and the gold W chip NOT changed yet — ask Tara. #333: logo wordmark in Fraunces 700 like the headings ("Court Report" title case, small "YOUR" in spaced Inter caps), header + public home page.
+
+**Section A of Tara's live-site list (Nov 21 2026):** calendar entries a captain added as a match (`TeamEvent#match_like?`)
+read like match cards: `#opponent` / `#side` / `#title_without_side` pull "vs X" and "(Away)" out of the typed title
+(Home/Away on its own line), `#playoff?` (kind or title says playoff) → PLAYOFFS pill. "Completed" = END time passed on
+the Eastern clock (`PlayClock`: end of a typed range, else start + 2 h; times are stored wall-clock), not midnight/start;
+`Match#over?`, `Match#playoff_like?`. /friendlies uses the band cards. Standings "Next match" counts match-like calendar
+entries (Over Served's schedule is all calendar entries). Only the name is serif in split titles (`vs_title_tag`).
+
+**Repeat fixes from Tara's 96-item live-site list (Nov 22 2026):** `Match#finished?` (scores in, or end time passed)
+hides Set lineup / Ask who can play everywhere (match page, schedule rows + chips, playoff rows, Upcoming cards, Lineups);
+captains get Edit scores instead. "Needs scores"/Enter scores wait for `over?` (not match morning). Team hero: "Scheduled"
+(not "Matches"); the Next match tile hides when the right-hand card shows the same match; Last 5 = newest first. My Teams
+standings have a T column (phones: W · L · T) + a footnote on the half-win formula. Player Stats Team Record + Recent
+Results count ties. "Team colors:" always shown, navy ("not set" when blank). **Items in that list that REVERSE locked
+decisions were NOT built** (asked Tara): 1200px column (#8), all-gold primaries (#28), plain-text W/L (#30), no green
+accents (#35), gold court net (#9/#29), flagging timed/total-games scores as invalid (#40/#41/#61/#63 — Bux-Mont and
+Del-Tri lines are won on total games; USTA stores a match tiebreak as 1-0).
+
+**FINAL LOCKED PALETTE (Tara, Nov 19 2026, #330) — "do not change them again".** Light blue page, Fraunces headings,
+cream cards (all kept). Accent = **tennis-court light green** (the green surround of a blue hard court): `--cr-court-green
+#6CAF7E` for small accents (section markers, the rank-1 ring, underlines), `--cr-court-green-tint #E4F3E8` for YOUR OWN row
+(`.cr-me-row`: ratings table, roster, Players & Teams; `.cr-standings-tbl-self`). Small doses only. **Green is NOT the win
+colour** (W gold, L grey, no red/yellow/traffic-light chips). **ALL text dark navy #182740**, secondary text and links too
+(links underlined); no pale text on pale blue, no green text. The blush rose (#326) is GONE (its vars now = green/navy). Never
+use clay/terracotta (Tara rejected it). Tables, stat tiles and bars sit on solid cream/white cards with a visible border;
+bars = white track + `#b9c6d4` border + navy fill, the value (`60% · 3/5`) in navy at the end. The court shows only in the
+margins: `.cr-shell-main::after` is a solid light-blue band behind the column on computers. Win % shows the real number
+whenever there's ≥1 match (Tara asked; no more "% from 3"); Best Partner still needs 3+. Block: end of application.css,
+"FINAL LOCKED PALETTE".
+
+**SITE PALETTE (Tara, Nov 18 2026, #325) — follow on every page:** light-blue page `#eaf5fc` (from the court photo)
+with the faded court; banners `#d6ecf9` with navy text (NO dark navy hero/header blocks); white header with a navy
+wordmark + gold ball tile; white left menu; navy `#182740` text, headings and primary buttons (white text); soft grey
+`#5f6b7e` secondary text, `#dbe3ec` borders; white rounded cards. **Gold `#c9a24a` (`--cr-accent`) ONLY for the logo
+ball, Enter scores, active states (current tab/menu item, today), and win chips.** `--cr-gold` is now soft slate for old
+"gold" spots. Results: **W = gold chip `#dcb862` + navy W; L = light grey `#e6eaf0` + navy L; T = white + navy outline
++ navy T.** **No red, green or bright yellow anywhere; no grid/squares patterns** (the hero grid and gold net SVG are off). **One exception (Tara, Nov 19 2026, #329):** the six feature tiles on the sign-in and public home pages keep their original colourful icons (`cr-tone-*`: red, green, blue, lime, orange, purple).
+The block lives at the end of application.css ("SITE PALETTE"); courtreport.css and pages/courtreport.html.erb were
+recoloured too (both load on their pages). Emails (LineupMailer, password reset) were NOT recoloured.
+
+**WARM-UP (Tara, Nov 18 2026, #326) on top of the palette:** dusty blush rose `--cr-rose #c48b8e` (tint `#f8ecea`,
+ink `#8c585c`) in TINY doses only (friendlies "Upcoming" pill, the soft tint behind "needs scores" / "confirm your spot"
+cards, the "Next match" label); deeper court blue `--cr-court #78a0b8` (sampled from the photo's net) for the active menu
+item, tab underlines and today; links in `--cr-court-ink #3f6c8a`; the page's PRIMARY button is gold with navy text
+(`.cr-btn-gold`: Set Lineup, Book a friendly, Enter scores, Add Match) — one gold moment per page; headings + team names
+in **Fraunces** (Google Fonts) with `text-transform: none` (body text and scores stay sans; the logo stays Bebas Neue);
+cards cream `--cr-card #fffcf7` (header and menu stay white); faded court at 30%. courtreport.css loads AFTER
+application.css on every page, so overrides of its classes (.cr-btn, .cr-section-title) need `html body` in front.
+
+**Rows fill the wide column (Tara, Nov 18 2026, #327):** every My Teams Upcoming row and team-schedule row is date |
+match info | venue (or "Place TBD") | status pill | ONE real action button | icons/▾. The button: Enter scores (gold) once
+a match has started with no scores and you're a captain; Enter my line for a player on a line; otherwise Set lineup
+(captains/co-captains/admins) or View lineup / View match. Friendlies: Open / Sign up / See lineup. `_cu_match_action`
+partial; `@captain_team_ids` in teams#index. /friendlies uses the full column with cards two-across (forms stay
+`.cr-rp-narrow`). Footer sits right under the content (main padding-bottom 12px). Fill the column with content.
+
+**Decisions (REMEMBER):**
+- **One definition of a player's "match" everywhere on the profile:** one line (court) played with a result.
+  Source = `PlayerRecord` (`app/services/player_record.rb`): Court Report line scores + league-website rows
+  (`player_matches`) that have no Court Report score. A league row is the SAME match as a Court Report line when it's
+  the same day and its "Team vs Team" label names that line's team or opponent (league only if no label). Playing Stats,
+  Overall/per-league tables, Lineup Quick Facts and **Match History** (was "League Match History") all read it.
+- The hand-typed `tennis_stats` seed table (59 matches, 49-10, from April) is no longer shown; rows still in the DB.
+- **Ties:** record shows W-L-T (3-3-1); a tie counts as half a win in win %.
+- **Team page header:** Matches = played + need scores + to play (+ playoff), with a breakdown line; "Starts" only
+  before the first match, then "Next match". Calendar entries a captain added as a match (any kind but Friendly /
+  Clinic) are listed in the schedule and counted; friendlies/clinics are listed and named but not counted.
+- **Calendar entries can't hold scores** → captains have **Make this a match** on the team schedule (#304).
+- **Win % and Best Partner need 3+ matches** together (`ProfilesController::MIN_SAMPLE`); no matches → "No singles yet".
+  Partners group by person ignoring case/spacing/accents (league sites type "Joanne", Court Report has "JoAnne").
+- **Profile:** current teams first, "Past seasons" below (past = team archived, or the player's spot archived). Badge =
+  `league_group`. Subtitle always league · level · season (falls back to flight/league name, start date). "Stats for"
+  lists current teams only. Own page titled "My Profile". Rating caption "USTA rating / year-end 2025" or "date not on
+  file"; no rating → "No USTA rating yet". City is player-entered only (never filled in for them).
+- **Private links live on /settings** (Google Calendar iCal masked like a password; league player-page link). The profile
+  only has a Refresh button. "Remove this account" is only on Site members, never on a profile.
+- **Duplicate people:** admin page **Possible duplicates** (`DuplicatePeople`, `UserMerge`). Merge keeps the record that
+  can sign in, moves everything, refuses when both can sign in, records old id → kept id in `merged_users` so old
+  `/players/:id` links forward. Merged Nov 16: JoAnne Steinberg (26 → 35), Sarah Dougherty (40 → 155). **Kriste/Kristen
+  Davidse was skipped by the data update** (both can sign in, or not exactly 2 records): check Possible duplicates.
+- **Why duplicates appear:** sign-up and the captain's "add player by name + email" create a new person without reusing a
+  same-name roster placeholder. Deliberately NOT auto-claiming (anyone could join a stranger's teams by typing a name).
+- Kiss My Ace and Kiss My Ace Winter are two teams (separate seasons). Tri Hards dropped to Past Seasons on Nov 16–17
+  because someone tapped Archive (nothing archives by date); a captain can tap **Restore to active**.
+
+**Lessons:**
+- **Unclosed `@media` blocks** (#297, #298) made every later style phone-only. After editing application.css, check the
+  braces balance (strip comments, count `{` vs `}`).
+- **League-site dates have no year** ("5/4"): `DeltriPlayerHistory#infer_date` assumed a fall season and filed spring
+  Inter-Club matches under the NEXT year, so they never paired with Court Report scores (Joanne showed 9, not 6). Now the
+  most recent past date; `PlayerRecord.played_date` corrects old rows.
+- A merge **page** merges nothing until the admin taps Merge — say so plainly; Tara expected #306 to merge her pairs.
+- Tara's re-checks can run against the pre-deploy site: quote the new wording ("My Profile", "Match History") so she can
+  tell which version she's seeing.
+- Run Playwright screenshot scripts from the scratchpad (or give absolute output paths), or the PNGs land in the repo.
+- Gems install in this sandbox now (`bundle install`), so `bin/rails test` and `bin/rubocop` run locally.
 
 ## Current Status (as of Oct 21, 2026 — PRs #219–#244)
 

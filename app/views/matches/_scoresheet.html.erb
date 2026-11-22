@@ -20,6 +20,9 @@
           <% if line.result.present? %>
             <span class="cr-result-badge <%= line.won? ? 'cr-result-badge-win' : 'cr-result-badge-loss' %>"><%= line.won? ? "W" : "L" %></span>
           <% end %>
+          <% if line.entered_by %>
+            <span class="cr-sheet-entered">Entered by <%= line.entered_by.name.to_s.split.first %><%= " · #{line.entered_at.strftime('%b %-d')}" if line.entered_at %></span>
+          <% end %>
         </div>
         <% rows.each do |row| %>
           <div class="cr-sheet-pair <%= 'cr-sheet-pair-win' if row[:won] %>">
@@ -50,13 +53,22 @@
   <% if team.league_group == "USTA" %>
     <%# Any teammate can upload the match's TennisLink scorecard (Send To Excel). %>
     <div class="cr-result-detail-empty cr-upload-card">
-      <p>No line scores yet. Open this match's scorecard on TennisLink, tap <strong>Send To Excel</strong>, then upload the file here.</p>
-      <%= link_to "Upload Send To Excel file", usta_upload_team_path(team), class: "cr-btn cr-btn-gold cr-btn-compact" %>
+      <% if local_assigns[:can_enter_results] %>
+        <p>No line scores yet. Type them in, or upload the match's TennisLink scorecard (<strong>Send To Excel</strong>).</p>
+      <% else %>
+        <p>No line scores yet. Open this match's scorecard on TennisLink, tap <strong>Send To Excel</strong>, then upload the file here.</p>
+      <% end %>
+      <div class="cr-upload-card-actions">
+        <% if local_assigns[:can_enter_results] && !local_assigns[:hide_enter] %>
+          <%= link_to "Enter scores", edit_results_team_match_path(team, match), class: "cr-btn cr-btn-gold cr-btn-compact" %>
+        <% end %>
+        <%= link_to "Upload Send To Excel file", usta_upload_team_path(team), class: "cr-btn #{local_assigns[:can_enter_results] ? 'cr-btn-outline' : 'cr-btn-gold'} cr-btn-compact" %>
+      </div>
     </div>
   <% else %>
     <p class="cr-result-detail-empty">
       Line-by-line results haven't been entered yet.
-      <% if local_assigns[:can_enter_results] %><%= link_to "Enter them now →", edit_results_team_match_path(team, match), class: "cr-enter-results-link" %><% end %>
+      <% if local_assigns[:can_enter_results] && !local_assigns[:hide_enter] %><%= link_to "Enter scores →", edit_results_team_match_path(team, match), class: "cr-enter-results-link" %><% end %>
     </p>
   <% end %>
 <% end %>

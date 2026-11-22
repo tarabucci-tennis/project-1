@@ -27,27 +27,27 @@
    pop · crisp win/loss. Muted text is deliberately dark for legibility.
    Division of accents: teal = interaction, amber = pop/brand highlight. */
 :root {
-  --cr-black: #182740;              /* ink navy — text, dark surfaces, hero */
+  --cr-black: #1b2a4a;              /* ink navy — text, dark surfaces, hero */
   --cr-black-soft: #24344f;
   --cr-navy-page: #f4f8fc;          /* cool near-white page canvas */
   --cr-header-bg: #101d33;          /* deep navy header bar */
   --cr-dark-panel: #16273f;         /* dark calendar background */
   --cr-dark-panel-soft: #21344f;    /* lighter inset for day cells */
-  --cr-dark-border: rgba(23, 180, 166, 0.22);  /* teal-tinted border on dark */
-  --cr-gold: #f4b431;               /* sunny amber — pop / brand highlight */
-  --cr-gold-soft: #ffce62;
-  --cr-gold-bright: #ffdb85;
-  --cr-teal: #17b4a6;              /* teal — the lead accent (fills) */
-  --cr-teal-deep: #0e7d73;         /* readable teal for link text on light */
-  --cr-teal-tint: rgba(23, 180, 166, 0.14);
+  --cr-dark-border: rgba(24, 39, 64, 0.22);  /* teal-tinted border on dark */
+  --cr-gold: #7d8899;               /* sunny amber — pop / brand highlight */
+  --cr-gold-soft: #7d8899;
+  --cr-gold-bright: #7d8899;
+  --cr-teal: #1b2a4a;              /* teal — the lead accent (fills) */
+  --cr-teal-deep: #1b2a4a;         /* readable teal for link text on light */
+  --cr-teal-tint: rgba(24, 39, 64, 0.14);
   --cr-white: #ffffff;
   --cr-bg: #eef3f9;                 /* cool light for subtle inset fills */
   --cr-border: #e1e8f1;
-  --cr-text: #182740;
+  --cr-text: #1b2a4a;
   --cr-text-muted: #4d5a72;         /* darker slate — reads clearly on light */
   --cr-text-light: #6f7c92;
-  --cr-green: #1ea97c;              /* win green */
-  --cr-red: #f1654f;               /* loss red */
+  --cr-green: #1b2a4a;              /* win green */
+  --cr-red: #6b7688;               /* loss red */
 }
 
 body {
@@ -147,7 +147,7 @@ a { color: inherit; text-decoration: none; }
 }
 
 .cr-league-dropdown-item:hover {
-  background: rgba(201, 162, 74, 0.12);
+  background: rgba(24, 39, 64, 0.12);
   border-left-color: var(--cr-gold);
 }
 
@@ -216,7 +216,7 @@ a { color: inherit; text-decoration: none; }
   align-items: center;
   justify-content: center;
   font-size: 1.3rem;
-  box-shadow: 0 3px 14px rgba(201, 168, 76, 0.4);
+  box-shadow: 0 3px 14px rgba(24, 39, 64, 0.4);
   overflow: hidden;
   flex-shrink: 0;
 }
@@ -332,15 +332,15 @@ button.cr-header-pill {
 }
 
 .cr-flash-notice {
-  background: #e6f4ea;
-  color: #065f46;
-  border: 1px solid #a7f3d0;
+  background: #e3f1fb;
+  color: #1b2a4a;
+  border: 1px solid #e3f1fb;
 }
 
 .cr-flash-alert {
-  background: #fef2f2;
-  color: #991b1b;
-  border: 1px solid #fca5a5;
+  background: #eef1f5;
+  color: #1b2a4a;
+  border: 1px solid #d5dbe4;
 }
 
 /* ========================================================
@@ -399,7 +399,7 @@ button.cr-header-pill {
 }
 
 .cr-btn-secondary:hover {
-  background: var(--cr-white);
+  background: var(--cr-card);
   border-color: var(--cr-gold);
 }
 
@@ -448,7 +448,7 @@ button.cr-header-pill {
 
 .cr-team-card {
   display: block;
-  background: var(--cr-white);
+  background: var(--cr-card);
   border: 1px solid var(--cr-border);
   border-radius: 10px;
   padding: 16px 18px;
@@ -639,7 +639,7 @@ button.cr-header-pill {
 }
 
 .cr-results-placeholder {
-  background: var(--cr-white);
+  background: var(--cr-card);
   border: 1px solid var(--cr-border);
   border-radius: 12px;
   overflow: hidden;
@@ -658,8 +658,8 @@ button.cr-header-pill {
 }
 
 .cr-match-home {
-  background: #dbeafe;
-  color: #1d4ed8;
+  background: #e3f1fb;
+  color: #1b2a4a;
 }
 
 .cr-match-away {
@@ -677,7 +677,7 @@ button.cr-header-pill {
 }
 
 .cr-stat-card {
-  background: var(--cr-white);
+  background: var(--cr-card);
   border: 1px solid var(--cr-border);
   border-top: 3px solid var(--cr-gold);
   border-radius: 10px;
@@ -721,7 +721,7 @@ button.cr-header-pill {
 /* ── Schedule list ── */
 
 .cr-match-list {
-  background: var(--cr-white);
+  background: var(--cr-card);
   border: 1px solid var(--cr-border);
   border-radius: 12px;
   overflow: hidden;
@@ -802,7 +802,7 @@ button.cr-header-pill {
 .cr-match-card {
   display: flex;
   flex-direction: column;
-  background: var(--cr-white);
+  background: var(--cr-card);
   border: 1px solid var(--cr-border);
   border-radius: 14px;
   margin-bottom: 14px;
@@ -811,7 +811,7 @@ button.cr-header-pill {
 }
 
 .cr-match-card:hover {
-  border-color: rgba(201, 162, 74, 0.45);
+  border-color: rgba(24, 39, 64, 0.45);
   box-shadow: 0 6px 18px rgba(10, 22, 40, 0.06);
 }
 
@@ -915,7 +915,7 @@ button.cr-header-pill {
   padding: 8px 16px;
   border: 1px solid var(--cr-border);
   border-radius: 8px;
-  background: var(--cr-white);
+  background: var(--cr-card);
   color: var(--cr-text-muted);
   font-size: 0.84rem;
   font-weight: 600;
@@ -931,15 +931,15 @@ button.cr-header-pill {
 }
 
 .cr-avail-in.avail-btn-active {
-  background: #dcfce7;
-  border-color: #86efac;
-  color: #166534;
+  background: #e3f1fb;
+  border-color: #d6ecf9;
+  color: #1b2a4a;
 }
 
 .cr-avail-out.avail-btn-active {
-  background: #fef2f2;
-  border-color: #fca5a5;
-  color: #991b1b;
+  background: #eef1f5;
+  border-color: #d5dbe4;
+  color: #1b2a4a;
 }
 
 .cr-avail-message {
@@ -950,7 +950,7 @@ button.cr-header-pill {
   border-radius: 8px;
   font-size: 0.84rem;
   color: var(--cr-text);
-  background: var(--cr-white);
+  background: var(--cr-card);
   outline: none;
   font-family: inherit;
   transition: border-color 0.15s;
@@ -1014,7 +1014,7 @@ button.cr-header-pill {
 .cr-popup-overlay.cr-popup-visible { opacity: 1; }
 
 .cr-popup {
-  background: var(--cr-white);
+  background: var(--cr-card);
   border-radius: 16px;
   padding: 32px 36px;
   max-width: 320px;
@@ -1084,7 +1084,7 @@ button.cr-header-pill {
 /* ── Roster ── */
 
 .cr-roster {
-  background: var(--cr-white);
+  background: var(--cr-card);
   border: 1px solid var(--cr-border);
   border-radius: 12px;
   overflow: hidden;
@@ -1112,8 +1112,8 @@ button.cr-header-pill {
 .cr-mins-note { margin: -4px 0 12px; font-size: 0.82rem; line-height: 1.45; color: var(--cr-text-muted); }
 .cr-mins-note-sub { display: block; font-size: 0.78rem; }
 .cr-mins { flex: 0 0 auto; font-size: 0.72rem; font-weight: 700; padding: 3px 9px; border-radius: 999px; white-space: nowrap; }
-.cr-mins-ok { color: #15803d; background: rgba(22,163,74,0.10); }
-.cr-mins-short { color: #92400e; background: #fef3c7; }
+.cr-mins-ok { color: #1b2a4a; background: rgba(24, 39, 64,0.10); }
+.cr-mins-short { color: #1b2a4a; background: #eef4fa; }
 /* Roster as a table on computers: the name, then fixed columns for rating,
    matches played, role and buttons, so tags sit next to the name and every
    row lines up. */
@@ -1145,7 +1145,7 @@ button.cr-header-pill {
   font-weight: 700;
   color: var(--cr-gold);
   padding: 3px 10px;
-  background: rgba(201, 162, 74, 0.1);
+  background: rgba(24, 39, 64, 0.1);
   border-radius: 12px;
 }
 
@@ -1178,7 +1178,7 @@ button.cr-header-pill {
 }
 
 .cr-login-card {
-  background: var(--cr-white);
+  background: var(--cr-card);
   border: 1px solid var(--cr-border);
   border-radius: 16px;
   padding: 48px 40px;
@@ -1223,7 +1223,7 @@ button.cr-header-pill {
 .cr-field select {
   width: 100%;
   padding: 11px 14px;
-  background: var(--cr-white);
+  background: var(--cr-card);
   border: 1px solid var(--cr-border);
   border-radius: 8px;
   color: var(--cr-text);
@@ -1301,7 +1301,7 @@ button.cr-header-pill {
 }
 
 .cr-auth-card {
-  background: var(--cr-white);
+  background: var(--cr-card);
   border: 1px solid var(--cr-border);
   border-radius: 16px;
   padding: 40px 32px;
@@ -1321,7 +1321,7 @@ button.cr-header-pill {
   align-items: center;
   justify-content: center;
   font-size: 1.6rem;
-  box-shadow: 0 3px 14px rgba(201, 162, 74, 0.35);
+  box-shadow: 0 3px 14px rgba(24, 39, 64, 0.35);
   overflow: hidden;
 }
 
@@ -1384,14 +1384,14 @@ button.cr-header-pill {
    ======================================================== */
 
 .cr-admin-page {
-  max-width: 760px;
+  max-width: var(--cr-col);
   margin: 0 auto;
 }
 
 .cr-table {
   width: 100%;
   border-collapse: collapse;
-  background: var(--cr-white);
+  background: var(--cr-card);
   border: 1px solid var(--cr-border);
   border-radius: 12px;
   overflow: hidden;
@@ -1473,7 +1473,7 @@ button.cr-header-pill {
 }
 
 .cr-rating-card {
-  background: var(--cr-white);
+  background: var(--cr-card);
   border: 1px solid var(--cr-border);
   border-top: 3px solid var(--cr-gold);
   border-radius: 12px;
@@ -1556,7 +1556,7 @@ button.cr-header-pill {
 }
 
 .cr-player-rating-chip {
-  background: rgba(201, 162, 74, 0.12);
+  background: rgba(24, 39, 64, 0.12);
   color: var(--cr-gold);
   font-weight: 700;
   padding: 2px 10px;
@@ -1674,7 +1674,7 @@ button.cr-header-pill {
   align-items: center;
   gap: 16px;
   padding: 16px 20px;
-  background: var(--cr-white);
+  background: var(--cr-card);
   border: 1px solid var(--cr-border);
   border-radius: 10px;
   margin-bottom: 28px;
@@ -1714,26 +1714,26 @@ button.cr-header-pill {
   font-size: 1.1rem;
   font-weight: 700;
   transition: all 0.2s;
-  background: var(--cr-white);
+  background: var(--cr-card);
 }
 
 .cr-result-option input[type="radio"] { display: none; }
 
 .cr-result-win:has(input:checked) {
   border-color: var(--cr-green);
-  background: #f0fdf4;
+  background: #e3f1fb;
   color: var(--cr-green);
 }
 
 .cr-result-loss:has(input:checked) {
   border-color: var(--cr-red);
-  background: #fef2f2;
+  background: #eef1f5;
   color: var(--cr-red);
 }
 
 /* Line cards */
 .cr-line-card {
-  background: var(--cr-white);
+  background: var(--cr-card);
   border: 1px solid var(--cr-border);
   border-radius: 10px;
   padding: 16px 20px;
@@ -1770,20 +1770,20 @@ button.cr-header-pill {
   font-weight: 700;
   font-size: 0.9rem;
   transition: all 0.2s;
-  background: var(--cr-white);
+  background: var(--cr-card);
 }
 
 .cr-line-result-opt input[type="radio"] { display: none; }
 
 .cr-line-win-opt:has(input:checked) {
   border-color: var(--cr-green);
-  background: #f0fdf4;
+  background: #e3f1fb;
   color: var(--cr-green);
 }
 
 .cr-line-loss-opt:has(input:checked) {
   border-color: var(--cr-red);
-  background: #fef2f2;
+  background: #eef1f5;
   color: var(--cr-red);
 }
 
@@ -1816,7 +1816,7 @@ button.cr-header-pill {
 .cr-input-small:focus {
   outline: none;
   border-color: var(--cr-gold);
-  box-shadow: 0 0 0 2px rgba(201, 162, 74, 0.15);
+  box-shadow: 0 0 0 2px rgba(24, 39, 64, 0.15);
 }
 
 .cr-line-players { margin-top: 8px; }
@@ -1838,7 +1838,7 @@ button.cr-header-pill {
   border: 1px solid var(--cr-border);
   border-radius: 6px;
   font-size: 0.9rem;
-  background: var(--cr-white);
+  background: var(--cr-card);
   margin-bottom: 6px;
 }
 
@@ -1900,21 +1900,21 @@ button.cr-header-pill {
 }
 
 .cr-result-badge-win {
-  background: #f0fdf4;
+  background: #e3f1fb;
   color: var(--cr-green);
-  border: 1px solid #bbf7d0;
+  border: 1px solid #e3f1fb;
 }
 
 .cr-result-badge-loss {
-  background: #fef2f2;
+  background: #eef1f5;
   color: var(--cr-red);
-  border: 1px solid #fecaca;
+  border: 1px solid #eef1f5;
 }
 
 .cr-result-badge-tie {
-  background: #fdf7e8;
-  color: #9a7b1f;
-  border: 1px solid #ecd9a6;
+  background: #eef4fa;
+  color: #1b2a4a;
+  border: 1px solid #eef4fa;
 }
 
 .cr-result-score {
@@ -2035,7 +2035,7 @@ button.cr-header-pill {
   border: 1px solid var(--cr-border);
   border-radius: 10px;
   overflow: hidden;
-  background: var(--cr-white);
+  background: var(--cr-card);
 }
 
 .cr-sheet-line-head {
@@ -2043,7 +2043,7 @@ button.cr-header-pill {
   align-items: center;
   gap: 8px;
   padding: 7px 12px;
-  background: var(--cr-teal-tint, #eef6f5);
+  background: var(--cr-teal-tint, #e3f1fb);
   border-bottom: 1px solid var(--cr-border);
 }
 
@@ -2067,7 +2067,7 @@ button.cr-header-pill {
 }
 
 .cr-sheet-pair-win {
-  background: rgba(34, 153, 120, 0.06);
+  background: rgba(24, 39, 64, 0.06);
 }
 
 .cr-sheet-names {
@@ -2109,7 +2109,7 @@ button.cr-header-pill {
   padding: 2px 0;
 }
 
-.cr-sheet-pair-win .cr-sheet-set { color: var(--cr-green, #229978); }
+.cr-sheet-pair-win .cr-sheet-set { color: var(--cr-green, #1b2a4a); }
 
 .cr-result-detail-empty {
   font-size: 0.85rem;
@@ -2129,7 +2129,7 @@ button.cr-header-pill {
 }
 
 .cr-roster-history-link:hover {
-  background: rgba(201, 162, 74, 0.08);
+  background: rgba(24, 39, 64, 0.08);
   border-color: var(--cr-gold);
 }
 
@@ -2188,7 +2188,7 @@ button.cr-header-pill {
   -webkit-overflow-scrolling: touch;
   border: 1px solid var(--cr-border);
   border-radius: 10px;
-  background: var(--cr-white);
+  background: var(--cr-card);
 }
 
 .cr-standings-tbl {
@@ -2241,7 +2241,7 @@ button.cr-header-pill {
 }
 
 .cr-standings-tbl .cr-standings-tbl-self td {
-  background: #fdf8ed;
+  background: var(--cr-card);
   font-weight: 700;
 }
 
@@ -2264,7 +2264,7 @@ button.cr-header-pill {
   background: #eef4fb;
 }
 .cr-standings-tbl .cr-standings-tbl-self.cr-standings-tbl-active td {
-  background: #fbf3df;
+  background: #eef4fa;
 }
 
 /* Standings spotlight — the panel that opens below the table when a
@@ -2275,7 +2275,7 @@ button.cr-header-pill {
 .cr-spotlight {
   border: 1px solid var(--cr-border);
   border-radius: 10px;
-  background: var(--cr-white);
+  background: var(--cr-card);
   padding: 14px 16px;
 }
 .cr-spotlight-head {
@@ -2398,7 +2398,7 @@ button.cr-header-pill {
 .cr-standings-row:last-child { border-bottom: none; }
 
 .cr-standings-row-self {
-  background: #fdf8ed;
+  background: var(--cr-card);
   border-left: 3px solid var(--cr-gold);
   font-weight: 700;
 }
@@ -2464,7 +2464,7 @@ button.cr-header-pill {
 }
 
 .cr-captain-match-card {
-  background: var(--cr-white);
+  background: var(--cr-card);
   border: 1px solid var(--cr-border);
   border-radius: 10px;
   padding: 16px 20px;
@@ -2503,8 +2503,8 @@ button.cr-header-pill {
   display: inline-block;
 }
 
-.cr-captain-label-in { background: #f0fdf4; color: var(--cr-green); }
-.cr-captain-label-out { background: #fef2f2; color: var(--cr-red); }
+.cr-captain-label-in { background: #e3f1fb; color: var(--cr-green); }
+.cr-captain-label-out { background: #eef1f5; color: var(--cr-red); }
 .cr-captain-label-pending { background: var(--cr-bg); color: var(--cr-text-muted); }
 
 .cr-captain-player-row {
@@ -2537,7 +2537,7 @@ button.cr-header-pill {
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
   margin-bottom: 16px;
-  background: var(--cr-white);
+  background: var(--cr-card);
 }
 
 /* Keep the row text dark on the white card, even on dark-themed pages
@@ -2634,7 +2634,7 @@ button.cr-header-pill {
   justify-content: flex-start;
   text-align: center;
   padding: 20px 10px 12px;
-  background: var(--cr-white);
+  background: var(--cr-card);
   border: 1px solid var(--cr-border);
   border-radius: 12px;
   min-width: 0;
@@ -2656,12 +2656,12 @@ button.cr-header-pill {
 .cr-landing-feature-icon svg { width: 22px; height: 22px; }
 
 /* Feature icon colours (same as the public home page). */
-.cr-landing-feature-icon.cr-tone-red{color:#e5484d;background:#fdecec;}
-.cr-landing-feature-icon.cr-tone-green{color:#2e9d5b;background:#e6f6ec;}
-.cr-landing-feature-icon.cr-tone-blue{color:#3b6fd8;background:#e8effc;}
-.cr-landing-feature-icon.cr-tone-lime{color:#7a9a14;background:#f2f8dc;}
-.cr-landing-feature-icon.cr-tone-orange{color:#d97706;background:#fdf1e1;}
-.cr-landing-feature-icon.cr-tone-purple{color:#7c4dce;background:#f1ebfb;}
+.cr-landing-feature-icon.cr-tone-red{color:#1b2a4a;background:#eef1f5;}
+.cr-landing-feature-icon.cr-tone-green{color:#1b2a4a;background:#e3f1fb;}
+.cr-landing-feature-icon.cr-tone-blue{color:#1b2a4a;background:#e3f1fb;}
+.cr-landing-feature-icon.cr-tone-lime{color:#1b2a4a;background:#e3f1fb;}
+.cr-landing-feature-icon.cr-tone-orange{color:#1b2a4a;background:#eef4fa;}
+.cr-landing-feature-icon.cr-tone-purple{color:#1b2a4a;background:#e3f1fb;}
 
 .cr-landing-feature-title {
   font-family: 'Bebas Neue', sans-serif;
@@ -2719,7 +2719,7 @@ button.cr-header-pill {
    ======================================================== */
 
 .cr-coming-soon-card {
-  background: var(--cr-white);
+  background: var(--cr-card);
   border: 1px solid var(--cr-border);
   border-radius: 12px;
   padding: 40px 32px;
@@ -2774,8 +2774,8 @@ button.cr-header-pill {
    ======================================================== */
 
 .cr-lineup-facts {
-  background: linear-gradient(135deg, #fdf8ed 0%, #fffaf0 100%);
-  border: 1px solid rgba(201, 162, 74, 0.35);
+  background: linear-gradient(135deg, #ffffff 0%, #ffffff 100%);
+  border: 1px solid rgba(24, 39, 64, 0.35);
   border-radius: 14px;
   padding: 18px 22px;
   margin-bottom: 24px;
@@ -2789,8 +2789,8 @@ button.cr-header-pill {
 }
 
 .cr-lineup-fact {
-  background: var(--cr-white);
-  border: 1px solid rgba(201, 162, 74, 0.2);
+  background: var(--cr-card);
+  border: 1px solid rgba(24, 39, 64, 0.2);
   border-radius: 10px;
   padding: 12px 14px;
 }
@@ -2843,8 +2843,8 @@ button.cr-header-pill {
   text-align: center;
   padding: 14px 18px;
   margin-bottom: 20px;
-  background: rgba(201, 162, 74, 0.08);
-  border: 1px dashed rgba(201, 162, 74, 0.4);
+  background: rgba(24, 39, 64, 0.08);
+  border: 1px dashed rgba(24, 39, 64, 0.4);
   border-radius: 10px;
   font-size: 0.85rem;
   color: var(--cr-text-muted);
@@ -2858,7 +2858,7 @@ button.cr-header-pill {
 }
 
 .cr-chart-summary-card {
-  background: var(--cr-white);
+  background: var(--cr-card);
   border: 1px solid var(--cr-border);
   border-radius: 12px;
   padding: 18px 20px;
@@ -3025,7 +3025,7 @@ button.cr-header-pill {
   gap: 12px;
   align-items: center;
   padding: 10px 14px;
-  background: var(--cr-white);
+  background: var(--cr-card);
   border: 1px solid var(--cr-border);
   border-radius: 8px;
 }
@@ -3055,12 +3055,12 @@ button.cr-header-pill {
 }
 
 .cr-chart-recent-win {
-  background: #dcfce7;
+  background: #e3f1fb;
   color: var(--cr-green);
 }
 
 .cr-chart-recent-loss {
-  background: #fee2e2;
+  background: #eef1f5;
   color: var(--cr-red);
 }
 
@@ -3096,7 +3096,7 @@ button.cr-header-pill {
 }
 
 .cr-playing-stat-card {
-  background: var(--cr-white);
+  background: var(--cr-card);
   border: 1px solid var(--cr-border);
   border-radius: 10px;
   padding: 16px;
@@ -3189,7 +3189,7 @@ button.cr-header-pill {
 .cr-match-card-body-split > .cr-match-captain-actions {
   flex: 0 0 170px;
   border-right: 1px solid var(--cr-border);
-  background: var(--cr-white);
+  background: var(--cr-card);
 }
 
 .cr-match-card-body-split > .cr-lineup-preview {
@@ -3206,7 +3206,7 @@ button.cr-header-pill {
   gap: 8px;
   padding: 14px 14px;
   border-top: 1px solid var(--cr-border);
-  background: var(--cr-white);
+  background: var(--cr-card);
 }
 
 .cr-match-action-btn {
@@ -3215,9 +3215,9 @@ button.cr-header-pill {
   justify-content: center;
   gap: 5px;
   padding: 7px 10px;
-  border: 1px solid rgba(201, 162, 74, 0.4);
+  border: 1px solid rgba(24, 39, 64, 0.4);
   border-radius: 8px;
-  background: var(--cr-white);
+  background: var(--cr-card);
   color: var(--cr-text);
   font-size: 0.74rem;
   font-weight: 600;
@@ -3229,7 +3229,7 @@ button.cr-header-pill {
 }
 
 .cr-match-action-btn:hover {
-  background: rgba(201, 162, 74, 0.08);
+  background: rgba(24, 39, 64, 0.08);
   border-color: var(--cr-gold);
   transform: translateY(-1px);
 }
@@ -3268,7 +3268,7 @@ button.cr-header-pill {
 .cr-lineup-preview {
   padding: 16px 22px 18px;
   border-top: 1px solid var(--cr-border);
-  background: var(--cr-white);
+  background: var(--cr-card);
 }
 
 .cr-lineup-preview-title {
@@ -3329,7 +3329,7 @@ button.cr-header-pill {
   align-items: center;
   gap: 10px;
   padding: 10px 12px;
-  background: #fdf8ed;
+  background: var(--cr-card);
   border-radius: 8px;
   margin-top: 8px;
 }
@@ -3337,7 +3337,7 @@ button.cr-header-pill {
 /* Single-column pages (forms, Set Lineup, Enter Results, uploads...) use a
    readable width instead of stretching across a wide screen (Tara: no
    hollow areas). */
-.cr-page { max-width: 760px; margin: 0 auto; }
+.cr-page { max-width: var(--cr-col); margin: 0 auto; }
 
 /* Lineup builder (captain page) */
 .cr-lineup-grid {
@@ -3347,7 +3347,7 @@ button.cr-header-pill {
 }
 
 .cr-lineup-line-card {
-  background: var(--cr-white);
+  background: var(--cr-card);
   border: 1px solid var(--cr-border);
   border-radius: 10px;
   padding: 16px 20px;
@@ -3361,7 +3361,7 @@ button.cr-header-pill {
 /* Line name with the picked pair's record right beside it (wraps under it on
    narrow phones). */
 .cr-lineup-line-head { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; margin-bottom: 10px; }
-.cr-lineup-pair { font-size: 0.74rem; font-weight: 600; color: #0f6b5c; background: rgba(23, 180, 166, 0.10); border-radius: 999px; padding: 2px 10px; white-space: nowrap; }
+.cr-lineup-pair { font-size: 0.74rem; font-weight: 600; color: #1b2a4a; background: rgba(24, 39, 64, 0.10); border-radius: 999px; padding: 2px 10px; white-space: nowrap; }
 .cr-lineup-pair.is-new { color: var(--cr-text-muted); background: var(--cr-bg); }
 .cr-lineup-pair[hidden] { display: none; }
 /* Each player slot: the dropdown with "Already confirmed" beside it (stacked
@@ -3377,7 +3377,7 @@ button.cr-header-pill {
 .cr-lineup-usual { margin: -4px 0 10px; font-size: 0.78rem; color: var(--cr-text-muted); line-height: 1.5; }
 .cr-lineup-usual-who { white-space: nowrap; }
 .cr-lineup-usual-who strong { color: var(--cr-text); font-weight: 600; }
-.cr-lineup-carry { font-size: 0.85rem; color: var(--cr-text); margin: 0 0 14px; padding: 10px 14px; background: rgba(23, 180, 166, 0.10); border-left: 3px solid var(--cr-teal); border-radius: 6px; }
+.cr-lineup-carry { font-size: 0.85rem; color: var(--cr-text); margin: 0 0 14px; padding: 10px 14px; background: rgba(24, 39, 64, 0.10); border-left: 3px solid var(--cr-teal); border-radius: 6px; }
 @media (max-width: 480px) {
   .cr-lineup-slot-row { grid-template-columns: 1fr; }
 }
@@ -3385,17 +3385,17 @@ button.cr-header-pill {
 /* Set Lineup: the dropdown with an × to take the player off the line */
 .cr-lineup-pickrow { display: flex; align-items: center; gap: 8px; min-width: 0; }
 .cr-lineup-pickrow .cr-select { flex: 1 1 auto; min-width: 0; }
-.cr-lineup-clear { flex: 0 0 auto; width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--cr-border); background: #fff; font-size: 1.25rem; line-height: 1; color: var(--cr-text-muted); cursor: pointer; }
-.cr-lineup-clear:hover { color: #b91c1c; border-color: #e5484d; }
+.cr-lineup-clear { flex: 0 0 auto; width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--cr-border); background: var(--cr-card); font-size: 1.25rem; line-height: 1; color: var(--cr-text-muted); cursor: pointer; }
+.cr-lineup-clear:hover { color: #1b2a4a; border-color: #6b7688; }
 .cr-lineup-actions { flex-wrap: wrap; align-items: center; }
 .cr-lineup-actions .cr-btn { white-space: nowrap; }
 @media (max-width: 480px) {
   .cr-lineup-actions .cr-btn { flex: 1 1 0; min-width: 0; padding-left: 8px; padding-right: 8px; font-size: 0.85rem; text-align: center; justify-content: center; }
   .cr-lineup-actions .cr-lineup-clear-all { flex-basis: 100%; margin-left: 0; text-align: center; }
 }
-.cr-lineup-clear-all { margin-left: auto; background: none; border: none; font: inherit; font-size: 0.88rem; font-weight: 700; color: #b91c1c; text-decoration: underline; cursor: pointer; padding: 10px 4px; }
+.cr-lineup-clear-all { margin-left: auto; background: none; border: none; font: inherit; font-size: 0.88rem; font-weight: 700; color: #1b2a4a; text-decoration: underline; cursor: pointer; padding: 10px 4px; }
 /* Set Lineup: tap a name, then "Put … here" (lineup_pick_controller) */
-.cr-lp-panel { background: var(--cr-white); border: 1px solid var(--cr-border); border-radius: 10px; padding: 14px 16px; margin-bottom: 12px; }
+.cr-lp-panel { background: var(--cr-card); border: 1px solid var(--cr-border); border-radius: 10px; padding: 14px 16px; margin-bottom: 12px; }
 .cr-lp-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 2px 10px; margin-bottom: 10px; }
 .cr-lp-title { font-size: 0.72rem; font-weight: 800; letter-spacing: 0.8px; text-transform: uppercase; color: var(--cr-text); }
 .cr-lp-hint { font-size: 0.78rem; color: var(--cr-text-muted); }
@@ -3403,17 +3403,17 @@ button.cr-header-pill {
 .cr-lp-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 6px; }
 .cr-lp-chip {
   display: flex; align-items: center; gap: 8px; width: 100%; min-width: 0; height: 40px; padding: 0 10px;
-  border: 1px solid var(--cr-border); border-radius: 8px; background: #fff;
+  border: 1px solid var(--cr-border); border-radius: 8px; background: var(--cr-card);
   font: inherit; font-size: 0.85rem; font-weight: 600; color: var(--cr-text); text-align: left; cursor: pointer;
 }
 .cr-lp-chip:hover { border-color: #c7ccd6; }
 .cr-lp-name { flex: 1 1 auto; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.cr-lp-chip.is-picked { border-color: var(--cr-gold); background: rgba(201,162,74,0.12); box-shadow: inset 0 0 0 1px var(--cr-gold); }
+.cr-lp-chip.is-picked { border-color: var(--cr-gold); background: rgba(24,39,64,0.12); box-shadow: inset 0 0 0 1px var(--cr-gold); }
 .cr-lp-line { flex: 0 0 auto; font-size: 0.68rem; font-weight: 800; letter-spacing: 0.3px; padding: 2px 6px; border-radius: 4px; background: var(--cr-black); color: var(--cr-white); }
 .cr-lp-line[hidden] { display: none; }
 .cr-lp-dot { flex: 0 0 auto; display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #cfd4dc; }
-.cr-lp-chip.is-yes .cr-lp-dot, .cr-lp-dot.is-yes { background: #2e9d5b; }
-.cr-lp-chip.is-no .cr-lp-dot, .cr-lp-dot.is-no { background: #e5484d; }
+.cr-lp-chip.is-yes .cr-lp-dot, .cr-lp-dot.is-yes { background: #1b2a4a; }
+.cr-lp-chip.is-no .cr-lp-dot, .cr-lp-dot.is-no { background: #6b7688; }
 .cr-lp-chip.is-no .cr-lp-name { color: var(--cr-text-muted); }
 .cr-lp-key { display: flex; flex-wrap: wrap; gap: 4px 16px; margin-top: 10px; font-size: 0.74rem; color: var(--cr-text-muted); }
 .cr-lp-key > span { display: inline-flex; align-items: center; gap: 6px; }
@@ -3423,7 +3423,7 @@ button.cr-header-pill {
   .cr-lp-chip { gap: 6px; height: 48px; padding: 0 8px; font-size: 0.8rem; line-height: 1.2; }
   .cr-lp-name { white-space: normal; overflow-wrap: normal; word-break: normal; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
 }
-.cr-lineup-spot { grid-column: 1 / -1; min-height: 40px; border: 1.5px dashed var(--cr-gold); border-radius: 8px; background: rgba(201,162,74,0.10); font: inherit; font-size: 0.86rem; font-weight: 700; color: #8a6d1f; cursor: pointer; }
+.cr-lineup-spot { grid-column: 1 / -1; min-height: 40px; border: 1.5px dashed var(--cr-gold); border-radius: 8px; background: rgba(24,39,64,0.10); font: inherit; font-size: 0.86rem; font-weight: 700; color: #1b2a4a; cursor: pointer; }
 .cr-lineup-spot[hidden] { display: none; }
 
 
@@ -3455,7 +3455,7 @@ button.cr-header-pill {
   align-items: center;
   gap: 12px;
   padding: 10px 16px;
-  background: var(--cr-white);
+  background: var(--cr-card);
   border: 1px solid var(--cr-border);
   border-radius: 8px;
   color: inherit;
@@ -3464,7 +3464,7 @@ button.cr-header-pill {
 
 .cr-my-week-card:hover {
   border-color: var(--cr-gold);
-  box-shadow: 0 2px 8px rgba(200, 164, 21, 0.1);
+  box-shadow: 0 2px 8px rgba(24, 39, 64, 0.1);
 }
 
 .cr-my-week-date {
@@ -3534,8 +3534,8 @@ button.cr-header-pill {
   border-radius: 4px;
   font-size: 0.65rem;
   font-weight: 700;
-  background: #eff6ff;
-  color: #2563eb;
+  background: #e3f1fb;
+  color: #1b2a4a;
   letter-spacing: 0.5px;
   text-transform: uppercase;
 }
@@ -3578,8 +3578,8 @@ button.cr-header-pill {
 .cr-lineup-confirm-prompt {
   margin-top: 16px;
   padding: 14px 18px;
-  background: #fef9ee;
-  border: 1px solid #f0dca0;
+  background: #eef4fa;
+  border: 1px solid #eef4fa;
   border-radius: 10px;
   display: flex;
   align-items: center;
@@ -3589,7 +3589,7 @@ button.cr-header-pill {
 }
 
 .cr-lineup-table {
-  background: var(--cr-white);
+  background: var(--cr-card);
   border: 1px solid var(--cr-border);
   border-radius: 10px;
   overflow: hidden;
@@ -3625,7 +3625,7 @@ button.cr-header-pill {
 .cr-lineup-table-row:last-child { border-bottom: none; }
 
 .cr-lineup-row-you {
-  background: rgba(200, 164, 21, 0.05);
+  background: rgba(24, 39, 64, 0.05);
 }
 
 .cr-lineup-col-time { color: var(--cr-text); }
@@ -3786,7 +3786,7 @@ button.cr-header-pill {
   background: linear-gradient(180deg, rgba(10, 22, 40, 0.97), var(--cr-black));
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border-top: 1px solid rgba(201, 162, 74, 0.15);
+  border-top: 1px solid rgba(24, 39, 64, 0.15);
   padding: 0 0 env(safe-area-inset-bottom);
   z-index: 9999;
   box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.4);
@@ -3813,7 +3813,7 @@ button.cr-header-pill {
   color: rgba(255, 255, 255, 0.4);
   transition: all 0.2s ease;
   position: relative;
-  -webkit-tap-highlight-color: rgba(201, 162, 74, 0.2);
+  -webkit-tap-highlight-color: rgba(24, 39, 64, 0.2);
   text-decoration: none;
   font-family: inherit;
   pointer-events: auto;
@@ -3945,7 +3945,7 @@ button.cr-header-pill {
   border: 1px solid var(--cr-border);
   border-radius: 6px;
   color: var(--cr-text-muted);
-  background: var(--cr-white);
+  background: var(--cr-card);
   text-decoration: none;
   transition: border-color 0.15s, color 0.15s;
 }
@@ -3957,7 +3957,7 @@ button.cr-header-pill {
 
 .cr-coming-up-empty {
   padding: 14px 16px;
-  background: var(--cr-white);
+  background: var(--cr-card);
   border: 1px dashed var(--cr-border);
   border-radius: 8px;
   color: var(--cr-text-muted);
@@ -3970,7 +3970,7 @@ button.cr-header-pill {
   width: 100%;
   margin-top: 10px;
   padding: 10px 16px;
-  background: var(--cr-white);
+  background: var(--cr-card);
   border: 1px solid var(--cr-border);
   border-radius: 8px;
   color: var(--cr-text);
@@ -3984,7 +3984,7 @@ button.cr-header-pill {
 .cr-see-full-schedule-btn:hover {
   border-color: var(--cr-gold);
   color: var(--cr-gold);
-  background: #fffdf5;
+  background: var(--cr-card);
 }
 
 /* ── Full schedule popup modal ── */
@@ -4001,7 +4001,7 @@ button.cr-header-pill {
 
 .cr-full-schedule-modal-panel {
   position: relative;
-  background: var(--cr-white);
+  background: var(--cr-card);
   border-radius: 14px;
   padding: 22px 22px 18px;
   max-width: 520px;
@@ -4029,7 +4029,7 @@ button.cr-header-pill {
   height: 32px;
   border: 1px solid var(--cr-border);
   border-radius: 999px;
-  background: var(--cr-white);
+  background: var(--cr-card);
   color: var(--cr-text);
   font-size: 1.3rem;
   line-height: 1;
@@ -4042,7 +4042,7 @@ button.cr-header-pill {
 .cr-full-schedule-modal-close:hover {
   border-color: var(--cr-gold);
   color: var(--cr-gold);
-  background: #fffdf5;
+  background: var(--cr-card);
 }
 
 .cr-full-schedule-modal-body {
@@ -4053,7 +4053,7 @@ button.cr-header-pill {
 
 /* ── Dashboard month calendar ── */
 .cr-dash-cal {
-  background: var(--cr-white);
+  background: var(--cr-card);
   border: 1px solid var(--cr-border);
   border-radius: 12px;
   padding: 12px 14px 14px;
@@ -4089,7 +4089,7 @@ button.cr-header-pill {
   border: 1px solid var(--cr-border);
   border-radius: 6px;
   color: var(--cr-text);
-  background: var(--cr-white);
+  background: var(--cr-card);
   text-decoration: none;
   font-size: 1.1rem;
   line-height: 1;
@@ -4132,7 +4132,7 @@ button.cr-header-pill {
   min-width: 0;
   border: 1px solid var(--cr-border);
   border-radius: 6px;
-  background: var(--cr-white);
+  background: var(--cr-card);
   color: var(--cr-text);
   font: inherit;
   padding: 3px 3px 2px;
@@ -4146,7 +4146,7 @@ button.cr-header-pill {
 
 .cr-dash-cal-day:hover {
   border-color: var(--cr-gold);
-  background: #fffdf5;
+  background: var(--cr-card);
 }
 
 .cr-dash-cal-day:active {
@@ -4169,7 +4169,7 @@ button.cr-header-pill {
 
 .cr-dash-cal-day-today {
   border: 2px solid var(--cr-gold);
-  background: #fffdf5;
+  background: var(--cr-card);
 }
 
 .cr-dash-cal-day-today .cr-dash-cal-day-num {
@@ -4192,8 +4192,8 @@ button.cr-header-pill {
 }
 
 .cr-dash-cal-day-event {
-  background: #fffdf5;
-  border-color: #f0dca0;
+  background: var(--cr-card);
+  border-color: #eef4fa;
 }
 
 .cr-dash-cal-day-dots {
@@ -4215,10 +4215,10 @@ button.cr-header-pill {
 }
 
 .cr-dash-cal-dot-match    { background: var(--cr-gold); }
-.cr-dash-cal-dot-practice { background: #2563eb; }
-.cr-dash-cal-dot-clinic   { background: #059669; }
-.cr-dash-cal-dot-friendly { background: #d97706; }
-.cr-dash-cal-dot-other    { background: #7c3aed; }
+.cr-dash-cal-dot-practice { background: #1b2a4a; }
+.cr-dash-cal-dot-clinic   { background: #1b2a4a; }
+.cr-dash-cal-dot-friendly { background: #7d8899; }
+.cr-dash-cal-dot-other    { background: #1b2a4a; }
 
 .cr-dash-cal-legend {
   margin-top: 10px;
@@ -4256,7 +4256,7 @@ button.cr-header-pill {
   max-width: 460px;
   max-height: 90vh;
   overflow-y: auto;
-  background: var(--cr-white);
+  background: var(--cr-card);
   border: 1px solid var(--cr-border);
   border-top: 4px solid var(--cr-gold);
   border-radius: 12px;
@@ -4306,7 +4306,7 @@ button.cr-header-pill {
   padding: 10px 12px;
   border: 1px solid var(--cr-border);
   border-radius: 8px;
-  background: var(--cr-white);
+  background: var(--cr-card);
   color: var(--cr-text);
   text-decoration: none;
   transition: border-color 0.15s;
@@ -4320,10 +4320,10 @@ button.cr-header-pill {
   border-left: 3px solid var(--cr-gold);
 }
 
-.cr-dash-cal-item-practice { border-left: 3px solid #2563eb; }
-.cr-dash-cal-item-clinic   { border-left: 3px solid #059669; }
-.cr-dash-cal-item-friendly { border-left: 3px solid #d97706; }
-.cr-dash-cal-item-other    { border-left: 3px solid #7c3aed; }
+.cr-dash-cal-item-practice { border-left: 3px solid #1b2a4a; }
+.cr-dash-cal-item-clinic   { border-left: 3px solid #1b2a4a; }
+.cr-dash-cal-item-friendly { border-left: 3px solid #7d8899; }
+.cr-dash-cal-item-other    { border-left: 3px solid #1b2a4a; }
 
 .cr-dash-cal-item-row {
   display: flex;
@@ -4410,7 +4410,7 @@ button.cr-header-pill {
   border: 1px solid var(--cr-border);
   border-radius: 6px;
   font-size: 0.82rem;
-  background: var(--cr-white);
+  background: var(--cr-card);
   color: var(--cr-text);
   min-width: 0;
 }
@@ -4475,8 +4475,8 @@ button.cr-header-pill {
 .cr-admin-reset-box {
   margin-bottom: 16px;
   padding: 14px 16px;
-  background: #fffdf5;
-  border: 1px solid #f0dca0;
+  background: var(--cr-card);
+  border: 1px solid #eef4fa;
   border-left: 4px solid var(--cr-gold);
   border-radius: 8px;
 }
@@ -4534,7 +4534,7 @@ button.cr-header-pill {
 .cr-stat-cards { gap: 12px; margin-bottom: 28px; }
 .cr-stat-card {
   border: 1px solid var(--cr-border);
-  border-top: 2px solid rgba(201, 162, 74, 0.55);
+  border-top: 2px solid rgba(24, 39, 64, 0.55);
   border-radius: 14px;
   padding: 18px 16px;
   box-shadow: 0 1px 2px rgba(10, 22, 40, 0.04);
@@ -4566,12 +4566,12 @@ button.cr-header-pill {
 
 /* — Badges: soft pills — */
 .cr-match-badge { border-radius: 999px; padding: 4px 11px; font-size: 0.64rem; }
-.cr-match-home { background: rgba(22,163,74,0.10); color: #15803d; }
+.cr-match-home { background: rgba(24, 39, 64,0.10); color: #1b2a4a; }
 .cr-match-away { background: var(--cr-bg); color: var(--cr-text-muted); }
 .cr-result-badge { border-radius: 999px; padding: 3px 11px; font-weight: 700; }
-.cr-result-badge-win  { background: rgba(22,163,74,0.12); color: #15803d; }
-.cr-result-badge-loss { background: rgba(220,38,38,0.10); color: #b91c1c; }
-.cr-result-badge-tie  { background: rgba(201,162,74,0.14); color: #9a7b1f; }
+.cr-result-badge-win  { background: rgba(24, 39, 64,0.12); color: #1b2a4a; }
+.cr-result-badge-loss { background: rgba(107, 118, 136,0.10); color: #1b2a4a; }
+.cr-result-badge-tie  { background: rgba(24,39,64,0.14); color: #1b2a4a; }
 .cr-result-score { color: var(--cr-text-muted); font-weight: 700; }
 
 /* — Captain actions: clean full-width pill row (stack the split) — */
@@ -4598,7 +4598,7 @@ button.cr-header-pill {
 .cr-lineup-preview { background: var(--cr-bg); }
 .cr-lineup-preview-title { color: var(--cr-text-muted); letter-spacing: 1.2px; }
 .cr-lineup-preview-line {
-  background: var(--cr-white);
+  background: var(--cr-card);
   border: 1px solid var(--cr-border);
   border-radius: 10px;
   padding: 9px 12px;
@@ -4648,7 +4648,7 @@ button.cr-header-pill {
   background: #e6ebf2;
   border: 1px solid var(--cr-teal);
   border-radius: 12px;
-  max-width: 760px;
+  max-width: var(--cr-col);
 }
 .cr-home-tab {
   min-width: 0;
@@ -4669,18 +4669,18 @@ button.cr-header-pill {
   -webkit-tap-highlight-color: transparent;
   transition: background 0.15s, color 0.15s, box-shadow 0.15s;
 }
-.cr-home-tab:hover { background: rgba(23, 180, 166, 0.10); }
+.cr-home-tab:hover { background: rgba(24, 39, 64, 0.10); }
 .cr-home-tab-active,
 .cr-home-tab-active:hover {
   color: var(--cr-teal-deep);
   font-weight: 700;
-  background: #fff;
+  background: var(--cr-card);
   box-shadow: 0 1px 2px rgba(10, 22, 40, 0.10), 0 1px 6px rgba(10, 22, 40, 0.06);
 }
 
 /* — Standings table — */
 .cr-standings-wrap {
-  background: var(--cr-white);
+  background: var(--cr-card);
   border: 1px solid var(--cr-border);
   border-radius: 16px;
   overflow: hidden;
@@ -4707,7 +4707,7 @@ button.cr-header-pill {
 }
 .cr-standings tbody tr:last-child td { border-bottom: none; }
 .cr-st-row { cursor: pointer; transition: background 0.12s; }
-.cr-st-row:hover td { background: rgba(201, 162, 74, 0.06); }
+.cr-st-row:hover td { background: rgba(24, 39, 64, 0.06); }
 
 .cr-st-n { text-align: center; white-space: nowrap; }
 /* W and L column headings are a green and a red circle. */
@@ -4735,7 +4735,7 @@ button.cr-header-pill {
 .cr-st-hint { color: var(--cr-text-light); font-size: 0.78rem; margin-top: 12px; text-align: center; }
 
 /* Center the calendar within its tab (it used to share a 2-col row) */
-.cr-dash-cal-full { max-width: 880px; margin: 0 auto; position: relative; }
+.cr-dash-cal-full { max-width: var(--cr-col); margin: 0 auto; position: relative; }
 
 /* Month calendar with each day's events written in the day (like a phone
    calendar app). Mouse: hover a day for its schedule, click a name to open it.
@@ -4743,14 +4743,14 @@ button.cr-header-pill {
 .cr-dash-cal-full .cr-dash-cal-grid { gap: 3px; }
 .cr-dash-cal-full .cr-dash-cal-day {
   height: auto; min-height: 96px; padding: 4px 4px 5px; gap: 2px;
-  align-items: stretch; overflow: hidden; background: var(--cr-white); color: var(--cr-text); border-color: var(--cr-border);
+  align-items: stretch; overflow: hidden; background: var(--cr-card); color: var(--cr-text); border-color: var(--cr-border);
 }
 .cr-dash-cal-full .cr-dash-cal-day-blank { background: transparent; }
 .cr-dash-cal-full .cr-dash-cal-day-num {
   align-self: flex-end; display: inline-flex; align-items: center; justify-content: center;
   min-width: 20px; height: 20px; padding: 0 3px; border-radius: 999px; font-size: 0.74rem; color: var(--cr-text);
 }
-.cr-dash-cal-full .cr-dash-cal-day-today { border: 2px solid var(--cr-gold); background: #fffdf5; }
+.cr-dash-cal-full .cr-dash-cal-day-today { border: 2px solid var(--cr-gold); background: var(--cr-card); }
 .cr-dash-cal-full .cr-dash-cal-day-today .cr-dash-cal-day-num { background: var(--cr-gold); color: var(--cr-black); }
 .cr-dash-cal-chip {
   display: block; width: 100%; min-width: 0; padding: 2px 5px; border-left: 3px solid var(--cr-text-muted); border-radius: 4px;
@@ -4758,10 +4758,10 @@ button.cr-header-pill {
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
 .cr-dash-cal-chip-match    { background: var(--cr-black); color: var(--cr-gold-bright); border-left-color: var(--cr-gold); }
-.cr-dash-cal-chip-practice { background: #eff4ff; color: #1e3a8a; border-left-color: #2563eb; }
-.cr-dash-cal-chip-clinic   { background: #ecfdf5; color: #065f46; border-left-color: #059669; }
-.cr-dash-cal-chip-friendly { background: #fff7ed; color: #9a3412; border-left-color: #d97706; }
-.cr-dash-cal-chip-other    { background: #f5f3ff; color: #5b21b6; border-left-color: #7c3aed; }
+.cr-dash-cal-chip-practice { background: #e3f1fb; color: #1b2a4a; border-left-color: #1b2a4a; }
+.cr-dash-cal-chip-clinic   { background: #e3f1fb; color: #1b2a4a; border-left-color: #1b2a4a; }
+.cr-dash-cal-chip-friendly { background: #eef4fa; color: #1b2a4a; border-left-color: #7d8899; }
+.cr-dash-cal-chip-other    { background: #e3f1fb; color: #1b2a4a; border-left-color: #1b2a4a; }
 .cr-dash-cal-form-other[hidden] { display: none; }
 @media (hover: hover) and (pointer: fine) {
   .cr-dash-cal-chip[data-url]:hover { text-decoration: underline; }
@@ -4770,7 +4770,7 @@ button.cr-header-pill {
 
 .cr-dash-cal-hover {
   position: absolute; z-index: 300; width: 290px; max-height: 380px; overflow-y: auto;
-  padding: 12px; background: var(--cr-white); border: 1px solid var(--cr-border); border-top: 4px solid var(--cr-gold);
+  padding: 12px; background: var(--cr-card); border: 1px solid var(--cr-border); border-top: 4px solid var(--cr-gold);
   border-radius: 12px; box-shadow: 0 12px 34px rgba(24, 39, 64, 0.22);
 }
 .cr-dash-cal-hover[hidden] { display: none; }
@@ -4814,7 +4814,7 @@ a.cr-dash-cal-item-title { display: block; color: var(--cr-text); text-decoratio
 
 /* Premium framing on the standings card */
 .cr-standings-wrap {
-  border-color: rgba(201, 162, 74, 0.22);
+  border-color: rgba(24, 39, 64, 0.22);
   box-shadow: 0 10px 30px rgba(10, 22, 40, 0.07);
 }
 
@@ -4838,13 +4838,13 @@ a.cr-dash-cal-item-title { display: block; color: var(--cr-text); text-decoratio
   letter-spacing: 1.4px;
   text-transform: uppercase;
   color: var(--cr-gold);
-  border-bottom: 1px solid rgba(201, 162, 74, 0.35);
+  border-bottom: 1px solid rgba(24, 39, 64, 0.35);
   background: transparent;
   cursor: default;
 }
 
 /* Subtle gold tint on the column header row */
-.cr-standings thead th { background: rgba(201, 162, 74, 0.06); }
+.cr-standings thead th { background: rgba(24, 39, 64, 0.06); }
 
 /* Rank medallions — gold for the leader */
 .cr-st-rank-badge {
@@ -4857,11 +4857,11 @@ a.cr-dash-cal-item-title { display: block; color: var(--cr-text); text-decoratio
   background: linear-gradient(135deg, var(--cr-gold-bright), var(--cr-gold));
   border-color: var(--cr-gold);
   color: var(--cr-black);
-  box-shadow: 0 2px 8px rgba(201, 162, 74, 0.45);
+  box-shadow: 0 2px 8px rgba(24, 39, 64, 0.45);
 }
 
 /* Leader row: soft gold tint + gold left accent */
-.cr-standings tbody tr.cr-st-row:first-child td { background: rgba(201, 162, 74, 0.07); }
+.cr-standings tbody tr.cr-st-row:first-child td { background: rgba(24, 39, 64, 0.07); }
 .cr-standings tbody tr.cr-st-row:first-child td:first-child { box-shadow: inset 3px 0 0 var(--cr-gold); }
 
 /* Win% color-coded */
@@ -4877,23 +4877,23 @@ a.cr-dash-cal-item-title { display: block; color: var(--cr-text); text-decoratio
    ============================================================ */
 
 /* Warm white (ivory) team listings instead of stark white */
-.cr-standings-wrap { background: #faf8f2; }
-.cr-standings thead th { background: rgba(201, 162, 74, 0.10); }
+.cr-standings-wrap { background: var(--cr-card); }
+.cr-standings thead th { background: rgba(24, 39, 64, 0.10); }
 .cr-standings tbody td { border-bottom-color: rgba(10, 22, 40, 0.06); }
-.cr-st-row:hover td { background: rgba(201, 162, 74, 0.12); }
-.cr-standings tbody tr.cr-st-row:first-child td { background: rgba(201, 162, 74, 0.13); }
+.cr-st-row:hover td { background: rgba(24, 39, 64, 0.12); }
+.cr-standings tbody tr.cr-st-row:first-child td { background: rgba(24, 39, 64, 0.13); }
 
 /* Lighter, warmer W/L circles (soft mint / soft rose, dark text) */
 .cr-st-dot { box-shadow: none; font-weight: 800; }
-.cr-st-dot-w { background: #aee5bd; color: #14532d; }
-.cr-st-dot-l { background: #f4b4b4; color: #8a2222; }
-.cr-st-dot-t { background: #e9c66a; color: #5c4708; }
+.cr-st-dot-w { background: #e3f1fb; color: #1b2a4a; }
+.cr-st-dot-l { background: #d5dbe4; color: #1b2a4a; }
+.cr-st-dot-t { background: #7d8899; color: #5c4708; }
 
 /* Rank medallion on ivory — keep it crisp */
-.cr-st-rank-badge { background: #ffffff; }
+.cr-st-rank-badge { background: var(--cr-card); }
 
 /* One solid, warm page background (ivory listings sit on top as a panel) */
-body { background: #f3f0e9; }
+body { background: #eef6fd; }
 
 /* ============================================================
    Dark home page (My Teams) — dark navy canvas, light data panels.
@@ -4932,7 +4932,7 @@ body.cr-ctx-teams-show .cr-subtab { color: var(--cr-text-muted); }
 body.cr-ctx-teams-show .cr-subtab:hover { color: var(--cr-text); }
 body.cr-ctx-teams-show .cr-subtab-active { color: var(--cr-text); }
 body.cr-ctx-teams-show .cr-empty { color: var(--cr-text-muted); }
-body.cr-ctx-teams-show .cr-team-hero { border: 1px solid rgba(201, 162, 74, 0.18); }
+body.cr-ctx-teams-show .cr-team-hero { border: 1px solid rgba(24, 39, 64, 0.18); }
 
 /* ============================================================
    Dark theme: Profile / Lineups / Find-a-Team (scoped, previewed)
@@ -4965,12 +4965,12 @@ body.cr-ctx-profiles-show .cr-section-subtitle { color: var(--cr-text-muted); }
 .cr-deltri-row { display: flex; gap: 8px; flex-wrap: wrap; }
 .cr-deltri-input {
   flex: 1 1 240px; min-width: 0; padding: 9px 12px; font-size: 0.85rem;
-  border: 1px solid var(--cr-border); border-radius: 8px; background: var(--cr-white); color: var(--cr-text);
+  border: 1px solid var(--cr-border); border-radius: 8px; background: var(--cr-card); color: var(--cr-text);
 }
 .cr-deltri-btn { white-space: nowrap; flex-shrink: 0; }
 .cr-deltri-record {
   font-size: 0.75rem; font-weight: 800; color: var(--cr-gold);
-  background: rgba(201,162,74,0.14); border-radius: 999px; padding: 2px 9px; margin-left: 8px;
+  background: rgba(24,39,64,0.14); border-radius: 999px; padding: 2px 9px; margin-left: 8px;
 }
 .cr-deltri-outcome { text-align: right; white-space: nowrap; display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
 .cr-deltri-score { font-size: 0.78rem; font-weight: 700; color: var(--cr-text-muted); font-variant-numeric: tabular-nums; }
@@ -4995,7 +4995,7 @@ body.cr-ctx-division_teams-show { background: var(--cr-black); }
 .cr-dt-results { display: flex; flex-direction: column; gap: 8px; }
 .cr-dt-row {
   display: flex; align-items: center; gap: 12px;
-  background: var(--cr-white); border: 1px solid var(--cr-border); border-radius: 10px;
+  background: var(--cr-card); border: 1px solid var(--cr-border); border-radius: 10px;
   padding: 12px 14px;
 }
 .cr-dt-row-btn {
@@ -5016,8 +5016,8 @@ body.cr-ctx-division_teams-show { background: var(--cr-black); }
 .cr-dt-pop-note { font-size: 0.72rem; color: var(--cr-text-light); margin-top: 10px; }
 .cr-dt-date { font-weight: 700; color: var(--cr-text-muted); width: 48px; flex-shrink: 0; font-size: 0.85rem; }
 .cr-dt-ha { font-size: 0.66rem; font-weight: 800; border-radius: 5px; padding: 2px 6px; flex-shrink: 0; }
-.cr-dt-ha-home { background: rgba(22,163,74,0.12); color: #15803d; }
-.cr-dt-ha-away { background: rgba(201,162,74,0.16); color: #9a7b1f; }
+.cr-dt-ha-home { background: rgba(24, 39, 64,0.12); color: #1b2a4a; }
+.cr-dt-ha-away { background: rgba(24,39,64,0.16); color: #1b2a4a; }
 .cr-dt-opp { flex: 1 1 auto; min-width: 0; font-weight: 600; color: var(--cr-text); }
 .cr-dt-score { font-weight: 800; color: var(--cr-text-muted); font-variant-numeric: tabular-nums; }
 .cr-dt-empty { color: rgba(255, 255, 255, 0.7); background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 18px; text-align: center; }
@@ -5029,9 +5029,9 @@ body.cr-ctx-division_teams-show { background: var(--cr-black); }
    ============================================================ */
 .cr-seg { display: inline-flex; background: var(--cr-bg); border: 1px solid var(--cr-border); border-radius: 999px; padding: 4px; margin-bottom: 16px; gap: 4px; }
 .cr-seg-btn { border: none; background: none; cursor: pointer; font-family: inherit; padding: 8px 20px; border-radius: 999px; font-size: 0.84rem; font-weight: 700; color: var(--cr-text-muted); transition: all 0.15s; }
-.cr-seg-btn-active { background: var(--cr-white); color: var(--cr-text); box-shadow: 0 1px 3px rgba(10,22,40,0.12); }
+.cr-seg-btn-active { background: var(--cr-card); color: var(--cr-text); box-shadow: 0 1px 3px rgba(10,22,40,0.12); }
 
-.cr-sched-list { background: var(--cr-white); border: 1px solid var(--cr-border); border-radius: 16px; overflow: hidden; box-shadow: 0 1px 2px rgba(10,22,40,0.04); }
+.cr-sched-list { background: var(--cr-card); border: 1px solid var(--cr-border); border-radius: 16px; overflow: hidden; box-shadow: 0 1px 2px rgba(10,22,40,0.04); }
 .cr-sched-item { border-bottom: 1px solid var(--cr-border); }
 .cr-sched-item:last-child { border-bottom: none; }
 .cr-sched-item[open] { background: var(--cr-bg); }
@@ -5046,16 +5046,16 @@ body.cr-ctx-division_teams-show { background: var(--cr-black); }
 .cr-sched-right { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
 .cr-sched-score { font-weight: 700; color: var(--cr-text-muted); font-size: 0.9rem; }
 .cr-sched-upcoming { font-size: 0.72rem; color: var(--cr-text-light); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
-.cr-sched-pill { font-size: 0.66rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #15803d; background: rgba(22,163,74,0.10); padding: 3px 9px; border-radius: 999px; }
+.cr-sched-pill { font-size: 0.66rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #1b2a4a; background: rgba(24, 39, 64,0.10); padding: 3px 9px; border-radius: 999px; }
 .cr-sched-caret { color: var(--cr-text-light); font-size: 0.8rem; transition: transform 0.15s; }
 .cr-sched-item[open] .cr-sched-caret { transform: rotate(180deg); }
 .cr-tag { font-size: 0.62rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px; padding: 3px 9px; border-radius: 999px; }
-.cr-tag-home { background: rgba(22,163,74,0.10); color: #15803d; }
+.cr-tag-home { background: rgba(24, 39, 64,0.10); color: #1b2a4a; }
 .cr-tag-away { background: #eceef1; color: var(--cr-text-muted); }
-.cr-tag-playoff { background: rgba(201,162,74,0.18); color: #8a6d1f; }
+.cr-tag-playoff { background: rgba(24,39,64,0.18); color: #1b2a4a; }
 
 /* Edit opponent standings */
-.cr-stand-edit-card { background: var(--cr-white); border: 1px solid var(--cr-border); border-radius: 10px; padding: 14px 16px; margin-bottom: 12px; }
+.cr-stand-edit-card { background: var(--cr-card); border: 1px solid var(--cr-border); border-radius: 10px; padding: 14px 16px; margin-bottom: 12px; }
 .cr-stand-edit-name { font-weight: 800; color: var(--cr-text); margin-bottom: 10px; }
 .cr-stand-edit-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
 .cr-stand-edit-grid label { display: flex; flex-direction: column; font-size: 0.7rem; font-weight: 700; color: var(--cr-text-muted); text-transform: uppercase; letter-spacing: 0.3px; gap: 4px; }
@@ -5091,7 +5091,7 @@ body.cr-ctx-division_teams-show { background: var(--cr-black); }
      top-left; margin:auto + inset:0 restores the browser's centering. */
   position: fixed; inset: 0; margin: auto; height: fit-content;
   border: 0; padding: 0; border-radius: 16px; width: min(560px, calc(100vw - 32px));
-  max-height: calc(100vh - 48px); background: var(--cr-white); color: var(--cr-text);
+  max-height: calc(100vh - 48px); background: var(--cr-card); color: var(--cr-text);
   box-shadow: 0 20px 60px rgba(10, 22, 40, 0.35);
 }
 .cr-result-dialog::backdrop { background: rgba(10, 22, 40, 0.55); }
@@ -5108,16 +5108,16 @@ body.cr-ctx-division_teams-show { background: var(--cr-black); }
 .cr-result-dialog-score { display: flex; align-items: center; gap: 10px; margin-top: 12px; }
 .cr-sched-detail-title { font-size: 0.64rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--cr-text-light); margin: 14px 0 8px; }
 .cr-sched-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
-.cr-chip-btn { display: inline-flex; align-items: center; gap: 5px; padding: 8px 14px; border-radius: 999px; border: 1px solid var(--cr-border); background: var(--cr-white); color: var(--cr-text); font-size: 0.78rem; font-weight: 600; text-decoration: none; white-space: nowrap; }
-.cr-chip-btn:hover { border-color: var(--cr-gold); background: rgba(201,162,74,0.06); }
+.cr-chip-btn { display: inline-flex; align-items: center; gap: 5px; padding: 8px 14px; border-radius: 999px; border: 1px solid var(--cr-border); background: var(--cr-card); color: var(--cr-text); font-size: 0.78rem; font-weight: 600; text-decoration: none; white-space: nowrap; }
+.cr-chip-btn:hover { border-color: var(--cr-gold); background: rgba(24,39,64,0.06); }
 
 /* Team page: segmented control reads on the light-blue canvas */
 /* Team page Upcoming / Results switch: same clean segmented look as the
    My Teams tabs (grey track, white pill for the selected one, no icons). */
 body.cr-ctx-teams-show .cr-seg { background: #e6ebf2; border: none; border-radius: 12px; padding: 4px; }
-body.cr-ctx-teams-show .cr-seg-btn { color: #475569; font-weight: 600; font-size: 0.88rem; border-radius: 9px; min-height: 40px; padding: 8px 22px; }
+body.cr-ctx-teams-show .cr-seg-btn { color: #1b2a4a; font-weight: 600; font-size: 0.88rem; border-radius: 9px; min-height: 40px; padding: 8px 22px; }
 body.cr-ctx-teams-show .cr-seg-btn:hover { color: var(--cr-black); }
-body.cr-ctx-teams-show .cr-seg-btn-active { background: #fff; color: var(--cr-black); box-shadow: 0 1px 2px rgba(10, 22, 40, 0.10), 0 1px 6px rgba(10, 22, 40, 0.06); }
+body.cr-ctx-teams-show .cr-seg-btn-active { background: var(--cr-card); color: var(--cr-black); box-shadow: 0 1px 2px rgba(10, 22, 40, 0.10), 0 1px 6px rgba(10, 22, 40, 0.06); }
 
 @media (max-width: 640px) {
   .cr-sched-row { padding: 12px; gap: 10px; }
@@ -5178,7 +5178,7 @@ body.cr-ctx-lineups-edit .cr-field > span { color: var(--cr-text); }
    Player Profile card + rating meter (TennisRecord-style)
    ============================================================ */
 .cr-pp {
-  background: var(--cr-white);
+  background: var(--cr-card);
   border: 1px solid var(--cr-border);
   border-radius: 14px;
   margin-bottom: 22px;
@@ -5194,7 +5194,7 @@ body.cr-ctx-lineups-edit .cr-field > span { color: var(--cr-text); }
   padding: 16px 22px;
   border-bottom: 1px solid var(--cr-border);
 }
-.cr-pp-head-title { font-size: 1.25rem; font-weight: 800; color: #64748b; letter-spacing: 0.3px; }
+.cr-pp-head-title { font-size: 1.25rem; font-weight: 800; color: #1b2a4a; letter-spacing: 0.3px; }
 .cr-pp-head-link { font-size: 0.9rem; font-weight: 600; color: var(--cr-teal-deep); text-decoration: none; }
 .cr-pp-head-link:hover { text-decoration: underline; }
 
@@ -5225,7 +5225,7 @@ body.cr-ctx-lineups-edit .cr-field > span { color: var(--cr-text); }
 .cr-pp-city-form { display: flex; gap: 8px; margin-top: 8px; max-width: 320px; }
 .cr-pp-city-form .cr-deltri-input { flex: 1 1 auto; }
 .cr-pp-city-note { font-size: 0.72rem; color: var(--cr-text-muted); margin: 4px 0 0; }
-.cr-pp-sub { font-size: 0.85rem; color: #64748b; margin-top: 3px; }
+.cr-pp-sub { font-size: 0.85rem; color: #1b2a4a; margin-top: 3px; }
 .cr-pp-label { font-size: 1rem; font-weight: 600; color: var(--cr-text); }
 .cr-pp-live {
   font-size: 0.62rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;
@@ -5238,7 +5238,7 @@ body.cr-ctx-lineups-edit .cr-field > span { color: var(--cr-text); }
 .cr-pp-metric-val.cr-pp-gold { color: var(--cr-gold); }
 .cr-pp-metric-cap { font-size: 0.68rem; color: var(--cr-text-muted); margin-top: 2px; }
 
-.cr-pp-meter-title { font-size: 0.8rem; color: #64748b; margin-bottom: 2px; }
+.cr-pp-meter-title { font-size: 0.8rem; color: #1b2a4a; margin-bottom: 2px; }
 .cr-pp-meter { width: 100%; max-width: 240px; height: auto; }
 .cr-pp-meter-scale {
   display: flex; justify-content: space-between; width: 100%; max-width: 200px;
@@ -5263,7 +5263,7 @@ body.cr-ctx-lineups-edit .cr-field > span { color: var(--cr-text); }
   margin: 18px 0 8px; letter-spacing: 0.3px;
 }
 .cr-adv-wrap {
-  background: var(--cr-white);
+  background: var(--cr-card);
   border: 1px solid var(--cr-border);
   border-radius: 12px;
   overflow-x: auto;
@@ -5271,7 +5271,7 @@ body.cr-ctx-lineups-edit .cr-field > span { color: var(--cr-text); }
 .cr-adv { width: 100%; border-collapse: collapse; font-size: 0.9rem; min-width: 640px; }
 .cr-adv.cr-adv-compact { min-width: 360px; }
 .cr-adv th, .cr-adv td { padding: 12px 10px; text-align: center; white-space: nowrap; color: var(--cr-text); }
-.cr-adv thead th { background: #f7f9fc; color: #64748b; font-weight: 700; font-size: 0.8rem; border-bottom: 1px solid var(--cr-border); }
+.cr-adv thead th { background: #f7f9fc; color: #1b2a4a; font-weight: 700; font-size: 0.8rem; border-bottom: 1px solid var(--cr-border); }
 .cr-adv tbody tr { border-bottom: 1px solid #eef1f5; }
 .cr-adv tbody tr:last-child { border-bottom: none; }
 .cr-adv-rowhead { text-align: left !important; padding-left: 18px !important; font-weight: 700; }
@@ -5304,7 +5304,7 @@ body.cr-ctx-lineups-edit .cr-field > span { color: var(--cr-text); }
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
   gap: 20px 28px;
-  background: var(--cr-white);
+  background: var(--cr-card);
   border: 1px solid var(--cr-border);
   border-radius: 14px;
   padding: 20px 24px;
@@ -5342,13 +5342,13 @@ body.cr-ctx-lineups-edit .cr-field > span { color: var(--cr-text); }
 .cr-info-field > span { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--cr-text-muted); }
 .cr-info-field input {
   padding: 9px 12px; font-size: 0.9rem; border: 1px solid var(--cr-border);
-  border-radius: 8px; background: var(--cr-white); color: var(--cr-text); width: 100%;
+  border-radius: 8px; background: var(--cr-card); color: var(--cr-text); width: 100%;
 }
 .cr-info-field input:focus { outline: none; border-color: var(--cr-teal); box-shadow: 0 0 0 2px var(--cr-teal-tint); }
 .cr-info-field input:disabled { background: var(--cr-bg); color: var(--cr-text-light); }
 
 /* ── Teams archive (Past Seasons) ── */
-.cr-archive-section { max-width: 760px; margin: 28px auto 0; }
+.cr-archive-section { max-width: var(--cr-col); margin: 28px auto 0; }
 .cr-archive-toggle {
   cursor: pointer; display: inline-block; list-style: none;
   font-size: 0.85rem; font-weight: 700; color: var(--cr-text-muted);
@@ -5360,7 +5360,7 @@ body.cr-ctx-lineups-edit .cr-field > span { color: var(--cr-text); }
 .cr-archive-league { margin-top: 12px; }
 .cr-archive-league-name {
   font-size: 0.68rem; font-weight: 800; letter-spacing: 1.4px; text-transform: uppercase;
-  color: var(--cr-gold); border-bottom: 1px solid rgba(201, 162, 74, 0.35); padding-bottom: 3px; margin-bottom: 2px;
+  color: var(--cr-gold); border-bottom: 1px solid rgba(24, 39, 64, 0.35); padding-bottom: 3px; margin-bottom: 2px;
 }
 /* League and year rows open on a click (▸ closed, ▾ open). */
 .cr-archive-league-name, .cr-archive-year-name { cursor: pointer; list-style: none; display: block; padding-top: 6px; }
@@ -5386,7 +5386,7 @@ body.cr-ctx-lineups-edit .cr-field > span { color: var(--cr-text); }
 .cr-team-archive-action { display: flex; justify-content: flex-end; flex-wrap: wrap; gap: 8px; margin: -2px 0 10px; }
 .cr-archived-banner {
   display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap;
-  background: var(--cr-teal-tint); border: 1px solid rgba(23, 180, 166, 0.3); border-radius: 10px;
+  background: var(--cr-teal-tint); border: 1px solid rgba(24, 39, 64, 0.3); border-radius: 10px;
   padding: 10px 16px; margin: 0 0 14px; font-size: 0.88rem; color: var(--cr-text);
 }
 
@@ -5398,7 +5398,7 @@ body.cr-ctx-lineups-edit .cr-field > span { color: var(--cr-text); }
 .cr-menu-panel {
   position: absolute; top: calc(100% + 6px); left: 0; right: auto; z-index: 200;
   min-width: 194px; padding: 6px;
-  background: var(--cr-white); border: 1px solid var(--cr-border); border-radius: 12px;
+  background: var(--cr-card); border: 1px solid var(--cr-border); border-radius: 12px;
   box-shadow: 0 6px 26px rgba(24, 39, 64, 0.16);
   /* Closed menus take no space (display: none), so a menu that opens to the
      right can't make the page wider than a phone screen. */
@@ -5427,7 +5427,7 @@ body.cr-ctx-lineups-edit .cr-field > span { color: var(--cr-text); }
 .cr-fr-menu-name { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .cr-fr-menu-edit {
   flex: 0 0 auto; padding: 6px 12px; border: 1px solid var(--cr-border); border-radius: 7px;
-  font-size: 0.78rem; font-weight: 700; color: var(--cr-teal-deep); text-decoration: none; background: #fff;
+  font-size: 0.78rem; font-weight: 700; color: var(--cr-teal-deep); text-decoration: none; background: var(--cr-card);
 }
 .cr-fr-menu-edit:hover { background: var(--cr-teal-tint); }
 .cr-fr-menu-empty { padding: 10px 12px 6px; font-size: 0.85rem; }
@@ -5453,7 +5453,7 @@ body.cr-ctx-lineups-edit .cr-field > span { color: var(--cr-text); }
    ============================================================ */
 body.cr-ctx-ratings-index, body.cr-ctx-ratings-show, body.cr-ctx-ratings-new { background: var(--cr-navy-page); }
 /* One centered 760px column, like the team page (Tara's rule). */
-.cr-rp-page { max-width: 760px; margin: 0 auto; padding: 16px 16px 96px; }
+.cr-rp-page { max-width: var(--cr-col); margin: 0 auto; padding: 16px 16px 96px; }
 .cr-rp-hero {
   display: flex; justify-content: space-between; align-items: center; gap: 16px;
   background: linear-gradient(135deg, var(--cr-header-bg) 0%, var(--cr-black-soft) 100%);
@@ -5466,14 +5466,14 @@ body.cr-ctx-ratings-index, body.cr-ctx-ratings-show, body.cr-ctx-ratings-new { b
 .cr-rp-sub { font-size: 0.88rem; color: rgba(255, 255, 255, 0.72); }
 .cr-rp-hero-level {
   flex-shrink: 0; text-align: center; min-width: 92px; padding: 10px 14px;
-  border: 2px solid var(--cr-gold); border-radius: 14px; background: rgba(244, 180, 49, 0.08);
+  border: 2px solid var(--cr-gold); border-radius: 14px; background: rgba(24, 39, 64, 0.08);
 }
 .cr-rp-level-val { font-size: 2rem; font-weight: 800; color: var(--cr-gold); line-height: 1; font-variant-numeric: tabular-nums; }
 .cr-rp-level-cap { font-size: 0.66rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: rgba(255, 255, 255, 0.75); margin-top: 4px; }
 
 .cr-rp-tiles { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; margin-bottom: 12px; }
-.cr-rp-tile { background: var(--cr-white); border: 1px solid var(--cr-border); border-radius: 12px; padding: 14px; min-width: 0; }
-.cr-rp-tile-gold { border-color: rgba(244, 180, 49, 0.55); background: #fffaf0; }
+.cr-rp-tile { background: var(--cr-card); border: 1px solid var(--cr-border); border-radius: 12px; padding: 14px; min-width: 0; }
+.cr-rp-tile-gold { border-color: rgba(24, 39, 64, 0.55); background: var(--cr-card); }
 .cr-rp-tile-label { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase; color: var(--cr-text-light); }
 .cr-rp-tile-val { font-size: 1.6rem; font-weight: 800; color: var(--cr-text); margin-top: 4px; font-variant-numeric: tabular-nums; line-height: 1.1; }
 .cr-rp-tile-val-sm { font-size: 1.15rem; }
@@ -5482,7 +5482,7 @@ body.cr-ctx-ratings-index, body.cr-ctx-ratings-show, body.cr-ctx-ratings-new { b
 
 .cr-rp-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
 
-.cr-rp-card { background: var(--cr-white); border: 1px solid var(--cr-border); border-radius: 14px; overflow: hidden; }
+.cr-rp-card { background: var(--cr-card); border: 1px solid var(--cr-border); border-radius: 14px; overflow: hidden; }
 .cr-rp-card-head { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; padding: 14px 18px; border-bottom: 1px solid var(--cr-border); }
 .cr-rp-card-title { font-size: 1.05rem; font-weight: 800; color: var(--cr-text); margin: 0; }
 .cr-rp-card-note { font-size: 0.78rem; color: var(--cr-text-light); }
@@ -5541,12 +5541,12 @@ body.cr-ctx-friendlies-new, body.cr-ctx-friendlies-show, body.cr-ctx-friendlies-
 .cr-place { position: relative; }
 .cr-place-list {
   position: absolute; left: 0; right: 0; top: calc(100% + 4px); z-index: 30; margin: 0; padding: 4px; list-style: none;
-  background: #fff; border: 1px solid var(--cr-border); border-radius: 10px; box-shadow: 0 10px 24px rgba(10,22,40,0.14);
+  background: var(--cr-card); border: 1px solid var(--cr-border); border-radius: 10px; box-shadow: 0 10px 24px rgba(10,22,40,0.14);
   max-height: 300px; overflow-y: auto;
 }
 .cr-place-list[hidden] { display: none; }
 .cr-place-opt { display: grid; gap: 1px; padding: 9px 12px; border-radius: 7px; cursor: pointer; font-size: 0.9rem; }
-.cr-place-opt-active, .cr-place-opt:hover { background: rgba(201,162,74,0.14); }
+.cr-place-opt-active, .cr-place-opt:hover { background: rgba(24,39,64,0.14); }
 .cr-place .cr-place-name { font-weight: 700; color: var(--cr-text); }
 .cr-place .cr-place-addr { font-weight: 400; font-size: 0.8rem; color: var(--cr-text-muted); }
 .cr-fr-when { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px 12px; }
@@ -5559,7 +5559,7 @@ body.cr-ctx-friendlies-new, body.cr-ctx-friendlies-show, body.cr-ctx-friendlies-
 .cr-fr-form legend { font-size: 0.82rem; font-weight: 700; color: var(--cr-text); margin-bottom: 4px; }
 .cr-fr-form .cr-fr-radio, .cr-fr-radio { display: flex; align-items: center; gap: 8px; font-weight: 500; }
 .cr-fr-error { margin: 12px 18px 0; color: var(--cr-red); font-size: 0.88rem; }
-.cr-fr-note { background: var(--cr-white); border: 1px solid var(--cr-border); border-radius: 12px; padding: 12px 16px; margin: 0 0 12px; color: var(--cr-text); }
+.cr-fr-note { background: var(--cr-card); border: 1px solid var(--cr-border); border-radius: 12px; padding: 12px 16px; margin: 0 0 12px; color: var(--cr-text); }
 .cr-fr-claim { padding: 16px 18px; margin-bottom: 12px; }
 .cr-fr-claim-form { display: flex; flex-wrap: wrap; gap: 10px; }
 .cr-fr-claim-form input { flex: 1 1 200px; min-width: 0; padding: 10px 12px; border: 1px solid var(--cr-border); border-radius: 8px; font-size: 0.95rem; }
@@ -5597,12 +5597,12 @@ body.cr-ctx-friendlies-index, body.cr-ctx-friendlies-edit, body.cr-ctx-friendlie
 .cr-fr-index-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; margin: 6px 0 16px; }
 .cr-fr-index-head .cr-rp-name { color: var(--cr-black); }
 .cr-fr-index { display: grid; gap: 10px; }
-.cr-fr-index-row { display: flex; align-items: center; gap: 12px; padding: 14px 16px; background: var(--cr-white); border: 1px solid var(--cr-border); border-radius: 12px; text-decoration: none; color: var(--cr-text); min-height: 56px; }
+.cr-fr-index-row { display: flex; align-items: center; gap: 12px; padding: 14px 16px; background: var(--cr-card); border: 1px solid var(--cr-border); border-radius: 12px; text-decoration: none; color: var(--cr-text); min-height: 56px; }
 .cr-fr-index-main { flex: 1 1 auto; min-width: 0; }
 .cr-fr-index-title { font-weight: 800; font-size: 1rem; color: var(--cr-black); }
 .cr-fr-index-sub { font-size: 0.85rem; color: var(--cr-text); margin-top: 2px; }
 .cr-fr-badge { flex-shrink: 0; font-size: 0.75rem; font-weight: 800; padding: 4px 10px; border-radius: 999px; }
-.cr-fr-badge-up { background: #dcfce7; color: #14532d; }
+.cr-fr-badge-up { background: #e3f1fb; color: #1b2a4a; }
 .cr-fr-badge-done { background: #e5e7eb; color: #1f2937; }
 .cr-fr-hint-block { margin: 0; font-size: 0.85rem; color: var(--cr-text); background: var(--cr-bg); border-radius: 8px; padding: 10px 12px; }
 .cr-fr-big-btn { min-height: 44px; padding-left: 18px; padding-right: 18px; font-size: 0.95rem; }
@@ -5619,29 +5619,29 @@ body.cr-ctx-friendlies-index, body.cr-ctx-friendlies-edit, body.cr-ctx-friendlie
 .cr-fr-generate { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-bottom: 12px; }
 .cr-fr-generate .cr-fr-courts-summary { padding: 0; color: var(--cr-text); }
 .cr-fr-sets-link { color: var(--cr-teal-deep); font-weight: 600; font-size: 0.88rem; }
-.cr-fr-warn { flex-basis: 100%; margin: 0; padding: 10px 14px; border-radius: 10px; background: #fef3c7; color: #78350f; font-weight: 600; font-size: 0.9rem; }
+.cr-fr-warn { flex-basis: 100%; margin: 0; padding: 10px 14px; border-radius: 10px; background: #eef4fa; color: #1b2a4a; font-weight: 600; font-size: 0.9rem; }
 .cr-fr-swap-hint { color: var(--cr-text-muted); font-size: 0.88rem; margin: 0 0 10px; }
 .cr-fr-sets { display: grid; gap: 12px; }
-.cr-fr-set { background: var(--cr-white); border: 2px solid var(--cr-border); border-radius: 14px; padding: 12px 14px; }
-.cr-fr-set-done { border-color: #86efac; }
+.cr-fr-set { background: var(--cr-card); border: 2px solid var(--cr-border); border-radius: 14px; padding: 12px 14px; }
+.cr-fr-set-done { border-color: #d6ecf9; }
 .cr-fr-set-head { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 6px; }
 .cr-fr-set-head h3 { margin: 0; font-size: 1.15rem; font-weight: 800; color: var(--cr-black); }
-.cr-fr-played { font-size: 0.8rem; color: #14532d; background: #dcfce7; border-radius: 999px; padding: 2px 8px; vertical-align: middle; }
+.cr-fr-played { font-size: 0.8rem; color: #1b2a4a; background: #e3f1fb; border-radius: 999px; padding: 2px 8px; vertical-align: middle; }
 .cr-fr-court-row { padding: 10px 0; border-top: 1px solid var(--cr-border); }
 .cr-fr-court-label { display: block; font-size: 0.72rem; font-weight: 800; letter-spacing: 0.8px; text-transform: uppercase; color: var(--cr-black); margin-bottom: 6px; }
 .cr-fr-match { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
 .cr-fr-pair { display: flex; flex-wrap: wrap; gap: 6px; }
 .cr-fr-vs { font-weight: 800; color: var(--cr-black); font-size: 0.85rem; }
-.cr-fr-chip { display: inline-flex; align-items: center; min-height: 44px; padding: 8px 14px; border-radius: 10px; border: 2px solid var(--cr-black); background: #fff; color: var(--cr-black); font: inherit; font-size: 1rem; font-weight: 700; cursor: pointer; touch-action: manipulation; }
+.cr-fr-chip { display: inline-flex; align-items: center; min-height: 44px; padding: 8px 14px; border-radius: 10px; border: 2px solid var(--cr-black); background: var(--cr-card); color: var(--cr-black); font: inherit; font-size: 1rem; font-weight: 700; cursor: pointer; touch-action: manipulation; }
 span.cr-fr-chip { cursor: default; }
 .cr-fr-chip.is-picked { background: var(--cr-gold); border-color: var(--cr-gold); color: var(--cr-black); }
 /* Friendly lineup: partners match, each pair on the court in its own colour. */
-.cr-fr-pair-tone-0 .cr-fr-chip { border-color: #3b6fd8; background: #e8effc; color: #1e3a8a; }
-.cr-fr-pair-tone-1 .cr-fr-chip { border-color: #e5484d; background: #fdecec; color: #8f1d21; }
-.cr-fr-pair-tone-2 .cr-fr-chip { border-color: #2e9d5b; background: #e6f6ec; color: #14532d; }
-.cr-fr-pair-tone-3 .cr-fr-chip { border-color: #7c4dce; background: #f1ebfb; color: #4c1d95; }
-.cr-fr-pair-tone-4 .cr-fr-chip { border-color: #d97706; background: #fdf1e1; color: #7c3a03; }
-.cr-fr-pair-tone-5 .cr-fr-chip { border-color: #0f8f8f; background: #e0f5f5; color: #0b4f4f; }
+.cr-fr-pair-tone-0 .cr-fr-chip { border-color: #1b2a4a; background: #e3f1fb; color: #1b2a4a; }
+.cr-fr-pair-tone-1 .cr-fr-chip { border-color: #6b7688; background: #eef1f5; color: #1b2a4a; }
+.cr-fr-pair-tone-2 .cr-fr-chip { border-color: #1b2a4a; background: #e3f1fb; color: #1b2a4a; }
+.cr-fr-pair-tone-3 .cr-fr-chip { border-color: #1b2a4a; background: #e3f1fb; color: #1b2a4a; }
+.cr-fr-pair-tone-4 .cr-fr-chip { border-color: #7d8899; background: #eef4fa; color: #1b2a4a; }
+.cr-fr-pair-tone-5 .cr-fr-chip { border-color: #1b2a4a; background: #e3f1fb; color: #1b2a4a; }
 .cr-lineup-share-row { display: flex; justify-content: flex-end; margin: 14px 0 8px; }
 
 /* "Can you play?" page (/a/:token) */
@@ -5651,35 +5651,35 @@ span.cr-fr-chip { cursor: default; }
 .cr-poll-place { margin-top: 2px; }
 .cr-poll-ask { padding: 14px 18px 4px; font-size: 0.95rem; color: var(--cr-text); }
 .cr-poll-counts { margin-top: 4px; font-size: 0.82rem; color: var(--cr-text-muted); }
-.cr-poll-yes-count { color: #15803d; font-weight: 700; } .cr-poll-no-count { color: #b91c1c; font-weight: 700; }
+.cr-poll-yes-count { color: #1b2a4a; font-weight: 700; } .cr-poll-no-count { color: #1b2a4a; font-weight: 700; }
 .cr-poll-list { list-style: none; margin: 8px 0 0; padding: 0 18px; }
 .cr-poll-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 0; border-top: 1px solid var(--cr-border); }
-.cr-poll-row-me { background: rgba(201,162,74,0.08); margin: 0 -18px; padding: 10px 18px; }
+.cr-poll-row-me { background: rgba(24,39,64,0.08); margin: 0 -18px; padding: 10px 18px; }
 .cr-poll-name { font-weight: 700; color: var(--cr-text); min-width: 0; overflow-wrap: anywhere; }
-.cr-poll-you { font-size: 0.66rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; color: #8a6d1f; background: rgba(201,162,74,0.2); padding: 2px 7px; border-radius: 999px; margin-left: 4px; }
+.cr-poll-you { font-size: 0.66rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; color: #1b2a4a; background: rgba(24,39,64,0.2); padding: 2px 7px; border-radius: 999px; margin-left: 4px; }
 .cr-poll-btns { display: flex; gap: 8px; flex-shrink: 0; }
 .cr-poll-form { margin: 0; }
-.cr-poll-btn { min-width: 64px; min-height: 44px; padding: 0 14px; border-radius: 999px; border: 1.5px solid var(--cr-border); background: #fff; font: inherit; font-weight: 800; font-size: 0.9rem; color: var(--cr-text-muted); cursor: pointer; }
+.cr-poll-btn { min-width: 64px; min-height: 44px; padding: 0 14px; border-radius: 999px; border: 1.5px solid var(--cr-border); background: var(--cr-card); font: inherit; font-weight: 800; font-size: 0.9rem; color: var(--cr-text-muted); cursor: pointer; }
 /* Picked answer: the same light green / light red as the friendly name chips */
-.cr-poll-btn-yes.is-on { background: #e6f6ec; border-color: #2e9d5b; color: #14532d; }
-.cr-poll-btn-no.is-on { background: #fdecec; border-color: #e5484d; color: #8f1d21; }
+.cr-poll-btn-yes.is-on { background: #e3f1fb; border-color: #1b2a4a; color: #1b2a4a; }
+.cr-poll-btn-no.is-on { background: #eef1f5; border-color: #6b7688; color: #1b2a4a; }
 .cr-lineup-said { display: grid; gap: 4px; margin: 0 0 14px; font-size: 0.85rem; color: var(--cr-text); }
-.cr-lineup-said-yes { color: #15803d; } .cr-lineup-said-no { color: #b91c1c; }
+.cr-lineup-said-yes { color: #1b2a4a; } .cr-lineup-said-no { color: #1b2a4a; }
 
 /* Optional court score under each match on a friendly */
 .cr-fr-score { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 12px; margin-top: 8px; }
 .cr-fr-score-val { display: inline-flex; align-items: baseline; gap: 6px; font-size: 1.05rem; font-weight: 600; }
 .cr-fr-score-win { font-weight: 900; }
 .cr-fr-score-dash { color: var(--cr-text-muted); font-weight: 600; }
-.cr-fr-score-tone-0 { color: #1e3a8a; } .cr-fr-score-tone-1 { color: #8f1d21; } .cr-fr-score-tone-2 { color: #14532d; }
-.cr-fr-score-tone-3 { color: #4c1d95; } .cr-fr-score-tone-4 { color: #7c3a03; } .cr-fr-score-tone-5 { color: #0b4f4f; }
+.cr-fr-score-tone-0 { color: #1b2a4a; } .cr-fr-score-tone-1 { color: #1b2a4a; } .cr-fr-score-tone-2 { color: #1b2a4a; }
+.cr-fr-score-tone-3 { color: #1b2a4a; } .cr-fr-score-tone-4 { color: #1b2a4a; } .cr-fr-score-tone-5 { color: #1b2a4a; }
 .cr-fr-score-edit summary { cursor: pointer; list-style: none; font-size: 0.85rem; font-weight: 700; color: var(--cr-teal-deep); }
 .cr-fr-score-edit summary::-webkit-details-marker { display: none; }
 .cr-fr-score-edit[open] { flex-basis: 100%; }
 .cr-fr-score-form { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 8px; }
 .cr-fr-score-form input[type="number"] {
   width: 58px; min-height: 44px; padding: 8px; text-align: center; font: inherit; font-size: 1rem; font-weight: 700;
-  border: 1px solid var(--cr-border); border-radius: 8px; color: var(--cr-text); background: #fff;
+  border: 1px solid var(--cr-border); border-radius: 8px; color: var(--cr-text); background: var(--cr-card);
 }
 .cr-fr-score-form .cr-chip-btn { flex: 0 0 auto; min-height: 44px; padding-left: 18px; padding-right: 18px; }
 .cr-fr-score-hint { flex-basis: 100%; font-size: 0.78rem; color: var(--cr-text-muted); }
@@ -5690,7 +5690,7 @@ span.cr-fr-chip { cursor: default; }
 
 @media print {
   .cr-header, .cr-bottom-nav, .cr-flash, .cr-no-print, .app-footer, footer { display: none !important; }
-  body { background: #fff !important; }
+  body { background: var(--cr-card) !important; }
   .cr-fr-lineup-title, .cr-fr-swap-hint { color: #000 !important; }
   .cr-rp-hero { background: none !important; color: #000 !important; box-shadow: none !important; }
   .cr-rp-hero * { color: #000 !important; }
@@ -5700,7 +5700,7 @@ span.cr-fr-chip { cursor: default; }
 }
 .cr-fr-subhead { padding: 12px 18px 2px; font-size: 0.75rem; font-weight: 800; letter-spacing: 0.8px; text-transform: uppercase; color: var(--cr-black); border-top: 1px solid var(--cr-border); }
 .cr-fr-subhead span { font-weight: 600; text-transform: none; letter-spacing: 0; color: var(--cr-text); }
-.cr-fr-check-wait { background: #d97706; }
+.cr-fr-check-wait { background: #7d8899; }
 
 /* ── Bux-Mont / Del-Tri: where the match is played ── */
 /* Pin, then club / street / town stacked and left-aligned in one column. */
@@ -5717,7 +5717,7 @@ a.cr-venue:hover .cr-venue-name { text-decoration: underline; }
 
 /* ── Bux-Mont / Del-Tri club locations (team Standings tab) ── */
 .cr-clubs-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 10px; }
-.cr-clubs-list { list-style: none; margin: 10px 0 0; padding: 0; background: var(--cr-white); border: 1px solid var(--cr-border); border-radius: 12px; overflow: hidden; }
+.cr-clubs-list { list-style: none; margin: 10px 0 0; padding: 0; background: var(--cr-card); border: 1px solid var(--cr-border); border-radius: 12px; overflow: hidden; }
 .cr-clubs-list li { display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-top: 1px solid var(--cr-border); }
 .cr-clubs-list li:first-child { border-top: none; }
 .cr-clubs-main { flex: 1 1 auto; min-width: 0; }
@@ -5734,10 +5734,10 @@ body.cr-ctx-clubs-new, body.cr-ctx-clubs-edit, body.cr-ctx-clubs-create, body.cr
 .cr-fr-length-title { font-size: 0.82rem; font-weight: 700; color: var(--cr-text); }
 .cr-fr-length-opts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; max-width: 420px; }
 .cr-fr-length-chip {
-  min-height: 44px; padding: 8px 10px; border: 2px solid var(--cr-border); border-radius: 999px; background: #fff;
+  min-height: 44px; padding: 8px 10px; border: 2px solid var(--cr-border); border-radius: 999px; background: var(--cr-card);
   font: inherit; font-weight: 700; font-size: 0.92rem; color: var(--cr-text); cursor: pointer; white-space: nowrap;
 }
-.cr-fr-length-chip.is-picked { border-color: var(--cr-gold); background: rgba(201, 162, 74, 0.16); color: var(--cr-black); }
+.cr-fr-length-chip.is-picked { border-color: var(--cr-gold); background: rgba(24, 39, 64, 0.16); color: var(--cr-black); }
 .cr-fr-length-chip:focus-visible { outline: 2px solid var(--cr-teal); outline-offset: 2px; }
 
 /* My Teams header buttons on phones: an even 2 × 2 grid, same size. */
@@ -5785,14 +5785,14 @@ body.cr-ctx-clubs-new, body.cr-ctx-clubs-edit, body.cr-ctx-clubs-create, body.cr
 /* Share a match */
 .cr-share-btn { display: inline-flex; align-items: center; gap: 6px; cursor: pointer; font-family: inherit; }
 .cr-share-btn svg { flex-shrink: 0; }
-button.cr-cal-btn.cr-share-icon { display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; padding: 0; border: 1px solid var(--cr-border); border-radius: 6px; background: var(--cr-white); color: var(--cr-text-muted); cursor: pointer; font-family: inherit; }
+button.cr-cal-btn.cr-share-icon { display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; padding: 0; border: 1px solid var(--cr-border); border-radius: 6px; background: var(--cr-card); color: var(--cr-text-muted); cursor: pointer; font-family: inherit; }
 button.cr-cal-btn.cr-share-icon:hover { border-color: var(--cr-gold); color: var(--cr-gold); }
 
 /* Computers: a tighter team page, and match rows laid out like a fixture
    list (date | opponent & time | location | status) instead of leaving a
    wide empty gap before the status. Phones keep the stacked layout. */
 @media (min-width: 900px) {
-  .cr-team-page { max-width: 760px; }
+  .cr-team-page { max-width: var(--cr-col); }
   /* Capped opponent column, then the address right after it, then a fixed
      status column at the edge: no wide gap opens and every row lines up. */
   .cr-sched-row.cr-has-venue {
@@ -5813,7 +5813,7 @@ button.cr-cal-btn.cr-share-icon:hover { border-color: var(--cr-gold); color: var
 .cr-team-colors-label { font-weight: 500; color: rgba(255, 255, 255, 0.6); }
 
 /* Friendly page, signed-out visitors: invitation to join */
-.cr-join-card { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 14px 20px; margin-top: 18px; padding: 18px 20px; background: var(--cr-white); border: 1px solid var(--cr-border); border-radius: 14px; }
+.cr-join-card { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 14px 20px; margin-top: 18px; padding: 18px 20px; background: var(--cr-card); border: 1px solid var(--cr-border); border-radius: 14px; }
 .cr-join-text { flex: 1 1 260px; min-width: 0; }
 .cr-join-title { font-weight: 800; font-size: 1rem; color: var(--cr-black); }
 .cr-join-text p { margin: 4px 0 0; font-size: 0.88rem; line-height: 1.45; color: var(--cr-text-muted); }
@@ -5828,7 +5828,7 @@ button.cr-cal-btn.cr-share-icon:hover { border-color: var(--cr-gold); color: var
 /* Comfortable reading widths on computers: no wide hollow gaps between a
    name and its buttons. Lists/forms are narrow; data tables keep 1040px. */
 .cr-rp-page.cr-rp-narrow { max-width: 680px; }
-.cr-rp-page.cr-fr-page { max-width: 760px; }
+.cr-rp-page.cr-fr-page { max-width: var(--cr-col); }
 
 /* Top-bar search (computers); phones get the 🔍 button. */
 .cr-header-search { display: flex; margin: 0; }
@@ -5852,11 +5852,11 @@ button.cr-cal-btn.cr-share-icon:hover { border-color: var(--cr-gold); color: var
 }
 /* Search results page */
 .cr-search-page-form { display: flex; gap: 8px; margin: 4px 0 18px; }
-.cr-search-page-input { flex: 1; min-width: 0; padding: 11px 14px; border: 1px solid var(--cr-border); border-radius: 10px; font: inherit; font-size: 1rem; background: #fff; }
+.cr-search-page-input { flex: 1; min-width: 0; padding: 11px 14px; border: 1px solid var(--cr-border); border-radius: 10px; font: inherit; font-size: 1rem; background: var(--cr-card); }
 .cr-search-hint { color: var(--cr-text-muted); font-size: 0.9rem; }
 .cr-search-head { margin: 20px 0 6px; font-size: 0.72rem; font-weight: 800; letter-spacing: 1.2px; text-transform: uppercase; color: var(--cr-gold); }
 .cr-search-head span { color: var(--cr-text-light); letter-spacing: 0; }
-.cr-search-list { background: var(--cr-white); border: 1px solid var(--cr-border); border-radius: 12px; overflow: hidden; }
+.cr-search-list { background: var(--cr-card); border: 1px solid var(--cr-border); border-radius: 12px; overflow: hidden; }
 .cr-search-row, .cr-search-rowlink { display: grid; gap: 1px; padding: 11px 14px; text-decoration: none; color: var(--cr-text); min-width: 0; }
 .cr-search-row + .cr-search-row { border-top: 1px solid var(--cr-border); }
 a.cr-search-row:hover, .cr-search-rowlink:hover { background: var(--cr-teal-tint); }
@@ -5869,13 +5869,13 @@ a.cr-search-row:hover, .cr-search-rowlink:hover { background: var(--cr-teal-tint
 
 /* Admin: Site members (/admin/members) */
 .cr-user-menu .cr-header-user { font: inherit; font-size: 0.82rem; background: transparent; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
-.cr-user-menu .cr-header-user:hover, .cr-user-menu.cr-menu-open .cr-header-user { background: rgba(244, 180, 49, 0.12); }
+.cr-user-menu .cr-header-user:hover, .cr-user-menu.cr-menu-open .cr-header-user { background: rgba(24, 39, 64, 0.12); }
 .cr-user-menu .cr-menu-panel { right: 0; left: auto; min-width: 250px; }
 .cr-founder-links { display: flex; justify-content: flex-end; margin: -4px 0 10px; }
 body.cr-ctx-admin-members { background: var(--cr-navy-page); }
-.cr-rp-page.cr-mem-page { max-width: 760px; }
+.cr-rp-page.cr-mem-page { max-width: var(--cr-col); }
 .cr-mem-stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; padding: 14px 18px 0; }
-.cr-mem-stat { display: grid; gap: 2px; padding: 10px 12px; border: 1px solid var(--cr-border); border-radius: 10px; background: #fbfaf6; text-align: center; }
+.cr-mem-stat { display: grid; gap: 2px; padding: 10px 12px; border: 1px solid var(--cr-border); border-radius: 10px; background: var(--cr-card); text-align: center; }
 .cr-mem-stat strong { font-size: 1.35rem; color: var(--cr-text); line-height: 1.1; }
 .cr-mem-stat span { font-size: 0.74rem; color: var(--cr-text-light); font-weight: 600; }
 .cr-mem-note { margin: 10px 18px 4px; font-size: 0.78rem; color: var(--cr-text-light); }
@@ -5895,8 +5895,8 @@ body.cr-ctx-admin-members { background: var(--cr-navy-page); }
 .cr-mem-remove-form { flex: none; margin: 0; }
 .cr-mem-edit { flex: none; font-size: 0.72rem; font-weight: 700; color: var(--cr-text-muted); text-decoration: none; border: 1px solid var(--cr-border); border-radius: 999px; padding: 2px 10px; }
 .cr-mem-edit:hover { color: var(--cr-text); border-color: var(--cr-text-light); }
-.cr-mem-remove { font: inherit; font-size: 0.72rem; font-weight: 700; color: #b42318; background: transparent; border: 1px solid rgba(180, 35, 24, 0.35); border-radius: 999px; padding: 2px 10px; cursor: pointer; }
-.cr-mem-remove:hover { background: rgba(180, 35, 24, 0.06); }
+.cr-mem-remove { font: inherit; font-size: 0.72rem; font-weight: 700; color: #1b2a4a; background: transparent; border: 1px solid rgba(107, 118, 136, 0.35); border-radius: 999px; padding: 2px 10px; cursor: pointer; }
+.cr-mem-remove:hover { background: rgba(107, 118, 136, 0.06); }
 .cr-mem-email, .cr-mem-teams { font-size: 0.76rem; color: var(--cr-text-light); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .cr-mem-cell { font-size: 0.86rem; color: var(--cr-text); white-space: nowrap; }
 .cr-mem-num { text-align: right; font-weight: 700; font-variant-numeric: tabular-nums; }
@@ -5927,7 +5927,7 @@ body.cr-ctx-admin-members { background: var(--cr-navy-page); }
 }
 
 /* Friendly page: where it's played (tap for Google Maps) */
-.cr-fr-place { background: var(--cr-white); border: 1px solid var(--cr-border); border-radius: 12px; padding: 10px 16px 12px; margin: 0 0 12px; }
+.cr-fr-place { background: var(--cr-card); border: 1px solid var(--cr-border); border-radius: 12px; padding: 10px 16px 12px; margin: 0 0 12px; }
 .cr-fr-place .cr-venue { margin-top: 0; font-size: 0.92rem; }
 .cr-fr-actions { margin: 2px 0 10px; }
 @media (max-width: 520px) {
@@ -5963,7 +5963,7 @@ body.cr-ctx-admin-members { background: var(--cr-navy-page); }
 .cr-cu-place:empty { display: none; }
 .cr-cu-place .cr-venue { margin-top: 4px; font-size: 0.74rem; }
 @media (min-width: 900px) {
-  .cr-my-week-list:has(> .cr-cu-row) { max-width: 760px; }
+  .cr-my-week-list:has(> .cr-cu-row) { max-width: var(--cr-col); }
   .cr-cu-row {
     grid-template-columns: 52px minmax(0, 230px) minmax(0, 1fr) 76px;
     grid-template-areas: "date info place right";
@@ -5977,16 +5977,16 @@ body.cr-ctx-admin-members { background: var(--cr-navy-page); }
 }
 
 /* Delete team: same chip, red so it never looks like a routine action. */
-.cr-chip-btn.cr-chip-danger { color: #b42318; border-color: rgba(180, 35, 24, 0.35); }
-.cr-chip-btn.cr-chip-danger:hover { background: rgba(180, 35, 24, 0.07); border-color: #b42318; color: #b42318; }
+.cr-chip-btn.cr-chip-danger { color: #1b2a4a; border-color: rgba(107, 118, 136, 0.35); }
+.cr-chip-btn.cr-chip-danger:hover { background: rgba(107, 118, 136, 0.07); border-color: #6b7688; color: #1b2a4a; }
 
 /* My Teams: the tab bar and the capped Upcoming / Friendlies lists sit in
    the middle of the page, not hugging the left edge. */
 .cr-home-tabs { margin-left: auto; margin-right: auto; }
 @media (min-width: 900px) {
   .cr-my-week-list:has(> .cr-cu-row) { margin-left: auto; margin-right: auto; }
-  .cr-fr-tab-head { max-width: 760px; margin-left: auto; margin-right: auto; }
-  .cr-coming-up-empty { max-width: 760px; margin-left: auto; margin-right: auto; }
+  .cr-fr-tab-head { max-width: var(--cr-col); margin-left: auto; margin-right: auto; }
+  .cr-coming-up-empty { max-width: var(--cr-col); margin-left: auto; margin-right: auto; }
 }
 .cr-home-page > .cr-page-header-row {
   flex-direction: column;
@@ -6000,7 +6000,7 @@ body.cr-ctx-admin-members { background: var(--cr-navy-page); }
    Upcoming list) instead of stretching across the page. Numbers sit in
    narrow fixed columns next to the team; Next gets the leftover room. */
 @media (min-width: 900px) {
-  .cr-standings-wrap, .cr-st-hint { max-width: 760px; margin-left: auto; margin-right: auto; }
+  .cr-standings-wrap, .cr-st-hint { max-width: var(--cr-col); margin-left: auto; margin-right: auto; }
   .cr-standings { table-layout: fixed; }
   .cr-standings th:nth-child(1) { width: 52px; }
   .cr-standings th:nth-child(2) { width: 40%; }
@@ -6022,27 +6022,27 @@ body.cr-ctx-admin-members { background: var(--cr-navy-page); }
 .cr-awaiting-alert {
   display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
   margin: 0 0 14px; padding: 11px 14px;
-  background: #fff7e6; border: 1px solid #f3d08a; border-radius: 12px;
-  color: #7a4b00; font-size: 0.86rem; line-height: 1.4;
+  background: #eef4fa; border: 1px solid #eef4fa; border-radius: 12px;
+  color: #1b2a4a; font-size: 0.86rem; line-height: 1.4;
 }
 .cr-awaiting-alert-icon { font-size: 1rem; }
 .cr-awaiting-alert-text { flex: 1 1 220px; min-width: 0; }
-.cr-awaiting-alert-text strong { color: #5c3800; }
+.cr-awaiting-alert-text strong { color: #1b2a4a; }
 .cr-awaiting-alert-btn { flex-shrink: 0; }
 .cr-awaiting-list { margin-bottom: 12px; }
-.cr-awaiting-row { cursor: default; background: #fffcf5; }
+.cr-awaiting-row { cursor: default; background: var(--cr-card); }
 .cr-awaiting-badge {
   display: inline-flex; align-items: center; white-space: nowrap;
   padding: 4px 10px; border-radius: 999px;
-  background: #fdecc8; color: #7a4b00; border: 1px solid #f3d08a;
+  background: #eef4fa; color: #1b2a4a; border: 1px solid #eef4fa;
   font-size: 0.74rem; font-weight: 700; text-decoration: none;
 }
-.cr-awaiting-badge-link:hover { background: #f9dfa6; }
+.cr-awaiting-badge-link:hover { background: #eef4fa; }
 
 /* My Availability: compact rows, one per match (date | match | In / Out / note).
    Same 880px column as the rest of the team page; no big empty card space. */
 .cr-av-list {
-  background: var(--cr-white); border: 1px solid var(--cr-border); border-radius: 14px; overflow: hidden;
+  background: var(--cr-card); border: 1px solid var(--cr-border); border-radius: 14px; overflow: hidden;
 }
 .cr-av-row {
   display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 10px 14px; align-items: center;
@@ -6071,22 +6071,22 @@ body.cr-ctx-admin-members { background: var(--cr-navy-page); }
 .cr-sheet-tr-link { color: var(--cr-text-light); margin-left: 3px; }
 .cr-sheet-tr-link:hover { color: var(--cr-teal-deep); }
 .cr-opp-link-icon { color: var(--cr-text-light); margin-left: 2px; }
-.cr-awaiting-alert-icon { color: #b7791f; display: inline-flex; }
+.cr-awaiting-alert-icon { color: #1b2a4a; display: inline-flex; }
 .cr-playoff-trophy { color: var(--cr-gold); display: inline-flex; }
 .cr-password-toggle { font-size: 0.75rem; font-weight: 600; color: var(--cr-text-muted); }
 /* Availability dots on the captain view (were emoji). */
 .dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; vertical-align: middle; }
-.dot-in { background: #22c55e; }
-.dot-out { background: #ef4444; }
-.dot-none { background: #fff; border: 1.5px solid #cbd5e1; }
+.dot-in { background: #1b2a4a; }
+.dot-out { background: #6b7688; }
+.dot-none { background: var(--cr-card); border: 1.5px solid #cbd5e1; }
 .cr-sc-sub { color: var(--cr-text-muted); font-size: 0.9rem; margin: 6px 0 10px; }
 
 /* ── Doubles Pairs (team page, Player Stats tab) ── */
 .cr-dp { margin-top: 28px; }
 .cr-dp-head { margin-bottom: 10px; }
 .cr-dp-note { color: var(--cr-text-muted); font-size: 0.84rem; line-height: 1.45; margin-top: 4px; }
-.cr-dp-empty { color: var(--cr-text-muted); font-size: 0.88rem; padding: 14px 16px; background: var(--cr-white); border: 1px dashed var(--cr-border); border-radius: 12px; }
-.cr-dp-list { background: var(--cr-white); border: 1px solid var(--cr-border); border-radius: 14px; overflow: hidden; }
+.cr-dp-empty { color: var(--cr-text-muted); font-size: 0.88rem; padding: 14px 16px; background: var(--cr-card); border: 1px dashed var(--cr-border); border-radius: 12px; }
+.cr-dp-list { background: var(--cr-card); border: 1px solid var(--cr-border); border-radius: 14px; overflow: hidden; }
 .cr-dp-list-ideas { border-style: dashed; }
 .cr-dp-row { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 13px 16px; border-bottom: 1px solid var(--cr-border); }
 .cr-dp-row:last-child { border-bottom: none; }
@@ -6100,7 +6100,7 @@ body.cr-ctx-admin-members { background: var(--cr-navy-page); }
 .cr-dp-count { color: var(--cr-text-muted); font-size: 0.74rem; margin-top: 2px; white-space: nowrap; }
 .cr-dp-tag { display: inline-block; margin-left: 6px; padding: 1px 8px; border-radius: 999px; font-size: 0.66rem; font-weight: 700; letter-spacing: 0.4px; text-transform: uppercase; vertical-align: 2px; }
 .cr-dp-tag-regular { background: var(--cr-teal-tint); color: var(--cr-teal-deep); }
-.cr-dp-tag-sub { background: #fdecc8; color: #7a4b00; }
+.cr-dp-tag-sub { background: #eef4fa; color: #1b2a4a; }
 .cr-dp-more { margin-top: 8px; }
 .cr-dp-more > summary { cursor: pointer; color: var(--cr-teal-deep); font-weight: 600; font-size: 0.86rem; padding: 6px 2px; list-style: none; }
 .cr-dp-more[open] > summary { margin-bottom: 8px; }
@@ -6114,7 +6114,7 @@ body.cr-ctx-admin-members { background: var(--cr-navy-page); }
 
 /* Sign-up bot trap: off-screen, never seen or tabbed to by people. */
 .cr-hp { position: absolute; left: -10000px; top: auto; width: 1px; height: 1px; overflow: hidden; }
-.cr-btn-danger-text { color: #b42318; border-color: rgba(180, 35, 24, 0.35); }
+.cr-btn-danger-text { color: #1b2a4a; border-color: rgba(107, 118, 136, 0.35); }
 
 /* Player Ratings list: names, level, record and win % sit together; only the
    last column takes the leftover width, so no gap opens after the names. */
@@ -6146,14 +6146,14 @@ body.cr-ctx-admin-members { background: var(--cr-navy-page); }
    top-left like every back link; one search field with its button joined to
    it; each table is name first, then narrow number columns, and the one text
    column (Teams / League) last so it takes the leftover width — no gaps. */
-.cr-lookup-page { max-width: 760px; margin: 0 auto; }
+.cr-lookup-page { max-width: var(--cr-col); margin: 0 auto; }
 .cr-lookup-head { text-align: center; margin: 4px 0 18px; }
 .cr-lookup-head .cr-home-subtitle { margin-top: 6px; }
 .cr-lookup-search {
   display: flex; width: 100%; max-width: 420px; margin: 0 auto 22px;
-  border: 1px solid var(--cr-border); border-radius: 999px; background: #fff; overflow: hidden;
+  border: 1px solid var(--cr-border); border-radius: 999px; background: var(--cr-card); overflow: hidden;
 }
-.cr-lookup-search:focus-within { border-color: var(--cr-gold); box-shadow: 0 0 0 3px rgba(201, 162, 74, 0.18); }
+.cr-lookup-search:focus-within { border-color: var(--cr-gold); box-shadow: 0 0 0 3px rgba(24, 39, 64, 0.18); }
 .cr-lookup-input { flex: 1 1 auto; min-width: 0; padding: 10px 16px; border: 0; font: inherit; font-size: 0.92rem; background: transparent; color: var(--cr-text); outline: none; }
 .cr-lookup-search .cr-btn { border-radius: 0; margin: 0; padding: 0 20px; box-shadow: none; }
 .cr-lookup-search .cr-btn + .cr-btn { border-left: 1px solid var(--cr-border); }
@@ -6191,6 +6191,9 @@ body.cr-ctx-admin-members { background: var(--cr-navy-page); }
    slides the same column in over the page (bottom tab bar stays).
    ======================================================== */
 :root { --cr-hh: 64px; --cr-sb-w: 248px; }
+/* One centered column on every page. Widened Nov 18 2026 (Tara: 760px left
+   ~450px of grey each side on a big monitor). */
+:root { --cr-col: 920px; }   /* Tara, Nov 18 2026 (later): 1040/1200 felt too wide on her computer — thinner. */
 .cr-has-sb .cr-header-inner { max-width: none; height: var(--cr-hh); padding-top: 0; padding-bottom: 0; box-sizing: border-box; }
 .cr-sb-burger {
   display: none; flex: none; align-items: center; justify-content: center; width: 38px; height: 38px;
@@ -6210,50 +6213,50 @@ body.cr-ctx-admin-members { background: var(--cr-navy-page); }
 .cr-sb-menu { position: relative; }
 .cr-sb-user {
   display: flex; align-items: center; gap: 10px; width: 100%; padding: 9px 10px; border-radius: 12px;
-  background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(232, 184, 74, 0.45); color: #fff;
+  background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(24, 39, 64, 0.45); color: #fff;
   font: inherit; text-align: left; cursor: pointer;
 }
 .cr-sb-user:hover, .cr-sb-menu.cr-menu-open .cr-sb-user { background: rgba(255, 255, 255, 0.09); }
 .cr-sb-avatar {
   flex: none; display: grid; place-items: center; width: 34px; height: 34px; border-radius: 50%;
-  background: linear-gradient(135deg, #f0c45e, #c9952a); color: #12213d; font-size: 0.78rem; font-weight: 800; letter-spacing: 0.3px;
+  background: linear-gradient(135deg, #7d8899, #7d8899); color: #12213d; font-size: 0.78rem; font-weight: 800; letter-spacing: 0.3px;
 }
 .cr-sb-who { display: grid; min-width: 0; }
-.cr-sb-name { font-size: 0.92rem; font-weight: 700; color: #f3c96b; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.cr-sb-meta { font-size: 0.72rem; color: #9fb0c8; }
-.cr-sb-caret { margin-left: auto; font-size: 0.7rem; color: #f3c96b; }
+.cr-sb-name { font-size: 0.92rem; font-weight: 700; color: #1b2a4a; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cr-sb-meta { font-size: 0.72rem; color: #1b2a4a; }
+.cr-sb-caret { margin-left: auto; font-size: 0.7rem; color: #1b2a4a; }
 .cr-sb-menu .cr-menu-panel { left: 0; right: 0; min-width: 0; }
 .cr-sb-menu .cr-menu-item { flex-direction: column; align-items: flex-start; gap: 1px; }
 .cr-sb-menu .cr-menu-item small { font-size: 0.73rem; font-weight: 500; color: var(--cr-text-muted); }
 .cr-sb-signout-form { margin: 0; }
-.cr-sb-signout { color: #b42318; }
+.cr-sb-signout { color: #1b2a4a; }
 
 .cr-sb-search {
   display: flex; align-items: center; gap: 8px; margin: 10px 0 6px; padding: 0 12px; height: 36px;
-  border-radius: 10px; background: rgba(255, 255, 255, 0.07); border: 1px solid transparent; color: #9fb0c8;
+  border-radius: 10px; background: rgba(255, 255, 255, 0.07); border: 1px solid transparent; color: #1b2a4a;
 }
-.cr-sb-search:focus-within { border-color: rgba(232, 184, 74, 0.6); background: rgba(255, 255, 255, 0.1); }
+.cr-sb-search:focus-within { border-color: rgba(24, 39, 64, 0.6); background: rgba(255, 255, 255, 0.1); }
 .cr-sb-search input { flex: 1; min-width: 0; border: 0; background: transparent; color: #fff; font: inherit; font-size: 0.84rem; outline: none; }
 .cr-sb-search input::placeholder { color: #8d9db5; }
 .cr-sb-search input::-webkit-search-cancel-button { -webkit-appearance: none; }
 
-.cr-sb-h { margin: 14px 10px 4px; font-size: 0.64rem; font-weight: 800; letter-spacing: 1.2px; text-transform: uppercase; color: #7f91ab; }
+.cr-sb-h { margin: 14px 10px 4px; font-size: 0.64rem; font-weight: 800; letter-spacing: 1.2px; text-transform: uppercase; color: #1b2a4a; }
 .cr-sb-link {
   display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 9px;
   color: #dbe3ef; text-decoration: none; font-size: 0.88rem; font-weight: 600;
 }
 .cr-sb-link:hover { background: rgba(255, 255, 255, 0.06); color: #fff; }
 .cr-sb-link .cr-icon { flex: none; opacity: 0.85; }
-.cr-sb-link.is-on { background: rgba(23, 180, 166, 0.16); color: #5fe0d2; box-shadow: inset 3px 0 0 #17b4a6; }
+.cr-sb-link.is-on { background: rgba(24, 39, 64, 0.16); color: #1b2a4a; box-shadow: inset 3px 0 0 #1b2a4a; }
 .cr-sb-dot { flex: none; width: 8px; height: 8px; margin: 0 4px 0 5px; border-radius: 50%; }
 .cr-sb-team-name { min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.cr-sb-team small { margin-left: auto; padding-left: 8px; font-size: 0.68rem; font-weight: 600; color: #7f91ab; white-space: nowrap; }
+.cr-sb-team small { margin-left: auto; padding-left: 8px; font-size: 0.68rem; font-weight: 600; color: #1b2a4a; white-space: nowrap; }
 
 /* + New Team: opens upward. */
 .cr-sb-new { margin-top: 16px; }
 .cr-sb-newbtn {
   display: flex; align-items: center; justify-content: center; gap: 6px; width: 100%; height: 40px; border: 0; border-radius: 10px;
-  background: linear-gradient(135deg, #17b4a6, #0f8f84); color: #fff; font: inherit; font-size: 0.88rem; font-weight: 700; cursor: pointer;
+  background: linear-gradient(135deg, #1b2a4a, #1b2a4a); color: #fff; font: inherit; font-size: 0.88rem; font-weight: 700; cursor: pointer;
 }
 .cr-sb-newbtn:hover { filter: brightness(1.06); }
 .cr-sb-new .cr-menu-panel { top: auto; bottom: calc(100% + 6px); }
@@ -6266,7 +6269,7 @@ body.cr-ctx-admin-members { background: var(--cr-navy-page); }
   .cr-has-sb.cr-ctx-teams-index .cr-fr-panel-head { display: flex; }
 }
 /* Book a friendly row on the Friendlies tab: only where the tab bar is hidden. */
-.cr-fr-panel-head { display: none; gap: 10px; justify-content: flex-start; margin: 0 auto 14px; max-width: 760px; }
+.cr-fr-panel-head { display: none; gap: 10px; justify-content: flex-start; margin: 0 auto 14px; max-width: var(--cr-col); }
 
 @media (max-width: 999px) {
   .cr-sb-burger { display: inline-flex; }
@@ -6286,10 +6289,10 @@ body.cr-ctx-admin-members { background: var(--cr-navy-page); }
 
 /* Lineups (/lineups): one card, one row per match in the 760px column.
    date | team, opponent, when | status (fixed) | one action (fixed). */
-.cr-lu-page { max-width: 760px; margin: 0 auto; }
+.cr-lu-page { max-width: var(--cr-col); margin: 0 auto; }
 .cr-lu-head { text-align: center; margin: 4px 0 20px; }
 .cr-lu-head .cr-home-subtitle { margin-top: 6px; }
-.cr-lu-card { background: var(--cr-white); border: 1px solid var(--cr-border); border-radius: 14px; overflow: hidden; box-shadow: 0 1px 2px rgba(15, 27, 51, 0.04); }
+.cr-lu-card { background: var(--cr-card); border: 1px solid var(--cr-border); border-radius: 14px; overflow: hidden; box-shadow: 0 1px 2px rgba(15, 27, 51, 0.04); }
 .cr-lu-empty { padding: 36px 24px; text-align: center; color: var(--cr-text-muted); font-size: 0.9rem; }
 .cr-lu-empty p + p { margin-top: 6px; font-size: 0.84rem; }
 .cr-lu-row {
@@ -6313,21 +6316,21 @@ body.cr-ctx-admin-members { background: var(--cr-navy-page); }
 .cr-lu-status {
   justify-self: start; padding: 4px 10px; border-radius: 999px; font-size: 0.7rem; font-weight: 700; white-space: nowrap;
 }
-.cr-lu-status.is-muted { background: #eef1f5; color: #64748b; }
-.cr-lu-status.is-gold { background: rgba(201, 162, 74, 0.15); color: #8a6a1f; }
-.cr-lu-status.is-yes { background: rgba(22, 163, 74, 0.12); color: #15803d; }
-.cr-lu-status.is-no { background: rgba(220, 38, 38, 0.1); color: #b42318; }
+.cr-lu-status.is-muted { background: #eef1f5; color: #1b2a4a; }
+.cr-lu-status.is-gold { background: rgba(24, 39, 64, 0.15); color: #1b2a4a; }
+.cr-lu-status.is-yes { background: rgba(24, 39, 64, 0.12); color: #1b2a4a; }
+.cr-lu-status.is-no { background: rgba(107, 118, 136, 0.1); color: #1b2a4a; }
 .cr-lu-action { justify-self: stretch; }
 .cr-lu-btn {
   display: inline-flex; align-items: center; justify-content: center; width: 100%; height: 34px; padding: 0 12px; box-sizing: border-box;
-  border: 1px solid var(--cr-border); border-radius: 9px; background: var(--cr-white); color: var(--cr-text);
+  border: 1px solid var(--cr-border); border-radius: 9px; background: var(--cr-card); color: var(--cr-text);
   font-size: 0.8rem; font-weight: 700; text-decoration: none; white-space: nowrap; transition: border-color 0.12s, background 0.12s;
 }
 .cr-lu-btn:hover { border-color: var(--cr-text-light); }
 .cr-lu-btn.is-primary { background: var(--cr-black); border-color: var(--cr-black); color: #fff; }
 .cr-lu-btn.is-primary:hover { background: var(--cr-black-soft); }
-.cr-lu-btn.is-yes { width: auto; background: rgba(22, 163, 74, 0.1); border-color: rgba(22, 163, 74, 0.35); color: #15803d; }
-.cr-lu-btn.is-no { width: auto; background: rgba(220, 38, 38, 0.06); border-color: rgba(220, 38, 38, 0.3); color: #b42318; }
+.cr-lu-btn.is-yes { width: auto; background: rgba(24, 39, 64, 0.1); border-color: rgba(24, 39, 64, 0.35); color: #1b2a4a; }
+.cr-lu-btn.is-no { width: auto; background: rgba(107, 118, 136, 0.06); border-color: rgba(107, 118, 136, 0.3); color: #1b2a4a; }
 .cr-lu-reply { grid-column: 2 / -1; display: flex; align-items: center; gap: 8px; margin-top: 6px; font-size: 0.8rem; color: var(--cr-text-muted); }
 .cr-lu-reply span { margin-right: auto; }
 @media (max-width: 600px) {
@@ -6407,8 +6410,8 @@ body.cr-ctx-profiles-player .cr-team-switch { margin: 0 0 14px; }
 /* Team page Subs tab: name + level + note | how often subbed | one button. */
 .cr-subs-intro { font-size: 0.86rem; color: var(--cr-text-muted); margin: 6px 0 14px; }
 .cr-subs-add { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr) auto; gap: 8px; margin-bottom: 14px; }
-.cr-subs-input { min-width: 0; height: 40px; padding: 0 12px; border: 1px solid var(--cr-border); border-radius: 10px; font: inherit; font-size: 0.9rem; background: var(--cr-white); }
-.cr-subs-list { background: var(--cr-white); border: 1px solid var(--cr-border); border-radius: 12px; overflow: hidden; }
+.cr-subs-input { min-width: 0; height: 40px; padding: 0 12px; border: 1px solid var(--cr-border); border-radius: 10px; font: inherit; font-size: 0.9rem; background: var(--cr-card); }
+.cr-subs-list { background: var(--cr-card); border: 1px solid var(--cr-border); border-radius: 12px; overflow: hidden; }
 .cr-subs-row { display: grid; grid-template-columns: minmax(0, 1fr) 190px 124px; align-items: center; gap: 12px; padding: 10px 14px; border-top: 1px solid var(--cr-border); }
 .cr-subs-row:first-child { border-top: 0; }
 .cr-subs-who { min-width: 0; display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px 8px; }
@@ -6424,6 +6427,7 @@ body.cr-ctx-profiles-player .cr-team-switch { margin: 0 0 14px; }
   .cr-subs-row { grid-template-columns: minmax(0, 1fr) auto; }
   .cr-subs-played { grid-column: 1; grid-row: 2; }
   .cr-subs-action { grid-column: 2; grid-row: 1 / span 2; }
+}
 
 /* Team page schedule header: Sync scores (league-site teams) + Add Match. */
 .cr-sched-actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; justify-content: flex-end; }
@@ -6434,6 +6438,7 @@ body.cr-ctx-profiles-player .cr-team-switch { margin: 0 0 14px; }
 .cr-sync-note { font-size: 0.78rem; color: var(--cr-text-muted); white-space: nowrap; }
 @media (max-width: 600px) {
   .cr-sched-actions, .cr-sync { justify-content: flex-start; }
+}
 
 /* Ratings: All players / Teams tabs. The tabs span the page like the cards. */
 .cr-rp-tabs { max-width: none; margin: 0 0 14px; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-auto-flow: row; }
@@ -6465,3 +6470,1103 @@ body.cr-ctx-profiles-player .cr-team-switch { margin: 0 0 14px; }
   .cr-rp-ranked th:nth-child(5), .cr-rp-ranked td:nth-child(5) { width: 16%; display: table-cell; }
   .cr-rp-ranked th:nth-child(6), .cr-rp-ranked td:nth-child(6) { display: none; }
 }
+
+/* Profile: what the stats count, right under each stats heading. */
+.cr-stats-scope {
+  font-size: 0.8rem;
+  line-height: 1.45;
+  color: var(--cr-text-muted);
+  margin: -4px 0 12px;
+}
+
+/* Team hero: "5 played · 2 need scores · 12 to play" under the stats. */
+.cr-hero-breakdown {
+  margin-top: 10px;
+  font-size: 0.78rem;
+  color: rgba(255, 255, 255, 0.7);
+  letter-spacing: 0.2px;
+}
+.cr-hero-breakdown-note { margin-top: 2px; color: rgba(255, 255, 255, 0.55); }
+
+/* Profile stats tables (5 columns) fit a phone without a sideways swipe. */
+.cr-adv.cr-adv-compact { min-width: 0; }
+@media (max-width: 480px) {
+  .cr-adv.cr-adv-compact th, .cr-adv.cr-adv-compact td { padding: 10px 6px; }
+  .cr-adv.cr-adv-compact .cr-adv-rowhead { padding-left: 12px !important; }
+}
+
+/* Team schedule: calendar entry → "Make this a match" (captains). */
+.cr-sched-event-note { font-size: 0.8rem; color: var(--cr-text-muted); line-height: 1.45; margin: 4px 0 10px; }
+.cr-sched-event .cr-sched-actions form { margin: 0; }
+.cr-chip-btn-primary { background: var(--cr-teal-deep); border-color: var(--cr-teal-deep); color: #fff; font-weight: 700; cursor: pointer; }
+.cr-chip-btn-primary:hover { filter: brightness(1.05); }
+
+/* Profile League Match History: note + Refresh (the link lives in Settings). */
+.cr-lmh-controls { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 10px; }
+.cr-lmh-controls form { margin: 0; flex-shrink: 0; }
+@media (max-width: 480px) {
+  .cr-lmh-controls { flex-direction: column; align-items: flex-start; }
+}
+.cr-founder-links { gap: 8px; }
+.cr-pp-metric-none { text-align: right; line-height: 1.3; }
+.cr-playing-stat-value-none { color: var(--cr-text-light); }
+.cr-ps-col-muted { color: var(--cr-text-light); font-weight: 600; }
+.cr-ps-min-note { font-size: 0.75rem; color: var(--cr-text-light); margin-top: 2px; }
+.cr-settings .cr-deltri-btn { min-width: 112px; justify-content: center; text-align: center; }
+
+/* Admin: Possible duplicates (merge two records of one person). */
+.cr-mem-head-actions { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+.cr-dup-list { display: flex; flex-direction: column; gap: 12px; padding: 0 18px 18px; }
+.cr-dup { border: 1px solid var(--cr-border); border-radius: 12px; padding: 12px 14px; background: var(--cr-card); }
+.cr-dup-reason { font-size: 0.68rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--cr-teal-deep); margin-bottom: 8px; }
+.cr-dup-sides { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.cr-dup-side { border: 1px solid #eef1f5; border-radius: 10px; padding: 10px 12px; min-width: 0; }
+.cr-dup-name { font-weight: 700; overflow-wrap: anywhere; }
+.cr-dup-name a { color: var(--cr-text); text-decoration: none; }
+.cr-dup-meta { font-size: 0.78rem; color: var(--cr-text-muted); margin-top: 3px; overflow-wrap: anywhere; }
+.cr-dup-tag { display: inline-block; margin-top: 8px; font-size: 0.68rem; font-weight: 700; padding: 2px 8px; border-radius: 999px; background: #f1f5f9; color: var(--cr-text-muted); }
+.cr-dup-side:first-child .cr-dup-tag { background: rgba(24, 39, 64, 0.12); color: var(--cr-teal-deep); }
+.cr-dup-form { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-top: 10px; }
+.cr-dup-keep-label { font-size: 0.8rem; font-weight: 600; }
+.cr-dup-radio { font-size: 0.85rem; display: inline-flex; align-items: center; gap: 4px; }
+.cr-dup-btn { margin-left: auto; min-width: 96px; justify-content: center; }
+.cr-dup-blocked { font-size: 0.8rem; color: var(--cr-red); margin-top: 10px; }
+@media (max-width: 520px) {
+  .cr-dup-sides { grid-template-columns: 1fr; }
+  .cr-dup-btn { margin-left: 0; width: 100%; }
+}
+.cr-dup-intro { margin-bottom: 12px; }
+@media (max-width: 520px) {
+  .cr-dup-list { padding: 0 10px 12px; }
+  .cr-dup { padding: 10px; }
+  .cr-dup-form { flex-direction: column; align-items: stretch; gap: 6px; }
+}
+/* Match History: one date width, so opponent names line up row to row. */
+.cr-match-date.cr-mh-date { width: 76px; min-width: 76px; flex: 0 0 76px; padding: 8px 6px; text-align: center; }
+.cr-match-date.cr-pp-team-badge { width: 92px; min-width: 92px; flex: 0 0 92px; padding: 8px 4px; text-align: center; }
+@media (max-width: 480px) {
+  .cr-match-date.cr-pp-team-badge { width: 70px; min-width: 70px; flex: 0 0 70px; padding: 7px 2px; }
+  .cr-match-date.cr-pp-team-badge .cr-match-date-month { font-size: 0.55rem !important; letter-spacing: 0.3px; }
+  .cr-match-date.cr-mh-date { width: 66px; min-width: 66px; flex: 0 0 66px; }
+}
+
+/* Players & Teams: past seasons fold away under their own heading. */
+.cr-lookup-past > summary { cursor: pointer; list-style: none; }
+.cr-lookup-past > summary::-webkit-details-marker { display: none; }
+.cr-lookup-past > summary::after { content: "▾"; color: var(--cr-gold); margin-left: 8px; transition: transform 0.15s; }
+.cr-lookup-past[open] > summary::after { transform: rotate(180deg); }
+.cr-lookup-past:not([open]) > summary { border-bottom: 0; }
+
+/* Ratings: the rank rule sits right above each table, not after 200 rows. */
+.cr-rp-rule { font-size: 0.78rem; color: var(--cr-text-muted); line-height: 1.45; margin: 0; padding: 10px 18px 8px; }
+
+/* Lineups: current teams with nothing ahead, named under the list. */
+.cr-lu-none { font-size: 0.82rem; color: var(--cr-text-muted); line-height: 1.5; margin: 14px 2px 0; }
+.cr-lu-none a { color: var(--cr-teal-deep); font-weight: 600; text-decoration: none; }
+
+/* Match page: Scores heading with its one Enter / Edit scores button. */
+.cr-match-scores-head { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.cr-match-scores-btn { margin-left: auto; text-transform: none; letter-spacing: 0; }
+.cr-upload-card-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+
+/* Enter Results: number boxes per set, a Tie option, a Save bar that stays put. */
+.cr-se-sets { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+.cr-se-set { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.cr-se-set-label { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.6px; text-transform: uppercase; color: var(--cr-text-muted); }
+.cr-se-set-boxes { display: flex; align-items: center; gap: 4px; }
+.cr-se-box {
+  width: 100%; min-width: 0; height: 44px; text-align: center; font-size: 1.15rem; font-weight: 700;
+  border: 1px solid var(--cr-border); border-radius: 10px; background: var(--cr-card); color: var(--cr-text);
+}
+.cr-se-box::placeholder { font-size: 0.72rem; font-weight: 500; color: var(--cr-text-light); }
+.cr-se-box:focus { outline: none; border-color: var(--cr-teal-deep); box-shadow: 0 0 0 3px rgba(24, 39, 64, 0.15); }
+.cr-se-dash { color: var(--cr-text-light); font-weight: 700; }
+.cr-se-savebar {
+  position: sticky; bottom: 0; z-index: 20; display: flex; align-items: center; gap: 10px;
+  background: var(--cr-card); border-top: 1px solid var(--cr-border); padding: 12px 0; margin-top: 18px;
+}
+.cr-se-savebar-sum { margin-right: auto; font-size: 0.85rem; font-weight: 700; color: var(--cr-text); }
+@media (max-width: 720px) {
+  .cr-se-savebar { bottom: calc(64px + env(safe-area-inset-bottom, 0px)); padding: 10px 0; }
+  .cr-se-sets { gap: 8px; }
+}
+/* Enter Results card: players and opponents fill the card, edges line up. */
+.cr-line-players { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.cr-line-players .cr-line-players-label { grid-column: 1 / -1; }
+.cr-line-players .cr-select { width: 100%; max-width: none; margin: 0; }
+.cr-line-players:has(> select:only-of-type) { grid-template-columns: minmax(0, 1fr); }
+.cr-line-opponents .cr-input {
+  display: block; width: 100%; height: 40px; padding: 0 12px; font-size: 0.95rem;
+  border: 1px solid var(--cr-border); border-radius: 10px; background: var(--cr-card); color: var(--cr-text);
+}
+.cr-se-sets { max-width: 560px; }
+@media (max-width: 480px) { .cr-line-players { grid-template-columns: minmax(0, 1fr); } }
+.cr-line-opponents { margin-top: 12px; }
+/* The player's one-line page reads like Enter Results. */
+body.cr-ctx-matches-edit_my_line .cr-page-title,
+body.cr-ctx-matches-edit_my_line .cr-line-label,
+body.cr-ctx-matches-edit_my_line .cr-line-players-label { color: var(--cr-text); }
+body.cr-ctx-matches-edit_my_line .cr-form-help { color: var(--cr-text-muted); }
+/* "Entered by Jaci · Nov 18" under a line on the scoresheet. */
+.cr-sheet-entered { margin-left: auto; font-size: 0.7rem; font-weight: 500; color: var(--cr-text-light); text-transform: none; letter-spacing: 0; }
+
+/* Lineup status: a saved draft (players can't see it) or posted. */
+.cr-lineup-status { font-size: 0.85rem; line-height: 1.45; padding: 10px 14px; border-radius: 10px; margin: 0 0 16px; }
+.cr-lineup-status.is-draft { background: rgba(24, 39, 64, 0.12); color: #6b5216; border: 1px solid rgba(24, 39, 64, 0.35); }
+.cr-lineup-status.is-posted { background: rgba(24, 39, 64, 0.08); color: #1b2a4a; border: 1px solid rgba(24, 39, 64, 0.25); }
+.cr-lineup-status a { color: inherit; font-weight: 700; }
+.cr-sched-pill.cr-sched-pill-draft { color: #1b2a4a; background: rgba(24, 39, 64, 0.15); }
+.cr-lu-status.is-draft { background: rgba(24, 39, 64, 0.15); color: #1b2a4a; }
+
+/* Enter scores: Win / Loss / Tie as three even buttons. */
+.cr-result-toggle.cr-result-toggle-3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+.cr-result-toggle-3 .cr-result-option { justify-content: center; padding: 14px 8px; }
+.cr-result-tie:has(input:checked) { border-color: #64748b; background: #f1f5f9; color: #1b2a4a; }
+body.cr-ctx-matches-edit_results .cr-result-option:has(input:checked) .cr-result-label { color: inherit; }
+
+/* Set Lineup: each line's start time (split court times). */
+.cr-lineup-time { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin: 2px 0 10px; }
+.cr-lineup-time > label { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--cr-text-muted); }
+.cr-lineup-time .cr-lineup-time-select { width: auto; max-width: 220px; margin: 0; }
+.cr-lineup-time-other { width: 130px; height: 36px; padding: 0 10px; border: 1px solid var(--cr-border); border-radius: 8px; font-size: 0.9rem; }
+/* Upcoming card: "Time & place TBD" when neither is known yet. */
+.cr-my-week-tbd { font-size: 0.75rem; color: var(--cr-text-light); font-style: italic; }
+
+/* Names are never cut off with "…" (Tara, Nov 18): they wrap to a second line. */
+.cr-sb-team-name { white-space: normal; overflow: visible; text-overflow: clip; line-height: 1.25; overflow-wrap: anywhere; }
+.cr-dash-cal-chip, .cr-dash-cal-full .cr-dash-cal-chip {
+  white-space: normal; overflow: hidden; text-overflow: clip; overflow-wrap: anywhere;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; line-height: 1.25;
+}
+@media (max-width: 720px) {
+  /* Phone cells are ~40px: keep words whole (no "Oppon / ent"); tap a day for the full list. */
+  .cr-dash-cal-chip, .cr-dash-cal-full .cr-dash-cal-chip { overflow-wrap: normal; word-break: normal; -webkit-line-clamp: 2; }
+}
+.cr-lookup-tbl td.cr-lookup-wide { white-space: normal; overflow: visible; text-overflow: clip; }
+/* Profile: three-set scores fit on one line; Best Partner name + numbers on two tidy lines. */
+.cr-ps-col-score { width: 112px; white-space: nowrap; font-size: 0.85rem; }
+.cr-fact-name { display: block; }
+.cr-fact-sub { display: block; margin-top: 2px; color: var(--cr-text-muted); font-weight: 500; font-size: 0.8rem; }
+@media (max-width: 400px) { .cr-ps-col-score { width: 92px; font-size: 0.78rem; } }
+/* Sidebar league tags read like the league headings (DEL-TRI, BUX-MONT). */
+.cr-sb-team small { text-transform: uppercase; letter-spacing: 0.4px; }
+
+/* Calendar (Tara's review, Nov 18): shorter day cells, the colour key at
+   the top, today's number inside its cell. */
+.cr-dash-cal-full .cr-dash-cal-day { min-height: 70px; }
+.cr-dash-cal-legend.cr-dash-cal-legend-top { margin: 4px 0 10px; justify-content: center; font-size: 0.74rem; gap: 16px; }
+.cr-dash-cal-full .cr-dash-cal-day-today .cr-dash-cal-day-num { margin: 1px 1px 0 0; }
+@media (max-width: 720px) {
+  .cr-dash-cal-full .cr-dash-cal-day { min-height: 58px; }
+  .cr-dash-cal-legend.cr-dash-cal-legend-top { font-size: 0.7rem; gap: 12px; }
+}
+
+/* ============================================================
+   Nov 18 2026 (Tara): squiggle pattern, team "⋯" menu, footer.
+   ============================================================ */
+
+/* The net in gold on the navy team hero (Tara, Nov 18 2026). */
+.cr-team-hero::after {
+  content: ""; position: absolute; top: 0; right: 0; bottom: 0; width: 60%;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 640 300' preserveAspectRatio='xMaxYMid slice'%3E%3Cpath d='M0 46V262M16 46V262M32 46V262M48 46V262M64 46V262M80 46V262M96 46V262M112 46V262M128 46V262M144 46V262M160 46V262M176 46V262M192 46V262M208 46V262M224 46V262M240 46V262M256 46V262M272 46V262M288 46V262M304 46V262M320 46V262M336 46V262M352 46V262M368 46V262M384 46V262M400 46V262M416 46V262M432 46V262M448 46V262M464 46V262M480 46V262M496 46V262M512 46V262M528 46V262M544 46V262M560 46V262M576 46V262M592 46V262M0 60H600M0 76H600M0 92H600M0 108H600M0 124H600M0 140H600M0 156H600M0 172H600M0 188H600M0 204H600M0 220H600M0 236H600M0 252H600' stroke='%23e2bd62' stroke-opacity='0.22' stroke-width='1.2'/%3E%3Cpath d='M0 46H600' stroke='%23e2bd62' stroke-opacity='0.55' stroke-width='9'/%3E%3Cpath d='M0 262H600' stroke='%23e2bd62' stroke-opacity='0.3' stroke-width='2'/%3E%3Crect x='600' y='28' width='10' height='272' rx='3' fill='%23e2bd62' fill-opacity='0.5'/%3E%3Ccircle cx='605' cy='28' r='8' fill='%23e2bd62' fill-opacity='0.55'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right center; background-size: cover;
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, #000 50%);
+          mask-image: linear-gradient(to right, transparent 0%, #000 50%);
+}
+@media (max-width: 720px) {
+  /* Phones: the text fills the hero, so keep the net faint. */
+  .cr-team-hero::after { width: 55%; opacity: 0.6; }
+}
+/* Tara's court photo as one full-page background (Nov 18 2026, 3rd try):
+   the WHOLE court, very faded, pinned behind the content and sized to fit
+   the screen, so it always reads as a court (never a cropped band) and
+   stays put while the page scrolls. A fixed layer (not background-
+   attachment: fixed) so it also works on iPhones. Sideways court on wide
+   screens, upright court on tall ones. */
+.cr-has-sb .cr-shell-main { position: relative; isolation: isolate; }
+.cr-has-sb .cr-shell-main::before {
+  content: ""; position: fixed; z-index: -1; pointer-events: none;
+  inset: var(--cr-hh) 0 0 0;
+  background: url("/court-tall.jpg") center 58% / contain no-repeat;   /* the court stands up and down (Tara) */
+  opacity: 0.2;
+}
+@media (min-width: 1000px) {
+  .cr-has-sb .cr-shell-main::before { left: var(--cr-sb-w); inset-block: calc(var(--cr-hh) + 36px) 24px; }
+}
+@media (max-aspect-ratio: 1/1) {
+  /* Phones and upright tablets; leave room for the bottom tab bar. */
+  .cr-has-sb .cr-shell-main::before { inset: calc(var(--cr-hh) + 24px) 8px 84px 8px; }
+}
+/* Dark pages keep their own background. */
+body.cr-ctx-division_teams-show .cr-shell-main::before { display: none; }
+
+/* Team options "⋯" menu (Archive team / Delete team). */
+.cr-team-menu { position: relative; }
+.cr-team-menu-btn {
+  list-style: none; cursor: pointer; display: inline-flex; align-items: center; justify-content: center;
+  width: 38px; height: 34px; border-radius: 999px; border: 1px solid var(--cr-border); background: var(--cr-card);
+  color: var(--cr-text); font-size: 1.3rem; line-height: 1; font-weight: 700; user-select: none;
+}
+.cr-team-menu-btn::-webkit-details-marker { display: none; }
+.cr-team-menu[open] .cr-team-menu-btn, .cr-team-menu-btn:hover { border-color: var(--cr-gold); }
+.cr-team-menu-list {
+  position: absolute; right: 0; top: calc(100% + 6px); z-index: 50; width: 260px; max-width: calc(100vw - 32px);
+  background: var(--cr-card); border: 1px solid var(--cr-border); border-radius: 12px; padding: 6px;
+  box-shadow: 0 12px 30px rgba(10, 22, 40, 0.16);
+}
+.cr-team-menu-list form { margin: 0; }
+.cr-team-menu-item {
+  display: block; width: 100%; text-align: left; padding: 9px 10px 2px; border: 0; background: none;
+  font: inherit; font-size: 0.9rem; font-weight: 700; color: var(--cr-text); cursor: pointer; border-radius: 8px;
+}
+.cr-team-menu-item:hover { color: var(--cr-teal); }
+.cr-team-menu-danger { color: #1b2a4a; }
+.cr-team-menu-danger:hover { color: #1b2a4a; }
+.cr-team-menu-off { color: var(--cr-text-light); cursor: default; }
+.cr-team-menu-off:hover { color: var(--cr-text-light); }
+.cr-team-menu-note { margin: 0; padding: 2px 10px 9px; font-size: 0.76rem; line-height: 1.35; color: var(--cr-text-muted); }
+.cr-team-menu-note + form, .cr-team-menu-note + .cr-team-menu-item { border-top: 1px solid var(--cr-border); }
+
+/* Simple footer on every signed-in page, in the same centered column. */
+.cr-app-footer { padding: 8px 24px 28px; }
+.cr-app-footer-inner {
+  max-width: var(--cr-col); margin: 0 auto; padding-top: 16px; border-top: 1px solid var(--cr-border);
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 20px;
+  font-size: 0.82rem; color: var(--cr-text-muted);
+}
+.cr-app-footer-brand { font-weight: 700; color: var(--cr-text); }
+.cr-app-footer-year { font-weight: 400; color: var(--cr-text-muted); margin-left: 4px; }
+.cr-app-footer-links { display: flex; flex-wrap: wrap; gap: 6px 18px; }
+.cr-app-footer-links a { color: var(--cr-text-muted); text-decoration: none; }
+.cr-app-footer-links a:hover { color: var(--cr-teal); }
+@media (max-width: 720px) {
+  /* Above the fixed bottom tab bar, centered. */
+  .cr-app-footer { padding: 8px 16px 96px; }
+  .cr-app-footer-inner { justify-content: center; text-align: center; }
+  .cr-app-footer-links { justify-content: center; }
+}
+/* The footer follows the page, so the page needs less empty space below. */
+.cr-has-sb .cr-main { padding-bottom: 40px; }
+@media (max-width: 720px) { .cr-has-sb .cr-main { padding-bottom: 24px; } }
+
+/* Friendlies tab: recent friendlies | who you play with | how it works,
+   three even boxes under the upcoming list (stacked on phones). */
+.cr-fr-more {
+  max-width: var(--cr-col); margin: 26px auto 0;
+  display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; align-items: start;
+}
+@media (max-width: 900px) { .cr-fr-more { grid-template-columns: minmax(0, 1fr); } }
+.cr-fr-box { background: var(--cr-card); border: 1px solid var(--cr-border); border-radius: 14px; padding: 16px 18px; min-width: 0; }
+.cr-fr-box-title { margin: 0 0 10px; font-size: 0.78rem; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; color: var(--cr-text); }
+.cr-fr-box-empty { margin: 0; font-size: 0.86rem; line-height: 1.45; color: var(--cr-text-muted); }
+.cr-fr-box-link { display: inline-block; margin-top: 10px; font-size: 0.84rem; font-weight: 700; color: var(--cr-teal); text-decoration: none; }
+.cr-fr-recent, .cr-fr-partners { list-style: none; margin: 0; padding: 0; }
+.cr-fr-recent li + li, .cr-fr-partners li + li { border-top: 1px solid var(--cr-border); }
+.cr-fr-recent-row { display: grid; grid-template-columns: 52px minmax(0, 1fr); gap: 10px; align-items: baseline; padding: 8px 0; text-decoration: none; color: inherit; }
+.cr-fr-recent-row:hover .cr-fr-recent-title { color: var(--cr-teal); }
+.cr-fr-recent-date { font-size: 0.78rem; font-weight: 700; color: var(--cr-gold-dark, #5f6b7e); white-space: nowrap; }
+.cr-fr-recent-main { display: flex; flex-direction: column; min-width: 0; }
+.cr-fr-recent-title { font-size: 0.9rem; font-weight: 700; color: var(--cr-text); }
+.cr-fr-recent-sub { font-size: 0.78rem; color: var(--cr-text-muted); }
+.cr-fr-partners li { display: flex; justify-content: space-between; gap: 12px; padding: 8px 0; font-size: 0.9rem; }
+.cr-fr-partner-name { font-weight: 700; color: var(--cr-text); min-width: 0; }
+.cr-fr-partner-n { color: var(--cr-text-muted); white-space: nowrap; font-size: 0.84rem; }
+.cr-fr-steps { margin: 0; padding-left: 20px; font-size: 0.86rem; line-height: 1.45; color: var(--cr-text-muted); }
+.cr-fr-steps li + li { margin-top: 8px; }
+.cr-fr-steps strong { color: var(--cr-text); }
+
+/* ============================================================
+   Nov 18 2026, wasted-space follow-up (Tara).
+   ============================================================ */
+
+/* Calendar entries: the time on its own line, then who/what (up to 2 lines). */
+.cr-dash-cal-chip, .cr-dash-cal-full .cr-dash-cal-chip {
+  display: flex; flex-direction: column; gap: 0; -webkit-line-clamp: unset; white-space: normal;
+}
+.cr-dash-cal-chip-time { display: block; font-size: 0.62rem; font-weight: 800; letter-spacing: 0.2px; opacity: 0.85; white-space: nowrap; }
+.cr-dash-cal-chip-text {
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+  overflow-wrap: anywhere; line-height: 1.25;
+}
+@media (max-width: 720px) {
+  /* Phone cells are ~40px wide: a short time ("10:30") and one line of name. */
+  .cr-dash-cal-chip-time { font-size: 0.5rem; letter-spacing: 0; }
+  .cr-dash-cal-chip-text { overflow-wrap: normal; word-break: normal; -webkit-line-clamp: 2; }
+}
+
+/* My Teams standings (computers): the team name column is capped so W/L sit
+   right after it, then the last result, then the next match on two lines. */
+.cr-st-last { white-space: nowrap; font-size: 0.84rem; color: var(--cr-text-muted); }
+.cr-st-last-badge {
+  display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px; margin-right: 6px;
+  border-radius: 6px; font-size: 0.7rem; font-weight: 800; color: #fff; background: var(--cr-text-muted); vertical-align: 1px;
+}
+.cr-st-last-w { background: #1b2a4a; }
+.cr-st-last-l { background: #6b7688; }
+.cr-st-last-t { background: #7d8899; }
+.cr-st-last-score { font-weight: 700; color: var(--cr-text); margin-right: 4px; }
+.cr-st-last-opp { display: block; margin: 2px 0 0 26px; font-size: 0.78rem; overflow: hidden; text-overflow: ellipsis; }
+.cr-home-st .cr-st-next { white-space: normal; }
+.cr-st-next-date { display: block; }
+.cr-st-next-opp { display: block; margin-top: 2px; font-size: 0.8rem; color: var(--cr-text-muted); }
+@media (min-width: 900px) {
+  .cr-home-st th:nth-child(2) { width: 250px; }
+  .cr-home-st th:nth-child(7) { width: 210px; }
+  .cr-home-st th:nth-child(8) { width: auto; }
+  .cr-home-st .cr-st-next { overflow: visible; }
+}
+/* Phones: no room for Last; Next keeps its two short lines. */
+@media (max-width: 899px) {
+  .cr-home-st .cr-st-last-h, .cr-home-st .cr-st-last { display: none; }
+}
+@media (max-width: 640px) {
+  /* As before on phones: Win% and the next match stay hidden (Upcoming has them). */
+  .cr-home-st thead th:nth-child(8), .cr-home-st tbody td:nth-child(8) { display: none; }
+}
+
+/* Friendlies tab (computers): upcoming friendlies two across; inside each
+   card the place sits under the details so nothing is squeezed. */
+@media (min-width: 900px) {
+  .cr-my-week-list.cr-fr-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+  .cr-my-week-list.cr-fr-list > .cr-cu-row { margin: 0; }
+  .cr-fr-list .cr-cu-row {
+    grid-template-columns: 52px minmax(0, 1fr) 76px;
+    grid-template-areas: "date info right" "date place right";
+    column-gap: 16px; align-items: center;
+  }
+  .cr-fr-list .cr-cu-place:empty { display: none; }
+  .cr-fr-list .cr-cu-place .cr-venue { margin-top: 6px; }
+  /* A single friendly still fills the row instead of leaving half of it empty. */
+  .cr-fr-list > .cr-cu-row:only-child { grid-column: 1 / -1; }
+}
+
+/* Profile: Win % by Line / Partner / Team side by side on computers. */
+.cr-ps-cols { display: grid; grid-template-columns: minmax(0, 1fr); gap: 0 18px; align-items: start; }
+@media (min-width: 900px) {
+  .cr-ps-cols { grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+  .cr-ps-col-card .cr-playing-stats-header, .cr-ps-col-card .cr-playing-stats-row { padding-left: 12px; padding-right: 12px; }
+}
+
+/* Team banner: the next match + recent form fill the right half on computers. */
+.cr-hero-side {
+  position: relative; z-index: 1; margin-top: 20px; padding: 16px 18px;
+  background: rgba(10, 22, 40, 0.55); border: 1px solid rgba(226, 189, 98, 0.35); border-radius: 14px;
+  -webkit-backdrop-filter: blur(2px); backdrop-filter: blur(2px);
+}
+.cr-hero-side-label { font-size: 0.68rem; font-weight: 800; letter-spacing: 1.2px; text-transform: uppercase; color: var(--cr-gold-soft, #7d8899); }
+.cr-hero-side-label-form { margin-top: 14px; }
+.cr-hero-side-match { display: block; margin-top: 6px; color: #fff; text-decoration: none; }
+.cr-hero-side-match:hover .cr-hero-side-opp { text-decoration: underline; }
+.cr-hero-side-date { display: block; font-size: 0.86rem; font-weight: 700; color: rgba(255, 255, 255, 0.85); }
+.cr-hero-side-opp { display: block; margin-top: 2px; font-size: 1.12rem; font-weight: 800; color: #fff; line-height: 1.25; }
+.cr-hero-side-where { display: flex; align-items: center; gap: 8px; margin-top: 6px; font-size: 0.82rem; color: rgba(255, 255, 255, 0.75); }
+.cr-hero-side-tag { padding: 2px 8px; border-radius: 999px; font-size: 0.66rem; font-weight: 800; letter-spacing: 0.6px; text-transform: uppercase; background: rgba(24, 39, 64, 0.25); color: #d6ecf9; }
+.cr-hero-side-tag-away { background: rgba(255, 255, 255, 0.14); color: rgba(255, 255, 255, 0.85); }
+.cr-hero-form { display: flex; gap: 6px; margin-top: 8px; }
+.cr-hero-form-dot {
+  display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: 8px;
+  font-size: 0.74rem; font-weight: 800; color: #fff;
+}
+.cr-hero-form-w { background: #1b2a4a; }
+.cr-hero-form-l { background: #6b7688; }
+.cr-hero-form-t { background: #7d8899; color: #1f1600; }
+@media (min-width: 900px) {
+  .cr-team-hero { display: grid; grid-template-columns: minmax(0, 1fr) minmax(260px, 340px); gap: 28px; align-items: center; }
+  .cr-hero-side { margin-top: 0; }
+}
+
+/* Ratings: a "Last 5" column of W/L dots, and your own USTA form in the hero. */
+.cr-rp-form { white-space: nowrap; }
+.cr-rp-form-dot {
+  display: inline-flex; align-items: center; justify-content: center; width: 18px; height: 18px; margin-right: 3px;
+  border-radius: 5px; font-size: 0.62rem; font-weight: 800; color: #fff;
+}
+.cr-rp-form-w { background: #1b2a4a; }
+.cr-rp-form-l { background: #6b7688; }
+.cr-rp-unranked td .cr-rp-form-dot { opacity: 0.75; }
+@media (max-width: 600px) {
+  .cr-rp-ranked th:nth-child(7), .cr-rp-ranked td:nth-child(7) { display: none; }
+}
+.cr-rp-hero-side {
+  flex: 0 0 auto; min-width: 250px; padding: 14px 18px;
+  background: rgba(10, 22, 40, 0.45); border: 1px solid rgba(226, 189, 98, 0.35); border-radius: 14px;
+}
+.cr-rp-hero-rec { display: flex; align-items: baseline; gap: 10px; margin-top: 4px; }
+.cr-rp-hero-num { font-size: 1.6rem; font-weight: 800; color: #fff; }
+.cr-rp-hero-pct { font-size: 0.82rem; color: rgba(255, 255, 255, 0.75); }
+.cr-rp-hero-link { display: inline-block; margin-top: 12px; font-size: 0.8rem; font-weight: 700; color: var(--cr-gold); text-decoration: none; }
+.cr-rp-hero-link:hover { text-decoration: underline; }
+@media (max-width: 720px) {
+  .cr-rp-hero { flex-direction: column; align-items: stretch; }
+  .cr-rp-hero-side { min-width: 0; }
+}
+/* Lookup: team names never cut off; each wraps as a whole. */
+.cr-lookup-team { display: inline-block; white-space: nowrap; max-width: 100%; overflow: visible; text-overflow: clip; }
+.cr-lookup-tbl td.cr-lookup-wide { white-space: normal !important; overflow: visible !important; text-overflow: clip !important; max-width: none !important; }
+
+/* =====================================================================
+   SITE PALETTE (Tara, Nov 18 2026) — keep to this everywhere:
+   light-blue page (from the court photo) + the faded court; white header
+   with a navy wordmark and the gold ball tile; navy text & headings; navy
+   primary buttons (white text); soft grey secondary text & borders; white
+   rounded cards. Gold is an ACCENT only: logo ball, Enter scores, active
+   states, win chips. Results: W = gold chip/navy W, L = light grey/navy L,
+   T = white with navy outline/navy T. NO red, green or bright yellow, and
+   no grid or squares patterns.
+   ===================================================================== */
+:root {
+  --cr-navy: #1b2a4a;
+  --cr-page: #eaf5fc;          /* the court blue, very light */
+  --cr-hero: #d6ecf9;          /* banners: the court blue, lighter */
+  --cr-black: #1b2a4a;
+  --cr-black-soft: #24344f;
+  --cr-navy-page: #eaf5fc;
+  --cr-bg: #eaf5fc;
+  --cr-header-bg: #ffffff;
+  /* Old "gold" spots (labels, dates, borders) become soft slate; real gold
+     is --cr-accent, used ONLY for the logo ball, Enter scores, active
+     states and win chips. */
+  --cr-gold: #7d8899;
+  --cr-gold-soft: #9aa5b4;
+  --cr-gold-bright: #ffffff;
+  --cr-accent: #c9a227;
+  --cr-accent-tint: #f6eed8;
+  --cr-teal: #1b2a4a;
+  --cr-teal-deep: #1b2a4a;
+  --cr-teal-tint: rgba(24, 39, 64, 0.07);
+  --cr-text: #1b2a4a;
+  --cr-text-muted: #5f6b7e;
+  --cr-text-light: #7d8899;
+  --cr-border: #dbe3ec;
+  --cr-green: #1b2a4a;
+  --cr-red: #6b7688;
+  --cr-win-bg: #dcb862;        /* W chip: gold, navy letter */
+  --cr-loss-bg: #e6eaf0;       /* L chip: light grey, navy letter */
+}
+html body, html body[class] { background: var(--cr-page); color: var(--cr-text); }
+
+/* Header: white, navy wordmark, gold ball tile. */
+.cr-header { background: var(--cr-card); border-bottom: 1px solid var(--cr-border); box-shadow: 0 1px 8px rgba(24, 39, 64, 0.05); }
+.cr-brand, .cr-brand-text, .cr-brand-gold { color: var(--cr-navy); }
+.cr-brand-your { color: var(--cr-text-light); }
+.cr-header .cr-header-search-icon, .cr-sb-burger { color: var(--cr-navy); border-color: var(--cr-border); background: var(--cr-card); }
+.cr-header .cr-header-pill { color: var(--cr-navy); border-color: var(--cr-border); background: var(--cr-card); }
+.cr-header .cr-header-signup { background: var(--cr-navy); color: #fff; border-color: var(--cr-navy); }
+
+/* Left menu: white, navy text; the page you're on is marked in gold. */
+.cr-sb { background: var(--cr-card); color: var(--cr-navy); border-right: 1px solid var(--cr-border); }
+.cr-sb-user { background: var(--cr-card); border-color: var(--cr-border); color: var(--cr-navy); }
+.cr-sb-user:hover, .cr-sb-menu.cr-menu-open .cr-sb-user { background: var(--cr-page); }
+.cr-sb-avatar { background: var(--cr-navy); color: #fff; }
+.cr-sb-name, .cr-sb-caret { color: var(--cr-navy); }
+.cr-sb-meta, .cr-sb-h, .cr-sb-team small { color: var(--cr-text-light); }
+.cr-sb-search { background: var(--cr-page); color: var(--cr-text-light); }
+.cr-sb-search input { color: var(--cr-navy); }
+.cr-sb-search input::placeholder { color: var(--cr-text-light); }
+.cr-sb-link { color: var(--cr-navy); }
+.cr-sb-link:hover { background: var(--cr-page); color: var(--cr-navy); }
+.cr-sb-link.is-on { background: var(--cr-accent-tint); color: var(--cr-navy); box-shadow: inset 3px 0 0 var(--cr-accent); }
+.cr-sb-newbtn { background: var(--cr-navy); color: #fff; }
+.cr-sb-signout { color: var(--cr-navy); }
+
+/* Buttons: primary = navy with white text; secondary = white with a grey border. */
+.cr-btn-gold, .cr-btn-primary { background: var(--cr-navy); color: #fff; border-color: var(--cr-navy); box-shadow: none; }
+.cr-btn-gold:hover, .cr-btn-primary:hover { background: var(--cr-black-soft); color: #fff; }
+.cr-btn-outline, .cr-chip-btn { background: var(--cr-card); color: var(--cr-navy); border-color: var(--cr-border); }
+.cr-btn-outline:hover, .cr-chip-btn:hover { border-color: var(--cr-navy); color: var(--cr-navy); background: var(--cr-card); }
+.cr-chip-btn.cr-chip-danger, .cr-team-menu-danger { color: var(--cr-navy); border-color: var(--cr-border); }
+/* "Enter scores" is the one gold button. */
+.cr-awaiting-badge-link, a.cr-btn[href*="edit_results"], .cr-enter-results-link { background: var(--cr-accent); color: var(--cr-navy) !important; border-color: var(--cr-accent); }
+.cr-enter-results-link { padding: 3px 10px; border-radius: 999px; font-weight: 700; text-decoration: none; }
+
+/* Active states are gold. */
+.cr-subtab-active, body.cr-ctx-teams-show .cr-subtab-active { color: var(--cr-navy); border-bottom-color: var(--cr-accent); box-shadow: inset 0 -2px 0 var(--cr-accent); }
+.cr-home-tab-active, .cr-home-tab-active:hover { background: var(--cr-card); color: var(--cr-navy); box-shadow: inset 0 -2px 0 var(--cr-accent), 0 1px 3px rgba(24, 39, 64, 0.08); }
+.cr-home-tabs { border-color: var(--cr-border); background: var(--cr-card); }
+.cr-home-tab { color: var(--cr-text-muted); }
+.cr-seg-btn-active, body.cr-ctx-teams-show .cr-seg-btn-active { box-shadow: inset 0 -2px 0 var(--cr-accent), 0 1px 2px rgba(10, 22, 40, 0.08); }
+.cr-dash-cal-full .cr-dash-cal-day-today { border-color: var(--cr-accent); }
+
+/* Banners: light blue with navy text — no dark blocks, no grid or net pattern. */
+.cr-team-hero, .cr-rp-hero { background: var(--cr-hero); color: var(--cr-navy); box-shadow: none; border: 1px solid rgba(24, 39, 64, 0.06); border-bottom: 1px solid rgba(24, 39, 64, 0.06); }
+.cr-team-hero::before, .cr-team-hero::after { display: none; content: none; }
+.cr-team-hero-label, .cr-rp-eyebrow { color: var(--cr-text-muted); }
+.cr-team-hero-name, .cr-rp-name, .cr-hero-stat-value { color: var(--cr-navy); }
+.cr-team-hero-sub, .cr-rp-sub, .cr-hero-stat-label, .cr-hero-breakdown, .cr-hero-breakdown-note, .cr-team-colors-text { color: var(--cr-text-muted); }
+.cr-hero-side, .cr-rp-hero-side { background: var(--cr-card); border: 1px solid var(--cr-border); -webkit-backdrop-filter: none; backdrop-filter: none; }
+.cr-hero-side-label { color: var(--cr-text-light); }
+.cr-hero-side-match, .cr-hero-side-opp, .cr-rp-hero-num { color: var(--cr-navy); }
+.cr-hero-side-date, .cr-hero-side-where, .cr-rp-hero-pct { color: var(--cr-text-muted); }
+.cr-hero-side-tag, .cr-hero-side-tag-away { background: var(--cr-page); color: var(--cr-navy); }
+.cr-rp-hero-link { color: var(--cr-navy); text-decoration: underline; text-decoration-color: var(--cr-accent); }
+.cr-rp-hero-level { border-color: var(--cr-border); background: var(--cr-card); color: var(--cr-navy); }
+
+/* Table title bars: white with navy text (were dark). */
+.cr-standings-head { background: #fff; color: var(--cr-navy); border-bottom: 1px solid var(--cr-border); }
+.cr-standings-head-title { color: var(--cr-navy); }
+.cr-standings-head-season { color: var(--cr-text-light); }
+.cr-standings-wrap { background: var(--cr-card); }
+
+/* Phone tab bar: white. */
+.cr-bottom-nav { background: rgba(255, 255, 255, 0.97); border-top: 1px solid var(--cr-border); box-shadow: 0 -2px 12px rgba(24, 39, 64, 0.06); }
+.cr-bottom-nav a, .cr-bottom-nav button, .cr-bottom-nav .cr-bnav-label, .cr-bottom-nav svg { color: var(--cr-text-muted); }
+.cr-bottom-nav .cr-bnav-active, .cr-bottom-nav .cr-bnav-active .cr-bnav-label, .cr-bottom-nav .cr-bnav-active svg { color: var(--cr-navy); }
+.cr-bottom-nav::before { background: var(--cr-accent); }
+
+/* Calendar: matches navy with white text; clinics/friendlies/others soft. */
+.cr-dash-cal-chip-match    { background: var(--cr-navy); color: #fff; border-left-color: var(--cr-navy); }
+.cr-dash-cal-chip-practice, .cr-dash-cal-chip-clinic { background: var(--cr-page); color: var(--cr-navy); border-left-color: #7d8899; }
+.cr-dash-cal-chip-friendly { background: var(--cr-card); color: var(--cr-navy); border-left-color: #a9c8e2; box-shadow: inset 0 0 0 1px var(--cr-border); }
+.cr-dash-cal-chip-other    { background: #f1f3f6; color: var(--cr-navy); border-left-color: #b7c0cc; }
+.cr-dash-cal-dot-match { background: var(--cr-navy); }
+.cr-dash-cal-dot-clinic, .cr-dash-cal-dot-practice { background: #7d8899; }
+.cr-dash-cal-dot-friendly { background: #a9c8e2; }
+
+/* Results: W gold / L light grey / T white with navy outline — navy letters. */
+.cr-result-badge-win, .cr-hero-form-w, .cr-rp-form-w, .cr-st-last-w, .cr-chart-recent-win, .cr-st-dot-w, .cr-rp-wl-w, .cr-adv-win
+  { background: var(--cr-win-bg); color: var(--cr-navy); border: 1px solid var(--cr-win-bg); }
+.cr-result-badge-loss, .cr-hero-form-l, .cr-rp-form-l, .cr-st-last-l, .cr-chart-recent-loss, .cr-st-dot-l, .cr-rp-wl-l, .cr-adv-loss
+  { background: var(--cr-loss-bg); color: var(--cr-navy); border: 1px solid var(--cr-loss-bg); }
+.cr-result-badge-tie, .cr-hero-form-t, .cr-st-last-t, .cr-st-dot-t, .cr-chart-recent-tie
+  { background: var(--cr-card); color: var(--cr-navy); border: 1.5px solid var(--cr-navy); }
+.cr-st-w, .cr-st-l, .cr-st-pct-good, .cr-st-pct-bad, .cr-result-win, .cr-result-loss, .cr-result-tie,
+.cr-line-win, .cr-line-loss, .cr-year-win, .cr-year-loss { color: var(--cr-navy); }
+.cr-st-l, .cr-st-pct-bad, .cr-result-loss, .cr-line-loss, .cr-year-loss { color: var(--cr-text-muted); }
+
+/* Sign-in / sign-up and the opponent drill-down were dark pages: now light. */
+body.cr-ctx-sessions-new .cr-landing-headline, .cr-dt-name { color: var(--cr-navy); }
+body.cr-ctx-sessions-new .cr-landing-tagline, .cr-dt-sub,
+body.cr-ctx-sessions-new .cr-landing-footer,
+body.cr-ctx-sessions-new .cr-admin-reset-label,
+body.cr-ctx-sessions-new .cr-admin-reset-note, .cr-dt-page .cr-back-link a { color: var(--cr-text-muted); }
+.cr-dt-sub strong { color: var(--cr-navy); }
+
+/* Sidebar league dots and team colour dots stay (they're the team's own colours). */
+
+/* The logo ball tile keeps its gold. */
+.cr-brand-ball, .cr-logo-mark { background: linear-gradient(135deg, #c9a227, #e2c57e); box-shadow: 0 3px 12px rgba(201, 162, 74, 0.35); }
+/* Table header rows: light blue, not cream. */
+.cr-standings thead th, .cr-standings thead tr { background: #f3f8fc; }
+.cr-standings tbody tr.cr-st-row:first-child td { background: transparent; }
+.cr-header .cr-header-search-icon { color: var(--cr-navy); opacity: 1; }
+/* Upcoming / Friendlies card labels: navy-grey, not gold. */
+.cr-my-week-league-label, .cr-my-week-day-name, .cr-my-week-month, .cr-fr-recent-date { color: var(--cr-text-muted); }
+.cr-dash-cal-full .cr-dash-cal-day-today .cr-dash-cal-day-num { background: var(--cr-accent); color: var(--cr-navy); }
+.cr-header-search-icon, .cr-header-search-icon svg { color: var(--cr-navy) !important; stroke: currentColor; opacity: 1 !important; }
+/* Top-bar search on the white header: navy magnifier, light-blue field. */
+.cr-header-search input {
+  color: var(--cr-navy); border-color: var(--cr-border);
+  background: var(--cr-page) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24'%3E%3Ccircle cx='11' cy='11' r='7' fill='none' stroke='%23182740' stroke-width='2.4'/%3E%3Cpath d='M16.5 16.5 21 21' stroke='%23182740' stroke-width='2.4' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat 12px center;
+}
+.cr-header-search input:not(:focus):placeholder-shown { background-position: center; background-size: 16px; }
+.cr-header-search input::placeholder { color: var(--cr-text-light); }
+.cr-header-search input:focus { border-color: var(--cr-accent); background-color: #fff; }
+.cr-header-search-icon { border-color: var(--cr-border) !important; }
+/* Feature tiles (sign-in page): every icon navy on light blue. */
+[class*="cr-tone-"] { color: var(--cr-navy) !important; background: #e3f1fb !important; }
+/* Sign-in / sign-up: navy submit button, navy headline. */
+.cr-login-card input[type="submit"], .cr-auth-card input[type="submit"], form input[type="submit"].cr-btn { background: var(--cr-navy); color: #fff; border-color: var(--cr-navy); }
+.cr-login-card input[type="submit"]:hover, .cr-auth-card input[type="submit"]:hover { background: var(--cr-black-soft); color: #fff; }
+.cr-landing-headline-gold { color: var(--cr-navy); }
+/* Things that were gold and aren't one of the four gold spots: navy or light blue. */
+.cr-header-signup { background: var(--cr-navy) !important; color: #fff !important; }
+.cr-popup-confirm, .cr-auth-submit, .cr-match-date, .cr-badge-admin, .cr-standings-you-badge, .cr-player-avatar { background: var(--cr-navy); color: #fff; }
+.cr-popup-confirm:hover, .cr-auth-submit:hover { background: var(--cr-black-soft); color: #fff; }
+.cr-auth-logo { background: linear-gradient(135deg, #c9a227, #e2c57e); }
+.cr-roster-role-captain { background: #e3f1fb; color: var(--cr-navy); }
+.cr-chart-split-left, .cr-bar-fill { background: var(--cr-navy); }
+.cr-cal-btn:hover { background: #e3f1fb; color: var(--cr-navy); }
+.cr-bnav-active::before { background: linear-gradient(90deg, transparent, var(--cr-accent), transparent); }
+.cr-fr-chip.is-picked, .cr-fr-pair .cr-fr-chip.is-picked { background: var(--cr-accent); color: var(--cr-navy); }
+.cr-standings tbody tr.cr-st-row:first-child .cr-st-rank-badge { background: var(--cr-card); color: var(--cr-navy); border: 1px solid var(--cr-border); }
+.cr-playing-stat-value, .cr-stat-card-value { color: var(--cr-navy); }
+.cr-playing-stat-value-none { color: var(--cr-text-light); }
+
+/* =====================================================================
+   WARM-UP (Tara, Nov 18 2026) — same bones as the SITE PALETTE above, plus:
+   • one warm accent, a muted dusty blush rose, in tiny doses only
+     (Upcoming pill, the soft tint behind "needs attention" cards, small
+     highlights) — warmth, never a pink site;
+   • a deeper court blue (sampled from the court photo's net) for the active
+     menu item, tab underlines and links — the page's mid-tone;
+   • the page's primary button is gold with navy text (one gold moment);
+   • headings and team names in a warm editorial serif (Fraunces), sentence
+     case; body text and scores stay in the clean sans;
+   • the faded court a little stronger; cards a very soft cream.
+   ===================================================================== */
+:root {
+  --cr-card: #fffcf7;          /* very soft cream cards */
+  --cr-court: #78a0b8;         /* deeper court blue, from the photo's net */
+  --cr-court-tint: #dcebf5;
+  --cr-court-ink: #3f6c8a;     /* same blue, dark enough to read as link text */
+  --cr-rose: #c48b8e;          /* muted dusty blush rose */
+  --cr-rose-tint: #f8ecea;
+  --cr-rose-ink: #8c585c;
+  --cr-teal-deep: #3f6c8a;     /* links */
+  --cr-serif: "Fraunces", Georgia, "Times New Roman", serif;
+}
+/* Header and left menu stay crisp white; content cards are cream. */
+.cr-header, .cr-sb { background: #fff; }
+
+/* The court reads as a court. */
+.cr-has-sb .cr-shell-main::before { opacity: 0.3; }
+
+/* Mid-tone blue: active menu item, tab underlines, links. */
+.cr-sb-link.is-on { background: var(--cr-court-tint); color: var(--cr-navy); box-shadow: inset 3px 0 0 var(--cr-court); }
+.cr-subtab-active, body.cr-ctx-teams-show .cr-subtab-active { border-bottom-color: var(--cr-court); box-shadow: inset 0 -2px 0 var(--cr-court); }
+.cr-home-tab-active, .cr-home-tab-active:hover { box-shadow: inset 0 -2px 0 var(--cr-court), 0 1px 3px rgba(24, 39, 64, 0.08); }
+.cr-seg-btn-active, body.cr-ctx-teams-show .cr-seg-btn-active { box-shadow: inset 0 -2px 0 var(--cr-court), 0 1px 2px rgba(10, 22, 40, 0.08); }
+.cr-bnav-active::before { background: linear-gradient(90deg, transparent, var(--cr-court), transparent); }
+.cr-main a:not([class]), .cr-back-link, .cr-back-link a, .cr-rp-plink, .cr-fr-box-link, .cr-rp-hero-link,
+.cr-enter-results-link:not(:hover), .cr-st-team:hover, .cr-ps-playerlink, .cr-app-footer-links a:hover { color: var(--cr-court-ink); }
+.cr-rp-hero-link { text-decoration-color: var(--cr-court); }
+.cr-dash-cal-full .cr-dash-cal-day-today { border-color: var(--cr-court); }
+.cr-dash-cal-full .cr-dash-cal-day-today .cr-dash-cal-day-num { background: var(--cr-court); color: #fff; }
+.cr-header-search input:focus { border-color: var(--cr-court); }
+
+/* One gold moment per page: the primary button (Set Lineup, Book a friendly,
+   Enter scores, Add Match). Other buttons stay navy or outlined. */
+html body .cr-btn.cr-btn-gold, html body .cr-btn-gold, html body .cr-set-lineup-btn, html body .cr-awaiting-badge-link, html body a.cr-btn[href*="edit_results"], html body .cr-btn-pill.cr-btn-primary {
+  background: var(--cr-accent); color: var(--cr-navy) !important; border-color: var(--cr-accent); box-shadow: none;
+}
+html body .cr-btn.cr-btn-gold:hover, html body .cr-set-lineup-btn:hover, html body .cr-awaiting-badge-link:hover { background: #bb9440; color: var(--cr-navy) !important; }
+
+/* Rose, in tiny doses. */
+.cr-fr-badge-up { background: var(--cr-rose-tint); color: var(--cr-rose-ink); }
+.cr-awaiting-alert, .cr-lineup-confirm-prompt { background: var(--cr-rose-tint) !important; border-color: #ecd3d1 !important; }
+.cr-awaiting-alert-icon { color: var(--cr-rose); }
+.cr-awaiting-alert-text strong { color: var(--cr-navy); }
+.cr-hero-side-label:first-child { color: var(--cr-rose-ink); }
+.cr-lookup-tbl .cr-you, .cr-you-tag, .cr-st-you { color: var(--cr-rose-ink) !important; }
+
+/* Headings and team names: warm editorial serif, sentence case. */
+html body .cr-page-title, html body .cr-rp-name, html body .cr-auth-title, html body .cr-section-title, html body .cr-card-title, html body .cr-hero-title, html body .cr-team-hero-name, html body .cr-landing-headline, html body .cr-lookup-head h1, html body .cr-fr-title, html body .cr-lu-title, html body .cr-standings-head-title, html body .cr-dt-name, html body .cr-st-team, html body .cr-my-week-team, html body .cr-sb-team-name, html body .cr-hero-side-opp, html body .cr-section-subtitle, html body .cr-fr-box-title, html body .cr-ps-col-card h3, html body .cr-sched-opp, html body .cr-match-opponent {
+  font-family: var(--cr-serif); text-transform: none; letter-spacing: -0.01em; font-optical-sizing: auto;
+}
+html body .cr-page-title, html body .cr-rp-name, html body .cr-auth-title, html body .cr-team-hero-name, html body .cr-landing-headline, html body .cr-hero-title { font-weight: 600; }
+html body .cr-section-title, html body .cr-card-title, html body .cr-section-subtitle, html body .cr-fr-box-title { font-weight: 600; font-size: 1.12rem; letter-spacing: 0; }
+html body .cr-st-team, html body .cr-my-week-team, html body .cr-sb-team-name, html body .cr-standings-head-title { font-weight: 600; }
+html body .cr-sb-team-name { font-size: 0.9rem; }
+html body .cr-rp-name { font-size: 2.1rem; line-height: 1.1; }
+html body .cr-pp-head-title, html body .cr-pp-name-text { font-family: var(--cr-serif); text-transform: none; letter-spacing: -0.01em; font-weight: 600; color: var(--cr-navy); }
+
+/* =====================================================================
+   Rows fill the wide column (Tara, Nov 18 2026): every Upcoming /
+   Friendlies row is date | match info | venue | status | ONE real action
+   button | calendar + share — no half-empty card. Phones stack it.
+   ===================================================================== */
+.cr-cu-status, .cr-cu-action { grid-area: auto; min-width: 0; }
+.cr-cu-pill {
+  display: inline-flex; align-items: center; padding: 4px 10px; border-radius: 999px; white-space: nowrap;
+  font-size: 0.74rem; font-weight: 700; background: var(--cr-court-tint); color: var(--cr-navy);
+}
+.cr-cu-pill-muted { background: #eef1f5; color: var(--cr-text-muted); font-weight: 600; }
+.cr-cu-pill-you { background: var(--cr-navy); color: #fff; }
+.cr-cu-pill-attn, .cr-cu-pill-rose { background: var(--cr-rose-tint); color: var(--cr-rose-ink); }
+.cr-cu-btn {
+  display: inline-flex; align-items: center; justify-content: center; width: 100%; min-height: 36px; padding: 0 12px;
+  border-radius: 10px; border: 1px solid var(--cr-navy); background: var(--cr-navy); color: #fff !important;
+  font-size: 0.84rem; font-weight: 700; text-decoration: none; white-space: nowrap;
+}
+.cr-cu-btn:hover { background: var(--cr-black-soft); }
+.cr-cu-btn-outline { background: var(--cr-card); color: var(--cr-navy) !important; border-color: var(--cr-border); }
+.cr-cu-btn-outline:hover { background: #fff; border-color: var(--cr-navy); }
+.cr-cu-btn-gold { background: var(--cr-accent); border-color: var(--cr-accent); color: var(--cr-navy) !important; }
+.cr-cu-btn-gold:hover { background: #bb9440; }
+
+@media (min-width: 900px) {
+  .cr-cu-phone-only { display: none !important; }
+  html body .cr-cu-row {
+    grid-template-columns: 52px minmax(0, 1.25fr) minmax(0, 1fr) 128px 132px 76px;
+    grid-template-areas: "date info place status action right";
+    column-gap: 18px; align-items: center; padding: 12px 18px;
+  }
+  html body .cr-cu-row > .cr-cu-status { grid-area: status; }
+  html body .cr-cu-row > .cr-cu-action { grid-area: action; }
+  html body .cr-cu-row > .cr-cu-place:empty::after { content: "Place TBD"; font-size: 0.8rem; font-style: italic; color: var(--cr-text-light); }
+  /* Friendlies two-across: info | status / place | action, icons on the right. */
+  html body .cr-fr-list .cr-cu-row {
+    grid-template-columns: 52px minmax(0, 1fr) 120px 76px;
+    grid-template-areas: "date info status right" "date place action right";
+    row-gap: 8px;
+  }
+  html body .cr-fr-list > .cr-cu-row:only-child {
+    grid-template-columns: 52px minmax(0, 1.25fr) minmax(0, 1fr) 128px 132px 76px;
+    grid-template-areas: "date info place status action right";
+  }
+}
+@media (max-width: 899px) {
+  /* Phones: the button sits under the details, full width of that column. */
+  html body .cr-cu-row { grid-template-areas: "date info right" "date place right" "date action right"; }
+  html body .cr-cu-row > .cr-cu-status { display: none; }
+  html body .cr-cu-row > .cr-cu-action { grid-area: action; margin-top: 8px; }
+  html body .cr-cu-row > .cr-cu-action .cr-cu-btn { width: auto; min-height: 34px; padding: 0 16px; }
+}
+/* Friendlies page: the full column, cards two-across on computers. */
+@media (min-width: 900px) {
+  .cr-fr-index-page .cr-fr-index { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+  .cr-fr-index-page .cr-fr-index > .cr-fr-index-row { margin: 0; height: 100%; box-sizing: border-box; }
+  .cr-fr-index-page .cr-fr-index > .cr-fr-index-row:only-child { grid-column: 1 / -1; }
+}
+/* The footer sits right under the content. */
+.cr-has-sb .cr-main { padding-bottom: 12px; }
+.cr-app-footer { padding-top: 4px; }
+.cr-app-footer-inner { padding-top: 14px; }
+@media (max-width: 720px) { .cr-has-sb .cr-main { padding-bottom: 8px; } }
+.cr-rp-page { padding-bottom: 16px; }
+/* Team schedule rows fill the card: date | opponent & time | place | status | action | ▾ */
+.cr-sched-row-full { display: grid; grid-template-columns: 50px minmax(0, 1fr) 22px; grid-template-areas: "date main caret" "date place caret" "date action caret"; column-gap: 12px; row-gap: 4px; align-items: center; }
+.cr-sched-row-full > .cr-sched-date { grid-area: date; }
+.cr-sched-row-full > .cr-sched-main { grid-area: main; }
+.cr-sched-row-full > .cr-sched-place { grid-area: place; min-width: 0; font-size: 0.82rem; }
+.cr-sched-row-full > .cr-sched-status { display: none; }
+.cr-sched-row-full > .cr-sched-action { grid-area: action; margin-top: 4px; }
+.cr-sched-row-full > .cr-sched-action .cr-cu-btn { width: auto; min-height: 34px; padding: 0 16px; }
+.cr-sched-row-full > .cr-sched-caret { grid-area: caret; justify-self: end; }
+.cr-sched-row-full .cr-venue { margin-top: 0; }
+.cr-sched-place-text { color: var(--cr-text); font-weight: 600; }
+.cr-sched-place-tbd { color: var(--cr-text-light); font-style: italic; }
+@media (min-width: 900px) {
+  .cr-sched-row-full {
+    grid-template-columns: 50px minmax(0, 1.1fr) minmax(0, 1fr) 120px 128px 20px;
+    grid-template-areas: "date main place status action caret";
+    column-gap: 18px;
+  }
+  .cr-sched-row-full > .cr-sched-status { display: block; grid-area: status; }
+  .cr-sched-row-full > .cr-sched-action { margin-top: 0; }
+  .cr-sched-row-full > .cr-sched-action .cr-cu-btn { width: 100%; padding: 0 10px; }
+}
+.cr-cu-pill.cr-sched-pill, .cr-cu-pill.cr-sched-pill-draft { text-transform: none; letter-spacing: 0; font-size: 0.74rem; padding: 4px 10px; }
+.cr-team-page { padding-bottom: 12px; }
+
+/* Court in the margins (Tara, Nov 19 2026): on computers the one court sat
+   hidden behind the 920px column and the sides were plain blue. Now a row of
+   whole, upright courts runs across the screen (like a row of courts at a
+   club), so the margins on both sides read as tennis court. A touch stronger. */
+@media (min-width: 1000px) and (min-aspect-ratio: 1/1) {
+  .cr-has-sb .cr-shell-main::before {
+    background-size: auto 100%;
+    background-repeat: repeat-x;
+    background-position: center top;
+    opacity: 0.38;
+  }
+}
+
+/* Feature tiles keep their original colourful icons (Tara, Nov 19 2026): the
+   six "See your week / Set availability / …" tiles on the sign-in and home
+   pages. The ONLY place these colours are allowed; everything else stays navy. */
+html body .cr-tone-red    { color: #e5484d !important; background: #fdecec !important; }
+html body .cr-tone-green  { color: #2e9d5b !important; background: #e6f6ec !important; }
+html body .cr-tone-blue   { color: #3b6fd8 !important; background: #e8effc !important; }
+html body .cr-tone-lime   { color: #7a9a14 !important; background: #f2f8dc !important; }
+html body .cr-tone-orange { color: #d97706 !important; background: #fdf1e1 !important; }
+html body .cr-tone-purple { color: #7c4dce !important; background: #f1ebfb !important; }
+
+/* ================================================================
+   FINAL LOCKED PALETTE (Tara, Nov 19 2026) — do not change again.
+   Light blue page + tennis-court light green accent (the green surround
+   of a blue hard court), in small doses: highlights, the top value,
+   section markers. The green is NOT the win colour (wins gold, losses
+   grey). All text dark navy, secondary text too; no pale text on pale
+   blue, no green text. No pink/blush, no red/yellow, no grid, no navy hero.
+   ================================================================ */
+:root {
+  --cr-court-green: #6CAF7E;
+  --cr-court-green-tint: #E4F3E8;
+  --cr-court-green-line: #bfe0c8;
+  /* The old blush accent now uses the court green. Text on it stays navy. */
+  --cr-rose: #6CAF7E;
+  --cr-rose-tint: #E4F3E8;
+  --cr-rose-ink: #1b2a4a;
+  /* Secondary text is dark navy too. */
+  --cr-text-muted: #1b2a4a;
+  --cr-text-light: #1b2a4a;
+}
+html body .cr-awaiting-alert, html body .cr-lineup-confirm-prompt { border-color: var(--cr-court-green-line) !important; }
+.cr-hero-side-label:first-child, .cr-lookup-tbl .cr-you, .cr-you-tag, .cr-st-you { color: var(--cr-navy) !important; }
+
+/* Your own row (Tara Bucci): court green tint, navy text. */
+.cr-me-row, .cr-me-row > td, tr.cr-me-row td,
+.cr-standings-tbl-self, .cr-standings-tbl-self > td { background: var(--cr-court-green-tint) !important; color: var(--cr-navy) !important; }
+.cr-roster-row.cr-me-row { border-radius: 8px; box-shadow: inset 3px 0 0 var(--cr-court-green); }
+tr.cr-me-row td:first-child, tr.cr-standings-tbl-self td:first-child { box-shadow: inset 3px 0 0 var(--cr-court-green); }
+
+/* The top value: rank 1 gets a green ring. */
+html body .cr-standings tbody tr.cr-st-row:first-child .cr-st-rank-badge,
+html body .cr-home-st tbody tr.cr-st-league + tr.cr-st-row .cr-st-rank-badge {
+  background: var(--cr-court-green-tint); border: 1.5px solid var(--cr-court-green); color: var(--cr-navy);
+}
+
+/* Section markers: a short green bar before section headings. */
+.cr-chart-section-title, .cr-st-league td { color: var(--cr-navy) !important; }
+.cr-chart-section-title::before, .cr-ps-col-card h3::before {
+  content: ""; display: inline-block; width: 4px; height: 0.95em; margin-right: 8px;
+  vertical-align: -0.12em; border-radius: 2px; background: var(--cr-court-green);
+}
+.cr-st-league td { box-shadow: inset 3px 0 0 var(--cr-court-green); }
+
+/* Bars: solid white track with a visible border, dark navy fill, navy numbers. */
+html body .cr-bar-track { background: #fff; border: 1px solid #b9c6d4; }
+html body .cr-bar-fill, html body .cr-bar-fill-navy { background: var(--cr-navy); color: #fff; }
+html body .cr-bar-fill > span { display: none; }   /* the number sits at the end of the bar, in navy */
+html body .cr-bar-fill-empty { background: transparent; }
+html body .cr-bar-value { color: var(--cr-navy); font-weight: 700; }
+.cr-bar-row { grid-template-columns: 42px 1fr 96px; }
+.cr-bar-row:has(.cr-bar-label-wide) { grid-template-columns: minmax(110px, 30%) 1fr 96px; }
+@media (max-width: 720px) {
+  .cr-bar-row { grid-template-columns: 34px 1fr 84px; }
+  .cr-bar-row:has(.cr-bar-label-wide) { grid-template-columns: minmax(90px, 32%) 1fr 84px; }
+}
+
+/* Tables, stat tiles and bars sit on solid cards with a visible border. */
+html body .cr-playing-stat-card, html body .cr-ps-col-card, html body .cr-chart-summary-card,
+html body .cr-chart-section, html body .cr-rp-scroll, html body .cr-standings, html body .cr-home-st {
+  background: var(--cr-card); border: 1px solid #cfd9e4;
+}
+html body .cr-chart-section, html body .cr-ps-col-card { border-radius: 12px; padding: 14px 16px; }
+
+/* The court shows only in the margins: a solid light-blue band sits behind
+   the content column on computers, so the court never shows through it. */
+@media (min-width: 1000px) {
+  .cr-has-sb .cr-shell-main::after {
+    content: ""; position: fixed; z-index: -1; pointer-events: none;
+    top: var(--cr-hh); bottom: 0; width: calc(var(--cr-col) + 48px);
+    left: calc(var(--cr-sb-w) + (100% - var(--cr-sb-w) - var(--cr-col) - 48px) / 2);
+    background: var(--cr-page);
+  }
+  body.cr-ctx-division_teams-show .cr-shell-main::after { display: none; }
+}
+
+/* All text navy (Tara, Nov 19 2026): links too (underlined so they still read as links). */
+html body .cr-main a:not([class]), html body .cr-back-link, html body .cr-back-link a, html body .cr-rp-plink,
+html body .cr-fr-box-link, html body .cr-rp-hero-link, html body .cr-enter-results-link, html body .cr-ps-playerlink,
+html body .cr-pp-head-link, html body .cr-archive-row-record, html body .cr-dp-tag, html body .cr-pp-city-edit summary, html body .cr-pp-city-edit > summary,
+html body .cr-archive-league-name, html body .cr-archive-count, html body .cr-captain-col-stat,
+html body .cr-deltri-record, html body .cr-st-n, html body .cr-roster-rating, html body .cr-roster a,
+html body .cr-main [style*="--cr-gold"], html body .cr-main [style*="--cr-text-light"] { color: var(--cr-navy) !important; }
+html body .cr-main a:not([class]), html body .cr-rp-hero-link, html body .cr-pp-head-link { text-decoration: underline; text-decoration-color: var(--cr-court-green); text-underline-offset: 3px; }
+html body .cr-roster-history-link, html body button.cr-roster-history-link { color: var(--cr-navy) !important; background: #fff; border: 1px solid #cfd9e4; }
+
+/* ================================================================
+   DESIGN SYSTEM (Tara, Nov 19 2026) — one system on every page.
+   Navy #1B2A4A for ALL text; gold #C9A227 primary buttons with navy text;
+   Court Green #6CAF7E the only other accent (tint #E4F3E8 for your own row);
+   every card solid cream/white, 1px visible border, same radius + padding.
+   ================================================================ */
+:root {
+  --cr-navy: #1b2a4a; --cr-text: #1b2a4a; --cr-black: #1b2a4a;
+  --cr-text-muted: #1b2a4a; --cr-text-light: #1b2a4a; --cr-rose-ink: #1b2a4a;
+  --cr-accent: #c9a227; --cr-gold-btn: #c9a227; --cr-gold-btn-hover: #b8931f;
+  --cr-card-border: #cfd9e4;
+  --cr-card-radius: 14px;
+  --cr-card-pad: 16px 18px;
+}
+
+/* Header Band match card. */
+.cr-band-grid { display: grid !important; grid-template-columns: 1fr; gap: 14px; }
+@media (min-width: 900px) { .cr-band-grid { grid-template-columns: 1fr 1fr; } }
+.cr-band-card {
+  display: flex; flex-direction: column; min-width: 0;
+  background: var(--cr-card); border: 1px solid var(--cr-card-border); border-radius: var(--cr-card-radius);
+  overflow: hidden; color: var(--cr-navy);
+  transition: box-shadow .15s ease;
+}
+@media (hover: hover) { .cr-band-card[onclick]:hover { box-shadow: 0 4px 14px rgba(27, 42, 74, 0.10); } }
+.cr-band-head {
+  display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+  background: var(--cr-court-green-tint); border-bottom: 1px solid var(--cr-court-green-line);
+  padding: 10px 18px; font-size: 0.86rem; font-weight: 700; color: var(--cr-navy);
+}
+.cr-band-dot { font-weight: 700; }
+.cr-band-pill, .cr-band-status {
+  display: inline-flex; align-items: center; height: 22px; padding: 0 9px; border-radius: 999px;
+  font-size: 0.7rem; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase;
+  background: #fff; border: 1px solid var(--cr-court-green); color: var(--cr-navy);
+}
+.cr-band-status { margin-left: auto; text-transform: none; letter-spacing: 0; font-size: 0.74rem; border-color: var(--cr-card-border); }
+.cr-band-status-you { border-color: var(--cr-court-green); }
+.cr-band-body { padding: 14px 18px 12px; display: flex; flex-direction: column; gap: 3px; flex: 1; }
+.cr-band-league { font-size: 0.7rem; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: var(--cr-navy); }
+html body .cr-band-title {
+  margin: 2px 0 2px; font-family: var(--cr-serif); font-weight: 600; font-size: 1.12rem; line-height: 1.25;
+  color: var(--cr-navy); text-transform: none; letter-spacing: 0; overflow-wrap: anywhere;
+}
+.cr-band-teams { font-size: 0.84rem; color: var(--cr-navy); }
+.cr-band-venue { margin-top: 6px; font-size: 0.84rem; color: var(--cr-navy); }
+.cr-band-venue .cr-venue, .cr-band-venue .cr-venue-name, .cr-band-venue .cr-venue-line { color: var(--cr-navy) !important; }
+.cr-band-venue-tbd { font-style: italic; }
+.cr-band-actions {
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  border-top: 1px solid var(--cr-card-border); padding: 12px 18px;
+}
+html body .cr-band-btn {
+  display: inline-flex; align-items: center; justify-content: center; min-height: 38px; padding: 0 18px;
+  border-radius: 10px; background: var(--cr-gold-btn); color: var(--cr-navy) !important;
+  font-weight: 800; font-size: 0.88rem; text-decoration: none !important; border: 1px solid var(--cr-gold-btn); white-space: nowrap;
+}
+html body .cr-band-btn:hover { background: var(--cr-gold-btn-hover); }
+.cr-band-actions .cr-my-week-right { display: flex; gap: 8px; margin: 0; flex-direction: row; }
+.cr-band-actions .cr-cal-btn { width: 36px; height: 36px; border: 1px solid var(--cr-card-border); background: #fff; color: var(--cr-navy); border-radius: 10px; }
+/* The old row grid must not apply to band cards. */
+.cr-band-grid > .cr-band-card.cr-cu-row { display: flex !important; grid-template-columns: none !important; padding: 0 !important; }
+html body .cr-band-card { align-items: stretch; text-align: left; padding: 0; margin: 0; }
+html body .cr-band-card > * { width: 100%; box-sizing: border-box; }
+.cr-band-head .cr-band-status { margin-left: auto; }
+html body .cr-band-grid { max-width: var(--cr-col); width: 100%; margin-left: auto; margin-right: auto; box-sizing: border-box; }
+html body .cr-band-actions .cr-cal-btn, html body .cr-band-actions .cr-share-icon {
+  display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; padding: 0; margin: 0;
+  border: 1px solid var(--cr-card-border); background: #fff; color: var(--cr-navy); border-radius: 10px; box-sizing: border-box;
+}
+
+/* Logo tile (Tara, Nov 19 2026): a tennis court in the site palette (court-blue court, court-green surround,
+   white lines) with the same bouncing ball. */
+html body .cr-brand-ball {
+  background: #6CAF7E url("/logo-court.svg") center / cover no-repeat;
+  box-shadow: 0 2px 8px rgba(27, 42, 74, 0.22); border: 1px solid rgba(27, 42, 74, 0.12);
+}
+
+/* ================================================================
+   MOCKUP LOOK (Tara's "C. Header Band" mockup, Nov 19 2026) — the model
+   for every page: white cards with a soft 1px border, a green-tint band,
+   navy headings, soft slate for secondary lines, pill-shaped gold button,
+   plain outline icons.
+   ================================================================ */
+:root {
+  --cr-card: #ffffff;
+  --cr-card-border: #dde3ea;
+  --cr-slate: #5d6b85;          /* secondary lines (league label, "vs.", address) */
+  --cr-text-muted: #5d6b85;
+  --cr-text-light: #5d6b85;
+}
+html body .cr-band-card { background: #fff; border: 1px solid var(--cr-card-border); border-radius: 16px; box-shadow: none; }
+html body .cr-band-head {
+  justify-content: space-between; flex-wrap: nowrap; gap: 10px;
+  background: var(--cr-court-green-tint); border-bottom: 0; padding: 14px 20px;
+}
+html body .cr-band-when { font-size: 1.02rem; font-weight: 700; color: var(--cr-navy); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+html body .cr-band-pill {
+  height: auto; padding: 4px 10px; border: 0; border-radius: 6px; background: #fff;
+  font-size: 0.78rem; font-weight: 800; letter-spacing: 0.06em; color: var(--cr-navy); flex-shrink: 0;
+}
+html body .cr-band-body { padding: 16px 20px 16px; gap: 6px; }
+html body .cr-band-league { font-size: 0.74rem; font-weight: 800; letter-spacing: 0.14em; color: var(--cr-slate); }
+html body .cr-band-title { margin: 0; font-family: var(--cr-serif); font-size: 1.45rem; font-weight: 700; line-height: 1.2; }
+html body .cr-band-title-vs { font-family: Inter, system-ui, -apple-system, sans-serif; font-size: 1rem; font-weight: 500; color: var(--cr-slate); }
+.cr-band-chip {
+  display: inline-block; padding: 3px 9px; border-radius: 6px; background: var(--cr-navy); color: var(--cr-gold-btn);
+  font-size: 0.82rem; font-weight: 700;
+}
+.cr-band-note { font-size: 0.84rem; font-weight: 600; color: var(--cr-slate); }
+html body .cr-band-venue { margin-top: 4px; }
+.cr-band-venue-name { font-size: 0.98rem; font-weight: 700; color: var(--cr-navy); }
+.cr-band-venue-addr { font-size: 0.92rem; color: var(--cr-slate); }
+html body .cr-band-actions {
+  margin-top: 10px; padding: 14px 0 0; border-top: 1px solid var(--cr-card-border);
+  display: flex; align-items: center; justify-content: space-between;
+}
+html body .cr-band-btn {
+  min-height: 44px; padding: 0 26px; border-radius: 999px; border: 0; background: var(--cr-gold-btn);
+  color: var(--cr-navy) !important; font-size: 0.98rem; font-weight: 700;
+}
+html body .cr-band-actions .cr-cal-btn, html body .cr-band-actions .cr-share-icon {
+  width: 36px; height: 36px; border: 0; background: transparent; color: var(--cr-navy);
+}
+html body .cr-band-actions .cr-cal-btn svg, html body .cr-band-actions .cr-share-icon svg { width: 22px; height: 22px; stroke-width: 1.8; }
+@media (max-width: 720px) {
+  html body .cr-band-title { font-size: 1.3rem; }
+}
+html body .cr-band-body { flex: 1 1 auto; }
+html body .cr-band-actions { margin-top: auto; }
+html body .cr-band-venue + .cr-band-actions, html body .cr-band-note + .cr-band-actions { margin-top: auto; }
+html body .cr-band-body > .cr-band-actions { margin-top: auto; padding-top: 14px; }
+html body .cr-band-body > :nth-last-child(2) { margin-bottom: 10px; }
+
+/* Logo wordmark in the site's heading font, Fraunces (Tara, Nov 19 2026). */
+html body .cr-brand-text {
+  font-family: var(--cr-serif); font-weight: 700; font-size: 1.95rem; letter-spacing: 0; text-transform: none; line-height: 1;
+}
+html body .cr-brand-your {
+  font-family: Inter, system-ui, -apple-system, sans-serif; font-weight: 800; font-size: 0.6rem; letter-spacing: 0.32em;
+  margin: 0 0 3px 1px; color: var(--cr-slate);
+}
+@media (max-width: 720px) { html body .cr-brand-text { font-size: 1.3rem; letter-spacing: 0; } }
+
+/* Header Band fixes (Tara, Nov 19 2026, #334): TWO pills on every band (date · time, and status);
+   ALL secondary text navy #1B2A4A; only the team / event name in the serif. */
+:root { --cr-slate: #1b2a4a; --cr-text-muted: #1b2a4a; --cr-text-light: #1b2a4a; }
+html body .cr-band-head { justify-content: space-between; }
+html body .cr-band-when {
+  display: inline-flex; align-items: center; padding: 5px 12px; border-radius: 999px; background: #fff;
+  border: 1px solid var(--cr-court-green); font-size: 0.92rem; font-weight: 700; color: var(--cr-navy);
+}
+html body .cr-band-pill {
+  padding: 5px 11px; border-radius: 999px; background: #fff; border: 1px solid var(--cr-court-green);
+  font-size: 0.74rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: var(--cr-navy);
+}
+html body .cr-band-league, html body .cr-band-title-vs, html body .cr-band-teams, html body .cr-band-note,
+html body .cr-band-venue-addr, html body .cr-band-venue-name { color: var(--cr-navy) !important; }
+html body .cr-band-title-main { font-family: var(--cr-serif); }
+html body .cr-band-title-vs { font-family: Inter, system-ui, -apple-system, sans-serif; font-weight: 500; }
+html body .cr-band-teams { font-size: 0.86rem; font-weight: 600; }
+html body .cr-band-note { font-weight: 700; }
+html body .cr-fr-past-title { margin: 26px 0 12px; }
+.cr-fr-past-more { margin: 10px 0 0; font-size: 0.9rem; }
+@media (min-width: 900px) { html body .cr-fr-more.cr-fr-more-two { grid-template-columns: 1fr 1fr; } }
+html body .cr-fr-past-title { max-width: var(--cr-col); width: 100%; box-sizing: border-box; margin-left: auto; margin-right: auto; padding-left: 0; padding-right: 0; }
+@media (max-width: 720px) {
+  html body .cr-band-head { padding: 12px 14px; gap: 8px; flex-wrap: wrap; }
+  html body .cr-band-when { font-size: 0.82rem; padding: 4px 10px; white-space: nowrap; overflow: visible; text-overflow: clip; }
+  html body .cr-band-pill { font-size: 0.66rem; padding: 4px 9px; }
+}
+
+/* Logo tile: solid court green with the bouncing ball, no court lines (Tara, Nov 19 2026). */
+html body .cr-brand-ball { background: #6CAF7E; }
+
+/* Logo: solid court green with a bouncing yellow tennis ball (drawn, so every phone shows the same ball). */
+html body .cr-brand-ball { position: relative; overflow: hidden; background: #6CAF7E; }
+html body .cr-brand-ball-inner {
+  position: absolute; left: 50%; bottom: 16%; width: 46%; height: 46%; margin-left: -23%;
+  background: url("/logo-ball.svg") center / contain no-repeat;
+  animation: cr-logo-hop 1.1s cubic-bezier(.3, 0, .5, 1) infinite;
+}
+@keyframes cr-logo-hop {
+  0%, 100% { transform: translateY(0) scale(1.08, .9); }
+  12% { transform: translateY(-6%) scale(1, 1); }
+  50% { transform: translateY(-55%) scale(.96, 1.04); }
+  88% { transform: translateY(-6%) scale(1, 1); }
+}
+
+/* Card buttons in deep court blue with white letters (Tara picked option C, Nov 19 2026).
+   The "You're on 6D" / "You're in" tag goes navy with white letters (no gold on the cards). */
+:root { --cr-card-btn: #3F6C8A; --cr-card-btn-hover: #335a74; }
+html body .cr-band-btn { background: var(--cr-card-btn) !important; color: #fff !important; border: 0; }
+html body .cr-band-btn:hover { background: var(--cr-card-btn-hover) !important; }
+html body .cr-band-chip { background: var(--cr-navy); color: #fff !important; }
+
+/* Month on the navy date squares must show (it went navy-on-navy in #330). */
+html body .cr-sched-date-mon { color: #fff !important; opacity: .85; }
+/* Weekday above the month on the schedule date squares (Tara: "month, and day"). */
+html body .cr-sched-date-dow { font-size: 0.58rem; font-weight: 800; letter-spacing: 1px; color: #fff; opacity: .75; line-height: 1.2; }
+
+/* Section A (Tara, Nov 21 2026): split titles — only the team / event name is
+   in the serif; "vs Smashers" stays in the body sans (team schedule rows). */
+html body .cr-title-main { font-family: var(--cr-serif); }
+html body .cr-title-vs { font-family: Inter, system-ui, -apple-system, sans-serif; font-weight: 500; letter-spacing: 0; }
+
+/* Tara's list #19/#31/#75 (Nov 22 2026): "Team colors:" in navy like all other
+   secondary text, and every swatch outlined so a white colour still shows. */
+html body .cr-team-colors-text, html body .cr-team-colors-label { color: var(--cr-navy) !important; }
+html body .cr-team-colors-label { font-weight: 700; }
+html body .cr-team-colors .cr-color-dot { box-shadow: 0 0 0 1px var(--cr-navy); }
+/* My Teams standings gained a T column (Tara's list #17/#37): T is column 5,
+   Win% 6, Last 7, Next 8. Phones show W · L · T (Win% and Next stay hidden, as before). */
+@media (min-width: 900px) {
+  html body .cr-home-st th:nth-child(5) { width: 44px; }
+  html body .cr-home-st th:nth-child(6) { width: 72px; }
+}
+@media (max-width: 640px) {
+  html body .cr-home-st thead th:nth-child(5), html body .cr-home-st tbody td:nth-child(5) { display: table-cell; }
+  html body .cr-home-st thead th:nth-child(6), html body .cr-home-st tbody td:nth-child(6) { display: none; }
+}
+html body .cr-home-st .cr-st-t { font-weight: 700; color: var(--cr-navy); }

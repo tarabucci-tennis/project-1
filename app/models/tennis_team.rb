@@ -162,15 +162,24 @@ class TennisTeam < ApplicationRecord
     matches.count { |m| m.result == "loss" }
   end
 
-  def record_label
-    "#{wins_count}-#{losses_count}"
+  def ties_count
+    matches.count { |m| m.result == "tie" }
   end
 
-  # Win percentage over decided matches (for the standings table). nil when
+  # "3-3", or "3-3-1" (W-L-T) once a match has been tied, so a tie is never
+  # silently dropped from the record.
+  def record_label
+    ties = ties_count
+    ties.positive? ? "#{wins_count}-#{losses_count}-#{ties}" : "#{wins_count}-#{losses_count}"
+  end
+
+  # Win percentage over played matches (for the standings table); a tie
+  # counts as half a win (Bux-Mont gives each team half a point). nil when
   # nothing has been played yet so the view can show a dash.
   def win_pct
-    decided = wins_count + losses_count
-    decided.zero? ? nil : (wins_count.to_f / decided * 100).round
+    ties = ties_count
+    played = wins_count + losses_count + ties
+    played.zero? ? nil : ((wins_count + ties / 2.0) / played * 100).round
   end
 
   # Recent results, oldest→newest: e.g. ["W", "L", "W"]. Iterates the

@@ -6,11 +6,13 @@ class LineupsController < ApplicationController
   def dashboard
     owned_team_ids  = current_user.tennis_teams.pluck(:id) rescue []
     member_team_ids = current_user.member_teams.pluck(:id) rescue []
-    @teams = TennisTeam.where(id: (owned_team_ids + member_team_ids).uniq)
+    all_teams = TennisTeam.where(id: (owned_team_ids + member_team_ids).uniq).to_a
+    # Current teams only (same rule as My Teams and the profile).
+    @teams, = current_user.current_and_past_teams(all_teams)
     @upcoming = []
 
     @teams.each do |team|
-      next unless team.respond_to?(:matches)
+      season = team.matches.reject(&:playoff?).sort_by(&:match_date)
       team.matches.where("match_date >= ?", Date.current).order(:match_date).each do |match|
         lineup = match.lineup rescue nil
         slot   = lineup&.lineup_slots&.find_by(user_id: current_user.id) rescue nil
@@ -20,12 +22,16 @@ class LineupsController < ApplicationController
           lineup: lineup,
           published: lineup&.published?,
           my_slot: slot,
-          is_captain: team.respond_to?(:captain?) ? team.captain?(current_user) : false
+          is_captain: team.respond_to?(:captain?) ? team.captain?(current_user) : false,
+          meeting: meeting_label(season, match)
         }
       end
     end
 
     @upcoming.sort_by! { |u| u[:match].match_date }
+    # Every current team is accounted for: those with nothing ahead are named.
+    with_matches = @upcoming.map { |u| u[:team].id }.uniq
+    @teams_without_upcoming = @teams.reject { |t| with_matches.include?(t.id) }
   end
 
   # GET /teams/:team_id/matches/:match_id/lineup/edit — captain sets lineup
@@ -43,6 +49,12 @@ class LineupsController < ApplicationController
     # earlier edit session, we'll fill in what's missing instead of
     # only creating slots when the lineup is completely empty.
     ensure_default_slots(@lineup)
+    # Start-time choices: the match time first, then every time already
+    # used on this lineup (so a second line at 10:30 is one tap).
+    match_time = LineStartTime.normalize(@match.match_time)
+    @match_time_label = match_time ? "#{match_time} (match time)" : "Match time"
+    @used_times = @lineup.lineup_slots.where.not(start_time: [ nil, "" ]).distinct.pluck(:start_time)
+                         .reject { |t| t == match_time }.sort_by { |t| LineStartTime.sort_key(t) }
 
     @slots = @lineup.lineup_slots.includes(:user).order(position: :asc)
     load_last_week
@@ -108,6 +120,23 @@ class LineupsController < ApplicationController
         end
       end
 
+      # Each line's start time (split court times). Blank or the match's own
+      # time = no separate time. Picked fresh every week; never copied.
+      if params[:line_times].present?
+        match_time = LineStartTime.normalize(@match.match_time)
+        params[:line_times].each do |key, picked|
+          line_type, position = key.to_s.split("-", 2)
+          next unless %w[singles doubles].include?(line_type) && position.to_s.match?(/\A\d+\z/)
+          raw = picked == "__other" ? params.dig(:line_times_other, key) : picked
+          time = LineStartTime.normalize(raw)
+          time = nil if time == match_time
+          @lineup.lineup_slots.where(line_type: line_type, position: position.to_i).update_all(start_time: time)
+        end
+      end
+
+      # When it was last saved (shown as "Draft · saved Nov 17, 3:40 PM").
+      @lineup.touch
+
       # Publish if requested
       @emailed = 0
       if params[:publish] == "true" && !@lineup.published?
@@ -160,6 +189,15 @@ class LineupsController < ApplicationController
   end
 
   private
+
+  # "Meeting 2 of 2" when a team plays the same opponent more than once this
+  # season, so the two rows can be told apart; nil otherwise.
+  def meeting_label(season, match)
+    key = ->(m) { m.opponent.to_s.downcase.gsub(/[^a-z0-9]/, "") }
+    same = season.select { |m| key.call(m) == key.call(match) && key.call(m).present? }
+    return nil if same.size < 2
+    "Meeting #{same.index { |m| m.id == match.id }.to_i + 1} of #{same.size}"
+  end
 
   # Email goes out only once the server has a Gmail login (SMTP_USERNAME / SMTP_PASSWORD).
   def email_ready?

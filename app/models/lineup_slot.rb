@@ -9,6 +9,11 @@ class LineupSlot < ApplicationRecord
   validates :line_type, presence: true, inclusion: { in: %w[singles doubles] }
   validates :position, presence: true
 
+  # This line's start time ("10:30 AM"), or the match's time if it has none.
+  def effective_start_time
+    start_time.presence || LineStartTime.normalize(lineup&.match&.match_time)
+  end
+
   def line_label
     if line_type == "singles"
       "#{position}S"

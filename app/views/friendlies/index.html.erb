@@ -1,31 +1,33 @@
 <% content_for :title, "Friendlies · Court Report" %>
 
-<div class="cr-rp-page cr-rp-narrow">
+<div class="cr-rp-page cr-fr-index-page">
   <%= link_to "← My Teams", teams_path, class: "cr-back-link" %>
 
   <div class="cr-fr-index-head">
     <h1 class="cr-rp-name">Friendlies</h1>
-    <%= link_to "+ New friendly", new_friendly_path, class: "cr-btn cr-btn-gold" %>
+    <%= link_to "+ Book a friendly", new_friendly_path, class: "cr-btn cr-btn-gold" %>
   </div>
 
   <% if @friendlies.any? %>
-    <div class="cr-fr-index">
-      <% @friendlies.each do |f| %>
-        <% n = f.active_spots.size %>
-        <%= link_to friendly_path(f), class: "cr-fr-index-row" do %>
-          <div class="cr-fr-index-main">
-            <div class="cr-fr-index-title"><%= f.title %></div>
-            <div class="cr-fr-index-sub">
-              <%= f.starts_at.strftime("%a, %b %-d") %> · <%= f.time_label %><% if f.location.present? %> · <%= f.location %><% end %>
-            </div>
-            <div class="cr-fr-index-sub">
-              <%= n %> signed up · <%= f.courts_needed %> <%= "court".pluralize(f.courts_needed) %><%= " · #{f.waitlist.size} on the waitlist" if f.courts_needed.positive? && f.waitlist.any? %>
-            </div>
-          </div>
-          <span class="cr-fr-badge <%= f.done? ? "cr-fr-badge-done" : "cr-fr-badge-up" %>"><%= f.done? ? "Done" : "Upcoming" %></span>
+    <%# Same Header Band cards as the My Teams Friendlies tab: coming up first
+        (soonest first), then past ones (latest first). %>
+    <% upcoming, past = @friendlies.partition { |f| f.starts_at >= Time.current.beginning_of_day } %>
+    <% if upcoming.any? %>
+      <h2 class="cr-section-title cr-fr-past-title">Coming up</h2>
+      <div class="cr-my-week-list cr-fr-list cr-band-grid">
+        <% upcoming.sort_by(&:starts_at).each do |f| %>
+          <%= render "teams/event_card", item: f %>
         <% end %>
-      <% end %>
-    </div>
+      </div>
+    <% end %>
+    <% if past.any? %>
+      <h2 class="cr-section-title cr-fr-past-title">Past friendlies</h2>
+      <div class="cr-my-week-list cr-fr-list cr-band-grid cr-fr-past">
+        <% past.each do |f| %>
+          <%= render "teams/event_card", item: f %>
+        <% end %>
+      </div>
+    <% end %>
   <% else %>
     <p class="cr-coming-up-empty">No friendlies yet. Book one and share the link: people add their names and Court Report makes the lineup.</p>
   <% end %>

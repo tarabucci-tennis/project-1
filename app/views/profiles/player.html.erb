@@ -4,19 +4,13 @@
 
   <%= link_to "← Back", :back, class: "cr-back-link" %>
 
-  <% if @is_self && current_user&.admin? %>
-    <%# Phones hide the header name menu, so the founder link lives here too. %>
+  <% if @is_self %>
+    <%# Phones hide the header name menu, so these links live here too. %>
     <div class="cr-founder-links">
-      <%= link_to "Site members →", admin_members_path, class: "cr-btn cr-btn-outline cr-btn-compact" %>
-    </div>
-  <% end %>
-
-  <% if current_user&.admin? && !@is_self %>
-    <%# Admin only: remove a junk or spam account from the site. %>
-    <div class="cr-founder-links">
-      <%= button_to "Remove this account", user_path(@user, return_to: "members"), method: :delete,
-            class: "cr-btn cr-btn-outline cr-btn-compact cr-btn-danger-text",
-            form: { data: { turbo_confirm: "Remove this account from Court Report? Their team spots and any lineup or score entries with their name are removed too. This can't be undone." } } %>
+      <%= link_to "Settings →", settings_path, class: "cr-btn cr-btn-outline cr-btn-compact" %>
+      <% if current_user&.admin? %>
+        <%= link_to "Site members →", admin_members_path, class: "cr-btn cr-btn-outline cr-btn-compact" %>
+      <% end %>
     </div>
   <% end %>
 
@@ -30,7 +24,7 @@
   %>
   <div class="cr-pp">
     <div class="cr-pp-head">
-      <span class="cr-pp-head-title">Player Profile</span>
+      <span class="cr-pp-head-title"><%= @is_self ? "My Profile" : "Player Profile" %></span>
       <a href="#cr-advanced-stats" class="cr-pp-head-link">Advanced Player Stats ↓</a>
     </div>
 
@@ -45,14 +39,21 @@
               <% if @user.location.present? %><span class="cr-pp-loc"><%= @user.location %></span><% end %>
             </div>
             <div class="cr-pp-sub">
-              <% if @is_self %><span class="cr-pp-you">You</span> · <% end %><%= [ gender, section ].compact.join(" · ").presence || "USTA" %>
+              <% bits = [ ({ "F" => "Women's", "M" => "Men's" }[gender.to_s.upcase] || gender), (section.present? ? "USTA #{section}" : nil) ].compact %>
+              <%= bits.join(" · ") %>
             </div>
           </div>
+          <%# One true USTA (NTRP) rating per player; the date is when USTA
+              published it (12/31 = the year-end rating). No rating → say so. %>
           <div class="cr-pp-metric">
-            <div class="cr-pp-metric-val"><%= @user.ntrp_rating.present? ? @user.ntrp_rating : "—" %></div>
-            <div class="cr-pp-metric-cap">
-              NTRP<% if @user.ntrp_rating_date.present? %><br><%= @user.ntrp_rating_date.strftime("%-m/%-d/%Y") %><% end %>
-            </div>
+            <% if @user.ntrp_rating.present? %>
+              <div class="cr-pp-metric-val"><%= @user.ntrp_rating %></div>
+              <div class="cr-pp-metric-cap">
+                USTA rating<br><% if @user.ntrp_rating_date.present? %><%= @user.ntrp_rating_date.month == 12 && @user.ntrp_rating_date.day == 31 ? "year-end #{@user.ntrp_rating_date.year}" : "as of #{@user.ntrp_rating_date.strftime('%-m/%-d/%Y')}" %><% else %>date not on file<% end %>
+              </div>
+            <% else %>
+              <div class="cr-pp-metric-cap cr-pp-metric-none">No USTA<br>rating yet</div>
+            <% end %>
           </div>
         </div>
         <% if @is_self %>
@@ -90,37 +91,36 @@
         <% end %>
       </div>
 
+      <% if meter %>
       <div class="cr-pp-right">
-        <% if meter %>
           <div class="cr-pp-meter-title"><%= meter[:title] %></div>
           <svg viewBox="0 0 260 150" class="cr-pp-meter" role="img" aria-label="Rating meter">
-            <path d="M26,130 A104,104 0 0 1 45.86,68.87" fill="none" stroke="#dc2626" stroke-width="20" stroke-linecap="butt"/>
-            <path d="M45.86,68.87 A104,104 0 0 1 97.86,31.09" fill="none" stroke="#f97316" stroke-width="20"/>
-            <path d="M97.86,31.09 A104,104 0 0 1 162.14,31.09" fill="none" stroke="#eab308" stroke-width="20"/>
-            <path d="M162.14,31.09 A104,104 0 0 1 214.14,68.87" fill="none" stroke="#84cc16" stroke-width="20"/>
-            <path d="M214.14,68.87 A104,104 0 0 1 234,130" fill="none" stroke="#16a34a" stroke-width="20" stroke-linecap="butt"/>
+            <path d="M26,130 A104,104 0 0 1 45.86,68.87" fill="none" stroke="#d6ecf9" stroke-width="20" stroke-linecap="butt"/>
+            <path d="M45.86,68.87 A104,104 0 0 1 97.86,31.09" fill="none" stroke="#a9c8e2" stroke-width="20"/>
+            <path d="M97.86,31.09 A104,104 0 0 1 162.14,31.09" fill="none" stroke="#7799bd" stroke-width="20"/>
+            <path d="M162.14,31.09 A104,104 0 0 1 214.14,68.87" fill="none" stroke="#476a94" stroke-width="20"/>
+            <path d="M214.14,68.87 A104,104 0 0 1 234,130" fill="none" stroke="#182740" stroke-width="20" stroke-linecap="butt"/>
             <line x1="130" y1="130" x2="<%= meter[:needle_x] %>" y2="<%= meter[:needle_y] %>"
                   stroke="#0a1628" stroke-width="4" stroke-linecap="round"/>
             <circle cx="130" cy="130" r="8" fill="#0a1628"/>
           </svg>
           <div class="cr-pp-meter-scale"><span>Low</span><span>Average</span><span>High</span></div>
           <div class="cr-pp-meter-band"><%= meter[:band_label] %></div>
-        <% end %>
-        <div class="cr-pp-links">
-          <a href="#cr-advanced-stats" class="cr-pp-link">Advanced Stats ↓</a>
-        </div>
       </div>
+      <% end %>
     </div>
   </div>
 
   <%# ── Team switcher: see this player's stats one team at a time ── %>
-  <% if @teams.size > 1 %>
+  <% switch_teams = @current_teams + ([ @selected_team ] - @current_teams).compact %>
+  <% if switch_teams.size > 1 || (@selected_team && switch_teams.any?) %>
     <div class="cr-team-switch">
       <label class="cr-team-switch-label" for="cr-team-select">Stats for</label>
       <select id="cr-team-select" class="cr-team-switch-select"
               onchange="if (this.value) window.location.href = this.value;">
         <option value="<%= player_path(@user) %>" <%= "selected" if @selected_team.nil? %>>All Teams</option>
-        <% @teams.each do |t| %>
+        <%# Current teams only (past seasons are listed under Teams below). %>
+        <% switch_teams.each do |t| %>
           <option value="<%= player_path(@user, team: t.id) %>" <%= "selected" if @selected_team&.id == t.id %>><%= t.name %></option>
         <% end %>
       </select>
@@ -161,10 +161,11 @@
           <div class="cr-lineup-fact-label">Best Partner</div>
           <div class="cr-lineup-fact-value">
             <% if @playing_stats[:best_partner] %>
-              <%= @playing_stats[:best_partner][:name] %>
-              <span style="color: var(--cr-text-muted); font-weight: 500; font-size: 0.85rem;">(<%= @playing_stats[:best_partner][:pct] %>%)</span>
+              <%# Name on one line, the numbers neatly on the next (not a ragged wrap). %>
+              <span class="cr-fact-name"><%= @playing_stats[:best_partner][:name] %></span>
+              <span class="cr-fact-sub"><%= @playing_stats[:best_partner][:pct] %>% · <%= pluralize(@playing_stats[:best_partner][:total], "match") %></span>
             <% else %>
-              —
+              <span style="color: var(--cr-text-muted); font-weight: 500; font-size: 0.85rem;">Needs <%= ProfilesController::MIN_SAMPLE %>+ matches together</span>
             <% end %>
           </div>
         </div>
@@ -191,28 +192,29 @@
   <% if @playing_stats.present? && !@playing_stats[:is_empty] %>
     <section class="cr-section">
       <h2 class="cr-section-title">Playing Stats</h2>
+      <p class="cr-stats-scope"><%= render "profiles/stats_scope", record: @record, team: @selected_team %></p>
 
-      <%# Overall stats row %>
+      <%# Overall stats row. No matches → "No singles yet", never "0%";
+          under 3 matches → the record, but no % (too few to mean anything). %>
+      <% min = ProfilesController::MIN_SAMPLE %>
       <div class="cr-playing-stats-grid">
-        <div class="cr-playing-stat-card">
-          <div class="cr-playing-stat-value"><%= @playing_stats[:overall][:pct] %>%</div>
-          <div class="cr-playing-stat-label">Overall Win %</div>
-          <div class="cr-playing-stat-detail"><%= @playing_stats[:overall][:won] %> of <%= @playing_stats[:overall][:total] %> matches</div>
-        </div>
-        <div class="cr-playing-stat-card">
-          <div class="cr-playing-stat-value"><%= @playing_stats[:singles][:pct] %>%</div>
-          <div class="cr-playing-stat-label">Singles Win %</div>
-          <div class="cr-playing-stat-detail"><%= @playing_stats[:singles][:won] %> of <%= @playing_stats[:singles][:total] %> matches</div>
-        </div>
-        <div class="cr-playing-stat-card">
-          <div class="cr-playing-stat-value"><%= @playing_stats[:doubles][:pct] %>%</div>
-          <div class="cr-playing-stat-label">Doubles Win %</div>
-          <div class="cr-playing-stat-detail"><%= @playing_stats[:doubles][:won] %> of <%= @playing_stats[:doubles][:total] %> matches</div>
-        </div>
+        <% [ [ :overall, "Overall Win %", "matches" ], [ :singles, "Singles Win %", "singles" ], [ :doubles, "Doubles Win %", "doubles" ] ].each do |key, label, noun| %>
+          <% d = @playing_stats[key] %>
+          <div class="cr-playing-stat-card">
+            <div class="cr-playing-stat-value<%= " cr-playing-stat-value-none" if d[:total].zero? %>"><%= d[:total].positive? ? "#{d[:pct]}%" : "—" %></div>
+            <div class="cr-playing-stat-label"><%= label %></div>
+            <div class="cr-playing-stat-detail">
+              <% if d[:total].zero? %>No <%= noun %> yet<% else %><%= d[:won] %> of <%= pluralize(d[:total], "match") %><% end %>
+            </div>
+          </div>
+        <% end %>
       </div>
 
+      <%# Win % by Line / Partner / Team side by side on computers, stacked on phones. %>
+      <div class="cr-ps-cols">
       <%# Win % by Line %>
       <% if @playing_stats[:by_line].any? %>
+        <div class="cr-ps-col-card">
         <h3 class="cr-section-subtitle" style="margin-top: 14px;">Win % by Line</h3>
         <div class="cr-playing-stats-table">
           <div class="cr-playing-stats-header">
@@ -223,15 +225,21 @@
           <% @playing_stats[:by_line].sort_by { |k, _| k }.each do |label, data| %>
             <div class="cr-playing-stats-row">
               <span class="cr-ps-col-line"><%= label %></span>
-              <span class="cr-ps-col-stat" style="font-weight: 700; color: <%= data[:pct] >= 50 ? 'var(--cr-green)' : 'var(--cr-red)' %>;"><%= data[:pct] %>%</span>
-              <span class="cr-ps-col-detail"><%= data[:won] %> of <%= data[:total] %> matches</span>
+              <% if data[:total].positive? %>
+                <span class="cr-ps-col-stat" style="font-weight: 700; color: var(--cr-navy);"><%= data[:pct] %>%</span>
+              <% else %>
+                <span class="cr-ps-col-stat cr-ps-col-muted">—</span>
+              <% end %>
+              <span class="cr-ps-col-detail"><%= data[:won] %>–<%= data[:total] - data[:won] %> (<%= pluralize(data[:total], "match") %>)</span>
             </div>
           <% end %>
+        </div>
         </div>
       <% end %>
 
       <%# Doubles Partners %>
       <% if @playing_stats[:partners].any? %>
+        <div class="cr-ps-col-card">
         <h3 class="cr-section-subtitle" style="margin-top: 14px;">Doubles Partner Win %</h3>
         <div class="cr-playing-stats-table">
           <div class="cr-playing-stats-header">
@@ -242,16 +250,50 @@
           <% @playing_stats[:partners].each do |partner| %>
             <div class="cr-playing-stats-row">
               <span class="cr-ps-col-name"><%= partner[:name] %></span>
-              <span class="cr-ps-col-stat" style="font-weight: 700; color: <%= partner[:pct] >= 50 ? 'var(--cr-green)' : 'var(--cr-red)' %>;"><%= partner[:pct] %>%</span>
-              <span class="cr-ps-col-detail"><%= partner[:won] %> of <%= partner[:total] %> matches</span>
+              <% if partner[:total].positive? %>
+                <span class="cr-ps-col-stat" style="font-weight: 700; color: var(--cr-navy);"><%= partner[:pct] %>%</span>
+              <% else %>
+                <span class="cr-ps-col-stat cr-ps-col-muted">—</span>
+              <% end %>
+              <span class="cr-ps-col-detail"><%= partner[:won] %>–<%= partner[:lost] %> (<%= pluralize(partner[:total], "match") %>)</span>
             </div>
           <% end %>
         </div>
-        <% if @playing_stats[:best_partner] %>
-          <div style="margin-top: 8px; font-size: 0.85rem; color: var(--cr-text-muted);">
-            Best Doubles Partner: <strong><%= @playing_stats[:best_partner][:name] %></strong> (<%= @playing_stats[:best_partner][:pct] %>%)
+        </div>
+      <% end %>
+
+      <%# Win % by Team %>
+      <% if @playing_stats[:by_team].size > 1 %>
+        <div class="cr-ps-col-card">
+        <h3 class="cr-section-subtitle" style="margin-top: 14px;">Win % by Team</h3>
+        <div class="cr-playing-stats-table">
+          <div class="cr-playing-stats-header">
+            <span class="cr-ps-col-name">Team</span>
+            <span class="cr-ps-col-stat">Win %</span>
+            <span class="cr-ps-col-detail">Record</span>
           </div>
-        <% end %>
+          <% @playing_stats[:by_team].each do |t| %>
+            <div class="cr-playing-stats-row">
+              <span class="cr-ps-col-name"><%= t[:name] %></span>
+              <% if t[:total].positive? %>
+                <span class="cr-ps-col-stat" style="font-weight: 700; color: var(--cr-navy);"><%= t[:pct] %>%</span>
+              <% else %>
+                <span class="cr-ps-col-stat cr-ps-col-muted">—</span>
+              <% end %>
+              <span class="cr-ps-col-detail"><%= t[:won] %>–<%= t[:total] - t[:won] %> (<%= pluralize(t[:total], "match") %>)</span>
+            </div>
+          <% end %>
+        </div>
+        </div>
+      <% end %>
+      </div>
+      <% if @playing_stats[:partners].any? %>
+        <div style="margin-top: 10px; font-size: 0.85rem; color: var(--cr-text-muted);">
+          <% if @playing_stats[:best_partner] %>
+            Best Doubles Partner: <strong><%= @playing_stats[:best_partner][:name] %></strong> (<%= @playing_stats[:best_partner][:pct] %>%, <%= @playing_stats[:best_partner][:won] %>–<%= @playing_stats[:best_partner][:lost] %>)
+          <% end %>
+          <div class="cr-ps-min-note">Best Partner needs <%= min %>+ matches together.</div>
+        </div>
       <% end %>
 
       <%# Recent Matches — tap a row to see the line's players + opponents %>
@@ -262,18 +304,18 @@
           <div class="cr-playing-stats-header">
             <span class="cr-ps-col-name">Opponent</span>
             <span class="cr-ps-col-line">Line</span>
-            <span class="cr-ps-col-stat">Score</span>
+            <span class="cr-ps-col-stat cr-ps-col-score">Score</span>
             <span class="cr-ps-col-detail">Result</span>
           </div>
           <% @playing_stats[:recent].each do |match| %>
             <details class="cr-ps-details">
               <summary class="cr-playing-stats-row cr-ps-summary">
                 <span class="cr-ps-col-name">
-                  <span class="cr-ps-caret">▸</span> vs. <%= match[:opponent] %>
+                  <span class="cr-ps-caret">▸</span> <%= match[:from_league_site] ? match[:opponent].presence || "League match" : "vs. #{match[:opponent]}" %>
                   <div style="font-size: 0.7rem; color: var(--cr-text-light);"><%= match[:team] %> · <%= match[:date].strftime("%-m/%-d/%y") %></div>
                 </span>
                 <span class="cr-ps-col-line"><%= match[:line_label] %></span>
-                <span class="cr-ps-col-stat"><%= match[:score].presence || "—" %></span>
+                <span class="cr-ps-col-stat cr-ps-col-score"><%= match[:score].presence || "—" %></span>
                 <span class="cr-ps-col-detail">
                   <span class="cr-result-badge <%= match[:result] == 'win' ? 'cr-result-badge-win' : 'cr-result-badge-loss' %>">
                     <%= match[:result] == 'win' ? 'W' : 'L' %>
@@ -315,179 +357,116 @@
     </section>
   <% end %>
 
-  <%# ── Teams ── %>
-  <% if @teams.any? %>
+  <%# ── Teams: current first, past seasons under their own heading ── %>
+  <% if @current_teams.any? || @past_teams.any? %>
     <section class="cr-section">
       <h2 class="cr-section-title">Teams</h2>
-      <div class="cr-match-list">
-        <% @teams.each do |team| %>
-          <%= link_to team_path(team), class: "cr-match-row", style: "text-decoration: none; color: inherit;" do %>
-            <div class="cr-match-date" style="min-width: auto; padding: 8px 14px;">
-              <div class="cr-match-date-month" style="font-size: 0.6rem;"><%= team.league_category == "Local" ? "DEL-TRI" : team.league_category.upcase %></div>
-            </div>
-            <div class="cr-match-info">
-              <div class="cr-match-opponent" style="font-size: 0.95rem;"><%= team.name %></div>
-              <div class="cr-match-location"><%= team.team_type %> · <%= team.season_name %></div>
-            </div>
-            <% membership = team.team_memberships.find { |m| m.user_id == @user.id } %>
-            <% if membership&.captain? %>
-              <div class="cr-roster-role cr-roster-role-captain">Captain</div>
-            <% end %>
-          <% end %>
-        <% end %>
-      </div>
-    </section>
-  <% end %>
-
-  <%# ── My Calendar: sync your whole calendar; tennis is highlighted gold ── %>
-  <% if @is_self %>
-    <section class="cr-section" id="my-tennis-calendar">
-      <h2 class="cr-section-title">My Calendar</h2>
-      <p class="cr-deltri-hint">
-        Paste your Google Calendar's secret iCal link and Court Report pulls your whole calendar,
-        with your <strong>tennis</strong> events — matches, clinics, friendlies —
-        <span class="cr-cal-tennis-ink">highlighted in gold</span>. It refreshes every night, and
-        <strong>only you</strong> can see your calendar here. In Google Calendar:
-        <strong>Settings → your calendar → “Secret address in iCal format”</strong>.
-      </p>
-      <%= form_with url: connect_calendar_path, method: :post, local: true, class: "cr-deltri-connect" do %>
-        <div class="cr-deltri-row">
-          <input type="url" name="ical_url" value="<%= @user.ical_url %>"
-                 placeholder="https://calendar.google.com/calendar/ical/.../basic.ics" class="cr-deltri-input">
-          <button type="submit" class="cr-btn cr-btn-gold cr-deltri-btn"><%= @user.ical_url.present? ? "Refresh" : "Connect" %></button>
-        </div>
-      <% end %>
-
-      <% if @external_events.any? %>
-        <h3 class="cr-section-subtitle" style="margin-top: 14px;">Upcoming on your calendar</h3>
+      <% if @current_teams.any? %>
         <div class="cr-match-list">
-          <% @external_events.each do |ev| %>
-            <div class="cr-match-row cr-cal-ev<%= ' cr-cal-ev-tennis' if ev.tennis %>">
-              <div class="cr-match-date" style="min-width: auto; padding: 8px 12px;">
-                <div class="cr-match-date-month" style="font-size: 0.62rem;"><%= ev.starts_at&.in_time_zone&.strftime("%-m/%-d") %></div>
-              </div>
-              <div class="cr-match-info">
-                <div class="cr-match-opponent" style="font-size: 0.9rem;"><% if ev.tennis %><span class="cr-cal-ev-ball">🎾</span> <% end %><%= ev.title %></div>
-                <div class="cr-match-location"><%= [ ev.time_label, ev.location.presence ].compact.join(" · ").presence || (ev.all_day ? "All day" : "") %></div>
-              </div>
-            </div>
-          <% end %>
+          <% @current_teams.each do |team| %><%= render "profiles/team_row", team: team, user: @user %><% end %>
         </div>
-      <% elsif @user.ical_url.present? %>
-        <p class="cr-deltri-empty">No upcoming events found in that calendar yet (we pull about two months back through next season).</p>
+      <% end %>
+      <% if @past_teams.any? %>
+        <h3 class="cr-section-subtitle" style="margin-top: 16px;">Past seasons</h3>
+        <div class="cr-match-list cr-pp-past-teams">
+          <% @past_teams.each do |team| %><%= render "profiles/team_row", team: team, user: @user %><% end %>
+        </div>
       <% end %>
     </section>
   <% end %>
 
-  <%# ── Personal league match history (auto-pulled from team rosters) ── %>
-
-  <%# ── Personal league match history (auto-pulled from team rosters) ── %>
-  <% if @selected_team.nil? && (@is_self || @deltri_matches.present?) %>
-    <section class="cr-section">
-      <h2 class="cr-section-title">League Match History</h2>
+  <%# ── Match history: every match counted on this page (Court Report scores
+      + league-website matches, each once), grouped by team, newest first ── %>
+  <% history = @record.entries %>
+  <% if @selected_team.nil? && (@is_self || history.any?) %>
+    <section class="cr-section" id="league-history">
+      <h2 class="cr-section-title">Match History</h2>
 
       <% if @is_self %>
-        <p class="cr-deltri-hint">Your matches are pulled automatically from your teams' league pages — every cup or division you've played in, including teams you only subbed on. To add a league we don't have yet, paste your player-page link below.</p>
-        <%= form_with url: connect_deltri_path, method: :post, local: true, class: "cr-deltri-connect" do %>
-          <div class="cr-deltri-row">
-            <input type="url" name="deltri_player_url" value="<%= @user.deltri_player_url %>"
-                   placeholder="https://...tenniscores.com/player.php?p=..." class="cr-deltri-input">
-            <button type="submit" class="cr-btn cr-btn-gold cr-deltri-btn"><%= @user.deltri_player_url.present? ? "Refresh" : "Add a link" %></button>
-          </div>
-        <% end %>
+        <%# The player-page link lives in Settings; here only a refresh control. %>
+        <div class="cr-lmh-controls">
+          <p class="cr-deltri-hint" style="margin: 0;">League-website matches come in automatically, including teams you only subbed on.</p>
+          <% if @user.deltri_player_url.present? %>
+            <%= button_to "Refresh", refresh_deltri_path, method: :post, class: "cr-chip-btn" %>
+          <% else %>
+            <%= link_to "Add a league in Settings", settings_path(anchor: "league-link"), class: "cr-chip-btn" %>
+          <% end %>
+        </div>
       <% end %>
 
-      <% if @deltri_matches.present? %>
-        <% @deltri_matches.each do |(league, division), matches| %>
-          <% wins = matches.count(&:won?); losses = matches.size - wins %>
+      <% if history.any? %>
+        <p class="cr-stats-scope">Every match counted above, newest first: <%= pluralize(history.size, "match") %>, from scores on Court Report and from league websites (a match on both is listed once).</p>
+        <% groups = history.group_by { |e| [ e.league, e.team_name ] }
+                           .sort_by { |_, list| -(list.map(&:date).compact.max || Date.new(0)).jd } %>
+        <% groups.each do |(league, team_name), list| %>
           <h3 class="cr-section-subtitle" style="margin-top: 14px;">
-            <%= [ league, division ].reject(&:blank?).join(" · ").presence || "Matches" %>
-            <span class="cr-deltri-record"><%= wins %>–<%= losses %></span>
+            <%= [ team_name, (league unless team_name.to_s.include?(league.to_s)) ].compact_blank.join(" · ").presence || "Matches" %>
+            <span class="cr-deltri-record"><%= list.count(&:won?) %>–<%= list.count(&:lost?) %></span>
           </h3>
           <div class="cr-match-list">
-            <% matches.each do |m| %>
+            <% list.sort_by { |e| e.date || Date.new(0) }.reverse_each do |e| %>
               <div class="cr-match-row cr-deltri-match">
-                <div class="cr-match-date" style="min-width: auto; padding: 8px 12px;">
-                  <div class="cr-match-date-month" style="font-size: 0.62rem;"><%= m.date_label %></div>
+                <div class="cr-match-date cr-mh-date">
+                  <div class="cr-match-date-month" style="font-size: 0.62rem;"><%= e.date&.strftime("%-m/%-d/%y") || "—" %></div>
                 </div>
                 <div class="cr-match-info">
-                  <div class="cr-match-opponent" style="font-size: 0.9rem;"><%= m.match_label %></div>
+                  <div class="cr-match-opponent" style="font-size: 0.9rem;"><%= e.source == :league_site ? (e.opponent.presence || "League match") : "vs. #{e.opponent}" %></div>
                   <div class="cr-match-location">
-                    <%= m.line_label %><% if m.partner.present? %> · with <%= m.partner %><% end %><% if m.opponents.present? %> · vs <%= m.opponents %><% end %>
+                    <%= [ e.line_label, (e.partners.any? ? "with #{e.partners.join(' & ')}" : nil), (e.opponents.present? ? "vs #{e.opponents}" : nil) ].compact.join(" · ") %>
                   </div>
                 </div>
                 <div class="cr-deltri-outcome">
-                  <span class="cr-result-badge <%= m.won? ? 'cr-result-badge-win' : 'cr-result-badge-loss' %>"><%= m.result_label %></span>
-                  <% if m.score.present? %><span class="cr-deltri-score"><%= m.score %></span><% end %>
+                  <span class="cr-result-badge <%= e.won? ? 'cr-result-badge-win' : 'cr-result-badge-loss' %>"><%= e.won? ? "W" : "L" %></span>
+                  <% if e.score.present? %><span class="cr-deltri-score"><%= e.score %></span><% end %>
                 </div>
               </div>
             <% end %>
           </div>
         <% end %>
       <% elsif @is_self %>
-        <p class="cr-deltri-empty">No league matches pulled in yet — add your player-page link above to get started.</p>
+        <p class="cr-deltri-empty">No matches yet. They appear here as scores are entered or pulled from league websites.</p>
       <% end %>
     </section>
   <% end %>
 
-  <%# ── Advanced stats: clean per-year matrix, TennisRecord style ── %>
-  <% if (@stats.any? && @selected_team.nil?) || @league_year_stats.present? %>
+  <%# ── Advanced stats: per-year matrix, same matches as Playing Stats ── %>
+  <% if @year_stats.present? %>
     <section class="cr-section" id="cr-advanced-stats">
       <h2 class="cr-section-title">Advanced Player Stats</h2>
+      <p class="cr-stats-scope"><%= render "profiles/stats_scope", record: @record, team: @selected_team %> The Overall table is every league together; each league's own table follows.</p>
 
-      <%# Overall matrix (imported season totals: matches / sets / games / defaults) %>
-      <% if @stats.any? && @selected_team.nil? %>
-        <div class="cr-adv-league-label">Overall</div>
-        <div class="cr-adv-wrap">
-          <table class="cr-adv">
-            <thead>
+      <div class="cr-adv-league-label">Overall<%= " · #{@selected_team.name}" if @selected_team %></div>
+      <div class="cr-adv-wrap">
+        <table class="cr-adv cr-adv-compact">
+          <thead>
+            <tr>
+              <th class="cr-adv-rowhead">All leagues</th>
+              <th>Matches</th><th>Win</th><th>Loss</th><th>WPct</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @year_stats.sort_by { |year, _| -year }.each do |year, c| %>
               <tr>
-                <th class="cr-adv-rowhead">All Matches</th>
-                <th>Total Matches</th><th>Win</th><th>Loss</th><th>WPct</th>
-                <th class="cr-adv-group">Total Sets</th><th>Win</th><th>Loss</th><th>WPct</th>
-                <th class="cr-adv-group">Total Games</th><th>Win</th><th>Loss</th><th>WPct</th>
-                <th class="cr-adv-group">Defaults</th>
+                <td class="cr-adv-rowhead cr-adv-year"><%= year %></td>
+                <td><%= c[:total] %></td>
+                <td class="cr-adv-win"><%= c[:won] %></td>
+                <td class="cr-adv-loss"><%= c[:lost] %></td>
+                <td><%= c[:total].positive? ? sprintf("%.1f", c[:won].to_f / c[:total] * 100) : "—" %></td>
               </tr>
-            </thead>
-            <tbody>
-              <% @stats.each do |s| %>
-                <tr>
-                  <td class="cr-adv-rowhead cr-adv-year"><%= s.year %></td>
-                  <td><%= s.matches_total || "—" %></td>
-                  <td class="cr-adv-win"><%= s.matches_won || "—" %></td>
-                  <td class="cr-adv-loss"><%= s.matches_lost || "—" %></td>
-                  <td><%= s.match_wpct ? sprintf("%.1f", s.match_wpct) : "—" %></td>
-                  <td class="cr-adv-group"><%= s.sets_total || "—" %></td>
-                  <td class="cr-adv-win"><%= s.sets_won || "—" %></td>
-                  <td class="cr-adv-loss"><%= s.sets_lost || "—" %></td>
-                  <td><%= s.set_wpct ? sprintf("%.1f", s.set_wpct) : "—" %></td>
-                  <td class="cr-adv-group"><%= s.games_total || "—" %></td>
-                  <td class="cr-adv-win"><%= s.games_won || "—" %></td>
-                  <td class="cr-adv-loss"><%= s.games_lost || "—" %></td>
-                  <td><%= s.game_wpct ? sprintf("%.1f", s.game_wpct) : "—" %></td>
-                  <td class="cr-adv-group"><%= s.defaults || 0 %></td>
-                </tr>
-              <% end %>
-              <%
-                mt = @stats.sum { |s| s.matches_total.to_i }; mw = @stats.sum { |s| s.matches_won.to_i }; ml = @stats.sum { |s| s.matches_lost.to_i }
-                st = @stats.sum { |s| s.sets_total.to_i };    sw = @stats.sum { |s| s.sets_won.to_i };    sl = @stats.sum { |s| s.sets_lost.to_i }
-                gt = @stats.sum { |s| s.games_total.to_i };   gw = @stats.sum { |s| s.games_won.to_i };   gl = @stats.sum { |s| s.games_lost.to_i }
-                df = @stats.sum { |s| s.defaults.to_i }
-                pct = ->(w, t) { t.positive? ? sprintf("%.1f", w.to_f / t * 100) : "—" }
-              %>
-              <tr class="cr-adv-total">
-                <td class="cr-adv-rowhead">Total</td>
-                <td><%= mt %></td><td class="cr-adv-win"><%= mw %></td><td class="cr-adv-loss"><%= ml %></td><td><%= pct.call(mw, mt) %></td>
-                <td class="cr-adv-group"><%= st %></td><td class="cr-adv-win"><%= sw %></td><td class="cr-adv-loss"><%= sl %></td><td><%= pct.call(sw, st) %></td>
-                <td class="cr-adv-group"><%= gt %></td><td class="cr-adv-win"><%= gw %></td><td class="cr-adv-loss"><%= gl %></td><td><%= pct.call(gw, gt) %></td>
-                <td class="cr-adv-group"><%= df %></td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      <% end %>
+            <% end %>
+            <% ot = @playing_stats[:overall] %>
+            <tr class="cr-adv-total">
+              <td class="cr-adv-rowhead">Total</td>
+              <td><%= ot[:total] %></td>
+              <td class="cr-adv-win"><%= ot[:won] %></td>
+              <td class="cr-adv-loss"><%= ot[:lost] %></td>
+              <td><%= ot[:total].positive? ? sprintf("%.1f", ot[:won].to_f / ot[:total] * 100) : "—" %></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
 
-      <%# One matrix per league, from the results entered into Court Report %>
+      <%# One matrix per league — the same matches, split by league %>
       <% if @league_year_stats.present? %>
         <% @league_year_stats.sort_by { |label, _| label.to_s }.each do |league, by_year| %>
           <div class="cr-adv-league-label"><%= league %></div>
@@ -525,7 +504,6 @@
             </table>
           </div>
         <% end %>
-        <p class="cr-adv-note">Per-league tables count the lines you played from results entered into Court Report. The Overall table above shows your imported season totals.</p>
       <% end %>
     </section>
   <% end %>

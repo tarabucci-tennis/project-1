@@ -1,0 +1,81 @@
+<% content_for :title, "My line's score · #{@team.name} · Court Report" %>
+
+<%# A player enters just her own line (Tara, Nov 17 2026). W/L fills in from
+    the score by the league's rule; she can tap to change it. Captains still
+    have the full Enter scores form. %>
+<div class="cr-page">
+  <%= link_to "← #{@team.name} vs. #{@match.opponent}", team_match_path(@team, @match), class: "cr-back-link" %>
+
+  <div class="cr-results-form">
+    <h1 class="cr-page-title"><%= @line.scored? ? "Edit my line's score" : "Enter my line's score" %></h1>
+    <p class="cr-form-help">
+      <%= @match.match_date.strftime("%a, %b %-d, %Y") %> · <%= @line.line_label %>.
+      Type each set's games, ours first. Your captain can still change anything.
+    </p>
+
+    <% mode = LineScoring.mode_for(@team) %>
+    <%= form_with url: my_line_team_match_path(@team, @match), method: :patch, local: true,
+          class: "cr-enter-results", data: { controller: "score-entry", score_entry_mode_value: mode } do %>
+      <div class="cr-line-card" data-score-entry-target="line">
+        <div class="cr-line-header">
+          <span class="cr-line-label"><%= @line.line_label %></span>
+          <div class="cr-line-result-toggle">
+            <label class="cr-line-result-opt cr-line-win-opt">
+              <%= radio_button_tag "line[result]", "win", @line.won?, id: "my_line_win", data: { line_result: "win", action: "change->score-entry#touchLine" } %>
+              <span>W</span>
+            </label>
+            <label class="cr-line-result-opt cr-line-loss-opt">
+              <%= radio_button_tag "line[result]", "loss", @line.lost?, id: "my_line_loss", data: { line_result: "loss", action: "change->score-entry#touchLine" } %>
+              <span>L</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="cr-line-scores cr-se-sets">
+          <% [ @line.set1_score, @line.set2_score, @line.set3_score ].each_with_index do |saved, i| %>
+            <% n = i + 1; ours, theirs = saved.to_s.scan(/\d+/).first(2) %>
+            <div class="cr-se-set">
+              <span class="cr-se-set-label"><%= n == 3 ? "Set 3 / TB" : "Set #{n}" %></span>
+              <div class="cr-se-set-boxes">
+                <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="2" autocomplete="off"
+                       name="line[set<%= n %>_ours]" value="<%= ours %>" placeholder="us" class="cr-se-box"
+                       aria-label="Set <%= n %>, our games" data-set="<%= n %>" data-side="ours"
+                       data-action="input->score-entry#scoreChanged">
+                <span class="cr-se-dash">–</span>
+                <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="2" autocomplete="off"
+                       name="line[set<%= n %>_theirs]" value="<%= theirs %>" placeholder="them" class="cr-se-box"
+                       aria-label="Set <%= n %>, their games" data-set="<%= n %>" data-side="theirs"
+                       data-action="input->score-entry#scoreChanged">
+              </div>
+            </div>
+          <% end %>
+        </div>
+
+        <% if @line.line_type == "doubles" %>
+          <% partner = @line.match_line_players.map(&:user).compact.find { |u| u.id != current_user.id } %>
+          <div class="cr-line-players">
+            <label class="cr-line-players-label" for="my_line_partner">Your partner</label>
+            <select name="line[partner_id]" id="my_line_partner" class="cr-select">
+              <option value="">-- Pick your partner --</option>
+              <% @partner_options.each do |u| %>
+                <option value="<%= u.id %>" <%= "selected" if partner&.id == u.id %>><%= u.name %><%= " (#{u.ntrp_rating})" if u.ntrp_rating.present? %></option>
+              <% end %>
+            </select>
+          </div>
+        <% end %>
+
+        <div class="cr-line-opponents">
+          <label class="cr-line-players-label" for="my_line_opponents">Opponents (optional)</label>
+          <%= text_field_tag "line[opponents]", @line.opponents, id: "my_line_opponents", class: "cr-input",
+                placeholder: @line.line_type == "singles" ? "e.g. Jane Smith" : "e.g. Jane Smith / Mary Jones" %>
+        </div>
+      </div>
+
+      <div class="cr-form-actions cr-se-savebar">
+        <span class="cr-se-savebar-sum" data-score-entry-target="barSummary"></span>
+        <%= link_to "Cancel", team_match_path(@team, @match), class: "cr-btn cr-btn-outline" %>
+        <%= submit_tag "Save my line", class: "cr-btn cr-btn-gold" %>
+      </div>
+    <% end %>
+  </div>
+</div>

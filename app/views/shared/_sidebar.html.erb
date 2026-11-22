@@ -16,10 +16,12 @@
     </button>
     <div class="cr-menu-panel" data-menu-target="panel" role="menu">
       <%= link_to profile_path, class: "cr-menu-item", role: "menuitem" do %>My profile<small>Your rating, stats and city</small><% end %>
+      <%= link_to settings_path, class: "cr-menu-item", role: "menuitem" do %>Settings<small>Calendar and league links</small><% end %>
       <% if current_user.admin? %>
         <div class="cr-menu-divider"></div>
         <%= link_to admin_members_path, class: "cr-menu-item", role: "menuitem" do %>Site members<small>Only you see this</small><% end %>
         <%= link_to "Download members spreadsheet", admin_members_path(format: :csv), class: "cr-menu-item", role: "menuitem" %>
+        <%= link_to admin_duplicates_path, class: "cr-menu-item", role: "menuitem" do %>Possible duplicates<small>Merge two records of one person</small><% end %>
       <% end %>
       <div class="cr-menu-divider"></div>
       <%= button_to "Sign out", session_path, method: :delete, class: "cr-menu-item cr-sb-signout", form: { class: "cr-sb-signout-form" } %>

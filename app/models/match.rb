@@ -35,8 +35,37 @@ class Match < ApplicationRecord
     { in: in_count, out: out_count, no_response: no_response }
   end
 
+  # The match time as "9:00 AM", however it was typed or imported
+  # ("01:30 pm", "10:30am"); nil if none. One format everywhere.
+  def time_label
+    LineStartTime.normalize(match_time)
+  end
+
   def played?
     result.present?
+  end
+
+  # Real scores saved (a line with set scores or W/L, or a team result)?
+  # Opening Enter Results creates blank lines, so "has lines" isn't enough.
+  def scores_entered?
+    result.present? || match_lines.any?(&:scored?)
+  end
+
+  # "Enter scores" until something is saved, then "Edit scores".
+  def scores_button_label
+    scores_entered? ? "Edit scores" : "Enter scores"
+  end
+
+  # Is `user` on a line of this match (saved scores or the posted lineup)?
+  def on_a_line?(user)
+    return false unless user
+    match_line_players.exists?(user_id: user.id) ||
+      (lineup&.published? && lineup.lineup_slots.exists?(user_id: user.id)) || false
+  end
+
+  # The match day has arrived (scores can be entered).
+  def started?
+    match_date.present? && match_date.to_date <= Date.current
   end
 
   # Captains can now set home_away directly via the Edit Match form.
@@ -93,6 +122,27 @@ class Match < ApplicationRecord
   # Does this match belong to a playoff stage (Districts / Sectionals / Nationals)?
   def playoff?
     playoff_level.present?
+  end
+
+  # A playoff stage, or a calendar entry turned into a match whose opponent
+  # or notes say "Playoffs" — shown with the PLAYOFFS pill.
+  def playoff_like?
+    playoff? || "#{opponent} #{notes}".match?(/playoff/i)
+  end
+
+  # Finished: final scores are in, or its end time has passed. Lineup actions
+  # (Set lineup, Ask who can play) hide once a match is finished; any lineup
+  # fix after that happens through score entry.
+  def finished?
+    played? || scores_entered? || over?
+  end
+
+  # Over once its end time has passed on the players' (Eastern) clock: the end
+  # of a typed range, else the start plus two hours.
+  def over?
+    return false if match_date.blank?
+    text = match_time.presence || (match_date.strftime("%-l:%M %p") unless match_date.hour.zero? && match_date.min.zero?)
+    PlayClock.over?(match_date.to_date, text)
   end
 
   def result_label

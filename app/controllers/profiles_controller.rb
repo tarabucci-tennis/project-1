@@ -1,4 +1,6 @@
 class ProfilesController < ApplicationController
+  # Fewest matches before a win % or a "best" pick is shown (Tara, Nov 16 2026).
+  MIN_SAMPLE = 3
   before_action :require_login
 
   # GET /profile — your own profile
@@ -6,13 +8,10 @@ class ProfilesController < ApplicationController
     @user  = current_user
     @teams = current_user.member_teams.includes(:team_memberships).order(start_date: :desc)
     @teams = current_user.tennis_teams.order(start_date: :desc) if @teams.empty?
-    @stats = @user.tennis_stats.chronological
     @is_self = true
     @shared_teams = []
-    @external_events = @user.external_events.upcoming.limit(30)
-    @playing_stats = build_playing_stats(@user)
-    @league_year_stats = build_league_year_stats(@user)
-    @deltri_matches = @user.player_matches.chronological.group_by { |pm| [ pm.league, pm.division ] }
+    split_teams(@user, @teams)
+    load_record(@user)
     render :player
   end
 
@@ -22,16 +21,37 @@ class ProfilesController < ApplicationController
     current_user.update(deltri_player_url: url.presence)
 
     if url.blank?
-      redirect_to profile_path, notice: "Removed your Del-Tri link."
+      redirect_to settings_path, notice: "Removed your league link."
       return
     end
 
     result = DeltriPlayerImport.new(current_user).call
     if result.imported.any?
-      redirect_to profile_path, notice: "Pulled your Del-Tri matches — #{result}"
+      redirect_to settings_path, notice: "Pulled your league matches — #{result}"
     else
-      redirect_to profile_path, alert: "Couldn't read that Del-Tri link. #{result.notes.join('; ')}"
+      redirect_to settings_path, alert: "Couldn't read that league link. #{result.notes.join('; ')}"
     end
+  end
+
+  # POST /profile/deltri/refresh — pull your league-site matches again from
+  # the link saved in Settings (the link itself never shows on the profile).
+  def refresh_deltri
+    unless current_user.deltri_player_url.present?
+      return redirect_to settings_path, alert: "Add your league player-page link first."
+    end
+
+    result = DeltriPlayerImport.new(current_user).call
+    if result.imported.any?
+      redirect_to profile_path(anchor: "league-history"), notice: "Refreshed your league matches."
+    else
+      redirect_to profile_path(anchor: "league-history"), alert: "Couldn't refresh right now. #{result.notes.join('; ')}"
+    end
+  end
+
+  # GET /settings — your private links and your synced calendar.
+  def settings
+    @user = current_user
+    @external_events = @user.external_events.upcoming.limit(30)
   end
 
   # POST /profile/city — optional: the city shown next to your name.
@@ -50,15 +70,15 @@ class ProfilesController < ApplicationController
 
     if url.blank?
       current_user.external_events.delete_all
-      redirect_to profile_path, notice: "Removed your Google Calendar link."
+      redirect_to settings_path, notice: "Removed your Google Calendar link."
       return
     end
 
     result = GoogleCalendarImport.new(current_user).call
     if result.error
-      redirect_to profile_path, alert: "Couldn't read that calendar link (#{result.error}). Make sure it's the secret iCal address from Google Calendar settings."
+      redirect_to settings_path, alert: "Couldn't read that calendar link (#{result.error}). Make sure it's the secret iCal address from Google Calendar settings."
     else
-      redirect_to profile_path, notice: "Synced #{result.imported} event#{'s' unless result.imported == 1} from your calendar (#{result.tennis} tennis)."
+      redirect_to settings_path, notice: "Synced #{result.imported} event#{'s' unless result.imported == 1} from your calendar (#{result.tennis} tennis)."
     end
   end
 
@@ -66,14 +86,17 @@ class ProfilesController < ApplicationController
   def player
     @user = User.find_by(id: params[:id])
     unless @user
+      # A merged-away record: forward to the person it was merged into.
+      kept = User.find_by(id: MergedUser.current_id_for(params[:id]))
+      return redirect_to(player_path(kept, team: params[:team].presence), status: :moved_permanently) if kept
+
       redirect_to teams_path, alert: "Player not found."
       return
     end
 
     @teams = @user.member_teams.includes(:team_memberships).order(start_date: :desc)
-    @stats = @user.tennis_stats.chronological
     @is_self = (@user.id == current_user.id)
-    @deltri_matches = @user.player_matches.chronological.group_by { |pm| [ pm.league, pm.division ] }
+    split_teams(@user, @teams)
 
     # Optional team filter: the "Stats for …" dropdown scopes the match-line
     # stats to one of this player's teams so you can flip between them without
@@ -85,9 +108,7 @@ class ProfilesController < ApplicationController
     their_team_ids = @user.member_teams.pluck(:id)
     shared_ids = my_team_ids & their_team_ids
     @shared_teams = TennisTeam.where(id: shared_ids).order(start_date: :desc)
-    @external_events = @user.external_events.upcoming.limit(30)
-    @playing_stats = build_playing_stats(@user, team: @selected_team)
-    @league_year_stats = build_league_year_stats(@user, team: @selected_team)
+    load_record(@user, team: @selected_team)
   end
 
   private
@@ -96,40 +117,29 @@ class ProfilesController < ApplicationController
     redirect_to login_path unless current_user
   end
 
-  # Per-league, per-year win/loss from the lines this player actually played.
-  # Returns { league_label => { year => { matches:, won:, lost: } } } so the
-  # player page can show one clean stats table per league, like TennisRecord's
-  # Advanced Player Stats matrix. Only uses decided lines (result present), so
-  # there's nothing to fabricate — the numbers are our own entered results.
-  def build_league_year_stats(user, team: nil)
-    lines = MatchLine.joins(:match_line_players)
-                     .where(match_line_players: { user_id: user.id })
-                     .where.not(result: nil)
-                     .includes(match: :tennis_team)
-    lines = lines.joins(:match).where(matches: { tennis_team_id: team.id }) if team
-
-    data = {}
-    lines.each do |line|
-      match = line.match
-      team  = match&.tennis_team
-      next unless team && match.match_date
-
-      league = team.league_label
-      year   = match.match_date.year
-      cell = ((data[league] ||= {})[year] ||= { matches: 0, won: 0, lost: 0 })
-      cell[:matches] += 1
-      cell[:won]  += 1 if line.result == "win"
-      cell[:lost] += 1 if line.result == "loss"
-    end
-    data
+  # Current teams first, past seasons separately (see User#current_and_past_teams).
+  def split_teams(user, teams)
+    @current_teams, @past_teams = user.current_and_past_teams(teams)
   end
 
-  def build_playing_stats(user, team: nil)
-    lines = MatchLine.joins(:match_line_players)
-                     .where(match_line_players: { user_id: user.id })
-                     .where.not(result: nil)
-                     .includes({ match: :tennis_team }, match_line_players: :user)
-    lines = lines.joins(:match).where(matches: { tennis_team_id: team.id }) if team
+  def load_record(user, team: nil)
+    @record = build_record(user, team: team)
+    @playing_stats = build_playing_stats(@record)
+    @league_year_stats = @record.by_league_year
+    @year_stats = @record.by_year
+    @deltri_matches = user.player_matches.chronological.group_by { |pm| [ pm.league, pm.division ] }
+    @counted_elsewhere_ids = @record.duplicate_player_match_ids
+  end
+
+  # Every stat on the profile comes from one PlayerRecord (see
+  # app/services/player_record.rb), so the numbers always agree.
+  def build_record(user, team: nil)
+    PlayerRecord.new(user, team: team)
+  end
+
+  def build_playing_stats(record)
+    entries = record.entries
+    user = record.user
 
     # Always return a well-formed hash so the view can show the stat
     # structure even before any matches have been played. Empty sections
@@ -139,101 +149,87 @@ class ProfilesController < ApplicationController
       singles:        { won: 0, total: 0, pct: 0 },
       doubles:        { won: 0, total: 0, pct: 0 },
       by_line:        {},
+      by_team:        [],  # [{ name:, won:, total:, pct: }]
       partners:       [],
       best_partner:   nil,
       recent:         [],
       usual_doubles_line:    nil,  # e.g. "2D" — the line this player plays most often
       matches_played_by_team: [],  # [{ team_name:, count: }]
       matches_played_total:   0,
-      is_empty:       lines.empty?
+      from_league_sites:      record.league_site_entries.size,
+      is_empty:       entries.empty?
     }
 
-    return stats if lines.empty?
+    return stats if entries.empty?
 
-    # Overall
-    total = lines.count
-    won = lines.where(result: "win").count
-    lost = lines.where(result: "loss").count
-    stats[:overall] = { won: won, lost: lost, total: total, pct: pct(won, total) }
+    overall = PlayerRecord.tally(entries)
+    stats[:overall] = overall.merge(pct: pct(overall[:won], overall[:total]))
 
-    # Singles vs Doubles
-    singles = lines.where(line_type: "singles")
-    doubles = lines.where(line_type: "doubles")
-    s_won = singles.where(result: "win").count
-    s_total = singles.count
-    d_won = doubles.where(result: "win").count
-    d_total = doubles.count
-    stats[:singles] = { won: s_won, total: s_total, pct: pct(s_won, s_total) }
-    stats[:doubles] = { won: d_won, total: d_total, pct: pct(d_won, d_total) }
+    singles, doubles = entries.partition(&:singles)
+    stats[:singles] = { won: singles.count(&:won?), total: singles.size, pct: pct(singles.count(&:won?), singles.size) }
+    stats[:doubles] = { won: doubles.count(&:won?), total: doubles.size, pct: pct(doubles.count(&:won?), doubles.size) }
 
-    # Win % by line position
-    stats[:by_line] = {}
-    lines.group_by { |l| l.line_type == "singles" ? "1S" : "#{l.position}D" }.each do |label, group|
-      w = group.count { |l| l.result == "win" }
-      t = group.size
-      stats[:by_line][label] = { won: w, total: t, pct: pct(w, t) }
+    # Win % by line position (only rows that say which line)
+    entries.select(&:line_label).group_by(&:line_label).each do |label, group|
+      w = group.count(&:won?)
+      stats[:by_line][label] = { won: w, total: group.size, pct: pct(w, group.size) }
     end
 
-    # Usual doubles line — the doubles position this player plays most
-    # often. Useful at a glance for captains setting a lineup ("this
-    # player usually plays 2D").
-    doubles_by_position = doubles.group(:position).count
-    if doubles_by_position.any?
-      top_position, _ = doubles_by_position.max_by { |_, count| count }
-      stats[:usual_doubles_line] = "#{top_position}D"
-    end
+    # Usual doubles line — the doubles position this player plays most often.
+    top = doubles.filter_map(&:position).tally.max_by { |_, count| count }
+    stats[:usual_doubles_line] = "#{top.first}D" if top
 
-    # Matches played per team (distinct match count per team, not per line)
-    played_by_team = Hash.new(0)
-    lines.each do |l|
-      team_name = l.match.tennis_team&.name || "Unknown"
-      played_by_team[[ team_name, l.match_id ]] = 1
-    end
-    team_counts = played_by_team.keys.group_by(&:first).transform_values(&:count)
-    stats[:matches_played_by_team] = team_counts.map { |team_name, count|
-      { team_name: team_name, count: count }
-    }.sort_by { |t| -t[:count] }
-    stats[:matches_played_total] = team_counts.values.sum
+    # Matches per team — same definition as everywhere else (one per line).
+    team_counts = entries.group_by { |e| e.team_name.presence || e.league }.transform_values(&:size)
+    stats[:matches_played_by_team] = team_counts.map { |name, count| { team_name: name, count: count } }
+                                                .sort_by { |t| -t[:count] }
+    stats[:matches_played_total] = entries.size
+
+    # Win % by team (same one-line-per-match definition), most matches first.
+    stats[:by_team] = entries.group_by { |e| e.team_name.presence || e.league }.map do |name, group|
+      w = group.count(&:won?)
+      { name: name, won: w, total: group.size, pct: pct(w, group.size) }
+    end.sort_by { |t| [ -t[:total], t[:name].to_s ] }
 
     # Doubles partner stats
-    doubles_lines = lines.where(line_type: "doubles").includes(match_line_players: :user)
+    # Grouped by person, not by spelling: league websites type partner names
+    # as text ("Joanne Steinberg"), so they're matched to the Court Report
+    # player ("JoAnne Steinberg") ignoring case, spacing and accents, and
+    # shown with the Court Report spelling.
     partner_data = Hash.new { |h, k| h[k] = { won: 0, lost: 0, total: 0 } }
-
-    doubles_lines.each do |line|
-      partners = line.match_line_players.map(&:user).reject { |u| u.id == user.id }
-      partners.each do |partner|
-        partner_data[partner.name][:total] += 1
-        partner_data[partner.name][:won] += 1 if line.result == "win"
-        partner_data[partner.name][:lost] += 1 if line.result == "loss"
+    display_name = {}
+    doubles.sort_by { |e| e.source == :court_report ? 0 : 1 }.each do |e|
+      e.partners.each do |name|
+        key = name.to_s.unicode_normalize(:nfkd).gsub(/\p{Mn}/, "").downcase.squish
+        display_name[key] ||= name
+        partner_data[key][:total] += 1
+        partner_data[key][:won] += 1 if e.won?
+        partner_data[key][:lost] += 1 if e.lost?
       end
     end
-
-    stats[:partners] = partner_data.map do |name, data|
-      { name: name, won: data[:won], lost: data[:lost], total: data[:total], pct: pct(data[:won], data[:total]) }
-    end.sort_by { |p| [ -p[:pct], -p[:total] ] }
-
-    # Best doubles partner
-    stats[:best_partner] = stats[:partners].first if stats[:partners].any?
+    # Percentages and "best" need a real sample: under MIN_SAMPLE matches a
+    # partner shows a record but no %, and can't be Best Partner (a 1-0
+    # partnership isn't "best"). Qualified partners first, best % first.
+    rows = partner_data.map do |key, data|
+      { name: display_name[key], won: data[:won], lost: data[:lost], total: data[:total], pct: pct(data[:won], data[:total]),
+        qualified: data[:total] >= MIN_SAMPLE }
+    end
+    qualified, small = rows.partition { |p| p[:qualified] }
+    stats[:partners] = qualified.sort_by { |p| [ -p[:pct], -p[:total], p[:name].to_s ] } +
+                       small.sort_by { |p| [ -p[:total], -p[:won], p[:name].to_s ] }
+    stats[:best_partner] = qualified.any? ? stats[:partners].first : nil
 
     # Recent matches (last 5)
-    stats[:recent] = lines.sort_by { |l| l.match.match_date }.last(5).reverse.map do |line|
+    stats[:recent] = entries.last(5).reverse.map do |e|
       {
-        date: line.match.match_date,
-        opponent: line.match.opponent,
-        team: line.match.tennis_team.name,
-        line_label: line.line_type == "singles" ? "#{line.position}S" : "#{line.position}D",
-        result: line.result,
-        score: line.score_display,
-        # Players on this line (this player + partner) so their names can link
-        # to full stats; opponents is the free-text names captains entered.
-        players: line.match_line_players.map(&:user).compact.map { |u| { id: u.id, name: u.name } },
-        opponents: line.opponents
+        date: e.date, opponent: e.opponent,
+        team: e.team_name, line_label: e.line_label, result: e.result, score: e.score,
+        players: e.player_ids, opponents: e.opponents, from_league_site: e.source == :league_site
       }
     end
 
     # Resolve opponent names to Court Report players so they can link to that
     # player's stats. Names we don't have a profile for stay as plain text.
-    # One query for every opponent name across the recent matches (no N+1).
     all_names = stats[:recent].flat_map { |m| split_opponent_names(m[:opponents]) }.uniq
     id_by_name = {}
     if all_names.any?

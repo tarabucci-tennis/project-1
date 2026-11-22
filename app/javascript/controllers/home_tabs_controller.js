@@ -26,5 +26,9 @@ export default class extends Controller {
   showTab(index) {
     this.tabTargets.forEach((tab, i) => tab.classList.toggle("cr-home-tab-active", i === index))
     this.panelTargets.forEach((panel, i) => { panel.style.display = i === index ? "block" : "none" })
+    // The heading under "My Teams" says what this tab is.
+    const sub = document.getElementById("cr-home-subtitle")
+    const text = this.panelTargets[index] && this.panelTargets[index].dataset.subtitle
+    if (sub && text) sub.textContent = text
   }
 }

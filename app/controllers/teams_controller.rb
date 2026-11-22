@@ -46,6 +46,14 @@ class TeamsController < ApplicationController
     # Schedule" button reveals all of @full_upcoming_matches in a modal.
     @upcoming_matches = @full_upcoming_matches.first(4)
 
+    # Teams where this person can set lineups and enter scores (captains,
+    # co-captains; admins everywhere) — decides each Upcoming row's button.
+    @captain_team_ids = if current_user.admin?
+                          team_ids.to_a
+    else
+                          TeamMembership.where(user: current_user, tennis_team_id: team_ids, role: %w[captain co_captain]).pluck(:tennis_team_id)
+    end
+
     # Build a hash of match_id => line_label for the current user's lineup positions
     @my_lineup_lines = {}
     @upcoming_matches.each do |match|
@@ -95,6 +103,18 @@ class TeamsController < ApplicationController
     # Friendlies & Clinics tab: everything coming up, not just this month.
     @upcoming_friendlies = Friendly.involving(current_user).upcoming.includes(:spots, :organizer).order(:starts_at)
     @upcoming_team_events = TeamEvent.where(tennis_team_id: team_ids).upcoming.includes(:tennis_team).to_a
+    # Friendlies tab, below what's coming up: the last few played, and who
+    # you play friendlies with most.
+    @past_friendlies = Friendly.involving(current_user).where("starts_at < ?", Time.current.beginning_of_day)
+                               .includes(:spots).order(starts_at: :desc).limit(40).to_a
+    @friendly_partners = friendly_partner_counts(@past_friendlies)
+
+    # Standings "Next match": calendar entries a captain added as a match
+    # count too (Over Served's schedule is all calendar entries), and a team
+    # with any of them has a schedule.
+    @next_event_by_team = @upcoming_team_events.select(&:match_like?).reject(&:over?)
+                                               .group_by(&:tennis_team_id).transform_values(&:first)
+    @teams_with_events = TeamEvent.where(tennis_team_id: team_ids).where.not(kind: TeamEvent::KINDS).distinct.pluck(:tennis_team_id).to_set
 
     # Coming Up: matches, friendlies and clinics together, soonest first.
     @coming_up_items = (@full_upcoming_matches + @upcoming_friendlies.to_a + @upcoming_team_events)
@@ -131,6 +151,11 @@ class TeamsController < ApplicationController
     @is_captain       = @team.can_set_lineup?(current_user) || current_user.admin?
     @wins             = @team.matches.where(result: "win").count
     @losses           = @team.matches.where(result: "loss").count
+    @ties             = @team.matches.where(result: "tie").count
+    # Friendlies / clinics / anything added from the calendar: listed in the
+    # schedule so it matches Calendar and Upcoming, never counted as a match.
+    @upcoming_events  = @team.team_events.upcoming.to_a
+    @sched            = schedule_counts(@team, @upcoming_events)
     @division_teams   = @team.division_teams.ranked
     @doubles_pairs    = DoublesPairs.new(@team)
     # Opponent name => its standings row, so schedule/results can open that
@@ -751,7 +776,7 @@ class TeamsController < ApplicationController
     completed_matches = @team.matches.completed.includes(match_lines: { match_line_players: :user })
 
     charts = {
-      overall:          { wins: 0, losses: 0, total: 0, pct: 0 },
+      overall:          { wins: 0, losses: 0, ties: 0, total: 0, pct: 0 },
       singles_doubles:  { singles_total: 0, singles_wins: 0, singles_pct: 0,
                           doubles_total: 0, doubles_wins: 0, doubles_pct: 0 },
       by_line:          {},     # "1S" => { wins:, total:, pct: }, ...
@@ -775,9 +800,11 @@ class TeamsController < ApplicationController
     # Team overall record (per match, not per line)
     charts[:overall][:wins]   = completed_matches.where(result: "win").count
     charts[:overall][:losses] = completed_matches.where(result: "loss").count
-    charts[:overall][:total]  = charts[:overall][:wins] + charts[:overall][:losses]
+    # Ties count as ties (a tie = half a win in win %), the same as the header.
+    charts[:overall][:ties]   = completed_matches.where(result: "tie").count
+    charts[:overall][:total]  = charts[:overall][:wins] + charts[:overall][:losses] + charts[:overall][:ties]
     if charts[:overall][:total] > 0
-      charts[:overall][:pct] = (charts[:overall][:wins].to_f / charts[:overall][:total] * 100).round(0)
+      charts[:overall][:pct] = ((charts[:overall][:wins] + charts[:overall][:ties] / 2.0) / charts[:overall][:total] * 100).round(0)
     end
 
     return charts if completed_matches.empty?
@@ -933,5 +960,41 @@ class TeamsController < ApplicationController
         win_pct: total > 0 ? (data[:wins].to_f / total * 100).round(0) : 0
       }
     end.sort_by { |p| [ -p[:played], -p[:win_pct] ] }
+  end
+
+  # The hero's "Matches" and its breakdown, from the same items as the
+  # schedule list: league matches, plus calendar entries a captain added as
+  # a match (any kind except Friendly / Clinic, e.g. "Match", "Tournament").
+  # Friendlies and clinics are listed and named in the breakdown but aren't
+  # matches. Parts add up: played + need scores + to play (+ playoff).
+  def schedule_counts(team, upcoming_events)
+    now = Time.current
+    regular, playoff = team.matches.partition { |m| !m.playoff? }
+    match_events, other_events = upcoming_events.partition { |e| e.display_kind == "other" }
+    played   = regular.count { |m| m.match_date < now && m.played? }
+    awaiting = regular.count { |m| m.match_date < now && !m.played? }
+    to_play  = regular.count { |m| m.match_date >= now } + match_events.size
+    { played: played, awaiting: awaiting, to_play: to_play, playoff: playoff.size,
+      total: regular.size + playoff.size + match_events.size,
+      friendlies: other_events.count { |e| e.display_kind == "friendly" },
+      clinics: other_events.count { |e| e.display_kind == "clinic" },
+      next_date: [ team.next_match&.match_date&.to_date, match_events.map(&:event_date).min ].compact.min,
+      started: team.matches.any? { |m| m.match_date < now } }
+  end
+
+  # [[name, times], ...] — the people you shared a friendly with, most first.
+  def friendly_partner_counts(friendlies)
+    counts = Hash.new(0)
+    names = {}
+    me = current_user.name.to_s.squish.downcase
+    friendlies.each do |f|
+      f.active_spots.each do |spot|
+        next if spot.user_id == current_user.id || spot.name.to_s.squish.downcase == me
+        key = spot.user_id ? "u#{spot.user_id}" : spot.name.to_s.squish.downcase
+        names[key] ||= spot.name.to_s.squish
+        counts[key] += 1
+      end
+    end
+    counts.sort_by { |k, n| [ -n, names[k].downcase ] }.first(6).map { |k, n| [ names[k], n ] }
   end
 end

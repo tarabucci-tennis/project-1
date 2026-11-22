@@ -31,7 +31,7 @@ class RatingsRankedTest < ActionDispatch::IntegrationTest
     end
     assert_response :success
     assert_select ".cr-rp-tabs .cr-home-tab", text: "All players"
-    assert_select ".cr-rp-tabs .cr-home-tab", text: "Teams"
+    assert_select ".cr-rp-tabs .cr-home-tab", text: "USTA teams"
     assert_select ".cr-rp-panel-players tbody tr", 3
     assert_select ".cr-rp-panel-players tbody tr:first-child td", text: "Rank Mate"
     assert_select ".cr-rp-panel-teams details.cr-rp-team", 1

@@ -199,6 +199,7 @@ export default class extends Controller {
             ${teamLink(e)}
           </div>
           <div class="cr-dash-cal-item-title">${escapeHtml(e.title || "")}</div>
+          ${e.side ? `<div class="cr-dash-cal-item-meta">${escapeHtml(e.side)}</div>` : ""}
           ${time}
           ${loc}
         </div>
