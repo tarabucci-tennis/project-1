@@ -7631,3 +7631,56 @@ html body .cr-sheet-entered { opacity: 1; font-weight: 600; }
     opacity: 0.45;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════════════
+   LOCKED PALETTE — teal wins (Tara's final decision, Nov 22 2026).
+   Do not revisit. This block wins over every earlier palette block.
+     Text      navy  #1B2A4A, all text everywhere (never grey text)
+     Buttons   blue  #3F6C8A ("option C", Tara's Nov 19 pick), hover #335A74,
+               WHITE text — every primary button, one style, site-wide
+     Accent    Court Green #6CAF7E, tint #E4F3E8 (band, small marks, scores area)
+               — the accent only, never the win colour
+     Wins      teal  #1B6B5A chip, WHITE letter
+     Losses    grey  #6B7688 chip, WHITE letter
+     Page      pale blue; cards white/cream with a 1px border
+     Type      Fraunces headings, clean sans body
+   NO GOLD anywhere on the site (#C9A227, #E3C84F and #D9C08A were all tried
+   and rejected). Only exceptions, separate assets: the logo ball, the bouncing
+   ball, and the gold net in the court image (court-side-gold.jpg).
+   ═══════════════════════════════════════════════════════════════════════ */
+:root {
+  --cr-btn-blue: #3F6C8A; --cr-btn-blue-hover: #335A74;
+  --cr-win-teal: #1B6B5A; --cr-loss-grey: #6B7688;
+  --cr-accent: #3F6C8A; --cr-gold-btn: #3F6C8A; --cr-gold-btn-hover: #335A74;
+  --cr-card-btn: #3F6C8A; --cr-card-btn-hover: #335A74;
+  --cr-win-bg: #1B6B5A; --cr-loss-bg: #6B7688;
+}
+/* Every primary button: blue, white text. */
+html body .cr-btn-gold, html body .cr-btn.cr-btn-gold, html body .cr-btn-primary, html body .cr-set-lineup-btn,
+html body .cr-cu-btn:not(.cr-cu-btn-outline), html body .cr-cu-btn-gold, html body .cr-lu-btn.is-primary,
+html body .cr-sb-newbtn, html body .cr-chip-btn-primary, html body .cr-band-btn, html body .cr-sync-btn,
+html body .cr-match-scores-btn, html body .cr-awaiting-badge-link, html body form input[type="submit"].cr-btn,
+html body .cr-login-card input[type="submit"], html body .cr-auth-card input[type="submit"] {
+  background: var(--cr-btn-blue) !important; border-color: var(--cr-btn-blue) !important; color: #fff !important;
+  box-shadow: none !important;
+}
+html body .cr-btn-gold:hover, html body .cr-btn-primary:hover, html body .cr-set-lineup-btn:hover,
+html body .cr-cu-btn:not(.cr-cu-btn-outline):hover, html body .cr-lu-btn.is-primary:hover, html body .cr-sb-newbtn:hover,
+html body .cr-chip-btn-primary:hover, html body .cr-band-btn:hover, html body .cr-sync-btn:hover,
+html body .cr-match-scores-btn:hover, html body form input[type="submit"].cr-btn:hover {
+  background: var(--cr-btn-blue-hover) !important; border-color: var(--cr-btn-blue-hover) !important; color: #fff !important;
+}
+html body .cr-btn-gold *, html body .cr-cu-btn:not(.cr-cu-btn-outline) *, html body .cr-sb-newbtn *, html body .cr-sync-btn * { color: #fff !important; }
+/* W chips teal + white, L chips grey + white, everywhere. */
+html body .cr-result-badge-win, html body .cr-hero-form-w, html body .cr-rp-form-w, html body .cr-st-last-w,
+html body .cr-chart-recent-win, html body .cr-st-dot-w, html body .cr-rp-wl-w, html body .cr-adv-win,
+html body .cr-cu-res-w, html body .cr-result-w {
+  background: var(--cr-win-teal) !important; border-color: var(--cr-win-teal) !important; color: #fff !important;
+}
+html body .cr-result-badge-loss, html body .cr-hero-form-l, html body .cr-rp-form-l, html body .cr-st-last-l,
+html body .cr-chart-recent-loss, html body .cr-st-dot-l, html body .cr-rp-wl-l, html body .cr-adv-loss,
+html body .cr-cu-res-l, html body .cr-result-l {
+  background: var(--cr-loss-grey) !important; border-color: var(--cr-loss-grey) !important; color: #fff !important;
+}
+/* Sign-up page logo tile: solid court green like the header logo (no gold). */
+html body .cr-auth-logo { background: #6CAF7E !important; box-shadow: 0 2px 8px rgba(27, 42, 74, 0.18) !important; }
