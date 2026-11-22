@@ -6,7 +6,7 @@
 <% captain = @captain_team_ids.include?(team.id) %>
 <% lineup = match.lineup %>
 <% my_line = @my_lineup_lines[match.id] %>
-<% needs_scores = match.started? && !match.scores_entered? %>
+<% needs_scores = match.over? && !match.scores_entered? %>
 <%# The pill and the "Needs scores" note wait until the match is over (its end
     time, Eastern), so a 9:30 match reads Upcoming at 9:00 and Completed after. %>
 <% over = match.over? %>
@@ -14,6 +14,8 @@
   label, url =
     if needs_scores && captain then [ "Enter scores", edit_results_team_match_path(team, match) ]
     elsif needs_scores && match.on_a_line?(current_user) then [ "Enter my line", my_line_team_match_path(team, match) ]
+    elsif captain && match.finished? then [ "Edit scores", edit_results_team_match_path(team, match) ]
+    elsif match.finished? then [ (lineup&.published? ? "View lineup" : "View match"), team_match_path(team, match) ]
     elsif captain then [ "Set lineup", edit_team_match_lineup_path(team, match) ]
     elsif lineup&.published? then [ "View lineup", team_match_path(team, match) ]
     else [ "View match", team_match_path(team, match) ]

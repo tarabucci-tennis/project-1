@@ -245,6 +245,16 @@ the Eastern clock (`PlayClock`: end of a typed range, else start + 2 h; times ar
 `Match#over?`, `Match#playoff_like?`. /friendlies uses the band cards. Standings "Next match" counts match-like calendar
 entries (Over Served's schedule is all calendar entries). Only the name is serif in split titles (`vs_title_tag`).
 
+**Repeat fixes from Tara's 96-item live-site list (Nov 22 2026):** `Match#finished?` (scores in, or end time passed)
+hides Set lineup / Ask who can play everywhere (match page, schedule rows + chips, playoff rows, Upcoming cards, Lineups);
+captains get Edit scores instead. "Needs scores"/Enter scores wait for `over?` (not match morning). Team hero: "Scheduled"
+(not "Matches"); the Next match tile hides when the right-hand card shows the same match; Last 5 = newest first. My Teams
+standings have a T column (phones: W · L · T) + a footnote on the half-win formula. Player Stats Team Record + Recent
+Results count ties. "Team colors:" always shown, navy ("not set" when blank). **Items in that list that REVERSE locked
+decisions were NOT built** (asked Tara): 1200px column (#8), all-gold primaries (#28), plain-text W/L (#30), no green
+accents (#35), gold court net (#9/#29), flagging timed/total-games scores as invalid (#40/#41/#61/#63 — Bux-Mont and
+Del-Tri lines are won on total games; USTA stores a match tiebreak as 1-0).
+
 **FINAL LOCKED PALETTE (Tara, Nov 19 2026, #330) — "do not change them again".** Light blue page, Fraunces headings,
 cream cards (all kept). Accent = **tennis-court light green** (the green surround of a blue hard court): `--cr-court-green
 #6CAF7E` for small accents (section markers, the rank-1 ring, underlines), `--cr-court-green-tint #E4F3E8` for YOUR OWN row

@@ -776,7 +776,7 @@ class TeamsController < ApplicationController
     completed_matches = @team.matches.completed.includes(match_lines: { match_line_players: :user })
 
     charts = {
-      overall:          { wins: 0, losses: 0, total: 0, pct: 0 },
+      overall:          { wins: 0, losses: 0, ties: 0, total: 0, pct: 0 },
       singles_doubles:  { singles_total: 0, singles_wins: 0, singles_pct: 0,
                           doubles_total: 0, doubles_wins: 0, doubles_pct: 0 },
       by_line:          {},     # "1S" => { wins:, total:, pct: }, ...
@@ -800,9 +800,11 @@ class TeamsController < ApplicationController
     # Team overall record (per match, not per line)
     charts[:overall][:wins]   = completed_matches.where(result: "win").count
     charts[:overall][:losses] = completed_matches.where(result: "loss").count
-    charts[:overall][:total]  = charts[:overall][:wins] + charts[:overall][:losses]
+    # Ties count as ties (a tie = half a win in win %), the same as the header.
+    charts[:overall][:ties]   = completed_matches.where(result: "tie").count
+    charts[:overall][:total]  = charts[:overall][:wins] + charts[:overall][:losses] + charts[:overall][:ties]
     if charts[:overall][:total] > 0
-      charts[:overall][:pct] = (charts[:overall][:wins].to_f / charts[:overall][:total] * 100).round(0)
+      charts[:overall][:pct] = ((charts[:overall][:wins] + charts[:overall][:ties] / 2.0) / charts[:overall][:total] * 100).round(0)
     end
 
     return charts if completed_matches.empty?
