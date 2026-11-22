@@ -44,7 +44,10 @@ class NumbersAgreeTest < ActionDispatch::IntegrationTest
     assert_select ".cr-hero-stat-label", text: "Record (W-L-T)"
     assert_select ".cr-hero-stat-value", text: "5"
     assert_select ".cr-hero-breakdown", text: /3 played · 1 needs scores · 1 to play/
-    assert_select ".cr-hero-stat-label", text: "Next match"
+    assert_select ".cr-hero-stat-label", text: "Scheduled"
+    # The next match shows once, in the card on the right — not again as a tile.
+    assert_select ".cr-hero-side-label", text: "Next match"
+    assert_select ".cr-hero-stat-label", text: "Next match", count: 0
     assert_select ".cr-hero-stat-label", text: "Starts", count: 0
     assert_equal "1-1-1", team.reload.record_label
     assert_equal 50, team.win_pct

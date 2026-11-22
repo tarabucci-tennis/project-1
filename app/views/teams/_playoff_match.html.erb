@@ -29,7 +29,7 @@
     <% if @is_captain %>
       <div class="cr-sched-actions">
         <%= link_to match.scores_button_label, edit_results_team_match_path(@team, match), class: "cr-chip-btn" %>
-        <%= link_to edit_team_match_lineup_path(@team, match), class: "cr-chip-btn" do %>Set Lineup<% end %>
+        <% unless match.finished? %><%= link_to edit_team_match_lineup_path(@team, match), class: "cr-chip-btn" do %>Set Lineup<% end %><% end %>
         <%= link_to edit_team_match_path(@team, match), class: "cr-chip-btn" do %>Edit Match<% end %>
       </div>
     <% end %>

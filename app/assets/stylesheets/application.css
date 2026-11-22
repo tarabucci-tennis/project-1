@@ -6812,8 +6812,8 @@ body.cr-ctx-division_teams-show .cr-shell-main::before { display: none; }
 .cr-st-next-opp { display: block; margin-top: 2px; font-size: 0.8rem; color: var(--cr-text-muted); }
 @media (min-width: 900px) {
   .cr-home-st th:nth-child(2) { width: 250px; }
-  .cr-home-st th:nth-child(6) { width: 210px; }
-  .cr-home-st th:nth-child(7) { width: auto; }
+  .cr-home-st th:nth-child(7) { width: 210px; }
+  .cr-home-st th:nth-child(8) { width: auto; }
   .cr-home-st .cr-st-next { overflow: visible; }
 }
 /* Phones: no room for Last; Next keeps its two short lines. */
@@ -6822,7 +6822,7 @@ body.cr-ctx-division_teams-show .cr-shell-main::before { display: none; }
 }
 @media (max-width: 640px) {
   /* As before on phones: Win% and the next match stay hidden (Upcoming has them). */
-  .cr-home-st thead th:nth-child(7), .cr-home-st tbody td:nth-child(7) { display: none; }
+  .cr-home-st thead th:nth-child(8), .cr-home-st tbody td:nth-child(8) { display: none; }
 }
 
 /* Friendlies tab (computers): upcoming friendlies two across; inside each
@@ -7028,7 +7028,7 @@ html body, html body[class] { background: var(--cr-page); color: var(--cr-text);
   { background: var(--cr-win-bg); color: var(--cr-navy); border: 1px solid var(--cr-win-bg); }
 .cr-result-badge-loss, .cr-hero-form-l, .cr-rp-form-l, .cr-st-last-l, .cr-chart-recent-loss, .cr-st-dot-l, .cr-rp-wl-l, .cr-adv-loss
   { background: var(--cr-loss-bg); color: var(--cr-navy); border: 1px solid var(--cr-loss-bg); }
-.cr-result-badge-tie, .cr-hero-form-t, .cr-st-last-t, .cr-st-dot-t
+.cr-result-badge-tie, .cr-hero-form-t, .cr-st-last-t, .cr-st-dot-t, .cr-chart-recent-tie
   { background: var(--cr-card); color: var(--cr-navy); border: 1.5px solid var(--cr-navy); }
 .cr-st-w, .cr-st-l, .cr-st-pct-good, .cr-st-pct-bad, .cr-result-win, .cr-result-loss, .cr-result-tie,
 .cr-line-win, .cr-line-loss, .cr-year-win, .cr-year-loss { color: var(--cr-navy); }
@@ -7553,3 +7553,20 @@ html body .cr-sched-date-dow { font-size: 0.58rem; font-weight: 800; letter-spac
    in the serif; "vs Smashers" stays in the body sans (team schedule rows). */
 html body .cr-title-main { font-family: var(--cr-serif); }
 html body .cr-title-vs { font-family: Inter, system-ui, -apple-system, sans-serif; font-weight: 500; letter-spacing: 0; }
+
+/* Tara's list #19/#31/#75 (Nov 22 2026): "Team colors:" in navy like all other
+   secondary text, and every swatch outlined so a white colour still shows. */
+html body .cr-team-colors-text, html body .cr-team-colors-label { color: var(--cr-navy) !important; }
+html body .cr-team-colors-label { font-weight: 700; }
+html body .cr-team-colors .cr-color-dot { box-shadow: 0 0 0 1px var(--cr-navy); }
+/* My Teams standings gained a T column (Tara's list #17/#37): T is column 5,
+   Win% 6, Last 7, Next 8. Phones show W · L · T (Win% and Next stay hidden, as before). */
+@media (min-width: 900px) {
+  html body .cr-home-st th:nth-child(5) { width: 44px; }
+  html body .cr-home-st th:nth-child(6) { width: 72px; }
+}
+@media (max-width: 640px) {
+  html body .cr-home-st thead th:nth-child(5), html body .cr-home-st tbody td:nth-child(5) { display: table-cell; }
+  html body .cr-home-st thead th:nth-child(6), html body .cr-home-st tbody td:nth-child(6) { display: none; }
+}
+html body .cr-home-st .cr-st-t { font-weight: 700; color: var(--cr-navy); }

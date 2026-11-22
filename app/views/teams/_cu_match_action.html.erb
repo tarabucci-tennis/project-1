@@ -5,7 +5,7 @@
 <% captain = @captain_team_ids.include?(team.id) %>
 <% lineup = match.lineup %>
 <% my_line = @my_lineup_lines[match.id] %>
-<% needs_scores = match.started? && !match.scores_entered? %>
+<% needs_scores = match.over? && !match.scores_entered? %>
 <div class="cr-cu-status">
   <% if needs_scores %>
     <span class="cr-cu-pill cr-cu-pill-attn">Needs scores</span>
@@ -24,6 +24,8 @@
     <%= link_to "Enter scores", edit_results_team_match_path(team, match), class: "cr-cu-btn cr-cu-btn-gold", onclick: "event.stopPropagation();" %>
   <% elsif needs_scores && match.on_a_line?(current_user) %>
     <%= link_to "Enter my line", my_line_team_match_path(team, match), class: "cr-cu-btn cr-cu-btn-gold", onclick: "event.stopPropagation();" %>
+  <% elsif captain && match.finished? %>
+    <%= link_to "Edit scores", edit_results_team_match_path(team, match), class: "cr-cu-btn", onclick: "event.stopPropagation();" %>
   <% elsif captain %>
     <%= link_to "Set lineup", edit_team_match_lineup_path(team, match), class: "cr-cu-btn", onclick: "event.stopPropagation();" %>
   <% else %>

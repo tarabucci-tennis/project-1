@@ -114,6 +114,7 @@
                 <th>Team</th>
                 <th class="cr-st-n"><span class="cr-st-dot cr-st-dot-w" title="Wins">W</span></th>
                 <th class="cr-st-n"><span class="cr-st-dot cr-st-dot-l" title="Losses">L</span></th>
+                <th class="cr-st-n" title="Ties">T</th>
                 <th class="cr-st-n">Win%</th>
                 <th class="cr-st-last-h">Last</th>
                 <th>Next match</th>
@@ -123,7 +124,7 @@
               <%# One section per league (USTA, Del-Tri, Bux-Mont, Cup) — records
                   from different leagues aren't comparable, so each ranks on its own. %>
               <% @teams_by_league.each do |league, league_teams| %>
-              <tr class="cr-st-league"><td colspan="7"><%= league %></td></tr>
+              <tr class="cr-st-league"><td colspan="8"><%= league %></td></tr>
               <% standings = league_teams.sort_by { |t| [ (t.wins_count + t.losses_count + t.ties_count).positive? ? 0 : 1, -(t.win_pct || 0), -t.wins_count, t.name.to_s.downcase ] } %>
               <% standings.each_with_index do |team, i| %>
                 <tr class="cr-st-row" onclick="if (!event.target.closest('a')) window.location='<%= team_path(team) %>'">
@@ -131,11 +132,12 @@
                   <td>
                     <%= link_to team.name, team_path(team), class: "cr-st-team" %>
                     <div class="cr-st-sub">
-                      <%= team.league_label %><% if team.team_type.present? %> · <%= team.team_type %><% end %><% if team.rating.present? %> · <%= team.rating %><% end %><% if team.ties_count.positive? %> · <%= pluralize(team.ties_count, "tie") %><% end %>
+                      <%= team.league_label %><% if team.team_type.present? %> · <%= team.team_type %><% end %><% if team.rating.present? %> · <%= team.rating %><% end %>
                     </div>
                   </td>
                   <td class="cr-st-n cr-st-w"><%= team.wins_count %></td>
                   <td class="cr-st-n cr-st-l"><%= team.losses_count %></td>
+                  <td class="cr-st-n cr-st-t"><%= team.ties_count %></td>
                   <td class="cr-st-n">
                     <% if team.win_pct %>
                       <span class="<%= team.win_pct >= 50 ? "cr-st-pct-good" : "cr-st-pct-bad" %>"><%= team.win_pct %>%</span>
@@ -175,7 +177,7 @@
             </tbody>
           </table>
         </div>
-        <p class="cr-st-hint">Tap a team to open its full details →</p>
+        <p class="cr-st-hint">Win % counts a tie as half a win: (W + ½T) ÷ matches played. Tap a team to open its full details →</p>
       </div>
 
       <%# ── Panel 2: Calendar ───────────────────────────────────── %>

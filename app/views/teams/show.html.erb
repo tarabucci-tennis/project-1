@@ -58,12 +58,15 @@
       </div>
 
       <h1 class="cr-team-hero-name"><%= @team.name %></h1>
-      <% if @team.team_colors.present? %>
-        <div class="cr-team-colors" title="Team colors">
+      <%# Always shown, in navy, so every team page reads the same (Tara's list #19/#75). %>
+      <div class="cr-team-colors" title="Team colors">
+        <% if @team.team_colors.present? %>
           <% @team.color_swatches.each do |hex| %><span class="cr-color-dot" style="background: <%= hex %>;"></span><% end %>
           <span class="cr-team-colors-text"><span class="cr-team-colors-label">Team colors:</span> <%= @team.team_colors %></span>
-        </div>
-      <% end %>
+        <% else %>
+          <span class="cr-team-colors-text"><span class="cr-team-colors-label">Team colors:</span> not set</span>
+        <% end %>
+      </div>
 
       <div class="cr-team-hero-sub">
         <% if @team.home_court.present? %>
@@ -86,9 +89,13 @@
         </div>
         <div class="cr-hero-stat">
           <div class="cr-hero-stat-value"><%= @sched[:total] %></div>
-          <div class="cr-hero-stat-label">Matches</div>
+          <%# The season total, not matches played: the line below splits it up (Tara, #27). %>
+          <div class="cr-hero-stat-label">Scheduled</div>
         </div>
-        <% if @sched[:next_date] %>
+        <%# The next match shows once: in the card on the right when there is one
+            (Tara, #27/#50). The tile stays for "Starts" and for a next date that's
+            a calendar entry the card can't show. %>
+        <% if @sched[:next_date] && !(@sched[:started] && @team.next_match&.match_date&.to_date == @sched[:next_date]) %>
           <div class="cr-hero-stat">
             <div class="cr-hero-stat-value"><%= @sched[:next_date].strftime("%b %-d").upcase %></div>
             <%# "Starts" only before the season's first match; after that it's the next one. %>
@@ -130,9 +137,9 @@
           <div class="cr-hero-side-opp">No matches left to play</div>
         <% end %>
         <% if hero_form.any? %>
-          <div class="cr-hero-side-label cr-hero-side-label-form">Last <%= hero_form.size %> results</div>
+          <div class="cr-hero-side-label cr-hero-side-label-form">Last <%= hero_form.size %> results · newest first</div>
           <div class="cr-hero-form">
-            <% hero_form.each do |r| %><span class="cr-hero-form-dot cr-hero-form-<%= r.downcase %>" title="<%= { 'W' => 'Win', 'L' => 'Loss', 'T' => 'Tie' }[r] %>"><%= r %></span><% end %>
+            <% hero_form.reverse.each do |r| %><span class="cr-hero-form-dot cr-hero-form-<%= r.downcase %>" title="<%= { 'W' => 'Win', 'L' => 'Loss', 'T' => 'Tie' }[r] %>"><%= r %></span><% end %>
           </div>
         <% end %>
       </div>
@@ -283,8 +290,10 @@
                       <% if lineup&.published? %><span class="cr-cu-pill cr-sched-pill">Lineup set</span><% elsif @is_captain && lineup&.draft? %><span class="cr-cu-pill cr-sched-pill-draft">Draft</span><% else %><span class="cr-cu-pill cr-cu-pill-muted">No lineup yet</span><% end %>
                     </div>
                     <div class="cr-sched-action">
-                      <% if match.started? && !match.scores_entered? && @is_captain %>
+                      <% if match.over? && !match.scores_entered? && @is_captain %>
                         <%= link_to "Enter scores", edit_results_team_match_path(@team, match), class: "cr-cu-btn cr-cu-btn-gold" %>
+                      <% elsif match.finished? && @is_captain %>
+                        <%= link_to "Edit scores", edit_results_team_match_path(@team, match), class: "cr-cu-btn" %>
                       <% elsif @is_captain %>
                         <%= link_to "Set lineup", edit_team_match_lineup_path(@team, match), class: "cr-cu-btn" %>
                       <% else %>
@@ -299,9 +308,9 @@
                       <% if lineup&.published? %><%= render "matches/lineup_share_button", match: match %><% end %>
                       <a href="<%= google_calendar_url(match) %>" target="_blank" rel="noopener" class="cr-chip-btn">Calendar</a>
                       <% if @is_captain %>
-                        <%= render "matches/poll_share_button", match: match %>
+                        <% unless match.finished? %><%= render "matches/poll_share_button", match: match %><% end %>
                         <%= link_to edit_team_match_path(@team, match), class: "cr-chip-btn" do %>Edit Match<% end %>
-                        <%= link_to edit_team_match_lineup_path(@team, match), class: "cr-chip-btn" do %>Set Lineup<% end %>
+                        <% unless match.finished? %><%= link_to edit_team_match_lineup_path(@team, match), class: "cr-chip-btn" do %>Set Lineup<% end %><% end %>
                         <%= link_to match.scores_button_label, edit_results_team_match_path(@team, match), class: "cr-chip-btn" %>
                       <% end %>
                     </div>
@@ -708,7 +717,7 @@
           <div class="cr-chart-summary-card">
             <div class="cr-chart-summary-label">Team Record</div>
             <div class="cr-chart-summary-value">
-              <%= charts[:overall][:wins] %>–<%= charts[:overall][:losses] %>
+              <%= charts[:overall][:wins] %>–<%= charts[:overall][:losses] %><%= "–#{charts[:overall][:ties]}" if charts[:overall][:ties].positive? %>
             </div>
             <div class="cr-chart-summary-detail">
               <%= charts[:overall][:pct] %>% win rate
@@ -819,8 +828,8 @@
                 <div class="cr-chart-recent-row">
                   <span class="cr-chart-recent-date"><%= m[:date].strftime("%b %-d") %></span>
                   <span class="cr-chart-recent-opponent">vs. <%= m[:opponent] %></span>
-                  <span class="cr-chart-recent-badge <%= m[:result] == 'win' ? 'cr-chart-recent-win' : 'cr-chart-recent-loss' %>">
-                    <%= m[:result] == 'win' ? 'W' : 'L' %>
+                  <span class="cr-chart-recent-badge <%= { 'win' => 'cr-chart-recent-win', 'tie' => 'cr-chart-recent-tie' }[m[:result]] || 'cr-chart-recent-loss' %>">
+                    <%= { 'win' => 'W', 'tie' => 'T' }[m[:result]] || 'L' %>
                   </span>
                   <% if m[:score].present? %>
                     <span class="cr-chart-recent-score"><%= m[:score] %></span>

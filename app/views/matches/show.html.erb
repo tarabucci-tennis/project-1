@@ -28,7 +28,7 @@
           <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
         </svg>
       </a>
-      <% if @is_captain %>
+      <% if @is_captain && !@match.finished? %>
         <%= link_to "Set Lineup", edit_team_match_lineup_path(@team, @match), class: "cr-btn cr-btn-gold cr-set-lineup-btn" %>
       <% end %>
     </div>
@@ -38,7 +38,7 @@
     <div style="margin-top: 8px;"><%= render "matches/venue", venue: @match.venue %></div>
   <% end %>
 
-  <% if @is_captain && @match.match_date >= Date.current.beginning_of_day %>
+  <% if @is_captain && !@match.finished? %>
     <div class="cr-lineup-share-row"><%= render "matches/poll_share_button", match: @match %></div>
   <% end %>
 

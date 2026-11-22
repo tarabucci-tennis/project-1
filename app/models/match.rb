@@ -130,6 +130,13 @@ class Match < ApplicationRecord
     playoff? || "#{opponent} #{notes}".match?(/playoff/i)
   end
 
+  # Finished: final scores are in, or its end time has passed. Lineup actions
+  # (Set lineup, Ask who can play) hide once a match is finished; any lineup
+  # fix after that happens through score entry.
+  def finished?
+    played? || scores_entered? || over?
+  end
+
   # Over once its end time has passed on the players' (Eastern) clock: the end
   # of a typed range, else the start plus two hours.
   def over?

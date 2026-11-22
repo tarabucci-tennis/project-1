@@ -47,7 +47,9 @@
           </div>
           <span class="cr-lu-status is-<%= tone %>"><%= status %></span>
           <div class="cr-lu-action">
-            <% if item[:is_captain] %>
+            <% if item[:is_captain] && match.finished? %>
+              <%= link_to "Edit scores", edit_results_team_match_path(team, match), class: "cr-lu-btn" %>
+            <% elsif item[:is_captain] %>
               <%= link_to item[:published] ? "Edit lineup" : "Set lineup", edit_team_match_lineup_path(team, match),
                     class: "cr-lu-btn#{' is-primary' unless item[:published]}" %>
             <% else %>
