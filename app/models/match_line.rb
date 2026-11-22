@@ -39,6 +39,23 @@ class MatchLine < ApplicationRecord
     set_games.map { |g| g[:theirs] }
   end
 
+  # Total games for each side, across every set played (numbers only).
+  def games_total
+    set_games.each_with_object([ 0, 0 ]) do |g, t|
+      t[0] += g[:ours].to_i if g[:ours].to_s.match?(/\A\d+\z/)
+      t[1] += g[:theirs].to_i if g[:theirs].to_s.match?(/\A\d+\z/)
+    end
+  end
+
+  # Sets won by each side.
+  def sets_total
+    set_games.each_with_object([ 0, 0 ]) do |g, t|
+      o, th = g[:ours].to_i, g[:theirs].to_i
+      t[0] += 1 if o > th
+      t[1] += 1 if th > o
+    end
+  end
+
   def scored?
     set_games.any? || result.present?
   end

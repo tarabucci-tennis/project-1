@@ -74,6 +74,21 @@ class TennisTeam < ApplicationRecord
     end
   end
 
+  # How a line (court) is won in this team's league (Tara + the league rules,
+  # Nov 22 2026): Del-Tri and Bux-Mont count TOTAL GAMES across every set played
+  # (timed play, unfinished sets count); USTA and Inter-Club (Cup) count SETS.
+  def line_rule
+    %w[Del-Tri Bux-Mont].include?(league_group) ? :games : :sets
+  end
+
+  def line_rule_text
+    if line_rule == :games
+      "#{league_group}: each line goes to the pair with the most total games across all sets played. An unfinished last set still counts its games."
+    else
+      "#{league_group}: each line goes to the pair that wins more sets."
+    end
+  end
+
   def league_display_name
     case league_category
     when "USTA"       then "USTA"

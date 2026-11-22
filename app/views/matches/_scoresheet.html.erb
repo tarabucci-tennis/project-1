@@ -6,27 +6,43 @@
 <%# TennisRecord only covers USTA, so the rating links show on USTA teams only. %>
 <% tr_links = team.league_group == "USTA" %>
 <% if lines.any? %>
+  <%# Our pair is always on top and each pair is labelled with its team, so the
+      W / L badge (always OUR team's result) can't be read as the top pair's
+      (Tara's list #102/#114/#122). The league's line rule is stated once. %>
+  <% rule = team.line_rule %>
+  <% n_sets = lines.map { |l| l.set_games.size }.max.to_i %>
   <div class="cr-sheet">
+    <p class="cr-sheet-rule"><%= team.line_rule_text %> W / L is <%= team.name %>'s result.</p>
     <% lines.each do |line| %>
-      <% our_row = { names: line.our_player_names, ids: line.match_line_players.map { |mlp| mlp.user_id },
+      <% our_row = { team: team.name, names: line.our_player_names, ids: line.match_line_players.map { |mlp| mlp.user_id },
                      games: line.our_games, won: line.won?, ours: true } %>
-      <% opp_names = line.opponent_names.any? ? line.opponent_names : [ match.opponent ].compact %>
-      <% opp_row = { names: opp_names, ids: [], games: line.their_games, won: line.lost?, ours: false,
+      <% opp_names = line.opponent_names.any? ? line.opponent_names : [] %>
+      <% opp_row = { team: match.opponent.presence || "Opponent", names: opp_names, ids: [], games: line.their_games, won: line.lost?, ours: false,
                      real: line.opponent_names.any? } %>
-      <% rows = line.won? ? [ our_row, opp_row ] : [ opp_row, our_row ] %>
+      <% tot = rule == :games ? line.games_total : line.sets_total %>
       <div class="cr-sheet-line">
         <div class="cr-sheet-line-head">
           <span class="cr-sheet-line-label"><%= line.line_label %></span>
           <% if line.result.present? %>
-            <span class="cr-result-badge <%= line.won? ? 'cr-result-badge-win' : 'cr-result-badge-loss' %>"><%= line.won? ? "W" : "L" %></span>
+            <span class="cr-result-badge <%= line.won? ? 'cr-result-badge-win' : 'cr-result-badge-loss' %>" title="<%= team.name %> <%= line.won? ? 'won' : 'lost' %> this line"><%= line.won? ? "W" : "L" %></span>
+          <% end %>
+          <% if line.set_games.any? %>
+            <span class="cr-sheet-total"><%= tot[0] %>–<%= tot[1] %> <%= rule == :games ? "games" : "sets" %></span>
           <% end %>
           <% if line.entered_by %>
             <span class="cr-sheet-entered">Entered by <%= line.entered_by.name.to_s.split.first %><%= " · #{line.entered_at.strftime('%b %-d')}" if line.entered_at %></span>
           <% end %>
         </div>
-        <% rows.each do |row| %>
-          <div class="cr-sheet-pair <%= 'cr-sheet-pair-win' if row[:won] %>">
+        <% if n_sets.positive? %>
+          <div class="cr-sheet-pair cr-sheet-sethead" aria-hidden="true">
+            <span class="cr-sheet-names"></span>
+            <span class="cr-sheet-sets"><% n_sets.times do |i| %><span class="cr-sheet-set">Set <%= i + 1 %></span><% end %></span>
+          </div>
+        <% end %>
+        <% [ our_row, opp_row ].each do |row| %>
+          <div class="cr-sheet-pair <%= 'cr-sheet-pair-win' if row[:won] %> <%= row[:ours] ? 'cr-sheet-pair-ours' : 'cr-sheet-pair-theirs' %>">
             <span class="cr-sheet-names">
+              <span class="cr-sheet-team"><%= row[:team] %></span>
               <% if row[:names].any? %>
                 <% row[:names].each_with_index do |nm, i| %>
                   <% pid = row[:ids][i] %>
@@ -37,11 +53,11 @@
                   <% end %><% if tr_links && (row[:ours] || row[:real]) %><%= link_to icon(:chart, size: 13), tennis_record_url(nm), target: "_blank", rel: "noopener", class: "cr-sheet-tr-link", title: "#{nm}'s rating on TennisRecord", "aria-label": "#{nm}'s rating on TennisRecord" %><% end %><%= " / " unless i == row[:names].size - 1 %>
                 <% end %>
               <% else %>
-                <span style="color: var(--cr-text-light);"><%= row[:ours] ? "Our line" : "Opponent" %></span>
+                <span class="cr-sheet-noname"><%= row[:ours] ? "Our line" : "Names not entered" %></span>
               <% end %>
             </span>
             <span class="cr-sheet-sets">
-              <% row[:games].each do |g| %><span class="cr-sheet-set"><%= g %></span><% end %>
+              <% n_sets.times do |i| %><span class="cr-sheet-set"><%= row[:games][i] || "" %></span><% end %>
             </span>
           </div>
         <% end %>
