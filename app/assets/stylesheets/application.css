@@ -6688,7 +6688,7 @@ body.cr-ctx-matches-edit_results .cr-result-option:has(input:checked) .cr-result
 .cr-has-sb .cr-shell-main::before {
   content: ""; position: fixed; z-index: -1; pointer-events: none;
   inset: var(--cr-hh) 0 0 0;
-  background: url("/court-portrait.jpg") center 58% / contain no-repeat;   /* the court stands up and down, net across (Tara) */
+  background: url("/court-tall.jpg") center 58% / contain no-repeat;   /* the court stands up and down, net across (Tara) */
   opacity: 0.2;
 }
 @media (min-width: 1000px) {
@@ -7599,9 +7599,9 @@ html body .cr-sheet-entered { opacity: 1; font-weight: 600; }
 }
 
 /* Court in the margins (Tara, Nov 22 2026, LOCKED): the court stands up and down
-   (portrait) and its GOLD net runs ACROSS it, horizontally, with gold posts —
-   never a vertical net anywhere. court-portrait.jpg: Tara's court photo with a
-   gold net + posts, soft green surround, thin navy border, rounded corners.
+   (portrait) and its net runs ACROSS it, horizontally — never a vertical net
+   anywhere. court-tall.jpg: Tara's own court photo, original colours (pale blue
+   court, white lines, pale blue net) — Tara: "keep this one, I love the colors".
    ≥1536px: one WHOLE court in each margin, centred in it. 1000–1535px (margins
    only ~30px): the row of whole upright courts from #328 (repeat-x) shows at the
    edges, so the margins still read as court with the net running across. */
@@ -7609,7 +7609,7 @@ html body .cr-sheet-entered { opacity: 1; font-weight: 600; }
   .cr-has-sb .cr-shell-main::before {
     --cr-margin: calc((100vw - var(--cr-sb-w) - var(--cr-col) - 48px) / 2);
     --cr-court-w: min(calc(var(--cr-margin) - 56px), calc((100vh - var(--cr-hh) - 120px) / 1.5));
-    background-image: url("/court-portrait.jpg"), url("/court-portrait.jpg");
+    background-image: url("/court-tall.jpg"), url("/court-tall.jpg");
     background-size: var(--cr-court-w) auto, var(--cr-court-w) auto;
     background-repeat: no-repeat, no-repeat;
     background-position:
@@ -7633,7 +7633,7 @@ html body .cr-sheet-entered { opacity: 1; font-weight: 600; }
      Type      Fraunces headings, clean sans body
    NO GOLD anywhere on the site (#C9A227, #E3C84F and #D9C08A were all tried
    and rejected). Only exceptions, separate assets: the logo ball, the bouncing
-   ball, and the gold net in the court image (court-portrait.jpg).
+   ball (the court photo has no gold).
    ═══════════════════════════════════════════════════════════════════════ */
 :root {
   --cr-btn-blue: #3F6C8A; --cr-btn-blue-hover: #335A74;
