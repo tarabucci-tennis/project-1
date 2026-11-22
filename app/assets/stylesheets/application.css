@@ -7598,24 +7598,19 @@ html body .cr-sheet-entered { opacity: 1; font-weight: 600; }
   html body .cr-sheet-line-head { flex-wrap: wrap; }
 }
 
-/* Court in the margins (Tara, Nov 22 2026, LOCKED): the court stands up and down
-   (portrait) and its net runs ACROSS it, horizontally — never a vertical net
-   anywhere. court-tall.jpg: Tara's own court photo, original colours (pale blue
-   court, white lines, pale blue net) — Tara: "keep this one, I love the colors".
-   ≥1536px: one WHOLE court in each margin, centred in it. 1000–1535px (margins
-   only ~30px): the row of whole upright courts from #328 (repeat-x) shows at the
-   edges, so the margins still read as court with the net running across. */
-@media (min-width: 1536px) and (min-aspect-ratio: 1/1) {
+/* Court behind the page (Tara, Nov 22 2026, LOCKED — "option A"): on computers ONE
+   big court sits behind the page, centred, so the 920px column rests on the court
+   and its sidelines, alleys and the two ends of the net show in the margins on
+   both sides. Tara's original court photo (court-tall.jpg), net running ACROSS.
+   Sizing: the court lines span 70.5% of the photo's width, so a photo
+   (column + 380px) / 0.705 wide puts each sideline ~190px outside the column. */
+@media (min-width: 1000px) and (min-aspect-ratio: 1/1) {
   .cr-has-sb .cr-shell-main::before {
-    --cr-margin: calc((100vw - var(--cr-sb-w) - var(--cr-col) - 48px) / 2);
-    --cr-court-w: min(calc(var(--cr-margin) - 56px), calc((100vh - var(--cr-hh) - 120px) / 1.5));
-    background-image: url("/court-tall.jpg"), url("/court-tall.jpg");
-    background-size: var(--cr-court-w) auto, var(--cr-court-w) auto;
-    background-repeat: no-repeat, no-repeat;
-    background-position:
-      calc(var(--cr-margin) / 2 - var(--cr-court-w) / 2) center,
-      calc(100vw - var(--cr-sb-w) - var(--cr-margin) / 2 - var(--cr-court-w) / 2) center;
-    opacity: 0.6;
+    background-image: url("/court-tall.jpg");
+    background-size: calc((var(--cr-col) + 380px) / 0.705) auto;
+    background-repeat: no-repeat;
+    background-position: center center;
+    opacity: 0.55;
   }
 }
 
