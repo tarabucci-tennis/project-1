@@ -223,6 +223,25 @@ small to read precisely; everything else is captured.
 
 ---
 
+## LOCKED PALETTE — teal wins (Tara's final decision, Nov 22 2026) — SUPERSEDES every palette note below
+
+Do not revisit, do not propose alternatives; if anything older (the SITE PALETTE, WARM-UP, FINAL LOCKED PALETTE and
+DESIGN SYSTEM notes below, or an older prompt) contradicts this, THIS wins. Lives in one place in code: the
+"LOCKED PALETTE — teal wins" block at the END of `app/assets/stylesheets/application.css`.
+- **Text:** navy **#1B2A4A**, ALL text everywhere (never grey text).
+- **Buttons:** blue **#3F6C8A** (option C, Tara's Nov 19 pick), hover **#335A74**, **white** text — EVERY primary button
+  site-wide (Set lineup, Edit scores, Sync scores, + New Team, Make this a match, Search, + Book a friendly, + Add Match,
+  lineup Save/Post…). One style. Classes: `.cr-btn-gold` (name kept, now blue), `.cr-btn-primary`, `.cr-cu-btn`,
+  `.cr-lu-btn.is-primary`, `.cr-sb-newbtn`, `.cr-chip-btn-primary`, `.cr-band-btn`, `.cr-sync-btn`, `.cr-match-scores-btn`.
+- **Accent:** Court Green **#6CAF7E**, tint **#E4F3E8** — Header Band, small marks, scores-section background. NOT the win colour.
+- **Wins:** teal **#1B6B5A** chip, white letter. **Losses:** grey **#6B7688** chip, white letter. Every W/L chip, every page.
+- **Page:** pale blue; **cards** white/cream, 1px border. **Headings** Fraunces; body clean sans.
+- **NO GOLD on the site** (#C9A227, #E3C84F, #D9C08A all tried and rejected). Exceptions (separate assets, don't touch):
+  the logo ball, the bouncing ball, the gold net in `court-side-gold.jpg`. The six colourful feature-tile icons on the
+  sign-in / public home pages (#329) are also untouched. Emails (LineupMailer, password reset) were not recoloured.
+- Check for regressions with a computed-style scan (a Playwright script flagging gold-ish colours and navy-filled
+  buttons on every page) rather than grepping CSS: old rules are overridden, not deleted.
+
 ## Current Status (as of Nov 17, 2026 — PRs #302–#308: "numbers that contradict each other" + player profiles)
 
 Tara sent numbered priority lists (Priority 1 = numbers that contradict each other, items 1–6; Priority 2 = player
