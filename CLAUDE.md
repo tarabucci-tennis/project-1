@@ -242,6 +242,17 @@ DESIGN SYSTEM notes below, or an older prompt) contradicts this, THIS wins. Live
 - Check for regressions with a computed-style scan (a Playwright script flagging gold-ish colours and navy-filled
   buttons on every page) rather than grepping CSS: old rules are overridden, not deleted.
 
+## LOCKED COURT — Tara's original court photo, portrait, HORIZONTAL net (Nov 22 2026) — supersedes #9/#29 and #340
+
+The net runs ACROSS the width of the court; the court stands portrait (tall). **Never a vertical net anywhere.** Colours:
+**Tara's original photo, unchanged** — pale blue court, white lines, pale blue net (Tara, Nov 22: "Please keep this one. I
+love the colors."). A gold-net / green-surround / navy-border version was drawn the same day and REJECTED in favour of the
+original — don't redraw or recolour the court. Images: `court-tall.jpg` (the whole court, every background) and
+`court-net.jpg` (the public home hero: a wide crop of the same court with the net near the bottom; wide slots are cropped,
+never rotated). The sideways `court-wide.jpg` / `court-side-gold.jpg` are deleted. **Computers (≥1000px): "option A"** —
+ONE big court centred behind the page (Tara: two courts in the margins "looks a little messy"), sized
+`(var(--cr-col) + 380px) / 0.705` wide so its sidelines and the net's two ends show in the margins; phones: one faded court.
+
 ## Current Status (as of Nov 17, 2026 — PRs #302–#308: "numbers that contradict each other" + player profiles)
 
 Tara sent numbered priority lists (Priority 1 = numbers that contradict each other, items 1–6; Priority 2 = player

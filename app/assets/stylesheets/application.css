@@ -6688,7 +6688,7 @@ body.cr-ctx-matches-edit_results .cr-result-option:has(input:checked) .cr-result
 .cr-has-sb .cr-shell-main::before {
   content: ""; position: fixed; z-index: -1; pointer-events: none;
   inset: var(--cr-hh) 0 0 0;
-  background: url("/court-tall.jpg") center 58% / contain no-repeat;   /* the court stands up and down (Tara) */
+  background: url("/court-tall.jpg") center 58% / contain no-repeat;   /* the court stands up and down, net across (Tara) */
   opacity: 0.2;
 }
 @media (min-width: 1000px) {
@@ -7598,37 +7598,19 @@ html body .cr-sheet-entered { opacity: 1; font-weight: 600; }
   html body .cr-sheet-line-head { flex-wrap: wrap; }
 }
 
-/* Court in the margins, gold net up and down (Tara's list #9/#29, Nov 22 2026).
-   On computers each margin shows a SIDEWAYS court (court-side-gold.jpg, the court
-   photo with its net drawn in gold), full height, placed so its net stands up and
-   down the middle of that margin. The column band (::after) still covers the
-   middle, so the court is only ever in the margins, never behind data.
-   H = the layer's height; the photo is 1.5 H wide with its net at 48.7% across.
-   Only from 1536px wide: narrower screens have ~30px margins, where the net
-   would fill the whole margin as a gold bar, so they keep the faded courts. */
-@media (min-width: 1536px) and (min-aspect-ratio: 1/1) {
+/* Court behind the page (Tara, Nov 22 2026, LOCKED — "option A"): on computers ONE
+   big court sits behind the page, centred, so the 920px column rests on the court
+   and its sidelines, alleys and the two ends of the net show in the margins on
+   both sides. Tara's original court photo (court-tall.jpg), net running ACROSS.
+   Sizing: the court lines span 70.5% of the photo's width, so a photo
+   (column + 380px) / 0.705 wide puts each sideline ~190px outside the column. */
+@media (min-width: 1000px) and (min-aspect-ratio: 1/1) {
   .cr-has-sb .cr-shell-main::before {
-    --cr-court-h: calc(100vh - var(--cr-hh) - 60px);
-    --cr-margin-mid: calc((100vw - var(--cr-sb-w) - var(--cr-col) - 48px) / 4);
-    background-image: url("/court-side-gold.jpg"), url("/court-side-gold.jpg");
-    background-size: auto 100%, auto 100%;
-    background-repeat: no-repeat, no-repeat;
-    background-position:
-      calc(var(--cr-margin-mid) - var(--cr-court-h) * 0.73) top,
-      calc(100vw - var(--cr-sb-w) - var(--cr-margin-mid) - var(--cr-court-h) * 0.73) top;
-    opacity: 0.55;
-  }
-}
-/* 1000–1535px wide: margins are too thin for a whole net, so one sideways court
-   is centered on the page — its net sits behind the column and the thin margins
-   show court lines only, never the old horizontal net (Tara's list #29). */
-@media (min-width: 1000px) and (max-width: 1535px) and (min-aspect-ratio: 1/1) {
-  .cr-has-sb .cr-shell-main::before {
-    background-image: url("/court-side-gold.jpg");
-    background-size: auto 100%;
+    background-image: url("/court-tall.jpg");
+    background-size: calc((var(--cr-col) + 380px) / 0.705) auto;
     background-repeat: no-repeat;
-    background-position: center top;
-    opacity: 0.45;
+    background-position: center center;
+    opacity: 0.55;
   }
 }
 
@@ -7646,7 +7628,7 @@ html body .cr-sheet-entered { opacity: 1; font-weight: 600; }
      Type      Fraunces headings, clean sans body
    NO GOLD anywhere on the site (#C9A227, #E3C84F and #D9C08A were all tried
    and rejected). Only exceptions, separate assets: the logo ball, the bouncing
-   ball, and the gold net in the court image (court-side-gold.jpg).
+   ball (the court photo has no gold).
    ═══════════════════════════════════════════════════════════════════════ */
 :root {
   --cr-btn-blue: #3F6C8A; --cr-btn-blue-hover: #335A74;
