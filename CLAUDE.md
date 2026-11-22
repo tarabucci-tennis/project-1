@@ -162,6 +162,20 @@ small to read precisely; everything else is captured.
   answering −2, lateness −2/−4/−6/−8 by 5-min band, leaving court −2/−5). **A published
   score may have been reduced for reasons unrelated to play.**
 
+### How a line is won, per league (Tara's rules comparison, Nov 22 2026)
+- **Del-Tri and Bux-Mont: TOTAL GAMES** across every set played (timed play; an unfinished last set counts its games).
+  Tara's example: win 6–5, lose 3–6 → you lose the line 9–11. Del-Tri team: most lines, 3–3 is a tie. Bux-Mont team:
+  most courts, 3–3 broken by total games. **USTA: SETS**, best of 3, 10-point match tiebreak in lieu of a 3rd set
+  (TennisLink stores it as "1-0"). **Cup (Inter-Club): SETS**, best of 3 FULL sets, never a tiebreak instead of a 3rd.
+- Code: `TennisTeam#line_rule` (:games / :sets), `#line_rule_text`; `MatchLine#games_total` / `#sets_total`.
+- **Nov 20 Legacy 1 vs Penn Oaks 1 is a real L 2-4.** The QA checker read the winning (opponent) pair, which the match page
+  listed first, as Legacy's and asked to flip it to W 5-1 (items #122/#127). Don't. Since Nov 22 the scoresheet puts OUR pair
+  first, labels both pairs with their team, adds Set 1/2/3 headers and the line total, and states the league rule.
+- Still wanted (Tara's Section Q, not built): a per-league ruleset that COMPUTES W/L from scores and flags a stored W/L that
+  disagrees, a "How this league scores" card, ruleset-driven standings columns/tiebreaks, default/retirement entry types,
+  score-entry deadlines (Del-Tri Mon 5 PM; Bux-Mont 24 h / 48 h / Wed 5 PM; USTA confirm 48 h). Del-Tri ratings = the USTA
+  rating issued the previous December, fixed for the season.
+
 ### Ratings — who owns them (stated by Tara, Sept 22 2026)
 - **USTA is the ONLY league that sets a player's rating.** Your USTA results feed the
   year-end USTA/NTRP computer rating (e.g. Tara is 4.0). USTA is "completely different"

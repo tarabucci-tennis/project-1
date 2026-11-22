@@ -7570,3 +7570,30 @@ html body .cr-team-colors .cr-color-dot { box-shadow: 0 0 0 1px var(--cr-navy); 
   html body .cr-home-st thead th:nth-child(6), html body .cr-home-st tbody td:nth-child(6) { display: none; }
 }
 html body .cr-home-st .cr-st-t { font-weight: 700; color: var(--cr-navy); }
+
+/* Match scores, Tara's list #26/#102/#122 (Nov 22 2026): the results area on a
+   Court Green tint, every name and score navy, bigger bolder set scores,
+   Set 1/2/3 headers, each pair labelled with its team, the line total, and the
+   league's line rule in one sentence. */
+html body .cr-sheet { background: var(--cr-court-green-tint, #E4F3E8); border: 1px solid var(--cr-court-green-line, #bfe0c8); border-radius: 12px; padding: 12px; }
+html body .cr-sheet-rule { margin: 0 0 2px; font-size: 0.85rem; font-weight: 600; color: var(--cr-navy); line-height: 1.4; }
+html body .cr-sheet-line { background: #fff; border-color: var(--cr-card-border, #cfd9e4); }
+html body .cr-sheet-line-head { background: #fff; color: var(--cr-navy); }
+html body .cr-sheet-line-label, html body .cr-sheet-names, html body .cr-sheet-playerlink,
+html body .cr-sheet-set, html body .cr-sheet-pair-win .cr-sheet-set, html body .cr-sheet-noname,
+html body .cr-sheet-entered, html body .cr-sheet-tr-link { color: var(--cr-navy) !important; }
+html body .cr-sheet-playerlink { text-decoration: underline; text-underline-offset: 2px; }
+html body .cr-sheet-team { display: block; font-size: 0.68rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 1px; }
+html body .cr-sheet-set { min-width: 46px; font-size: 1.2rem; font-weight: 800; }
+html body .cr-sheet-pair-win { background: rgba(108, 175, 126, 0.10); }
+html body .cr-sheet-pair-win .cr-sheet-set { font-weight: 900; }
+html body .cr-sheet-sethead { padding-top: 6px; padding-bottom: 0; }
+html body .cr-sheet-sethead .cr-sheet-set { font-size: 0.66rem; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; }
+html body .cr-sheet-sethead + .cr-sheet-pair { border-top: none; }
+html body .cr-sheet-total { font-size: 0.82rem; font-weight: 700; color: var(--cr-navy); }
+html body .cr-sheet-entered { opacity: 1; font-weight: 600; }
+@media (max-width: 480px) {
+  html body .cr-sheet { padding: 8px; }
+  html body .cr-sheet-set { min-width: 34px; font-size: 1.05rem; }
+  html body .cr-sheet-line-head { flex-wrap: wrap; }
+}
