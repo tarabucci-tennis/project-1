@@ -242,6 +242,17 @@ DESIGN SYSTEM notes below, or an older prompt) contradicts this, THIS wins. Live
 - Check for regressions with a computed-style scan (a Playwright script flagging gold-ish colours and navy-filled
   buttons on every page) rather than grepping CSS: old rules are overridden, not deleted.
 
+## LOCKED COURT — portrait court, HORIZONTAL gold net (Tara's correction, Nov 22 2026) — supersedes #9/#29 and #340
+
+The net runs ACROSS the width of the court. On this site the court stands portrait (tall) with the net HORIZONTAL across
+the middle and gold posts at each end. **Never a vertical net anywhere** (the Nov 22 morning "vertical gold net" from list
+items #9/#29, PR #340, was wrong and is gone). One image: `app/assets/images/court-portrait.jpg` (Tara's court photo: pale
+blue court, white lines, gold net + posts, soft green surround, thin navy border, rounded corners). `court-net.jpg` (public
+home hero) is a WIDE CROP of that same portrait court with the net near the bottom — wide slots are cropped, never rotated.
+The sideways images (`court-wide.jpg`, `court-side-gold.jpg`) and the old white-net `court-tall.jpg` were deleted.
+Margins: ≥1536px one whole court per margin, centred; 1000–1535px the #328 repeat-x row (thin margins show the net's ends,
+horizontal); phones: one faded court behind the page.
+
 ## Current Status (as of Nov 17, 2026 — PRs #302–#308: "numbers that contradict each other" + player profiles)
 
 Tara sent numbered priority lists (Priority 1 = numbers that contradict each other, items 1–6; Priority 2 = player

@@ -6688,7 +6688,7 @@ body.cr-ctx-matches-edit_results .cr-result-option:has(input:checked) .cr-result
 .cr-has-sb .cr-shell-main::before {
   content: ""; position: fixed; z-index: -1; pointer-events: none;
   inset: var(--cr-hh) 0 0 0;
-  background: url("/court-tall.jpg") center 58% / contain no-repeat;   /* the court stands up and down (Tara) */
+  background: url("/court-portrait.jpg") center 58% / contain no-repeat;   /* the court stands up and down, net across (Tara) */
   opacity: 0.2;
 }
 @media (min-width: 1000px) {
@@ -7598,37 +7598,24 @@ html body .cr-sheet-entered { opacity: 1; font-weight: 600; }
   html body .cr-sheet-line-head { flex-wrap: wrap; }
 }
 
-/* Court in the margins, gold net up and down (Tara's list #9/#29, Nov 22 2026).
-   On computers each margin shows a SIDEWAYS court (court-side-gold.jpg, the court
-   photo with its net drawn in gold), full height, placed so its net stands up and
-   down the middle of that margin. The column band (::after) still covers the
-   middle, so the court is only ever in the margins, never behind data.
-   H = the layer's height; the photo is 1.5 H wide with its net at 48.7% across.
-   Only from 1536px wide: narrower screens have ~30px margins, where the net
-   would fill the whole margin as a gold bar, so they keep the faded courts. */
+/* Court in the margins (Tara, Nov 22 2026, LOCKED): the court stands up and down
+   (portrait) and its GOLD net runs ACROSS it, horizontally, with gold posts —
+   never a vertical net anywhere. court-portrait.jpg: Tara's court photo with a
+   gold net + posts, soft green surround, thin navy border, rounded corners.
+   ≥1536px: one WHOLE court in each margin, centred in it. 1000–1535px (margins
+   only ~30px): the row of whole upright courts from #328 (repeat-x) shows at the
+   edges, so the margins still read as court with the net running across. */
 @media (min-width: 1536px) and (min-aspect-ratio: 1/1) {
   .cr-has-sb .cr-shell-main::before {
-    --cr-court-h: calc(100vh - var(--cr-hh) - 60px);
-    --cr-margin-mid: calc((100vw - var(--cr-sb-w) - var(--cr-col) - 48px) / 4);
-    background-image: url("/court-side-gold.jpg"), url("/court-side-gold.jpg");
-    background-size: auto 100%, auto 100%;
+    --cr-margin: calc((100vw - var(--cr-sb-w) - var(--cr-col) - 48px) / 2);
+    --cr-court-w: min(calc(var(--cr-margin) - 56px), calc((100vh - var(--cr-hh) - 120px) / 1.5));
+    background-image: url("/court-portrait.jpg"), url("/court-portrait.jpg");
+    background-size: var(--cr-court-w) auto, var(--cr-court-w) auto;
     background-repeat: no-repeat, no-repeat;
     background-position:
-      calc(var(--cr-margin-mid) - var(--cr-court-h) * 0.73) top,
-      calc(100vw - var(--cr-sb-w) - var(--cr-margin-mid) - var(--cr-court-h) * 0.73) top;
-    opacity: 0.55;
-  }
-}
-/* 1000–1535px wide: margins are too thin for a whole net, so one sideways court
-   is centered on the page — its net sits behind the column and the thin margins
-   show court lines only, never the old horizontal net (Tara's list #29). */
-@media (min-width: 1000px) and (max-width: 1535px) and (min-aspect-ratio: 1/1) {
-  .cr-has-sb .cr-shell-main::before {
-    background-image: url("/court-side-gold.jpg");
-    background-size: auto 100%;
-    background-repeat: no-repeat;
-    background-position: center top;
-    opacity: 0.45;
+      calc(var(--cr-margin) / 2 - var(--cr-court-w) / 2) center,
+      calc(100vw - var(--cr-sb-w) - var(--cr-margin) / 2 - var(--cr-court-w) / 2) center;
+    opacity: 0.6;
   }
 }
 
@@ -7646,7 +7633,7 @@ html body .cr-sheet-entered { opacity: 1; font-weight: 600; }
      Type      Fraunces headings, clean sans body
    NO GOLD anywhere on the site (#C9A227, #E3C84F and #D9C08A were all tried
    and rejected). Only exceptions, separate assets: the logo ball, the bouncing
-   ball, and the gold net in the court image (court-side-gold.jpg).
+   ball, and the gold net in the court image (court-portrait.jpg).
    ═══════════════════════════════════════════════════════════════════════ */
 :root {
   --cr-btn-blue: #3F6C8A; --cr-btn-blue-hover: #335A74;
