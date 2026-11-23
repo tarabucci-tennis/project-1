@@ -6,28 +6,64 @@
     You'll be the captain. Add players later from the Captain tab.
   </p>
 
+  <%# ── Start from a previous team (Tara, Nov 23 2026) ── %>
+  <% if @replicable_teams.present? %>
+    <section class="cr-replicate">
+      <h2 class="cr-replicate-title">Start from a previous team</h2>
+      <p class="cr-replicate-sub">Pick a team you captained. Its league, home court and roster fill in below; the old team isn't changed.</p>
+      <%= form_with url: new_team_path, method: :get, local: true, class: "cr-replicate-row" do %>
+        <select name="from" class="cr-replicate-select" aria-label="Previous team">
+          <option value="">Choose a team…</option>
+          <%# Grouped by year, newest first: "2026 Teams", "2025 Teams"… (Tara, Nov 23 2026). %>
+          <% year_of = ->(t) { t.start_date&.year || t.season_name.to_s[/\b(20\d\d)\b/, 1]&.to_i || t.created_at.year } %>
+          <% @replicable_teams.group_by(&year_of).sort_by { |y, _| -y }.each do |year, teams| %>
+            <optgroup label="<%= year %> Teams">
+              <% teams.each do |t| %>
+                <% detail = [ t.league_group, t.season_name.presence ].compact.join(" ") %>
+                <option value="<%= t.id %>" <%= "selected" if @source_team&.id == t.id %>><%= t.name %><%= " – #{detail}" if detail.present? %></option>
+              <% end %>
+            </optgroup>
+          <% end %>
+        </select>
+        <button type="submit" class="cr-btn cr-btn-gold cr-replicate-btn">Copy this team</button>
+      <% end %>
+    </section>
+  <% end %>
+
+  <% src = @source_team %>
+  <% roster_count = src ? src.team_memberships.where(archived_season: nil).where.not(user_id: current_user.id).count : 0 %>
   <%= form_with url: create_team_path, method: :post, local: true do |f| %>
+    <% if src %>
+      <%= hidden_field_tag :from_team_id, src.id %>
+      <div class="cr-replicate-note">
+        Copying from <strong><%= src.name %></strong>. Change the name and season for the new team.
+        <label class="cr-replicate-check">
+          <%= check_box_tag :copy_roster, "1", true %>
+          Bring the roster (<%= pluralize(roster_count, "player") %>)
+        </label>
+      </div>
+    <% end %>
     <div class="cr-field">
       <%= f.label :name, "Team Name" %>
-      <%= f.text_field :name, placeholder: "e.g. Kiss My Ace", required: true,
+      <%= f.text_field :name, value: (params[:name].presence || src&.name), placeholder: "e.g. Kiss My Ace", required: true,
           style: "width: 100%; padding: 12px 16px; border: 1px solid var(--cr-border); border-radius: 8px; font-size: 1rem;" %>
     </div>
 
     <div class="cr-field">
       <%= f.label :league_category, "League" %>
       <%= f.select :league_category, [["USTA", "USTA"], ["Inter-Club", "Inter-Club"], ["Local League (Del-Tri, Bux-Mont, etc.)", "Local"]],
-          {}, style: "width: 100%; padding: 12px 16px; border: 1px solid var(--cr-border); border-radius: 8px; font-size: 1rem; background: var(--cr-white);" %>
+          { selected: (params[:league_category].presence || src&.league_category) }, style: "width: 100%; padding: 12px 16px; border: 1px solid var(--cr-border); border-radius: 8px; font-size: 1rem; background: var(--cr-white);" %>
     </div>
 
     <div class="cr-field">
       <%= f.label :team_type, "Division / Type (optional)" %>
-      <%= f.text_field :team_type, placeholder: "e.g. Adult 40+, Adult 18+",
+      <%= f.text_field :team_type, value: (params[:team_type].presence || src&.team_type), placeholder: "e.g. Adult 40+, Adult 18+",
           style: "width: 100%; padding: 12px 16px; border: 1px solid var(--cr-border); border-radius: 8px; font-size: 1rem;" %>
     </div>
 
     <div class="cr-field">
       <%= f.label :season_name, "Season (optional)" %>
-      <%= f.text_field :season_name, placeholder: "e.g. Spring 2026",
+      <%= f.text_field :season_name, value: params[:season_name], placeholder: "e.g. Spring 2026",
           style: "width: 100%; padding: 12px 16px; border: 1px solid var(--cr-border); border-radius: 8px; font-size: 1rem;" %>
     </div>
 

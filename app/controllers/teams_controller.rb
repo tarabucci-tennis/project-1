@@ -303,7 +303,10 @@ class TeamsController < ApplicationController
 
   # GET /create-team — form to create a new team
   def new
-    # Any logged-in user can create a team
+    # Any logged-in user can create a team. "Start from a previous team"
+    # (Tara, Nov 23 2026): pick a team you captain and the form fills in from it.
+    @replicable_teams = replicable_teams
+    @source_team = @replicable_teams.detect { |t| t.id.to_s == params[:from].to_s } if params[:from].present?
   end
 
   # POST /create-team — create a new team
@@ -317,12 +320,20 @@ class TeamsController < ApplicationController
       season_name: params[:season_name].to_s.strip.presence
     )
 
+    source = replicable_teams.detect { |t| t.id.to_s == params[:from_team_id].to_s } if params[:from_team_id].present?
+    team.assign_attributes(source.attributes.slice(*REPLICATED_TEAM_FIELDS)) if source
+    team.gender = source&.gender.presence || "F"
+
     if team.save
       # Creator becomes captain
       TeamMembership.create!(user: current_user, tennis_team: team, role: "captain")
-      redirect_to team_path(team), notice: "#{team.name} created! You're the captain."
+      copied = source && params[:copy_roster] == "1" ? copy_roster(source, team) : 0
+      note = copied.positive? ? " #{copied} #{'player'.pluralize(copied)} copied from #{source.name}." : ""
+      redirect_to team_path(team), notice: "#{team.name} created! You're the captain.#{note}"
     else
       flash.now[:alert] = team.errors.full_messages.join(", ")
+      @replicable_teams = replicable_teams
+      @source_team = source
       render :new, status: :unprocessable_entity
     end
   end
@@ -633,6 +644,33 @@ class TeamsController < ApplicationController
   end
 
   private
+
+  # Team details a "Start from a previous team" copy carries over. Never the
+  # schedule, scores, league-site links or USTA standings: those belong to the
+  # old season.
+  REPLICATED_TEAM_FIELDS = %w[league_category league_name team_type section district flight rating
+                              home_court home_court_address line_format standings_style team_colors].freeze
+
+  # Teams you can start a new season from: ones you captain or co-captain,
+  # current or past (an archived spot still counts).
+  def replicable_teams
+    TennisTeam.joins(:team_memberships)
+              .where(team_memberships: { user_id: current_user.id, role: %w[captain co_captain] })
+              .distinct.order(start_date: :desc, created_at: :desc).to_a
+  end
+
+  # Copies the old team's current players (captains and co-captains keep their
+  # role). The old team is never changed. Returns how many were added.
+  def copy_roster(source, team)
+    added = 0
+    source.team_memberships.where(archived_season: nil).where.not(user_id: current_user.id).find_each do |m|
+      next if team.team_memberships.where(user_id: m.user_id, archived_season: nil).exists?
+      team.team_memberships.create!(user_id: m.user_id, role: m.role)
+      added += 1
+    end
+    added
+  end
+
 
   # When an item on the Coming Up list happens (team events have a date only).
   def coming_up_time(item)
