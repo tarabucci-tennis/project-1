@@ -251,7 +251,8 @@ original — don't redraw or recolour the court. Images: `court-tall.jpg` (the w
 `court-net.jpg` (the public home hero: a wide crop of the same court with the net near the bottom; wide slots are cropped,
 never rotated). The sideways `court-wide.jpg` / `court-side-gold.jpg` are deleted. **Computers (≥1000px): "option A"** —
 ONE big court centred behind the page (Tara: two courts in the margins "looks a little messy"), sized
-`(var(--cr-col) + 380px) / 0.705` wide so its sidelines and the net's two ends show in the margins; phones: one faded court.
+`(var(--cr-col) + 380px) / 0.705` wide so its sidelines and the net's two ends show in the margins, at FULL strength (opacity 1 — Tara, Nov 23: at 0.55
+it nearly vanished on her ~1500px laptop); phones: one faded court.
 
 ## Current Status (as of Nov 17, 2026 — PRs #302–#308: "numbers that contradict each other" + player profiles)
 

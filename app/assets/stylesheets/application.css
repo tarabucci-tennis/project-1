@@ -7610,7 +7610,7 @@ html body .cr-sheet-entered { opacity: 1; font-weight: 600; }
     background-size: calc((var(--cr-col) + 380px) / 0.705) auto;
     background-repeat: no-repeat;
     background-position: center center;
-    opacity: 0.55;
+    opacity: 1;   /* full strength (Tara, Nov 23): at 0.55 it all but vanished on her laptop */
   }
 }
 
