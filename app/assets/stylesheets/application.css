@@ -7689,5 +7689,13 @@ html body .cr-auth-logo { background: #6CAF7E !important; box-shadow: 0 2px 8px 
   .cr-has-sb .cr-shell-main::before { left: var(--cr-sb-w) !important; }   /* keep the left menu plain white */
 }
 @media (max-width: 720px) {
-  .cr-has-sb .cr-shell-main::before { background-size: 560px 560px !important; }   /* phones: smaller tile so a few balls show */
+  .cr-has-sb .cr-shell-main::before { background-size: 420px 420px !important; }   /* phones: tighter tile so every page shows balls */
 }
+/* Every page shows the doodles (Tara, Nov 23): signed-out pages (sign in, sign up,
+   reset password) have no sidebar shell, so the layer sits on the body there. */
+body:not(.cr-has-sb)::before {
+  content: ""; position: fixed; inset: var(--cr-hh) 0 0 0; z-index: -1; pointer-events: none;
+  background: url("/ball-doodles.svg") 0 0 / 960px 960px repeat;
+}
+@media (max-width: 720px) { body:not(.cr-has-sb)::before { background-size: 420px 420px; } }
+body.cr-ctx-division_teams-show .cr-shell-main::before { display: block !important; }
