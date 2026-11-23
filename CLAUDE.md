@@ -242,6 +242,12 @@ DESIGN SYSTEM notes below, or an older prompt) contradicts this, THIS wins. Live
 - Check for regressions with a computed-style scan (a Playwright script flagging gold-ish colours and navy-filled
   buttons on every page) rather than grepping CSS: old rules are overridden, not deleted.
 
+## UPCOMING LAYOUT (Tara, Nov 23 2026): option B
+
+My Teams → Upcoming keeps band cards two across, under week headings "This week / Next week / Later" (`week_bucket` in
+ApplicationHelper, Mon–Sun on the Eastern clock; `.cr-week-head`). Tara found two-across hard to read in order without them.
+The team Schedule tab is still rows (its drop-down holds captain actions); not changed yet — ask Tara.
+
 ## BALL DOODLES background (Tara, Nov 23 2026) — SUPERSEDES the LOCKED COURT background below
 
 The court photo behind signed-in pages was "too much detail and hard to read". Tara picked Instagram-style doodles instead:

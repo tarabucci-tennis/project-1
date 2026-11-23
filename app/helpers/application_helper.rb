@@ -1,4 +1,16 @@
 module ApplicationHelper
+  # "This week" / "Next week" / "Later" for the My Teams Upcoming headings
+  # (Tara, Nov 23 2026: option B — two across, grouped by week so the order is
+  # obvious). Weeks run Monday–Sunday on the players' (Eastern) clock.
+  def week_bucket(date)
+    day = date.to_date
+    today = PlayClock.now.to_date
+    if day <= today.end_of_week then "This week"
+    elsif day <= (today + 1.week).end_of_week then "Next week"
+    else "Later"
+    end
+  end
+
   # "Over Served vs Smashers" → ["Over Served", "vs Smashers"]: only the team /
   # event name goes in the serif, the "vs …" part stays in the body sans.
   def split_vs_title(text)
