@@ -380,7 +380,8 @@ partial; `@captain_team_ids` in teams#index. /friendlies uses the full column wi
   Partners group by person ignoring case/spacing/accents (league sites type "Joanne", Court Report has "JoAnne").
 - **Profile:** current teams first, "Past seasons" below (past = team archived, or the player's spot archived). Badge =
   `league_group`. Subtitle always league · level · season (falls back to flight/league name, start date). "Stats for"
-  lists current teams only. Own page titled "My Profile". Rating caption "USTA rating / year-end 2025" or "date not on
+  lists current teams only. The Playing Stats heading names the team ("Playing Stats — Legacy 1" / "— All Teams", Nov 23 2026); a
+  team with no scored matches keeps the heading plus a "No matches with scores on … yet" note instead of the section vanishing. Own page titled "My Profile". Rating caption "USTA rating / year-end 2025" or "date not on
   file"; no rating → "No USTA rating yet". City is player-entered only (never filled in for them).
 - **Private links live on /settings** (Google Calendar iCal masked like a password; league player-page link). The profile
   only has a Refresh button. "Remove this account" is only on Site members, never on a profile.
