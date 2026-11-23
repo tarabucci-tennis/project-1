@@ -7854,3 +7854,12 @@ html body .cr-fr-scores { padding-bottom: 20px; margin-bottom: 16px; }
   .cr-fr-score-row { grid-template-columns: minmax(0, 1fr) auto; }
 }
 .cr-fr-se-set-label { width: 8.2em; flex: 0 0 auto; }
+
+/* iPhone date boxes: Safari/Chrome on iOS give <input type=date> a built-in
+   minimum width and centred text, so it ran past the card's right edge (Tara,
+   Nov 23 2026, Edit friendly). Same width as the other boxes, text on the left. */
+input[type="date"], input[type="datetime-local"], input[type="time"] {
+  -webkit-appearance: none; appearance: none; box-sizing: border-box;
+  max-width: 100%; min-width: 0; text-align: left;
+}
+input[type="date"]::-webkit-date-and-time-value { text-align: left; }
