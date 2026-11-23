@@ -242,6 +242,15 @@ DESIGN SYSTEM notes below, or an older prompt) contradicts this, THIS wins. Live
 - Check for regressions with a computed-style scan (a Playwright script flagging gold-ish colours and navy-filled
   buttons on every page) rather than grepping CSS: old rules are overridden, not deleted.
 
+## BALL DOODLES background (Tara, Nov 23 2026) — SUPERSEDES the LOCKED COURT background below
+
+The court photo behind signed-in pages was "too much detail and hard to read". Tara picked Instagram-style doodles instead:
+plain light-blue page + thin line-drawn tennis balls with dashed bounce trails in court blue (`#a6c4d7`, 1.3px), "all over the background, light but there, cute but not too much" (Tara): 16 small balls (r 9–17) per tile, half with bounce trails.
+Drawing: `app/assets/images/ball-doodles.svg` (960px tile; phones use `ball-doodles-sm.svg`, a 420px tile with smaller balls but a normal-weight line so they stay visible (Tara, Nov 23: "a little bit smaller but visible"); signed-out pages get it on body::before); CSS block "BALL DOODLES" at the end of
+application.css; the public home page `body::before` uses it too. The left menu stays plain white. The court photo stays
+ONLY in the public home hero (`court-net.jpg`). Net behind signed-in pages: asked Tara (Claude advised no — it's the most
+detailed part of the photo).
+
 ## LOCKED COURT — Tara's original court photo, portrait, HORIZONTAL net (Nov 22 2026) — supersedes #9/#29 and #340
 
 The net runs ACROSS the width of the court; the court stands portrait (tall). **Never a vertical net anywhere.** Colours:
@@ -252,7 +261,9 @@ original — don't redraw or recolour the court. Images: `court-tall.jpg` (the w
 never rotated). The sideways `court-wide.jpg` / `court-side-gold.jpg` are deleted. **Computers (≥1000px): "option A"** —
 ONE big court centred behind the page (Tara: two courts in the margins "looks a little messy"), sized
 `(var(--cr-col) + 380px) / 0.705` wide so its sidelines and the net's two ends show in the margins, at FULL strength (opacity 1 — Tara, Nov 23: at 0.55
-it nearly vanished on her ~1500px laptop); phones: one faded court.
+it nearly vanished on her ~1500px laptop). Nov 23 ("it still looks like 2 courts"): the light-blue band behind the column
+(`.cr-shell-main::after`) is hidden on computers, so ONE court shows behind the whole page, under the header to the bottom
+edge; cards stay white, so data sits on cards. This supersedes "court only in the margins". Phones: one faded court.
 
 ## Current Status (as of Nov 17, 2026 — PRs #302–#308: "numbers that contradict each other" + player profiles)
 
