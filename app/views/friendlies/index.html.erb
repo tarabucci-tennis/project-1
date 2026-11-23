@@ -11,7 +11,7 @@
   <% if @friendlies.any? %>
     <%# Same Header Band cards as the My Teams Friendlies tab: coming up first
         (soonest first), then past ones (latest first). %>
-    <% upcoming, past = @friendlies.partition { |f| f.starts_at >= Time.current.beginning_of_day } %>
+    <% upcoming, past = @friendlies.partition { |f| !f.over? } %>
     <% if upcoming.any? %>
       <h2 class="cr-section-title cr-fr-past-title">Coming up</h2>
       <div class="cr-my-week-list cr-fr-list cr-band-grid">

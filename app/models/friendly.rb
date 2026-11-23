@@ -70,7 +70,9 @@ class Friendly < ApplicationRecord
     archived_at.present?
   end
 
-  scope :upcoming, -> { where("starts_at >= ?", Time.current.beginning_of_day) }
+  # Starts today or later on the players' (Eastern) clock. Lists also drop the
+  # ones already over (#over?), so a friendly moves to Past once it ends.
+  scope :upcoming, -> { where("starts_at >= ?", PlayClock.now.beginning_of_day) }
 
   # Everyone signed up and not marked out for today, in sign-up order.
   def active_spots
@@ -146,9 +148,13 @@ class Friendly < ApplicationRecord
     end
   end
 
-  def done?
-    starts_at < Time.current.beginning_of_day
+  # Over once its end time has passed (no end time: start + 2 h), on the
+  # players' clock (times are stored wall-clock Eastern). Tara, Nov 23 2026: a
+  # finished friendly goes to Past friendlies, not "Coming up" with Completed.
+  def over?
+    (ends_at || starts_at + PlayClock::DEFAULT_LENGTH) <= PlayClock.now
   end
+  alias_method :done?, :over?
 
   # ── Lineup ──────────────────────────────────────────────────────────
   # lineup = { "sets" => [ { "courts" => [[a, b, c, d], ...], "sitting" => [...], "done" => bool,

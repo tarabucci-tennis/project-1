@@ -15,7 +15,7 @@ class FriendliesController < ApplicationController
 
   # GET /friendlies — every friendly I organized or joined, newest first.
   def index
-    @friendlies = Friendly.involving(current_user).unarchived.includes(:spots).order(starts_at: :desc)
+    @friendlies = Friendly.involving(current_user).unarchived.includes(:spots, :scores).order(starts_at: :desc)
     @archived_friendlies = Friendly.involving(current_user).archived.order(starts_at: :desc).to_a
     @archivable_count = current_user.organized_friendlies.unarchived.count
   end

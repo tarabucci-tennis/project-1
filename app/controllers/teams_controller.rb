@@ -101,12 +101,12 @@ class TeamsController < ApplicationController
                                           .group_by { |f| f.starts_at.to_date }
 
     # Friendlies & Clinics tab: everything coming up, not just this month.
-    @upcoming_friendlies = Friendly.involving(current_user).unarchived.upcoming.includes(:spots, :organizer).order(:starts_at)
+    @upcoming_friendlies = Friendly.involving(current_user).unarchived.upcoming.includes(:spots, :organizer).order(:starts_at).to_a.reject(&:over?)
     @upcoming_team_events = TeamEvent.where(tennis_team_id: team_ids).upcoming.includes(:tennis_team).to_a
     # Friendlies tab, below what's coming up: the last few played, and who
     # you play friendlies with most.
-    past_all = Friendly.involving(current_user).where("starts_at < ?", Time.current.beginning_of_day)
-                       .includes(:spots).order(starts_at: :desc).limit(40).to_a
+    past_all = Friendly.involving(current_user).where("starts_at <= ?", PlayClock.now)
+                       .includes(:spots, :scores).order(starts_at: :desc).limit(40).to_a.select(&:over?)
     @past_friendlies = past_all.reject(&:archived?)
     # "You play friendlies with" still counts archived ones: they were played.
     @friendly_partners = friendly_partner_counts(past_all)
