@@ -7671,3 +7671,23 @@ html body .cr-cu-res-l, html body .cr-result-l {
 }
 /* Sign-up page logo tile: solid court green like the header logo (no gold). */
 html body .cr-auth-logo { background: #6CAF7E !important; box-shadow: 0 2px 8px rgba(27, 42, 74, 0.18) !important; }
+
+/* ═══════════════════════════════════════════════════════════════════════
+   BALL DOODLES (Tara, Nov 23 2026) — SUPERSEDES the court-photo background.
+   The court photo behind the pages was too busy to read over. Every signed-in
+   page is now plain light blue with thin line-drawn tennis balls and dashed
+   bounce trails in court blue (like Instagram's doodle chat backgrounds).
+   Drawing: app/assets/images/ball-doodles.svg (one 600px tile, repeated).
+   ═══════════════════════════════════════════════════════════════════════ */
+.cr-has-sb .cr-shell-main::before {
+  background: url("/ball-doodles.svg") 0 0 / 960px 960px repeat !important;
+  opacity: 1 !important;
+  inset: var(--cr-hh) 0 0 0 !important;
+}
+.cr-has-sb .cr-shell-main::after { display: none !important; }
+@media (min-width: 1000px) {
+  .cr-has-sb .cr-shell-main::before { left: var(--cr-sb-w) !important; }   /* keep the left menu plain white */
+}
+@media (max-width: 720px) {
+  .cr-has-sb .cr-shell-main::before { background-size: 560px 560px !important; }   /* phones: smaller tile so a few balls show */
+}

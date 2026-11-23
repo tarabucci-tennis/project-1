@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="960" viewBox="0 0 960 960">
+<g fill="none" stroke="#9bbcd1" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+<style>.t{stroke-dasharray:2 7;}</style>
+<path class="t" d="M60 300 Q110.6 177.6 161.2 287.6 Q192.5 211.8 223.9 280.0 Q243.4 232.9 262.8 275.2"/>
+<g transform="translate(270 250) rotate(15)"><circle r="24"/><path d="M-17.3 -17.3 Q-4.3 0 -17.3 17.3"/><path d="M17.3 -17.3 Q4.3 0 17.3 17.3"/></g>
+<path class="t" d="M690 140 Q738.5 54.5 787.1 134.5 Q817.2 81.4 847.3 131.0 Q865.9 98.1 884.6 128.9"/>
+<g transform="translate(890 110) rotate(-25)"><circle r="18"/><path d="M-13.0 -13.0 Q-3.2 0 -13.0 13.0"/><path d="M13.0 -13.0 Q3.2 0 13.0 13.0"/></g>
+<path class="t" d="M520 620 Q474.7 484.7 429.4 604.7 Q401.3 520.9 373.2 595.3 Q355.8 543.3 338.4 589.4"/>
+<g transform="translate(330 560) rotate(40)"><circle r="28"/><path d="M-20.2 -20.2 Q-5.0 0 -20.2 20.2"/><path d="M20.2 -20.2 Q5.0 0 20.2 20.2"/></g>
+<path class="t" d="M90 860 Q138.1 772.0 186.2 832.0 Q216.0 777.5 245.8 814.7"/>
+<g transform="translate(250 800) rotate(60)"><circle r="14"/><path d="M-10.1 -10.1 Q-2.5 0 -10.1 10.1"/><path d="M10.1 -10.1 Q2.5 0 10.1 10.1"/></g>
+<path class="t" d="M640 900 Q693.3 786.1 746.6 876.1 Q779.7 805.4 812.7 861.2 Q833.2 817.5 853.7 852.0"/>
+<g transform="translate(860 830) rotate(-10)"><circle r="21"/><path d="M-15.1 -15.1 Q-3.8 0 -15.1 15.1"/><path d="M15.1 -15.1 Q3.8 0 15.1 15.1"/></g>
+<path class="t" d="M930 480 Q885.2 395.7 840.4 465.7 Q812.6 413.4 784.8 456.8"/>
+<g transform="translate(780 440) rotate(25)"><circle r="16"/><path d="M-11.5 -11.5 Q-2.9 0 -11.5 11.5"/><path d="M11.5 -11.5 Q2.9 0 11.5 11.5"/></g>
+</g></svg>

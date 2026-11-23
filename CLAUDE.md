@@ -242,6 +242,15 @@ DESIGN SYSTEM notes below, or an older prompt) contradicts this, THIS wins. Live
 - Check for regressions with a computed-style scan (a Playwright script flagging gold-ish colours and navy-filled
   buttons on every page) rather than grepping CSS: old rules are overridden, not deleted.
 
+## BALL DOODLES background (Tara, Nov 23 2026) — SUPERSEDES the LOCKED COURT background below
+
+The court photo behind signed-in pages was "too much detail and hard to read". Tara picked Instagram-style doodles instead:
+plain light-blue page + thin line-drawn tennis balls with dashed bounce trails in court blue (`#9bbcd1`), sparse.
+Drawing: `app/assets/images/ball-doodles.svg` (960px tile; 560px on phones); CSS block "BALL DOODLES" at the end of
+application.css; the public home page `body::before` uses it too. The left menu stays plain white. The court photo stays
+ONLY in the public home hero (`court-net.jpg`). Net behind signed-in pages: asked Tara (Claude advised no — it's the most
+detailed part of the photo).
+
 ## LOCKED COURT — Tara's original court photo, portrait, HORIZONTAL net (Nov 22 2026) — supersedes #9/#29 and #340
 
 The net runs ACROSS the width of the court; the court stands portrait (tall). **Never a vertical net anywhere.** Colours:
