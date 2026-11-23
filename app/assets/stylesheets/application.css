@@ -7730,3 +7730,7 @@ body.cr-ctx-division_teams-show .cr-shell-main::before { display: block !importa
 section.cr-rp-team .cr-rp-team-head { cursor: default; border-bottom: 1px solid var(--cr-card-border, #dde3ea); }
 section.cr-rp-team .cr-rp-team-head::after { content: none; }
 section.cr-rp-team .cr-rp-team-head .cr-rp-card-title { font-family: "Fraunces", Georgia, serif; }
+
+/* Profile: "Playing Stats — <team>" says which team the stats are for (Tara, Nov 23 2026). */
+.cr-stats-for-team { font-family: Inter, system-ui, sans-serif; font-weight: 600; font-size: .7em; color: #1B2A4A; text-transform: none; letter-spacing: 0; }
+.cr-stats-empty { background: #fff; border: 1px solid var(--cr-card-border, #dde3ea); border-radius: 14px; padding: 16px 18px; color: #1B2A4A; }

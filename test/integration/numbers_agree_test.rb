@@ -238,6 +238,12 @@ class ProfileCleanupTest < ActionDispatch::IntegrationTest
     assert_select "#cr-team-select option", text: "Clean Old", count: 0
   end
 
+  test "Playing Stats heading names the team the stats are for" do
+    sign_in(@me)
+    get profile_path
+    assert_select "h2.cr-section-title .cr-stats-for-team", text: /All Teams/
+  end
+
   test "private links live in Settings, not on the profile; one Advanced link; no Remove button" do
     sign_in(@me)
     get profile_path

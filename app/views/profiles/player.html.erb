@@ -189,9 +189,17 @@
   <% end %>
 
   <%# ── Playing Stats ── %>
+  <%# A team with no matches yet still gets its heading, so picking it in
+      "Stats for" never makes the section vanish (Tara, Nov 23 2026). %>
+  <% if @selected_team && (@playing_stats.blank? || @playing_stats[:is_empty]) %>
+    <section class="cr-section">
+      <h2 class="cr-section-title">Playing Stats <span class="cr-stats-for-team">— <%= @selected_team.name %></span></h2>
+      <p class="cr-stats-empty">No matches with scores on <%= @selected_team.name %> yet. Pick another team, or All Teams, in "Stats for" above.</p>
+    </section>
+  <% end %>
   <% if @playing_stats.present? && !@playing_stats[:is_empty] %>
     <section class="cr-section">
-      <h2 class="cr-section-title">Playing Stats</h2>
+      <h2 class="cr-section-title">Playing Stats <span class="cr-stats-for-team">— <%= @selected_team ? @selected_team.name : "All Teams" %></span></h2>
       <p class="cr-stats-scope"><%= render "profiles/stats_scope", record: @record, team: @selected_team %></p>
 
       <%# Overall stats row. No matches → "No singles yet", never "0%";
