@@ -8,7 +8,7 @@
           share_text: friendly_invite_text(item), share_url: fr_url %>
   <% end %>
   <%# Completed once it has ended (times are wall-clock Eastern), not at its start. %>
-  <% done = (item.ends_at || item.starts_at + 2.hours) <= PlayClock.now %>
+  <% done = item.over? %>
   <%= render "shared/band_card", date: item.starts_at, time: item.time_label, pill: (done ? "Completed" : "Upcoming"),
         chip: (mine ? "You're in" : nil),
         league: "Friendly", title: item.title.presence || "Friendly",

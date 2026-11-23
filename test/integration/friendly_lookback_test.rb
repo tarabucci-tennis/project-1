@@ -21,4 +21,22 @@ class FriendlyLookbackTest < ActionDispatch::IntegrationTest
       assert_select ".cr-fr-lookback-card[hidden]", 2
     end
   end
+
+  test "a friendly from earlier today that has ended moves to Past, not Coming up" do
+    now = PlayClock.now
+    begin
+      ended = @me.organized_friendlies.create!(title: "LB Ended Today", starts_at: now - 3.hours, ends_at: now - 1.hour)
+      later = @me.organized_friendlies.create!(title: "LB Later Today", starts_at: now + 1.hour, ends_at: now + 2.hours)
+      assert ended.over?
+      assert_not later.over?
+      [ friendlies_path, teams_path(tab: "friendlies") ].each do |path|
+        get path
+        assert_select "select.cr-fr-lookback-select option", text: /LB Ended Today/
+        # Only its (hidden) card inside the Look back menu, not a Coming up card.
+        assert_select ".cr-band-card", text: /LB Ended Today/, count: 1
+        assert_select ".cr-fr-lookback-card .cr-band-card", text: /LB Ended Today/, count: 1
+        assert_select "select.cr-fr-lookback-select option", text: /LB Later Today/, count: 0
+      end
+    end
+  end
 end
