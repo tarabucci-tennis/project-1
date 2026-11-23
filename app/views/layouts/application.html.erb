@@ -99,13 +99,14 @@
 
       // Share a match (or anything with data-share-text): the phone's share
       // sheet (Messages, WhatsApp, email…), or copy to the clipboard on a computer.
-      // A link (data-share-url) is handed to the share menu separately from the
-      // text, which is how iPhones reliably keep it in the message.
+      // The link (data-share-url) goes INSIDE the text: handed over separately,
+      // iPhone Messages dropped it (Tara, Nov 23 2026: friendly text ended at
+      // "…and the lineup:" with no link).
       function crShare(btn) {
         var text = btn.getAttribute('data-share-text');
         var url = btn.getAttribute('data-share-url');
         if (navigator.share) {
-          navigator.share(url ? { text: text, url: url } : { text: text }).catch(function () {});
+          navigator.share({ text: url ? text + '\n' + url : text }).catch(function () {});
         } else if (navigator.clipboard) {
           navigator.clipboard.writeText(url ? text + '\n' + url : text).then(function () {
             var label = btn.querySelector('.cr-share-label');
