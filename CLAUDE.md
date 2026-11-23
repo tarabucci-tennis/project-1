@@ -235,6 +235,11 @@ DESIGN SYSTEM notes below, or an older prompt) contradicts this, THIS wins. Live
   `.cr-lu-btn.is-primary`, `.cr-sb-newbtn`, `.cr-chip-btn-primary`, `.cr-band-btn`, `.cr-sync-btn`, `.cr-match-scores-btn`.
 - **Accent:** Court Green **#6CAF7E**, tint **#E4F3E8** — Header Band, small marks, scores-section background. NOT the win colour.
 - **Wins:** teal **#1B6B5A** chip, white letter. **Postseason banner** (team page "AGC Aces — Districts / Sectionals / Nationals", `.cr-playoff-banner`) is the same teal with white words (Tara, Nov 23 2026; was near-black + gold). **Losses:** grey **#6B7688** chip, white letter. Every W/L chip, every page.
+- **DEEP GREEN = the win teal, used more (Tara, Nov 23 2026, option B "bolder"):** team-page banner, Ratings banner and the
+  Team Standings header bar are solid #1B6B5A with white words (white side cards inside stay white/navy); a 3px deep-green line
+  under the header; current left-menu item, current tab and today on the calendar marked in deep green; standings league rows
+  and Upcoming week headings use it as their side mark. Still NOT on buttons (blue) or text (navy). Block "DEEP GREEN" at the end
+  of application.css.
 - **Page:** pale blue; **cards** white/cream, 1px border. **Headings** Fraunces; body clean sans.
 - **NO GOLD on the site** (#C9A227, #E3C84F, #D9C08A all tried and rejected). Exceptions (separate assets, don't touch):
   the logo ball, the bouncing ball, the gold net in `court-side-gold.jpg`. The six colourful feature-tile icons on the

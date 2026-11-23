@@ -7734,3 +7734,37 @@ section.cr-rp-team .cr-rp-team-head .cr-rp-card-title { font-family: "Fraunces",
 /* Profile: "Playing Stats — <team>" says which team the stats are for (Tara, Nov 23 2026). */
 .cr-stats-for-team { font-family: Inter, system-ui, sans-serif; font-weight: 600; font-size: .7em; color: #1B2A4A; text-transform: none; letter-spacing: 0; }
 .cr-stats-empty { background: #fff; border: 1px solid var(--cr-card-border, #dde3ea); border-radius: 14px; padding: 16px 18px; color: #1B2A4A; }
+
+/* ═══════════════════════════════════════════════════════════════════════
+   DEEP GREEN — option B "bolder" (Tara, Nov 23 2026: "I love B… change that on
+   the whole site"). The win teal #1B6B5A, used for:
+     • big banners: team page banner, Ratings banner, Team Standings header
+       (white words; the white side cards inside stay white with navy words);
+     • "you are here" marks: line under the header, current left-menu item,
+       current tab, today on the calendar;
+     • section marks: league rows in standings, Upcoming week headings.
+   NOT used for buttons (stay blue #3F6C8A) or body text (stays navy), so the
+   W chips keep their meaning. Light court green stays on card bands/own-row tints.
+   ═══════════════════════════════════════════════════════════════════════ */
+:root { --cr-deep-green: #1B6B5A; --cr-deep-green-tint: #E3F0EC; }
+
+/* Big banners */
+html body .cr-team-hero, html body .cr-rp-hero { background: var(--cr-deep-green) !important; border-color: var(--cr-deep-green) !important; }
+html body .cr-team-hero :where(*:not(.cr-hero-side, .cr-hero-side *, .cr-team-color-dot)),
+html body .cr-rp-hero :where(*:not(.cr-rp-hero-side, .cr-rp-hero-side *)) { color: #fff !important; }
+html body .cr-team-hero, html body .cr-rp-hero { color: #fff !important; }
+html body .cr-standings-head { background: var(--cr-deep-green) !important; border-color: var(--cr-deep-green) !important; }
+html body .cr-standings-head, html body .cr-standings-head * { color: #fff !important; }
+
+/* "You are here" */
+.cr-header { border-bottom: 3px solid var(--cr-deep-green) !important; }
+.cr-sb-link.is-on { background: var(--cr-deep-green-tint) !important; box-shadow: inset 3px 0 0 var(--cr-deep-green) !important; }
+.cr-subtab-active, body.cr-ctx-teams-show .cr-subtab-active { border-bottom-color: var(--cr-deep-green) !important; box-shadow: inset 0 -3px 0 var(--cr-deep-green) !important; }
+.cr-home-tab-active, .cr-home-tab-active:hover { box-shadow: inset 0 -3px 0 var(--cr-deep-green), 0 1px 3px rgba(24,39,64,.08) !important; }
+.cr-seg-btn-active, body.cr-ctx-teams-show .cr-seg-btn-active { box-shadow: inset 0 -3px 0 var(--cr-deep-green), 0 1px 2px rgba(10,22,40,.08) !important; }
+.cr-dash-cal-full .cr-dash-cal-day-today { border-color: var(--cr-deep-green) !important; }
+.cr-dash-cal-full .cr-dash-cal-day-today .cr-dash-cal-day-num { background: var(--cr-deep-green) !important; color: #fff !important; }
+
+/* Section marks */
+.cr-st-league td { box-shadow: inset 4px 0 0 var(--cr-deep-green) !important; }
+.cr-band-grid > .cr-week-head { border-left-color: var(--cr-deep-green) !important; }
