@@ -256,6 +256,12 @@ The team Schedule tab is still rows (its drop-down holds captain actions); not c
 **Ratings → USTA teams (Tara, Nov 23 2026):** one "Team" dropdown (`.cr-rp-team-select`) shows one team's ratings at a time
 (`section.cr-rp-team[data-rp-team]`), replacing the stack of fold-open `<details>` sections. First team shows by default.
 
+**New Team → "Start from a previous team" (Tara, Nov 23 2026, like MatchTime's Replicate Team):** pick a team you captain or
+co-captain (current or past); the form fills in and "Bring the roster" (on by default) copies its current players with their
+roles. Copied: league, league name, type, section, district, flight, rating, home court + address, line format, standings
+style, team colors (`TeamsController::REPLICATED_TEAM_FIELDS`). NOT copied: matches, scores, league-site links, USTA
+standings, playoff level. The old team is never changed. Teams you only play on can't be copied.
+
 ## BALL DOODLES background (Tara, Nov 23 2026) — SUPERSEDES the LOCKED COURT background below
 
 The court photo behind signed-in pages was "too much detail and hard to read". Tara picked Instagram-style doodles instead:
