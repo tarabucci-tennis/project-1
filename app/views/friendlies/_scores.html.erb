@@ -1,0 +1,81 @@
+<%# Scores (Tara, Nov 23 2026): anyone with this link can enter a court's score,
+    no sign-in; each save is logged with the typed name. The organizer can lock. %>
+<% scores = @friendly.scores.to_a %>
+<% locked = @friendly.scores_locked? %>
+<% court_count = [ @friendly.courts_needed, scores.map(&:court).max.to_i, 6 ].max.clamp(1, FriendlyScore::MAX_COURT) %>
+<% names = @friendly.spots.map(&:name).uniq %>
+<section class="cr-rp-card cr-fr-scores" id="scores">
+  <div class="cr-rp-card-head">
+    <h2 class="cr-rp-card-title">Scores</h2>
+    <span class="cr-rp-card-note"><%= locked ? "Locked by the organizer" : "Anyone with this link can add a score, no sign-in" %></span>
+  </div>
+
+  <% if scores.any? %>
+    <ul class="cr-fr-score-rows">
+      <% scores.each do |s| %>
+        <li class="cr-fr-score-row">
+          <div class="cr-fr-score-court">Court <%= s.court %></div>
+          <div class="cr-fr-score-pairs">
+            <div><%= s.pair_a.presence || "Pair 1" %></div>
+            <div class="cr-fr-score-vs">vs. <%= s.pair_b.presence || "Pair 2" %></div>
+          </div>
+          <div class="cr-fr-score-sets"><%= s.sets_text %></div>
+          <div class="cr-fr-score-by">by <%= s.entered_by %> · <%= s.updated_at.in_time_zone("America/New_York").strftime("%-l:%M %p") %>
+            <% if organizer? && s.changes_log.size > 1 %>
+              <details class="cr-fr-score-log"><summary>Changes (<%= s.changes_log.size %>)</summary>
+                <ul><% s.changes_log.reverse_each do |c| %>
+                  <li><%= c["sets"] %> — <%= c["by"] %>, <%= Time.zone.parse(c["at"].to_s)&.in_time_zone("America/New_York")&.strftime("%b %-d, %-l:%M %p") %></li>
+                <% end %></ul>
+              </details>
+            <% end %>
+          </div>
+          <% if organizer? %>
+            <%= button_to "Remove", friendly_score_path(@friendly, s.court), method: :delete, class: "cr-chip-btn cr-no-print",
+                  form: { class: "cr-fr-score-remove", data: { turbo_confirm: "Remove the Court #{s.court} score?" } } %>
+          <% end %>
+        </li>
+      <% end %>
+    </ul>
+  <% else %>
+    <p class="cr-fr-courts-summary">No scores yet.</p>
+  <% end %>
+
+  <% unless locked %>
+    <details class="cr-fr-score-add cr-no-print" <%= "open" if scores.empty? %>>
+      <summary class="cr-btn cr-btn-gold">+ Add or update a score</summary>
+      <%= form_with url: friendly_scores_path(@friendly), method: :post, scope: :score, data: { turbo: false }, class: "cr-fr-score-entry" do |f| %>
+        <label class="cr-fr-se-field">Court
+          <%= f.select :court, (1..court_count).map { |c| [ "Court #{c}#{' (has a score)' if scores.any? { |s| s.court == c }}", c ] } %>
+        </label>
+        <label class="cr-fr-se-field">Pair 1
+          <%= f.text_field :pair_a, placeholder: "e.g. Tara & Rebecca", maxlength: 80, list: "cr-fr-names" %>
+        </label>
+        <label class="cr-fr-se-field">Pair 2
+          <%= f.text_field :pair_b, placeholder: "e.g. Amy & Jen", maxlength: 80, list: "cr-fr-names" %>
+        </label>
+        <div class="cr-fr-se-sets">
+          <% (1..FriendlyScore::MAX_SETS).each do |i| %>
+            <div class="cr-fr-se-set">
+              <span class="cr-fr-se-set-label">Set <%= i %><%= " (if played)" if i == 3 %></span>
+              <%= f.number_field "set#{i}_a", min: 0, max: 99, inputmode: "numeric", "aria-label": "Set #{i}, Pair 1 games" %>
+              <span class="cr-fr-score-dash">–</span>
+              <%= f.number_field "set#{i}_b", min: 0, max: 99, inputmode: "numeric", "aria-label": "Set #{i}, Pair 2 games" %>
+            </div>
+          <% end %>
+        </div>
+        <label class="cr-fr-se-field">Your name
+          <%= f.text_field :entered_by, value: scorer_name, required: true, maxlength: 60, autocomplete: "name" %>
+        </label>
+        <p class="cr-fr-score-hint">Partial sets are fine (time ran out at 4–3? enter 4–3). Choosing a court that already has a score replaces it.</p>
+        <%= f.submit "Save score", class: "cr-btn cr-btn-gold" %>
+      <% end %>
+      <datalist id="cr-fr-names"><% names.each do |n| %><option value="<%= n %>"></option><% end %></datalist>
+    </details>
+  <% end %>
+
+  <% if organizer? %>
+    <%= button_to (locked ? "Unlock scores" : "Lock scores"), lock_friendly_scores_path(@friendly), method: :patch,
+          class: "cr-btn cr-btn-outline cr-fr-score-lock cr-no-print",
+          form: { data: { turbo_confirm: locked ? "Let people change scores again?" : "Lock scores? Nobody can add or change scores until you unlock." } } %>
+  <% end %>
+</section>

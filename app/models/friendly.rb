@@ -12,6 +12,7 @@ class Friendly < ApplicationRecord
 
   belongs_to :organizer, class_name: "User"
   has_many :spots, -> { order(:created_at, :id) }, class_name: "FriendlySpot", dependent: :destroy
+  has_many :scores, -> { order(:court) }, class_name: "FriendlyScore", dependent: :destroy
 
   serialize :lineup, coder: JSON
 
@@ -51,6 +52,10 @@ class Friendly < ApplicationRecord
   validates :sets_count, numericality: { only_integer: true, greater_than_or_equal_to: 1, less_than_or_equal_to: 3 }
 
   before_create { self.token ||= SecureRandom.urlsafe_base64(9) }
+
+  def scores_locked?
+    scores_locked_at.present?
+  end
 
   # Friendlies a user organized or has a spot in.
   scope :involving, ->(user) {
