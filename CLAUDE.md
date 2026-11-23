@@ -245,7 +245,7 @@ DESIGN SYSTEM notes below, or an older prompt) contradicts this, THIS wins. Live
 ## BALL DOODLES background (Tara, Nov 23 2026) — SUPERSEDES the LOCKED COURT background below
 
 The court photo behind signed-in pages was "too much detail and hard to read". Tara picked Instagram-style doodles instead:
-plain light-blue page + thin line-drawn tennis balls with dashed bounce trails in court blue (`#9bbcd1`), sparse.
+plain light-blue page + thin line-drawn tennis balls with dashed bounce trails in court blue (`#a6c4d7`, 1.3px), "all over the background, light but there, cute but not too much" (Tara): 16 small balls (r 9–17) per tile, half with bounce trails.
 Drawing: `app/assets/images/ball-doodles.svg` (960px tile; 560px on phones); CSS block "BALL DOODLES" at the end of
 application.css; the public home page `body::before` uses it too. The left menu stays plain white. The court photo stays
 ONLY in the public home hero (`court-net.jpg`). Net behind signed-in pages: asked Tara (Claude advised no — it's the most
