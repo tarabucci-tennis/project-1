@@ -6,15 +6,31 @@
 class FriendliesController < ApplicationController
   GUEST_COOKIE = :friendly_guest_keys
 
-  before_action :require_login, only: [ :index, :new, :create, :edit, :update, :destroy,
+  before_action :require_login, only: [ :index, :new, :create, :edit, :update, :destroy, :archive, :archive_all,
                                         :add_player, :toggle_spot, :generate, :swap, :set_done ]
-  before_action :load_friendly, except: [ :index, :new, :create ]
-  before_action :require_organizer, only: [ :edit, :update, :destroy, :add_player, :toggle_spot,
+  before_action :load_friendly, except: [ :index, :new, :create, :archive_all ]
+  before_action :require_organizer, only: [ :edit, :update, :destroy, :archive, :add_player, :toggle_spot,
                                             :generate, :swap, :set_done ]
 
   # GET /friendlies — every friendly I organized or joined, newest first.
   def index
-    @friendlies = Friendly.involving(current_user).includes(:spots).order(starts_at: :desc)
+    @friendlies = Friendly.involving(current_user).unarchived.includes(:spots).order(starts_at: :desc)
+    @archived_friendlies = Friendly.involving(current_user).archived.order(starts_at: :desc).to_a
+    @archivable_count = current_user.organized_friendlies.unarchived.count
+  end
+
+  # PATCH /f/:token/archive — archive or restore one friendly (organizer only).
+  # Archived friendlies leave every list but nothing is deleted.
+  def archive
+    restoring = @friendly.archived?
+    @friendly.update!(archived_at: restoring ? nil : Time.current)
+    redirect_to friendlies_path, notice: restoring ? "#{@friendly.title} restored." : "#{@friendly.title} archived. Restore it any time from Archived friendlies."
+  end
+
+  # PATCH /friendlies/archive_all — archive every friendly I booked.
+  def archive_all
+    count = current_user.organized_friendlies.unarchived.update_all(archived_at: Time.current, updated_at: Time.current)
+    redirect_to friendlies_path, notice: "#{count} #{'friendly'.pluralize(count)} archived. Restore any of them from Archived friendlies."
   end
 
   # GET /friendlies/new
