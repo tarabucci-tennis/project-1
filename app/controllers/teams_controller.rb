@@ -323,6 +323,17 @@ class TeamsController < ApplicationController
     source = replicable_teams.detect { |t| t.id.to_s == params[:from_team_id].to_s } if params[:from_team_id].present?
     team.assign_attributes(source.attributes.slice(*REPLICATED_TEAM_FIELDS)) if source
     team.gender = source&.gender.presence || "F"
+    # The League menu wins over a copied team's league (you may be moving leagues).
+    if (league = TennisTeam.league_choice_attributes(params[:league_choice], params[:league_name]))
+      team.assign_attributes(league)
+      if league[:league_name].nil? && %w[local other].include?(params[:league_choice].to_s)
+        team.errors.add(:base, "Type your league's name")
+        @replicable_teams = replicable_teams
+        @source_team = source
+        flash.now[:alert] = "Please type your league's name."
+        return render :new, status: :unprocessable_entity
+      end
+    end
 
     if team.save
       # Creator becomes captain

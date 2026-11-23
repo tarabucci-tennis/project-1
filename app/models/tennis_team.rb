@@ -20,6 +20,42 @@ class TennisTeam < ApplicationRecord
 
   validates :league_category, inclusion: { in: LEAGUE_CATEGORIES }
 
+  # The League menu on Create a Team (Tara, Nov 23 2026): her leagues by name,
+  # plus other areas' leagues (Atlanta, NorCal, Houston, Chicago) and "Other",
+  # so a player anywhere can set up a team. Each choice stores the category,
+  # league name and standings layout the rest of the app already reads
+  # (league_group, line_rule, standings_layout).
+  LEAGUE_CHOICES = [
+    { key: "usta",     group: "National",          label: "USTA",                                 category: "USTA",       name: nil },
+    { key: "deltri",   group: "Philadelphia area", label: "Del-Tri",                              category: "Local",      name: "Del-Tri" },
+    { key: "buxmont",  group: "Philadelphia area", label: "Bux-Mont",                             category: "Local",      name: "Bux-Mont", style: "win_loss" },
+    { key: "cup",      group: "Philadelphia area", label: "Inter-Club (Cup)",                     category: "Inter-Club", name: "Inter-Club" },
+    { key: "alta",     group: "Other areas",       label: "ALTA (Atlanta)",                       category: "Local",      name: "ALTA", style: "win_loss" },
+    { key: "norcal",   group: "Other areas",       label: "USTA NorCal (Northern California)",    category: "USTA",       name: "USTA NorCal" },
+    { key: "hlta",     group: "Other areas",       label: "HLTA (Houston)",                       category: "Local",      name: "HLTA", style: "win_loss" },
+    { key: "nittl",    group: "Other areas",       label: "NITTL (Northern Illinois)",            category: "Local",      name: "NITTL", style: "win_loss" },
+    { key: "local",    group: "Other areas",       label: "Local / club league (type its name)",  category: "Local",      name: :typed, style: "win_loss" },
+    { key: "other",    group: "Not listed",        label: "Other league (type its name)",         category: "Local",      name: :typed, style: "win_loss" }
+  ].freeze
+
+  # Attributes for a League menu choice. "local" / "other" use the typed name.
+  def self.league_choice_attributes(key, typed_name = nil)
+    choice = LEAGUE_CHOICES.detect { |c| c[:key] == key.to_s }
+    return nil unless choice
+    name = choice[:name] == :typed ? typed_name.to_s.strip.presence : choice[:name]
+    { league_category: choice[:category], league_name: name, standings_style: choice[:style] }
+  end
+
+  # The League menu choice that matches this team (to pre-select it when
+  # copying a team). Falls back to "other" for a league not in the list.
+  def league_choice_key
+    named = LEAGUE_CHOICES.detect { |c| c[:name].is_a?(String) && c[:name].casecmp?(league_name.to_s) }
+    return named[:key] if named
+    return "usta" if league_category == "USTA"
+    return "cup" if league_category == "Inter-Club"
+    league_name.present? ? "other" : "usta"
+  end
+
   # Has this team advanced to a playoff level (Districts / Sectionals / Nationals)?
   def in_playoffs?
     playoff_level.present?

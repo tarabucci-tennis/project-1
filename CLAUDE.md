@@ -262,6 +262,13 @@ roles. Copied: league, league name, type, section, district, flight, rating, hom
 style, team colors (`TeamsController::REPLICATED_TEAM_FIELDS`). NOT copied: matches, scores, league-site links, USTA
 standings, playoff level. The old team is never changed. Teams you only play on can't be copied.
 
+**Create a Team → League menu (Tara, Nov 23 2026):** grouped like MatchTime's Organization menu — National: USTA;
+Philadelphia area: Del-Tri, Bux-Mont, Inter-Club (Cup); Other areas: ALTA (Atlanta), USTA NorCal, HLTA (Houston), NITTL
+(Northern Illinois), Local / club league (typed name); Not listed: Other (typed name). `TennisTeam::LEAGUE_CHOICES` maps each
+to league_category + league_name + standings_style, so league_group / line_rule (Del-Tri & Bux-Mont = total games) keep
+working. A "League name" box appears only for Local/Other (required). Season field suggests Winter/Spring/Summer/Fall + year.
+Atlanta/Houston/Chicago leagues are stored and grouped by name, but Court Report knows nothing special about their rules yet.
+
 ## BALL DOODLES background (Tara, Nov 23 2026) — SUPERSEDES the LOCKED COURT background below
 
 The court photo behind signed-in pages was "too much detail and hard to read". Tara picked Instagram-style doodles instead:
