@@ -39,4 +39,15 @@ class FriendlyLookbackTest < ActionDispatch::IntegrationTest
       end
     end
   end
+
+  test "a past friendly's card offers Add scores, then See scores" do
+    get friendlies_path
+    assert_select ".cr-fr-lookback-card a[href$='#scores']", text: "Add scores", minimum: 2
+    s = @new.scores.new(court: 1, entered_by: "Jen")
+    s.assign_set_boxes("set1_a" => "6", "set1_b" => "4")
+    s.save!
+    get friendlies_path
+    assert_select ".cr-fr-lookback-card a[href$='#scores']", text: "See scores", count: 1
+    assert_select ".cr-fr-lookback-card", text: /1 court scored/
+  end
 end

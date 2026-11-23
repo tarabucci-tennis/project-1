@@ -106,7 +106,7 @@ class TeamsController < ApplicationController
     # Friendlies tab, below what's coming up: the last few played, and who
     # you play friendlies with most.
     past_all = Friendly.involving(current_user).where("starts_at <= ?", PlayClock.now)
-                       .includes(:spots).order(starts_at: :desc).limit(40).to_a.select(&:over?)
+                       .includes(:spots, :scores).order(starts_at: :desc).limit(40).to_a.select(&:over?)
     @past_friendlies = past_all.reject(&:archived?)
     # "You play friendlies with" still counts archived ones: they were played.
     @friendly_partners = friendly_partner_counts(past_all)
