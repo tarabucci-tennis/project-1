@@ -20,14 +20,7 @@
         <% end %>
       </div>
     <% end %>
-    <% if past.any? %>
-      <h2 class="cr-section-title cr-fr-past-title">Past friendlies</h2>
-      <div class="cr-my-week-list cr-fr-list cr-band-grid cr-fr-past">
-        <% past.each do |f| %>
-          <%= render "teams/event_card", item: f %>
-        <% end %>
-      </div>
-    <% end %>
+    <%= render "friendlies/past_picker", friendlies: past, key: "page" %>
   <% else %>
     <p class="cr-coming-up-empty"><%= @archived_friendlies.any? ? "No friendlies showing. Your archived ones are below." : "No friendlies yet." %> Book one and share the link: people add their names and Court Report makes the lineup.</p>
   <% end %>

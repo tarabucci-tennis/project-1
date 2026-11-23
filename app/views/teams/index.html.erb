@@ -376,19 +376,8 @@
           <p class="cr-coming-up-empty">No friendlies coming up. Tap + Book a friendly to book one and share the link.</p>
         <% end %>
 
-        <%# Past friendlies: the same Header Band cards, two across, so the tab feels full. %>
-        <% recent = @past_friendlies.first(4) %>
-        <% if recent.any? %>
-          <h2 class="cr-section-title cr-fr-past-title">Past friendlies</h2>
-          <div class="cr-my-week-list cr-fr-list cr-band-grid cr-fr-past">
-            <% recent.each do |f| %>
-              <%= render "teams/event_card", item: f %>
-            <% end %>
-          </div>
-          <% if @past_friendlies.size > recent.size %>
-            <p class="cr-fr-past-more"><%= link_to "See all friendlies →", friendlies_path %></p>
-          <% end %>
-        <% end %>
+        <%# Past friendlies: one "Look back" menu by date (Tara, Nov 23 2026). %>
+        <%= render "friendlies/past_picker", friendlies: @past_friendlies, key: "tab" %>
 
         <%# Below: who you play with, and how it works. %>
         <div class="cr-fr-more cr-fr-more-two">
