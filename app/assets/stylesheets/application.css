@@ -7805,3 +7805,52 @@ html body .cr-replicate-btn, html body .cr-replicate-btn:hover { color: #fff !im
 .cr-fr-lookback-cards { margin-top: 14px; max-width: 452px; }
 .cr-fr-lookback-card[hidden] { display: none !important; }
 @media (max-width: 520px) { .cr-fr-lookback-row { flex-wrap: wrap; } .cr-fr-lookback-select { flex-basis: 100%; } .cr-fr-lookback-cards { max-width: none; } }
+
+/* Friendly scores, no sign-in (Tara, Nov 23 2026). */
+.cr-fr-score-rows { list-style: none; margin: 0 0 14px; padding: 0; }
+.cr-fr-score-row { display: grid; grid-template-columns: 76px minmax(0, 1fr) 120px auto; gap: 6px 14px; align-items: center; padding: 12px 0; border-top: 1px solid #e3e9f0; color: #1B2A4A; }
+.cr-fr-score-row:first-child { border-top: 0; }
+.cr-fr-score-court { font-weight: 700; font-size: .8rem; letter-spacing: .06em; text-transform: uppercase; }
+.cr-fr-score-pairs { font-weight: 600; min-width: 0; overflow-wrap: anywhere; }
+.cr-fr-score-vs { font-weight: 500; }
+.cr-fr-score-sets { font-weight: 800; font-size: 1.1rem; font-variant-numeric: tabular-nums; }
+.cr-fr-score-by { grid-column: 2 / 4; font-size: .82rem; }
+.cr-fr-score-remove { grid-column: 4; grid-row: 1; margin: 0; }
+.cr-fr-score-log summary { cursor: pointer; text-decoration: underline; display: inline; }
+.cr-fr-score-log ul { margin: 6px 0 0; padding-left: 18px; }
+.cr-fr-score-add > summary { list-style: none; display: inline-block; cursor: pointer; }
+.cr-fr-score-add > summary::-webkit-details-marker { display: none; }
+.cr-fr-score-add[open] > summary { margin-bottom: 14px; }
+.cr-fr-score-entry { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px 14px; max-width: 680px; }
+.cr-fr-se-field { display: flex; flex-direction: column; gap: 4px; font-weight: 700; font-size: .85rem; color: #1B2A4A; min-width: 0; }
+.cr-fr-se-field input, .cr-fr-se-field select { padding: 10px 12px; border: 1px solid #cfd9e4; border-radius: 10px; font: inherit; font-weight: 500; background: #fff; color: #1B2A4A; min-width: 0; }
+.cr-fr-se-sets { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 10px 22px; }
+.cr-fr-se-set { display: flex; align-items: center; gap: 6px; }
+.cr-fr-se-set-label { font-weight: 700; font-size: .85rem; color: #1B2A4A; min-width: 44px; }
+.cr-fr-se-set input { width: 58px; padding: 10px 6px; text-align: center; border: 1px solid #cfd9e4; border-radius: 10px; font: inherit; font-weight: 700; color: #1B2A4A; }
+.cr-fr-score-entry .cr-fr-score-hint, .cr-fr-score-entry .cr-fr-se-field:last-of-type { grid-column: 1 / -1; }
+.cr-fr-score-entry .cr-fr-se-field:last-of-type { max-width: 320px; }
+.cr-fr-score-entry .cr-fr-score-hint { margin: 0; font-size: .85rem; color: #1B2A4A; }
+.cr-fr-score-entry input[type=submit] { justify-self: start; }
+.cr-fr-score-lock { margin-top: 14px; }
+@media (max-width: 600px) {
+  .cr-fr-score-row { grid-template-columns: minmax(0, 1fr) auto; }
+  .cr-fr-score-court { grid-column: 1; }
+  .cr-fr-score-remove { grid-column: 2; grid-row: 1; }
+  .cr-fr-score-pairs { grid-column: 1; }
+  .cr-fr-score-sets { grid-column: 2; grid-row: 2; }
+  .cr-fr-score-by { grid-column: 1 / -1; }
+  .cr-fr-score-entry { grid-template-columns: minmax(0, 1fr); }
+  .cr-fr-se-sets { flex-direction: column; }
+}
+/* Friendly scores: inner padding like the other cards; scores right after the names (no hollow gap). */
+html body .cr-fr-scores { padding-bottom: 20px; margin-bottom: 16px; }
+.cr-fr-scores .cr-fr-score-rows, .cr-fr-scores .cr-fr-score-add, .cr-fr-scores > form, .cr-fr-scores > .cr-fr-courts-summary { margin-left: 24px; margin-right: 24px; }
+.cr-fr-score-row { grid-template-columns: 84px minmax(0, 260px) minmax(0, 1fr) 96px; }
+.cr-fr-score-remove { justify-self: end; }
+.cr-fr-scores > form .cr-fr-score-lock { margin-top: 12px; }
+@media (max-width: 600px) {
+  .cr-fr-scores .cr-fr-score-rows, .cr-fr-scores .cr-fr-score-add, .cr-fr-scores > form, .cr-fr-scores > .cr-fr-courts-summary { margin-left: 16px; margin-right: 16px; }
+  .cr-fr-score-row { grid-template-columns: minmax(0, 1fr) auto; }
+}
+.cr-fr-se-set-label { width: 8.2em; flex: 0 0 auto; }

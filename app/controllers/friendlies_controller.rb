@@ -7,10 +7,11 @@ class FriendliesController < ApplicationController
   GUEST_COOKIE = :friendly_guest_keys
 
   before_action :require_login, only: [ :index, :new, :create, :edit, :update, :destroy, :archive, :archive_all,
-                                        :add_player, :toggle_spot, :generate, :swap, :set_done ]
+                                        :add_player, :toggle_spot, :generate, :swap, :set_done,
+                                        :remove_score, :lock_scores ]
   before_action :load_friendly, except: [ :index, :new, :create, :archive_all ]
   before_action :require_organizer, only: [ :edit, :update, :destroy, :archive, :add_player, :toggle_spot,
-                                            :generate, :swap, :set_done ]
+                                            :generate, :swap, :set_done, :remove_score, :lock_scores ]
 
   # GET /friendlies — every friendly I organized or joined, newest first.
   def index
@@ -148,6 +149,46 @@ class FriendliesController < ApplicationController
     redirect_to friendly_path(@friendly, anchor: "set-#{params[:set].to_i + 1}"),
                 **(ok ? { notice: "Score saved." } : { alert: "Scores must be whole numbers (or leave both blank)." })
   end
+
+  SCORER_COOKIE = :friendly_scorer_name
+
+  # POST /f/:token/scores — anyone with the link, no sign-in. Saving a court
+  # that already has a score updates it; every save is logged with the name.
+  def save_score
+    anchor = { anchor: "scores" }
+    return redirect_to(friendly_path(@friendly, **anchor), alert: "Scores are locked. Ask the organizer to unlock them.") if @friendly.scores_locked?
+
+    sp = params.fetch(:score, {}).permit(:court, :pair_a, :pair_b, :entered_by, *(1..FriendlyScore::MAX_SETS).flat_map { |i| [ "set#{i}_a", "set#{i}_b" ] })
+    score = @friendly.scores.find_or_initialize_by(court: sp[:court].to_i)
+    name = sp[:entered_by].to_s.strip.first(60)
+    score.assign_attributes(pair_a: sp[:pair_a].to_s.strip.presence, pair_b: sp[:pair_b].to_s.strip.presence, entered_by: name)
+    score.assign_set_boxes(sp)
+    score.record_change!(name) if name.present?
+    if score.save
+      cookies.permanent[SCORER_COOKIE] = name
+      redirect_to friendly_path(@friendly, **anchor), notice: "Court #{score.court} score saved."
+    else
+      redirect_to friendly_path(@friendly, **anchor), alert: score.errors.full_messages.to_sentence
+    end
+  end
+
+  # DELETE /f/:token/scores/:court — organizer only.
+  def remove_score
+    @friendly.scores.where(court: params[:court].to_i).destroy_all
+    redirect_to friendly_path(@friendly, anchor: "scores"), notice: "Score removed."
+  end
+
+  # PATCH /f/:token/scores/lock — organizer only; toggles.
+  def lock_scores
+    @friendly.update!(scores_locked_at: @friendly.scores_locked? ? nil : Time.current)
+    redirect_to friendly_path(@friendly, anchor: "scores"),
+                notice: @friendly.scores_locked? ? "Scores locked. Nobody can change them now." : "Scores unlocked."
+  end
+
+  def scorer_name
+    cookies[SCORER_COOKIE].presence || current_user&.name
+  end
+  helper_method :scorer_name
 
   # PATCH /f/:token/lineup/sets/:set/done?done=1|0
   def set_done

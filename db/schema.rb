@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_11_23_210000) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_23_220000) do
   create_table "availabilities", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.integer "match_id", null: false
@@ -78,6 +78,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_23_210000) do
     t.string "location"
     t.text "notes"
     t.integer "organizer_id", null: false
+    t.datetime "scores_locked_at"
     t.integer "sets_count", default: 3, null: false
     t.datetime "starts_at", null: false
     t.string "title", default: "Friendly", null: false
@@ -87,6 +88,20 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_23_210000) do
     t.index ["organizer_id"], name: "index_friendlies_on_organizer_id"
     t.index ["starts_at"], name: "index_friendlies_on_starts_at"
     t.index ["token"], name: "index_friendlies_on_token", unique: true
+  end
+
+  create_table "friendly_scores", force: :cascade do |t|
+    t.integer "court", null: false
+    t.datetime "created_at", null: false
+    t.string "entered_by", null: false
+    t.integer "friendly_id", null: false
+    t.text "history"
+    t.string "pair_a"
+    t.string "pair_b"
+    t.text "sets"
+    t.datetime "updated_at", null: false
+    t.index ["friendly_id", "court"], name: "index_friendly_scores_on_friendly_id_and_court", unique: true
+    t.index ["friendly_id"], name: "index_friendly_scores_on_friendly_id"
   end
 
   create_table "friendly_spots", force: :cascade do |t|
@@ -373,6 +388,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_23_210000) do
   add_foreign_key "division_teams", "tennis_teams"
   add_foreign_key "external_events", "users"
   add_foreign_key "friendlies", "users", column: "organizer_id"
+  add_foreign_key "friendly_scores", "friendlies"
   add_foreign_key "friendly_spots", "friendlies"
   add_foreign_key "friendly_spots", "users"
   add_foreign_key "lineup_slots", "lineups"

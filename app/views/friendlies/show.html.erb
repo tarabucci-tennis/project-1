@@ -31,6 +31,10 @@
     <p class="cr-fr-note cr-no-print"><%= @friendly.notes %></p>
   <% end %>
 
+  <%# Scores: near the top once play has started (people enter them courtside). %>
+  <% started = @friendly.starts_at <= Time.current %>
+  <% if started %><%= render "friendlies/scores" %><% end %>
+
   <%# ── Add your name ── %>
   <section class="cr-rp-card cr-fr-claim cr-no-print">
     <% if @my_spot %>
@@ -238,6 +242,8 @@
       <p class="cr-fr-courts-summary">The organizer hasn't made the lineup yet. Check back here closer to the day.</p>
     <% end %>
   </section>
+
+  <% unless started %><%= render "friendlies/scores" %><% end %>
 
   <% unless current_user %>
     <section class="cr-join-card cr-no-print">

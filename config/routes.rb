@@ -51,6 +51,10 @@ Rails.application.routes.draw do
   patch  "f/:token/lineup/swap", to: "friendlies#swap", as: :swap_friendly_lineup
   patch  "f/:token/lineup/sets/:set/done", to: "friendlies#set_done", as: :friendly_set_done
   patch  "f/:token/lineup/sets/:set/courts/:court/score", to: "friendlies#score", as: :friendly_court_score
+  # Scores anyone with the link can enter, no sign-in (Tara, Nov 23 2026).
+  post   "f/:token/scores", to: "friendlies#save_score", as: :friendly_scores
+  delete "f/:token/scores/:court", to: "friendlies#remove_score", as: :friendly_score
+  patch  "f/:token/scores/lock", to: "friendlies#lock_scores", as: :lock_friendly_scores
 
   # Add a whole USTA team from its TennisLink Team Summary file
   get  "usta-teams/new", to: "usta_teams#new", as: :new_usta_team
