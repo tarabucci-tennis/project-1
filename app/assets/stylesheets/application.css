@@ -7705,3 +7705,14 @@ body.cr-ctx-division_teams-show .cr-shell-main::before { display: block !importa
 .cr-playoff-banner { background: var(--cr-win-teal, #1B6B5A) !important; border-color: var(--cr-win-teal, #1B6B5A) !important; }
 .cr-playoff-banner-title, .cr-playoff-banner-sub, .cr-playoff-trophy, .cr-playoff-trophy svg { color: #fff !important; }
 .cr-playoff-banner-sub { opacity: 0.92; }
+
+/* Upcoming week headings (Tara, Nov 23 2026, option B): two cards across, grouped
+   under "This week / Next week / Later" so the soonest match is easy to find. */
+.cr-band-grid > .cr-week-head {
+  grid-column: 1 / -1; margin: 18px 0 0; padding-left: 10px;
+  border-left: 4px solid var(--cr-court-green, #6CAF7E);
+  font-family: "Fraunces", Georgia, serif; font-size: 1.2rem; font-weight: 700; line-height: 1.3;
+  color: #1B2A4A; text-transform: none; letter-spacing: 0;
+}
+.cr-band-grid > .cr-week-head:first-child { margin-top: 0; }
+.cr-week-head-count { font-family: Inter, system-ui, sans-serif; font-size: .8rem; font-weight: 600; margin-left: 6px; color: #1B2A4A; }

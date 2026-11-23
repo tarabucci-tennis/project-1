@@ -331,7 +331,15 @@
       <div data-home-tabs-target="panel" data-subtitle="Everything coming up, soonest first" style="display: none;">
         <% if @coming_up_items.any? %>
           <div class="cr-my-week-list cr-band-grid">
+            <% bucket_of = ->(i) { week_bucket(i.is_a?(Match) ? i.match_date : (i.respond_to?(:starts_at) ? i.starts_at : i.event_date)) } %>
+            <% bucket_counts = @coming_up_items.map(&bucket_of).tally %>
+            <% last_bucket = nil %>
             <% @coming_up_items.each do |match| %>
+              <% bucket = bucket_of.call(match) %>
+              <% if bucket != last_bucket %>
+                <h3 class="cr-week-head"><%= bucket %> <span class="cr-week-head-count"><%= pluralize(bucket_counts[bucket], "game") %></span></h3>
+                <% last_bucket = bucket %>
+              <% end %>
               <% unless match.is_a?(Match) %>
                 <%= render "teams/event_card", item: match %>
                 <% next %>
