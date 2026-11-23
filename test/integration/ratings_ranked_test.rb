@@ -34,8 +34,9 @@ class RatingsRankedTest < ActionDispatch::IntegrationTest
     assert_select ".cr-rp-tabs .cr-home-tab", text: "USTA teams"
     assert_select ".cr-rp-panel-players tbody tr", 3
     assert_select ".cr-rp-panel-players tbody tr:first-child td", text: "Rank Mate"
-    assert_select ".cr-rp-panel-teams details.cr-rp-team", 1
-    assert_select ".cr-rp-team summary", text: /Rank Aces/
+    assert_select ".cr-rp-panel-teams section.cr-rp-team", 1
+    assert_select "select.cr-rp-team-select option", text: /Rank Aces/
+    assert_select ".cr-rp-team .cr-rp-card-title", text: /Rank Aces/
     assert_select ".cr-rp-team tbody tr", 2
     assert_select ".cr-rp-team tbody tr:first-child .cr-rp-rank", text: "1"
     assert_select ".cr-rp-team tbody tr:first-child td", text: "Rank Mate"
