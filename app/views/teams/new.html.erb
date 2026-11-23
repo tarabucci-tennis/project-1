@@ -49,10 +49,27 @@
           style: "width: 100%; padding: 12px 16px; border: 1px solid var(--cr-border); border-radius: 8px; font-size: 1rem;" %>
     </div>
 
+    <%# League menu (Tara, Nov 23 2026): her leagues by name, other areas' leagues, or "Other". %>
+    <% chosen = params[:league_choice].presence || src&.league_choice_key || "usta" %>
+    <% typed = params[:league_name].presence || (src && %w[local other].include?(src.league_choice_key) ? src.league_name : nil) %>
     <div class="cr-field">
-      <%= f.label :league_category, "League" %>
-      <%= f.select :league_category, [["USTA", "USTA"], ["Inter-Club", "Inter-Club"], ["Local League (Del-Tri, Bux-Mont, etc.)", "Local"]],
-          { selected: (params[:league_category].presence || src&.league_category) }, style: "width: 100%; padding: 12px 16px; border: 1px solid var(--cr-border); border-radius: 8px; font-size: 1rem; background: var(--cr-white);" %>
+      <label for="league_choice">League</label>
+      <select name="league_choice" id="league_choice" class="cr-league-select"
+              onchange="var o=document.getElementById('cr-league-name-field');o.hidden=!(this.value==='local'||this.value==='other');if(!o.hidden)o.querySelector('input').focus();">
+        <% TennisTeam::LEAGUE_CHOICES.group_by { |c| c[:group] }.each do |group, choices| %>
+          <optgroup label="<%= group %>">
+            <% choices.each do |c| %>
+              <option value="<%= c[:key] %>" <%= "selected" if c[:key] == chosen %>><%= c[:label] %></option>
+            <% end %>
+          </optgroup>
+        <% end %>
+      </select>
+    </div>
+
+    <div class="cr-field" id="cr-league-name-field" <%= "hidden" unless %w[local other].include?(chosen) %>>
+      <label for="league_name">League name</label>
+      <input type="text" name="league_name" id="league_name" value="<%= typed %>" placeholder="e.g. Main Line Women's League"
+             style="width: 100%; padding: 12px 16px; border: 1px solid var(--cr-border); border-radius: 8px; font-size: 1rem;">
     </div>
 
     <div class="cr-field">
@@ -63,9 +80,17 @@
 
     <div class="cr-field">
       <%= f.label :season_name, "Season (optional)" %>
-      <%= f.text_field :season_name, value: params[:season_name], placeholder: "e.g. Spring 2026",
+      <%= f.text_field :season_name, value: params[:season_name], placeholder: "e.g. Spring 2026", list: "cr-season-options",
           style: "width: 100%; padding: 12px 16px; border: 1px solid var(--cr-border); border-radius: 8px; font-size: 1rem;" %>
     </div>
+
+    <% this_year = Date.current.year %>
+    <datalist id="cr-season-options">
+      <% [ this_year, this_year + 1 ].each do |y| %>
+        <% %w[Winter Spring Summer Fall].each do |season| %><option value="<%= season %> <%= y %>"><% end %>
+      <% end %>
+      <option value="<%= this_year %>-<%= (this_year + 1).to_s.last(2) %>">
+    </datalist>
 
     <div style="margin-top: 24px;">
       <%= f.submit "Create Team", class: "cr-btn cr-btn-gold", style: "width: 100%; padding: 14px; font-size: 1rem;" %>
