@@ -40,6 +40,8 @@ Rails.application.routes.draw do
   get    "f/:token", to: "friendlies#show", as: :friendly
   patch  "f/:token", to: "friendlies#update"
   delete "f/:token", to: "friendlies#destroy"
+  patch  "f/:token/archive", to: "friendlies#archive", as: :archive_friendly
+  patch  "friendlies/archive_all", to: "friendlies#archive_all", as: :archive_all_friendlies
   get    "f/:token/edit", to: "friendlies#edit", as: :edit_friendly
   post   "f/:token/claim", to: "friendlies#claim", as: :claim_friendly
   delete "f/:token/claim", to: "friendlies#unclaim"

@@ -138,6 +138,8 @@
             target: "_blank", rel: "noopener", class: "cr-chip-btn", title: "Add to Google Calendar" %>
       <% if organizer? %>
         <%= link_to "Edit", edit_friendly_path(@friendly), class: "cr-chip-btn" %>
+        <%= button_to (@friendly.archived? ? "Restore" : "Archive"), archive_friendly_path(@friendly), method: :patch, class: "cr-chip-btn",
+              form: { style: "display:inline;" } %>
         <%= button_to "Cancel friendly", friendly_path(@friendly), method: :delete, class: "cr-chip-btn",
               form: { style: "display:inline;", data: { turbo_confirm: "Cancel this friendly for everyone?" } } %>
       <% end %>

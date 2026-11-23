@@ -7751,7 +7751,9 @@ section.cr-rp-team .cr-rp-team-head .cr-rp-card-title { font-family: "Fraunces",
 /* Big banners */
 html body .cr-team-hero, html body .cr-rp-hero { background: var(--cr-deep-green) !important; border-color: var(--cr-deep-green) !important; }
 html body .cr-team-hero :where(*:not(.cr-hero-side, .cr-hero-side *, .cr-team-color-dot)),
-html body .cr-rp-hero :where(*:not(.cr-rp-hero-side, .cr-rp-hero-side *)) { color: #fff !important; }
+html body .cr-rp-hero :where(*:not(.cr-rp-hero-side, .cr-rp-hero-side *, .cr-rp-hero-level, .cr-rp-hero-level *)) { color: #fff !important; }
+/* The white number box (friendly courts needed, a player's level) keeps navy words on white. */
+html body .cr-rp-hero .cr-rp-hero-level, html body .cr-rp-hero .cr-rp-hero-level * { color: #1B2A4A !important; }
 html body .cr-team-hero, html body .cr-rp-hero { color: #fff !important; }
 html body .cr-standings-head { background: var(--cr-deep-green) !important; border-color: var(--cr-deep-green) !important; }
 html body .cr-standings-head, html body .cr-standings-head * { color: #fff !important; }
@@ -7783,3 +7785,14 @@ html body .cr-replicate-btn, html body .cr-replicate-btn:hover { color: #fff !im
 /* Create a Team → League menu (Tara, Nov 23 2026). */
 .cr-league-select { width: 100%; padding: 12px 16px; border: 1px solid var(--cr-border); border-radius: 8px; font-size: 1rem; background: #fff; color: #1B2A4A; }
 #cr-league-name-field[hidden] { display: none !important; }
+
+/* Friendlies → Archive (Tara, Nov 23 2026). */
+.cr-fr-archive-all { margin-top: 28px; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; }
+.cr-fr-archive-all form { margin: 0; }
+.cr-fr-archive-note { font-size: .85rem; color: #1B2A4A; margin: 0; }
+.cr-fr-archived { margin-top: 18px; background: #fff; border: 1px solid var(--cr-card-border, #dde3ea); border-radius: 14px; padding: 12px 16px; }
+.cr-fr-archived summary { cursor: pointer; font-weight: 700; color: #1B2A4A; }
+.cr-fr-archived-list { list-style: none; margin: 10px 0 0; padding: 0; }
+.cr-fr-archived-list li { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 8px 0; border-top: 1px solid #e3e9f0; color: #1B2A4A; font-size: .92rem; }
+.cr-fr-archived-name a { color: #1B2A4A; font-weight: 600; }
+.cr-fr-archived-form { margin: 0; flex: 0 0 auto; }

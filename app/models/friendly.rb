@@ -56,6 +56,15 @@ class Friendly < ApplicationRecord
   scope :involving, ->(user) {
     where(organizer_id: user.id).or(where(id: FriendlySpot.where(user_id: user.id).select(:friendly_id)))
   }
+  # Archived friendlies (Tara, Nov 23 2026) drop out of every list but are kept,
+  # and the organizer can restore them from the Friendlies page.
+  scope :unarchived, -> { where(archived_at: nil) }
+  scope :archived, -> { where.not(archived_at: nil) }
+
+  def archived?
+    archived_at.present?
+  end
+
   scope :upcoming, -> { where("starts_at >= ?", Time.current.beginning_of_day) }
 
   # Everyone signed up and not marked out for today, in sign-up order.

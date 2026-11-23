@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_11_17_160000) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_23_210000) do
   create_table "availabilities", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.integer "match_id", null: false
@@ -70,6 +70,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_17_160000) do
   end
 
   create_table "friendlies", force: :cascade do |t|
+    t.datetime "archived_at"
     t.integer "courts", default: 1, null: false
     t.datetime "created_at", null: false
     t.datetime "ends_at"
@@ -82,6 +83,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_17_160000) do
     t.string "title", default: "Friendly", null: false
     t.string "token", null: false
     t.datetime "updated_at", null: false
+    t.index ["archived_at"], name: "index_friendlies_on_archived_at"
     t.index ["organizer_id"], name: "index_friendlies_on_organizer_id"
     t.index ["starts_at"], name: "index_friendlies_on_starts_at"
     t.index ["token"], name: "index_friendlies_on_token", unique: true

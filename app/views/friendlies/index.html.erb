@@ -29,6 +29,31 @@
       </div>
     <% end %>
   <% else %>
-    <p class="cr-coming-up-empty">No friendlies yet. Book one and share the link: people add their names and Court Report makes the lineup.</p>
+    <p class="cr-coming-up-empty"><%= @archived_friendlies.any? ? "No friendlies showing. Your archived ones are below." : "No friendlies yet." %> Book one and share the link: people add their names and Court Report makes the lineup.</p>
+  <% end %>
+
+  <%# Archive (Tara, Nov 23 2026): hide friendlies from every list without deleting them. %>
+  <% if @archivable_count.positive? %>
+    <div class="cr-fr-archive-all">
+      <%= button_to "Archive all friendlies I booked (#{@archivable_count})", archive_all_friendlies_path, method: :patch,
+            class: "cr-btn cr-btn-outline",
+            form: { data: { turbo_confirm: "Archive all #{@archivable_count} friendlies you booked? They leave your lists (and your players' lists) but aren't deleted. You can restore any of them." } } %>
+      <p class="cr-fr-archive-note">To archive just one, open it and tap Archive.</p>
+    </div>
+  <% end %>
+  <% if @archived_friendlies.any? %>
+    <details class="cr-fr-archived">
+      <summary>Archived friendlies (<%= @archived_friendlies.size %>)</summary>
+      <ul class="cr-fr-archived-list">
+        <% @archived_friendlies.each do |f| %>
+          <li>
+            <span class="cr-fr-archived-name"><%= link_to f.title, friendly_path(f) %> · <%= f.starts_at.strftime("%a, %b %-d, %Y") %></span>
+            <% if f.organizer_id == current_user.id || current_user.admin? %>
+              <%= button_to "Restore", archive_friendly_path(f), method: :patch, class: "cr-chip-btn", form: { class: "cr-fr-archived-form" } %>
+            <% end %>
+          </li>
+        <% end %>
+      </ul>
+    </details>
   <% end %>
 </div>

@@ -56,7 +56,7 @@ class SearchesController < ApplicationController
                     .sort_by { |m| [ m.match_date < Time.current ? 1 : 0, (m.match_date - Time.current).abs ] }
                     .first(LIMIT)
 
-    @friendlies = Friendly.involving(current_user)
+    @friendlies = Friendly.involving(current_user).unarchived
                           .where("friendlies.title LIKE ? OR friendlies.location LIKE ?", like, like)
                           .order(starts_at: :desc).limit(LIMIT).to_a
 

@@ -269,6 +269,12 @@ to league_category + league_name + standings_style, so league_group / line_rule 
 working. A "League name" box appears only for Local/Other (required). Season field suggests Winter/Spring/Summer/Fall + year.
 Atlanta/Houston/Chicago leagues are stored and grouped by name, but Court Report knows nothing special about their rules yet.
 
+**Friendlies → Archive (Tara, Nov 23 2026):** `friendlies.archived_at`. The organizer (or an admin) taps **Archive** on a friendly's
+page, or **Archive all friendlies I booked (N)** on /friendlies (with a confirm). Archived friendlies leave every list (My Teams
+Upcoming/Friendlies tab, calendar, /friendlies, search) for everyone, but are never deleted; "Archived friendlies (N)" on
+/friendlies lists them with **Restore**. "You play friendlies with" still counts archived ones (they were played). Also fixed:
+the white number box on the friendly and player-ratings banners (`.cr-rp-hero-level`) had turned white-on-white with #349.
+
 ## BALL DOODLES background (Tara, Nov 23 2026) — SUPERSEDES the LOCKED COURT background below
 
 The court photo behind signed-in pages was "too much detail and hard to read". Tara picked Instagram-style doodles instead:
