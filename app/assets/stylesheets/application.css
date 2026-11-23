@@ -7699,3 +7699,9 @@ body:not(.cr-has-sb)::before {
 }
 @media (max-width: 720px) { body:not(.cr-has-sb)::before { background-image: url("/ball-doodles-sm.svg"); background-size: 420px 420px; } }
 body.cr-ctx-division_teams-show .cr-shell-main::before { display: block !important; }
+
+/* Postseason banner (Districts / Sectionals / Nationals) = win teal (Tara, Nov 23 2026),
+   white trophy and words. The lighter court green was too pale for white text. */
+.cr-playoff-banner { background: var(--cr-win-teal, #1B6B5A) !important; border-color: var(--cr-win-teal, #1B6B5A) !important; }
+.cr-playoff-banner-title, .cr-playoff-banner-sub, .cr-playoff-trophy, .cr-playoff-trophy svg { color: #fff !important; }
+.cr-playoff-banner-sub { opacity: 0.92; }
