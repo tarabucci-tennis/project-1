@@ -1,0 +1,25 @@
+<%# Past friendlies as one "Look back" menu (Tara, Nov 23 2026: "a lot on one
+    page… a drop down with the date"). Nothing shows until one is picked; then
+    just that friendly's card. Locals: friendlies (newest first). %>
+<% if friendlies.any? %>
+  <section class="cr-fr-lookback">
+    <h2 class="cr-section-title cr-fr-past-title">Past friendlies</h2>
+    <div class="cr-fr-lookback-row">
+      <label class="cr-fr-lookback-label" for="cr-fr-lookback-<%= local_assigns[:key] || "list" %>">Look back</label>
+      <select id="cr-fr-lookback-<%= local_assigns[:key] || "list" %>" class="cr-fr-lookback-select"
+              onchange="var box=this.closest('.cr-fr-lookback'),v=this.value;box.querySelectorAll('[data-fr-past]').forEach(function(c){c.hidden=c.dataset.frPast!==v});">
+        <option value="">Choose a date (<%= pluralize(friendlies.size, "past friendly", plural: "past friendlies") %>)</option>
+        <% friendlies.each_with_index do |f, i| %>
+          <option value="<%= i %>"><%= f.starts_at.strftime("%a, %b %-d, %Y") %> · <%= f.title %></option>
+        <% end %>
+      </select>
+    </div>
+    <div class="cr-fr-lookback-cards">
+      <% friendlies.each_with_index do |f, i| %>
+        <div class="cr-fr-lookback-card" data-fr-past="<%= i %>" hidden>
+          <%= render "teams/event_card", item: f %>
+        </div>
+      <% end %>
+    </div>
+  </section>
+<% end %>
