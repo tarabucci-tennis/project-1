@@ -252,7 +252,9 @@ original — don't redraw or recolour the court. Images: `court-tall.jpg` (the w
 never rotated). The sideways `court-wide.jpg` / `court-side-gold.jpg` are deleted. **Computers (≥1000px): "option A"** —
 ONE big court centred behind the page (Tara: two courts in the margins "looks a little messy"), sized
 `(var(--cr-col) + 380px) / 0.705` wide so its sidelines and the net's two ends show in the margins, at FULL strength (opacity 1 — Tara, Nov 23: at 0.55
-it nearly vanished on her ~1500px laptop); phones: one faded court.
+it nearly vanished on her ~1500px laptop). Nov 23 ("it still looks like 2 courts"): the light-blue band behind the column
+(`.cr-shell-main::after`) is hidden on computers, so ONE court shows behind the whole page, under the header to the bottom
+edge; cards stay white, so data sits on cards. This supersedes "court only in the margins". Phones: one faded court.
 
 ## Current Status (as of Nov 17, 2026 — PRs #302–#308: "numbers that contradict each other" + player profiles)
 

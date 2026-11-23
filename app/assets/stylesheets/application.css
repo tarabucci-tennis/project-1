@@ -7611,7 +7611,12 @@ html body .cr-sheet-entered { opacity: 1; font-weight: 600; }
     background-repeat: no-repeat;
     background-position: center center;
     opacity: 1;   /* full strength (Tara, Nov 23): at 0.55 it all but vanished on her laptop */
+    inset-block: var(--cr-hh) 0;   /* the whole area under the header, no pale strips */
   }
+  /* One court behind the WHOLE page (Tara, Nov 23: "it still looks like 2 courts"):
+     the light-blue band that hid the court behind the column is gone, so the
+     middle of the court shows through between the cards. */
+  .cr-has-sb .cr-shell-main::after { display: none; }
 }
 
 /* ═══════════════════════════════════════════════════════════════════════
