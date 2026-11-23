@@ -248,6 +248,9 @@ My Teams → Upcoming keeps band cards two across, under week headings "This wee
 ApplicationHelper, Mon–Sun on the Eastern clock; `.cr-week-head`). Tara found two-across hard to read in order without them.
 The team Schedule tab is still rows (its drop-down holds captain actions); not changed yet — ask Tara.
 
+**Ratings → USTA teams (Tara, Nov 23 2026):** one "Team" dropdown (`.cr-rp-team-select`) shows one team's ratings at a time
+(`section.cr-rp-team[data-rp-team]`), replacing the stack of fold-open `<details>` sections. First team shows by default.
+
 ## BALL DOODLES background (Tara, Nov 23 2026) — SUPERSEDES the LOCKED COURT background below
 
 The court photo behind signed-in pages was "too much detail and hard to read". Tara picked Instagram-style doodles instead:

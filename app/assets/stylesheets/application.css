@@ -7716,3 +7716,17 @@ body.cr-ctx-division_teams-show .cr-shell-main::before { display: block !importa
 }
 .cr-band-grid > .cr-week-head:first-child { margin-top: 0; }
 .cr-week-head-count { font-family: Inter, system-ui, sans-serif; font-size: .8rem; font-weight: 600; margin-left: 6px; color: #1B2A4A; }
+
+/* Ratings → USTA teams: one dropdown to pick a team (Tara, Nov 23 2026). */
+.cr-rp-team-pick { display: flex; align-items: center; gap: 12px; padding: 14px 18px; margin-bottom: 14px; }
+.cr-rp-team-pick-label { font-weight: 700; font-size: .78rem; letter-spacing: .08em; text-transform: uppercase; color: #1B2A4A; }
+.cr-rp-team-select {
+  flex: 1 1 auto; max-width: 420px; min-width: 0; padding: 10px 38px 10px 14px; border-radius: 12px;
+  border: 1px solid #cfd9e4; background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%231B2A4A' stroke-width='2'/%3E%3C/svg%3E") no-repeat right 14px center;
+  appearance: none; -webkit-appearance: none; font: inherit; font-weight: 600; color: #1B2A4A; cursor: pointer;
+}
+.cr-rp-team-select:focus { outline: 2px solid #3F6C8A; outline-offset: 1px; }
+.cr-rp-team[hidden] { display: none !important; }
+section.cr-rp-team .cr-rp-team-head { cursor: default; border-bottom: 1px solid var(--cr-card-border, #dde3ea); }
+section.cr-rp-team .cr-rp-team-head::after { content: none; }
+section.cr-rp-team .cr-rp-team-head .cr-rp-card-title { font-family: "Fraunces", Georgia, serif; }

@@ -50,18 +50,28 @@
         <%= render "ranked_table", rows: @players %>
       </section>
 
-      <%# ── Teams: one dropdown per USTA team I'm on ── %>
+      <%# ── Teams: pick one USTA team from a dropdown (Tara, Nov 23 2026) ──
+          One team's ratings at a time instead of a stack of fold-open sections. %>
       <div class="cr-rp-panel-teams" data-home-tabs-target="panel" style="display: none;">
         <% if @teams.any? %>
-          <% @teams.each do |team, rows| %>
-            <details class="cr-rp-card cr-rp-team">
-              <summary class="cr-rp-card-head cr-rp-team-head">
-                <span class="cr-rp-card-title"><%= team.name %></span>
+          <div class="cr-rp-card cr-rp-team-pick">
+            <label class="cr-rp-team-pick-label" for="cr-rp-team-select">Team</label>
+            <select id="cr-rp-team-select" class="cr-rp-team-select"
+                    onchange="var v=this.value;document.querySelectorAll('.cr-rp-panel-teams [data-rp-team]').forEach(function(t){t.hidden=t.dataset.rpTeam!==v})">
+              <% @teams.each_with_index do |(team, rows), i| %>
+                <option value="<%= i %>"><%= team.name %></option>
+              <% end %>
+            </select>
+          </div>
+          <% @teams.each_with_index do |(team, rows), i| %>
+            <section class="cr-rp-card cr-rp-team" data-rp-team="<%= i %>"<%= " hidden" unless i.zero? %>>
+              <div class="cr-rp-card-head cr-rp-team-head">
+                <h2 class="cr-rp-card-title"><%= team.name %></h2>
                 <span class="cr-rp-team-count"><%= rows.size %> <%= "player".pluralize(rows.size) %></span>
-              </summary>
+              </div>
               <p class="cr-rp-rule">Everyone on this team's Court Report roster, with her whole USTA record (not just this team). <%= RatingsHistory::MIN_LINES_TO_RANK %>+ lines for a rank.</p>
               <%= render "ranked_table", rows: rows %>
-            </details>
+            </section>
           <% end %>
         <% else %>
           <section class="cr-rp-card cr-rp-empty"><p>You're not on any current USTA teams.</p></section>
