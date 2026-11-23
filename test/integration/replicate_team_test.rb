@@ -21,10 +21,20 @@ class ReplicateTeamTest < ActionDispatch::IntegrationTest
 
   test "picking a previous team fills the form and offers its roster" do
     get new_team_path(from: @old.id)
-    assert_select "select.cr-replicate-select option", text: /Rep Aces/
+    assert_select "select.cr-replicate-select optgroup option", text: /Rep Aces – USTA Spring 2026/
     assert_select "input[name=from_team_id][value='#{@old.id}']"
     assert_select "input[name=name][value='Rep Aces']"
     assert_select ".cr-replicate-check", text: /2 players/
+  end
+
+  test "previous teams are grouped by year, newest first" do
+    older = TennisTeam.create!(user: @cap, name: "Rep Older", league_category: "USTA", season_name: "Fall 2025")
+    TeamMembership.create!(user: @cap, tennis_team: older, role: "captain")
+    get new_team_path
+    labels = css_select("select.cr-replicate-select optgroup").map { |g| g["label"] }
+    assert_equal labels.sort.reverse, labels
+    assert_includes labels, "2025 Teams"
+    assert_select "optgroup[label='2025 Teams'] option", text: /Rep Older/
   end
 
   test "creating from a previous team copies details and current roster, not matches or links" do

@@ -257,7 +257,7 @@ The team Schedule tab is still rows (its drop-down holds captain actions); not c
 (`section.cr-rp-team[data-rp-team]`), replacing the stack of fold-open `<details>` sections. First team shows by default.
 
 **New Team → "Start from a previous team" (Tara, Nov 23 2026, like MatchTime's Replicate Team):** pick a team you captain or
-co-captain (current or past); the form fills in and "Bring the roster" (on by default) copies its current players with their
+co-captain (current or past) from a menu grouped by year ("2026 Teams", "2025 Teams"; each "Team – League Season"); the form fills in and "Bring the roster" (on by default) copies its current players with their
 roles. Copied: league, league name, type, section, district, flight, rating, home court + address, line format, standings
 style, team colors (`TeamsController::REPLICATED_TEAM_FIELDS`). NOT copied: matches, scores, league-site links, USTA
 standings, playoff level. The old team is never changed. Teams you only play on can't be copied.
