@@ -3,17 +3,18 @@
     outside or Close to shut it. %>
 <button type="button" class="cr-beta-pill" popovertarget="cr-beta-pop" aria-label="Court Report is in beta. Tap to send feedback">Beta</button>
 <div id="cr-beta-pop" class="cr-beta-pop" popover>
+  <%# Small, in the lower right by the Feedback pill; ✕ closes it (Tara, Nov 24 2026). %>
+  <button type="button" class="cr-beta-x" popovertarget="cr-beta-pop" popovertargetaction="hide" aria-label="Close">✕</button>
   <h4 class="cr-beta-pop-title">We're still building 🎾</h4>
-  <p>Court Report is in beta: new features land every week and some things may change. Something missing or not working? Tell us here.</p>
+  <p>Court Report is in beta. Something missing or not working? Tell us.</p>
   <%= form_with url: feedback_path, method: :post, data: { turbo: false }, class: "cr-beta-form" do %>
     <% unless current_user %>
       <input type="text" name="name" maxlength="80" placeholder="Your name (optional)" autocomplete="name">
     <% end %>
-    <textarea name="message" rows="4" maxlength="2000" required placeholder="What's working, what's missing, what broke?"></textarea>
+    <textarea name="message" rows="2" maxlength="2000" required placeholder="What's working, what's missing, what broke?"></textarea>
     <label class="cr-beta-anon"><input type="checkbox" name="anonymous" value="1"><span>Send anonymously <small>(your name isn't saved)</small></span></label>
     <div class="cr-beta-form-row">
       <button type="submit" class="cr-btn cr-btn-gold">Send feedback</button>
-      <button type="button" class="cr-beta-close" popovertarget="cr-beta-pop" popovertargetaction="hide">Close</button>
     </div>
   <% end %>
 </div>
