@@ -9,6 +9,7 @@ class Feedback < ApplicationRecord
   validates :page, length: { maximum: 300 }
 
   def from_label
+    return "Anonymous" if anonymous?
     user&.name.presence || name.presence || "Someone not signed in"
   end
 end

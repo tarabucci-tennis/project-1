@@ -34,3 +34,6 @@ button.cr-beta-pill:focus-visible { outline: 2px solid #3F6C8A; outline-offset: 
 .cr-fb-meta { font-size: .85rem; margin-bottom: 6px; }
 .cr-fb-meta code { font-size: .8rem; }
 .cr-fb-message p { margin: 0 0 6px; }
+.cr-beta-anon { display: flex; align-items: center; gap: 8px; font-size: .85rem; font-weight: 600; color: #1B2A4A; cursor: pointer; }
+.cr-beta-anon input { width: 18px; height: 18px; margin: 0; accent-color: #3F6C8A; flex: 0 0 auto; }
+.cr-beta-anon small { font-size: inherit; font-weight: 400; }
