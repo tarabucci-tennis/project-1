@@ -72,7 +72,10 @@
           <button class="cr-home-tab" data-home-tabs-target="tab" data-tab-key="friendlies"
                   data-action="click->home-tabs#switch click->menu#tabTap" aria-haspopup="true">Friendlies</button>
             <div class="cr-menu-panel" data-menu-target="panel" role="menu">
-              <%= link_to new_friendly_path, class: "cr-menu-item", role: "menuitem" do %>
+              <%= link_to new_friendly_path(kind: "round_robin"), class: "cr-menu-item", role: "menuitem" do %>
+                + Book a round robin
+              <% end %>
+              <%= link_to new_friendly_path(kind: "friendly"), class: "cr-menu-item", role: "menuitem" do %>
                 + Book a friendly
               <% end %>
               <div class="cr-menu-divider"></div>
@@ -85,7 +88,7 @@
                   <div class="cr-fr-menu-row">
                     <%= link_to friendly_path(f), class: "cr-menu-item cr-fr-menu-open", role: "menuitem" do %>
                       <span class="cr-fr-menu-when"><%= f.starts_at.strftime("%a %-m/%-d") %> · <%= f.time_label %></span>
-                      <span class="cr-fr-menu-name"><%= f.title.presence || "Friendly" %></span>
+                      <span class="cr-fr-menu-name"><%= f.title.presence || f.kind_label %></span>
                     <% end %>
                     <% if f.organizer_id == current_user.id || current_user.admin? %>
                       <%= link_to "Edit", edit_friendly_path(f), class: "cr-fr-menu-edit", role: "menuitem",
@@ -320,7 +323,7 @@
               </div>
 
               <p class="cr-dash-cal-modal-captain-note" data-dashboard-calendar-target="captainNote" style="display: none;">
-                Only captains and co-captains can add friendlies or clinics here. Anyone can use + Book a friendly.
+                Only captains and co-captains can add friendlies or clinics here. Anyone can use + Round robin / friendly.
               </p>
             </div>
           </div>
@@ -361,7 +364,7 @@
             Book a friendly menu isn't there: offer the same two links here.
             Phones keep the tab-bar menu and never see this row. %>
         <div class="cr-fr-panel-head">
-          <%= link_to "+ Book a friendly", new_friendly_path, class: "cr-btn cr-btn-gold" %>
+          <%= link_to "+ Round robin / friendly", new_friendly_path, class: "cr-btn cr-btn-gold" %>
           <%= link_to "All friendlies →", friendlies_path, class: "cr-btn cr-btn-outline" %>
         </div>
         <% fc_items = @upcoming_friendlies.to_a + @upcoming_team_events.select { |e| e.display_kind == "friendly" } %>
@@ -373,7 +376,7 @@
             <% end %>
           </div>
         <% else %>
-          <p class="cr-coming-up-empty">No friendlies coming up. Tap + Book a friendly to book one and share the link.</p>
+          <p class="cr-coming-up-empty">No friendlies coming up. Tap + Round robin / friendly to book one and share the link.</p>
         <% end %>
 
         <%# Past friendlies: one "Look back" menu by date (Tara, Nov 23 2026). %>
@@ -397,7 +400,7 @@
           <section class="cr-fr-box cr-fr-how">
             <h2 class="cr-fr-box-title">How friendlies work</h2>
             <ol class="cr-fr-steps">
-              <li><strong>Book it.</strong> Pick a day, time and club with + Book a friendly.</li>
+              <li><strong>Book it.</strong> Pick a day, time and club with + Round robin / friendly.</li>
               <li><strong>Share the link.</strong> Anyone can add their name, no account needed. Every 4 names fills a court.</li>
               <li><strong>Play.</strong> Court Report mixes up partners for each set and keeps the scores.</li>
             </ol>

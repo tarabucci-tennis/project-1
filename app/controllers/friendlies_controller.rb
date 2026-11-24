@@ -37,7 +37,8 @@ class FriendliesController < ApplicationController
   # GET /friendlies/new
   def new
     starts_at = Time.current.change(min: 0) + 1.day
-    @friendly = Friendly.new(starts_at: starts_at, ends_at: starts_at + 90.minutes)
+    @friendly = Friendly.new(title: nil, starts_at: starts_at, ends_at: starts_at + 90.minutes,
+                             kind: params[:kind].presence_in(Friendly::KINDS.keys) || "round_robin")
   end
 
   # POST /friendlies
@@ -138,8 +139,13 @@ class FriendliesController < ApplicationController
   # PATCH /f/:token/lineup/swap?set=&a=&b=
   def swap
     ok = @friendly.swap_players!(params[:set], params[:a], params[:b])
+    alert = if (pair = @friendly.swap_repeat)
+      "#{pair.join(' and ')} would be partners twice, so that swap wasn't made. Everyone plays with a different partner each set."
+    else
+      "Couldn't swap those two."
+    end
     redirect_to friendly_path(@friendly, anchor: "set-#{params[:set].to_i + 1}"),
-                **(ok ? { notice: "Swapped." } : { alert: "Couldn't swap those two." })
+                **(ok ? { notice: "Swapped." } : { alert: alert })
   end
 
   # PATCH /f/:token/lineup/sets/:set/courts/:court/score — optional games for
@@ -212,7 +218,7 @@ class FriendliesController < ApplicationController
   end
 
   def friendly_params
-    params.require(:friendly).permit(:title, :starts_at, :start_date, :start_time, :duration, :end_time, :location, :sets_count, :notes)
+    params.require(:friendly).permit(:kind, :title, :starts_at, :start_date, :start_time, :duration, :end_time, :location, :sets_count, :notes)
   end
 
   def organizer?

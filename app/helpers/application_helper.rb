@@ -162,6 +162,7 @@ module ApplicationHelper
       bits << "#{friendly.players_for_next_court} more for a court"
     else
       bits << pluralize(courts, "court")
+      bits << "#{friendly.sitting_per_set} sit out each set" if friendly.sitting_per_set.positive?
       bits << "#{friendly.waitlist.size} waiting" if friendly.waitlist.any?
     end
     bits.join(" · ")
@@ -174,13 +175,14 @@ module ApplicationHelper
   #   3600 St Davids Rd
   #   Newtown Square, PA 19073
   #
-  #   Can you play? Add your name here. Every 4 names = 1 court, so we'll add
-  #   courts if more people join. This link always shows who's playing and the lineup:
+  #   Can you play? Add your name:
+  #   (link)
   def friendly_invite_text(friendly)
     lines = [ "🎾 #{friendly.title}", "📅 #{friendly.starts_at.strftime('%a, %b %-d')} · #{friendly.time_label}" ]
     lines.concat(place_lines(friendly.place))
-    lines << "" << "Can you play? Add your name here. Every 4 names = 1 court, so we'll add courts " \
-                   "if more people join. This link always shows who's playing and the lineup:"
+    # Short (Tara, Nov 24 2026: "I don't want all of the words at the bottom").
+    # The share button puts the link on the next line, so it reads in order.
+    lines << "" << "Can you play? Add your name:"
     lines.join("\n")
   end
 

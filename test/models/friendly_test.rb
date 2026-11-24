@@ -88,6 +88,7 @@ class FriendlyTest < ActiveSupport::TestCase
 
   test "swap two players in a set, but not in a played set" do
     add("A", "B", "C", "D", "E", "F", "G", "H")
+    @friendly.update!(sets_count: 1) # one set: any swap gives new partners
     @friendly.generate_lineup!(rng: Random.new(5))
     set = @friendly.lineup_sets[0]
     a = set["courts"][0][0]

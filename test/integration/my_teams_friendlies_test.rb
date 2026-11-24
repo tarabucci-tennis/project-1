@@ -40,7 +40,7 @@ class MyTeamsFriendliesTest < ActionDispatch::IntegrationTest
 
   test "Friendlies tab has its own Book a friendly link for computers, where the tab bar is hidden" do
     get teams_path
-    assert_select ".cr-fr-panel .cr-fr-panel-head a[href=?]", new_friendly_path, text: "+ Book a friendly"
+    assert_select ".cr-fr-panel .cr-fr-panel-head a[href=?]", new_friendly_path, text: "+ Round robin / friendly"
     assert_select ".cr-fr-panel .cr-fr-panel-head a[href=?]", friendlies_path
   end
 
@@ -51,7 +51,8 @@ class MyTeamsFriendliesTest < ActionDispatch::IntegrationTest
     theirs.spots.create!(user: @user, name: @user.name)
     get teams_path
     assert_select ".cr-home-tabs .cr-fr-menu .cr-home-tab[data-tab-key=friendlies]", text: "Friendlies"
-    assert_select ".cr-fr-menu a.cr-menu-item[href=?]", new_friendly_path, text: /Book a friendly/
+    assert_select ".cr-fr-menu a.cr-menu-item[href=?]", new_friendly_path(kind: "round_robin"), text: /Book a round robin/
+    assert_select ".cr-fr-menu a.cr-menu-item[href=?]", new_friendly_path(kind: "friendly"), text: /Book a friendly/
     assert_select ".cr-fr-menu a.cr-fr-menu-head[href=?]", friendlies_path, text: /All friendlies/
     assert_select ".cr-page-header-actions > a", text: "Book a friendly", count: 0
     assert_select ".cr-page-header-actions .cr-fr-menu", count: 0
