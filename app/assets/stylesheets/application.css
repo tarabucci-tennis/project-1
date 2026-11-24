@@ -7865,3 +7865,7 @@ input[type="date"], input[type="datetime-local"], input[type="time"] {
 input[type="date"]::-webkit-date-and-time-value { text-align: left; }
 /* Round robin / friendly type hint under the Type menu (Tara, Nov 24 2026). */
 html body .cr-fr-form .cr-fr-kind-hint { font-weight: 500; font-size: .8rem; color: #1B2A4A; line-height: 1.4; }
+
+/* "Beta" tag beside the logo (Tara, Nov 24 2026): small, deep-green outline, sits right after the wordmark. */
+.cr-beta-pill { display: inline-flex; align-items: center; align-self: center; margin: 0 auto 0 10px; padding: 3px 9px; border: 1.5px solid #1B6B5A; border-radius: 999px; background: #E3F0EC; color: #1B6B5A; font-family: Inter, system-ui, sans-serif; font-size: .68rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; line-height: 1; white-space: nowrap; flex: 0 0 auto; cursor: default; }
+@media (max-width: 420px) { .cr-beta-pill { margin-left: 6px; padding: 2px 7px; font-size: .6rem; } }
