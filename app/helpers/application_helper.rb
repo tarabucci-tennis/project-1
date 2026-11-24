@@ -162,7 +162,6 @@ module ApplicationHelper
       bits << "#{friendly.players_for_next_court} more for a court"
     else
       bits << pluralize(courts, "court")
-      bits << "#{friendly.sitting_per_set} sit out each set" if friendly.sitting_per_set.positive?
       bits << "#{friendly.waitlist.size} waiting" if friendly.waitlist.any?
     end
     bits.join(" · ")

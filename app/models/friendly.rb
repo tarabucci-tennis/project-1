@@ -17,9 +17,9 @@ class Friendly < ApplicationRecord
   serialize :lineup, coder: JSON
 
   # Round robin vs friendly (Tara, Nov 24 2026: "people might not understand"
-  # a round robin booked as a "Friendly"). Round robin: everyone plays and
-  # extras take turns sitting out a set. Friendly: full courts only; extras
-  # wait until 4 more join.
+  # a round robin booked as a "Friendly"). The name people see. Both work the
+  # same: full courts only, partners rotate every set, extras wait until 4
+  # more join (nobody sits out a set).
   KINDS = { "round_robin" => "Round robin", "friendly" => "Friendly" }.freeze
   validates :kind, inclusion: { in: KINDS.keys }
 
@@ -103,10 +103,10 @@ class Friendly < ApplicationRecord
 
   # The first 4-per-court names play; anyone past a full court waits
   # (first come, first served) until enough join to fill another court.
-  # Round robin: once there's a court, everyone plays (extras take turns
-  # sitting out a set, see FriendlyLineupGenerator).
+  # Full courts only, for round robins AND friendlies (Tara, Nov 24 2026:
+  # "nobody wants to take time to go to a round robin and then sit out"):
+  # the first 4 per court play every set; anyone extra waits until 4 more join.
   def playing_spots
-    return active_spots if round_robin? && courts_needed.positive?
     active_spots.first(courts_needed * PER_COURT)
   end
 
@@ -114,9 +114,9 @@ class Friendly < ApplicationRecord
     active_spots.drop(playing_spots.size)
   end
 
-  # Round robin: how many sit out each set (players beyond full courts).
+  # Nobody sits out a set any more: extras wait instead (kept for old views).
   def sitting_per_set
-    round_robin? && courts_needed.positive? ? active_spots.size - courts_needed * PER_COURT : 0
+    0
   end
 
   def player_names
