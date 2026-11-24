@@ -3,8 +3,6 @@
     W / L badge. Our players link to their profiles.
     Locals: match (a Match), team (its TennisTeam). %>
 <% lines = match.match_lines.sort_by(&:position).select(&:scored?) %>
-<%# TennisRecord only covers USTA, so the rating links show on USTA teams only. %>
-<% tr_links = team.league_group == "USTA" %>
 <% if lines.any? %>
   <%# Our pair is always on top and each pair is labelled with its team, so the
       W / L badge (always OUR team's result) can't be read as the top pair's
@@ -50,7 +48,7 @@
                     <%= link_to nm, player_path(pid), class: "cr-sheet-playerlink" %>
                   <% else %>
                     <%= nm %>
-                  <% end %><% if tr_links && (row[:ours] || row[:real]) %><%= link_to icon(:chart, size: 13), tennis_record_url(nm), target: "_blank", rel: "noopener", class: "cr-sheet-tr-link", title: "#{nm}'s rating on TennisRecord", "aria-label": "#{nm}'s rating on TennisRecord" %><% end %><%= " / " unless i == row[:names].size - 1 %>
+                  <% end %><%= " / " unless i == row[:names].size - 1 %>
                 <% end %>
               <% else %>
                 <span class="cr-sheet-noname"><%= row[:ours] ? "Our line" : "Names not entered" %></span>

@@ -618,11 +618,10 @@
               <div class="cr-roster-row<%= ' cr-me-row' if membership.user_id == current_user.id %>">
                 <span class="cr-roster-who">
                   <%= link_to membership.user.name + (membership.user_id == current_user.id ? " (you)" : ""),
-                              tennis_record_url(membership.user),
-                              target: "_blank", rel: "noopener",
+                              player_path(membership.user),
                               class: "cr-roster-name #{'cr-roster-self' if membership.user_id == current_user.id}",
                               style: "text-decoration: none; color: inherit;",
-                              title: "View #{membership.user.name} on TennisRecord" %>
+                              title: "#{membership.user.name}'s Court Report profile" %>
                   <% if membership.captain? %><span class="cr-roster-role cr-roster-role-captain">Captain</span><% end %>
                 </span>
                 <%# Fixed cells so every row lines up like a table on computers. %>
@@ -641,10 +640,9 @@
                 <% end %>
                 <span class="cr-roster-cell cr-roster-cell-actions">
                   <%= link_to "Matches",
-                              tennis_record_match_history_url(membership.user),
-                              target: "_blank", rel: "noopener",
+                              player_path(membership.user, anchor: "league-history"),
                               class: "cr-roster-history-link",
-                              title: "#{membership.user.name}'s TennisRecord match history" %>
+                              title: "#{membership.user.name}'s match history on Court Report" %>
                   <% if @is_captain && !membership.captain? %>
                     <%= button_to "Make captain",
                                   make_captain_team_path(@team, user_id: membership.user_id),
@@ -677,23 +675,20 @@
                 <% memberships.each do |membership| %>
                   <div class="cr-roster-row" style="opacity: 0.85;">
                     <%= link_to membership.user.name,
-                                tennis_record_url(membership.user),
-                                target: "_blank", rel: "noopener",
+                                player_path(membership.user),
                                 class: "cr-roster-name",
                                 style: "text-decoration: none; color: inherit;",
-                                title: "View #{membership.user.name} on TennisRecord" %>
+                                title: "#{membership.user.name}'s Court Report profile" %>
                     <% if membership.user.ntrp_rating.present? %>
                       <div class="cr-roster-rating"><%= membership.user.ntrp_rating %></div>
                     <% end %>
                     <% if membership.captain? %>
                       <div class="cr-roster-role cr-roster-role-captain">Captain</div>
                     <% end %>
-                    <% season_year = season.to_s[/\d{4}/]&.to_i || Date.current.year %>
                     <%= link_to "Matches",
-                                tennis_record_match_history_url(membership.user, year: season_year),
-                                target: "_blank", rel: "noopener",
+                                player_path(membership.user, anchor: "league-history"),
                                 class: "cr-roster-history-link",
-                                title: "#{membership.user.name}'s TennisRecord match history (#{season_year})" %>
+                                title: "#{membership.user.name}'s match history on Court Report" %>
                   </div>
                 <% end %>
               </div>
@@ -872,7 +867,7 @@
               <div class="cr-captain-analytics-header">
                 <span class="cr-captain-col-name">Player</span>
                 <span class="cr-captain-col-stat"><%= User::SHOW_COURT_REPORT_RATING ? "YCR" : "NTRP" %></span>
-                <span class="cr-captain-col-stat">TR</span>
+                <span class="cr-captain-col-stat">Profile</span>
                 <span class="cr-captain-col-stat">Played</span>
                 <span class="cr-captain-col-stat">W</span>
                 <span class="cr-captain-col-stat">L</span>
@@ -898,7 +893,7 @@
                     <% else %>—<% end %>
                   </span>
                   <span class="cr-captain-col-stat">
-                    <%= link_to "view", tennis_record_url(ps[:name]), target: "_blank", rel: "noopener", style: "color: var(--cr-text-light); font-size: 0.72rem; text-decoration: underline;", title: "#{ps[:name]} on TennisRecord" %>
+                    <% if ps[:user_id] %><%= link_to "view", player_path(ps[:user_id]), style: "color: var(--cr-text-light); font-size: 0.72rem; text-decoration: underline;", title: "#{ps[:name]}'s Court Report profile" %><% else %>—<% end %>
                   </span>
                   <span class="cr-captain-col-stat"><%= ps[:matches_played] %></span>
                   <span class="cr-captain-col-stat" style="color: var(--cr-green);"><%= ps[:wins] %></span>
@@ -913,7 +908,7 @@
               <% end %>
             </div>
             <p style="font-size: 0.8rem; color: var(--cr-text-muted); margin-top: 8px;">
-              <% if User::SHOW_COURT_REPORT_RATING %><strong>YCR</strong> = Court Report Rating, computed live from your entered scores<% else %><strong>NTRP</strong> = official USTA rating<% end %> — tap it for full stats. <strong>TR</strong> = TennisRecord (opens their site).
+              <% if User::SHOW_COURT_REPORT_RATING %><strong>YCR</strong> = Court Report Rating, computed live from your entered scores<% else %><strong>NTRP</strong> = official USTA rating<% end %> — tap it for full stats. <strong>Profile</strong> = their Court Report page.
             </p>
           </div>
         <% end %>
@@ -1332,7 +1327,7 @@
                     <div class="cr-captain-avail-label cr-captain-label-in">In (<%= counts[:in] %>)</div>
                     <% match.availabilities.where(status: "in").includes(:user).each do |a| %>
                       <div class="cr-captain-player-row">
-                        <span><%= link_to_tennis_record(a.user, style: "color: inherit; text-decoration: none;") %></span>
+                        <span><%= link_to(a.user.name, player_path(a.user), style: "color: inherit; text-decoration: none;") %></span>
                         <% if a.message.present? %>
                           <span class="cr-captain-player-msg">"<%= a.message %>"</span>
                         <% end %>
@@ -1347,7 +1342,7 @@
                     <div class="cr-captain-avail-label cr-captain-label-out">Out (<%= counts[:out] %>)</div>
                     <% match.availabilities.where(status: "out").includes(:user).each do |a| %>
                       <div class="cr-captain-player-row">
-                        <span><%= link_to_tennis_record(a.user, style: "color: inherit; text-decoration: none;") %></span>
+                        <span><%= link_to(a.user.name, player_path(a.user), style: "color: inherit; text-decoration: none;") %></span>
                         <% if a.message.present? %>
                           <span class="cr-captain-player-msg">"<%= a.message %>"</span>
                         <% end %>
