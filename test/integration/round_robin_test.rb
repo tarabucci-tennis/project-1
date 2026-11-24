@@ -50,7 +50,7 @@ class RoundRobinTest < ActionDispatch::IntegrationTest
     rr = book("round_robin")
     get friendlies_path
     assert_select ".cr-band-card", text: /Round robin/
-    assert_match(/Add your name here:\z/, ApplicationController.helpers.friendly_invite_text(rr))
+    assert_match(/Can you play\? Add your name:\z/, ApplicationController.helpers.friendly_invite_text(rr))
   end
 
   test "nobody partners the same person twice, and a swap that would is refused" do

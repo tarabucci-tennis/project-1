@@ -9,6 +9,6 @@ class FriendlyInviteTextTest < ActionDispatch::IntegrationTest
     get friendly_path(friendly)
     button = css_select("button.cr-chip-btn").find { |b| b.text.include?("Invite players") }
     assert button, "Invite players button"
-    assert button["data-share-text"].end_with?("Add your name here:")
+    assert button["data-share-text"].end_with?("Can you play? Add your name:")
   end
 end

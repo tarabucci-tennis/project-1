@@ -175,14 +175,14 @@ module ApplicationHelper
   #   3600 St Davids Rd
   #   Newtown Square, PA 19073
   #
-  #   Add your name here:
+  #   Can you play? Add your name:
   #   (link)
   def friendly_invite_text(friendly)
     lines = [ "🎾 #{friendly.title}", "📅 #{friendly.starts_at.strftime('%a, %b %-d')} · #{friendly.time_label}" ]
     lines.concat(place_lines(friendly.place))
     # Short (Tara, Nov 24 2026: "I don't want all of the words at the bottom").
     # The share button puts the link on the next line, so it reads in order.
-    lines << "" << "Add your name here:"
+    lines << "" << "Can you play? Add your name:"
     lines.join("\n")
   end
 
