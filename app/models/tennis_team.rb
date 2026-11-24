@@ -100,6 +100,19 @@ class TennisTeam < ApplicationRecord
     team_colors.to_s.downcase.scan(/[a-z]+/).filter_map { |w| COLOR_WORDS[w] }.uniq
   end
 
+  # The hero legend (QA qa-170): [name, swatch] per colour the team typed, names
+  # only, so raw hex codes or numbers in the typed text ("Gold: #C9A227 1.0")
+  # never show. Unknown words are skipped.
+  def color_legend
+    team_colors.to_s.downcase.scan(/[a-z]+/).filter_map { |w| [ w.capitalize, COLOR_WORDS[w] ] if COLOR_WORDS[w] }.uniq(&:first)
+  end
+
+  # QA qa-169: Archive Season only once the team has played a match (a result is
+  # in, or a match's end time has passed), so an unplayed season can't be archived.
+  def played_any_match?
+    matches.any? { |m| m.result.present? || m.over? }
+  end
+
   # The My Teams section a team belongs under. Unlike league_label, this
   # folds every USTA league_name ("USTA Adult Tri-Level" etc.) into "USTA".
   def league_group

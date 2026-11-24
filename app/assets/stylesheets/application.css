@@ -7880,3 +7880,7 @@ html body .cr-fr-form .cr-fr-format[hidden] { display: none; }
 /* Create a Team: plain Cancel link under the full-width button (QA qa-168). Navy text, underlined, not a button. */
 .cr-form-cancel { margin: 14px 0 0; text-align: center; font-size: 0.95rem; }
 html body .cr-form-cancel a { color: #1B2A4A; text-decoration: underline; text-underline-offset: 3px; font-weight: 600; padding: 6px 10px; }
+
+/* Team colors legend: swatch + name only (QA qa-170). */
+.cr-color-item { display: inline-flex; align-items: center; gap: 5px; margin-left: 8px; white-space: nowrap; }
+.cr-color-item .cr-color-dot { margin: 0; }
