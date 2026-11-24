@@ -14,24 +14,23 @@ class RoundRobinTest < ActionDispatch::IntegrationTest
     Friendly.order(:id).last
   end
 
-  test "a round robin with 6 people: one court, everyone plays, 2 sit out each set in turn" do
+  test "a round robin with 6 people works like a friendly: 4 play every set, 2 wait" do
     rr = book("round_robin")
     assert rr.round_robin?
     assert_equal "Round robin", rr.title
     6.times { |i| rr.spots.create!(name: "RR P#{i}") }
     rr.reload
     assert_equal 1, rr.courts_needed
-    assert_equal 6, rr.playing_spots.size
-    assert_empty rr.waitlist
-    assert_equal 2, rr.sitting_per_set
+    assert_equal 4, rr.playing_spots.size
+    assert_equal 2, rr.waitlist.size
     rr.generate_lineup!(rng: Random.new(1))
-    sat = rr.lineup_sets.flat_map { |s| s["sitting"] }
-    assert_equal 6, sat.size
-    assert_equal 6, sat.uniq.size, "everyone sits exactly once over 3 sets"
+    assert rr.lineup_sets.all? { |set| Array(set["sitting"]).empty? }, "nobody sits out a set"
+    assert_empty rr.repeat_partners(rr.lineup_sets)
 
     get friendly_path(rr)
     assert_select ".cr-rp-eyebrow", text: /Round robin · organized by/
-    assert_match(/2 sit out each set, taking turns/, response.body)
+    assert_match(/2 on the waitlist/, response.body)
+    assert_no_match(/sit out each set/, response.body)
   end
 
   test "a friendly with 6 people keeps full courts: 4 play, 2 wait" do

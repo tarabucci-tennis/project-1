@@ -59,16 +59,13 @@
   <section class="cr-rp-card cr-no-print" id="players">
     <div class="cr-rp-card-head">
       <h2 class="cr-rp-card-title">Who's playing (<%= n_players %>)</h2>
-      <span class="cr-rp-card-note"><%= @friendly.round_robin? ? "Every 4 names = 1 court · extras take turns sitting out" : "Every 4 names = 1 court" %></span>
+      <span class="cr-rp-card-note">Every 4 names = 1 court</span>
     </div>
     <p class="cr-fr-courts-summary">
       <% if courts.zero? %>
         <strong><%= @friendly.players_for_next_court %> more <%= "player".pluralize(@friendly.players_for_next_court) %></strong> needed for the first court.
       <% else %>
         <strong><%= n_players %> players = <%= courts %> <%= "court".pluralize(courts) %></strong>
-        <% if (sit = @friendly.sitting_per_set).positive? %>
-          · <%= sit %> <%= sit == 1 ? "sits" : "sit" %> out each set, taking turns
-        <% end %>
         <% if waitlist.any? %>
           · <%= waitlist.size %> on the waitlist · <%= @friendly.players_for_next_court %> more makes court <%= courts + 1 %>
         <% end %>
