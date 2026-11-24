@@ -283,7 +283,7 @@ logo on every page. **A + D (Tara, Nov 24 evening):** the tag is a button that o
 `shared/_beta_popover`) with "We're still building" + a feedback box; a one-time welcome card (`shared/_beta_welcome`, shown
 while `users.beta_welcomed_at` is nil; "Got it" or sending feedback sets it). Feedback is saved in the `feedbacks` table
 (user or typed name, message, page path) and read by admins at **/admin/feedback** ("Beta feedback (N)" in the admin menu).
-Styles live in `app/assets/stylesheets/beta.css` (the public home page links it). Rate limit: 10 messages/hour. **Send anonymously** checkbox (Tara, Nov 24): `feedbacks.anonymous`; no account or name saved; admin page shows "Anonymous".
+Styles live in `app/assets/stylesheets/beta.css` (the public home page links it). Rate limit: 10 messages/hour. **Send anonymously** checkbox (Tara, Nov 24): `feedbacks.anonymous`; no account or name saved; admin page shows "Anonymous". **Floating "Feedback" pill** (Tara, Nov 24, from a SitterLink screenshot; in Court Report blue, not their colors): `shared/_feedback_fab`, bottom right on every page, opens the same popup; on phones it sits 84px up so it clears the bottom menu bar.
 
 **Stale form = friendly message (Tara, Nov 24 2026):** adding a name to a round robin showed the bare "422 Unprocessable Entity"
 page: the form's hidden security code had gone stale (adding players works; reproduced every path). `ApplicationController`
