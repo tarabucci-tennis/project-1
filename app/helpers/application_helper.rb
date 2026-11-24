@@ -199,7 +199,7 @@ module ApplicationHelper
     friendly.lineup_sets.first(friendly.sets_count).each_with_index do |set, i|
       lines << "" << "Set #{i + 1}"
       Array(set["courts"]).each_with_index do |(a, b, c, d), ci|
-        lines << "Ct #{ci + 1}: #{a} + #{b} vs #{c} + #{d}"
+        lines << (c.nil? ? "Ct #{ci + 1}: #{a} vs #{b}" : "Ct #{ci + 1}: #{a} + #{b} vs #{c} + #{d}")
       end
       lines << "Sitting out: #{set['sitting'].join(', ')}" if Array(set["sitting"]).any?
     end

@@ -11,7 +11,7 @@
   <% done = item.over? %>
   <%= render "shared/band_card", date: item.starts_at, time: item.time_label, pill: (done ? "Completed" : "Upcoming"),
         chip: (mine ? "You're in" : nil),
-        league: item.kind_label, title: item.title.presence || item.kind_label,
+        league: "#{item.kind_label}#{' · Singles' if item.singles?}", title: item.title.presence || item.kind_label,
         note: (done && (n_scored = item.scores.size).positive? ? "#{pluralize(n_scored, 'court')} scored" : "#{friendly_signup_status(item)}#{" · lineup ready" if item.lineup?}"),
         venue: item.place, venue_tbd: (item.place ? nil : "Place TBD"),
         action_label: (done ? (item.scores.any? ? "See scores" : "Add scores") : (item.lineup? ? "See lineup" : (mine ? "Open" : "Sign up"))),

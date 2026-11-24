@@ -128,7 +128,7 @@ class FriendliesController < ApplicationController
   def generate
     unless @friendly.can_generate?
       return redirect_to(friendly_path(@friendly, anchor: "lineup"),
-                         alert: "You need at least #{Friendly::MIN_PLAYERS} players to make a lineup.")
+                         alert: "You need at least #{@friendly.per_court} players to make a lineup.")
     end
     kept = @friendly.lineup_sets.count { |s| s["done"] }
     @friendly.generate_lineup!
@@ -218,7 +218,7 @@ class FriendliesController < ApplicationController
   end
 
   def friendly_params
-    params.require(:friendly).permit(:kind, :title, :starts_at, :start_date, :start_time, :duration, :end_time, :location, :sets_count, :notes)
+    params.require(:friendly).permit(:kind, :format, :title, :starts_at, :start_date, :start_time, :duration, :end_time, :location, :sets_count, :notes)
   end
 
   def organizer?

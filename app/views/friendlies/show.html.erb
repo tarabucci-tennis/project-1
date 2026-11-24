@@ -11,7 +11,7 @@
 
   <section class="cr-rp-hero">
     <div class="cr-rp-hero-main">
-      <div class="cr-rp-eyebrow"><%= @friendly.kind_label %> · organized by <%= @friendly.organizer.name %></div>
+      <div class="cr-rp-eyebrow"><%= @friendly.kind_label %><%= " · Singles" if @friendly.singles? %> · organized by <%= @friendly.organizer.name %></div>
       <h1 class="cr-rp-name"><%= @friendly.title %></h1>
       <div class="cr-rp-sub">
         <%= @friendly.starts_at.strftime("%A, %B %-d") %> · <%= @friendly.time_label %>
@@ -59,7 +59,7 @@
   <section class="cr-rp-card cr-no-print" id="players">
     <div class="cr-rp-card-head">
       <h2 class="cr-rp-card-title">Who's playing (<%= n_players %>)</h2>
-      <span class="cr-rp-card-note">Every 4 names = 1 court</span>
+      <span class="cr-rp-card-note"><%= @friendly.singles? ? "Singles · every 2 names = 1 court" : "Every 4 names = 1 court" %></span>
     </div>
     <p class="cr-fr-courts-summary">
       <% if courts.zero? %>
@@ -127,7 +127,7 @@
                 form: { style: "display:inline;", data: (@friendly.lineup? ? { turbo_confirm: "Make a new lineup for every set not marked played?" } : {}) } %>
           <%= link_to "Sets: #{@friendly.sets_count} · change", edit_friendly_path(@friendly), class: "cr-fr-sets-link" %>
         <% else %>
-          <p class="cr-fr-courts-summary">Once <%= Friendly::MIN_PLAYERS %> people have added their names, you can generate the lineup here.</p>
+          <p class="cr-fr-courts-summary">Once <%= @friendly.per_court %> people have added their names, you can generate the lineup here.</p>
         <% end %>
       </div>
     <% end %>
@@ -181,7 +181,7 @@
               <div class="cr-fr-court-row">
                 <div class="cr-fr-court-label">Court <%= ci + 1 %></div>
                 <div class="cr-fr-match">
-                  <% [ [ 0, 1 ], [ 2, 3 ] ].each_with_index do |pair, side| %>
+                  <% (court.size == 2 ? [ [ 0 ], [ 1 ] ] : [ [ 0, 1 ], [ 2, 3 ] ]).each_with_index do |pair, side| %>
                     <% if side == 1 %><span class="cr-fr-vs">vs</span><% end %>
                     <%# Partners share a colour; each pair on a set's courts gets its own. %>
                     <div class="cr-fr-pair cr-fr-pair-tone-<%= (ci * 2 + side) % 6 %>">
@@ -211,7 +211,7 @@
                     <%= form_with url: friendly_court_score_path(@friendly, set: si, court: ci), method: :patch,
                           data: { turbo: false }, class: "cr-fr-score-form" do %>
                       <input type="number" name="a" min="0" max="99" inputmode="numeric" value="<%= score&.first %>"
-                             aria-label="Games for <%= court.values_at(0, 1).compact.join(' & ') %>">
+                             aria-label="Games for <%= (court.size == 2 ? court.values_at(0) : court.values_at(0, 1)).compact.join(' & ') %>">
                       <span class="cr-fr-score-dash">–</span>
                       <input type="number" name="b" min="0" max="99" inputmode="numeric" value="<%= score&.last %>"
                              aria-label="Games for <%= court.values_at(2, 3).compact.join(' & ') %>">

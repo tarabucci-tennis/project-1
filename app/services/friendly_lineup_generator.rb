@@ -18,11 +18,13 @@ class FriendlyLineupGenerator
   PARTNER_COST = 100
   OPPONENT_COST = 10
 
-  def self.courts_for(player_count)
-    player_count.to_i / PER_COURT
+  def self.courts_for(player_count, per_court = PER_COURT)
+    player_count.to_i / per_court
   end
 
-  def initialize(names, history: [], rng: Random.new)
+  # per_court: 4 = doubles ([a, b, c, d] = a+b vs c+d), 2 = singles ([a, b] = a vs b).
+  def initialize(names, history: [], rng: Random.new, per_court: PER_COURT)
+    @per_court = per_court
     @names = names.uniq
     @rng = rng
     @partners = Hash.new(0)
@@ -34,10 +36,10 @@ class FriendlyLineupGenerator
   end
 
   def next_set
-    courts = self.class.courts_for(@names.size)
-    raise ArgumentError, "needs at least #{PER_COURT} players" if courts < 1
+    courts = self.class.courts_for(@names.size, @per_court)
+    raise ArgumentError, "needs at least #{@per_court} players" if courts < 1
 
-    sitting = pick_sitters(@names.size - courts * PER_COURT)
+    sitting = pick_sitters(@names.size - courts * @per_court)
     playing = @names - sitting
     set = { "courts" => best_courts(playing), "sitting" => sitting, "done" => false }
     record(set)
@@ -55,6 +57,10 @@ class FriendlyLineupGenerator
       @last_sat[n] = @round
     end
     courts.each do |a, b, c, d|
+      if c.nil? # singles: a vs b
+        @opponents[key(a, b)] += 1
+        next
+      end
       @partners[key(a, b)] += 1
       @partners[key(c, d)] += 1
       [ a, b ].each { |x| [ c, d ].each { |y| @opponents[key(x, y)] += 1 } }
@@ -68,6 +74,8 @@ class FriendlyLineupGenerator
   end
 
   def best_courts(playing)
+    return best_singles(playing) if @per_court == 2
+
     best = nil
     best_cost = nil
     TRIES.times do
@@ -75,6 +83,19 @@ class FriendlyLineupGenerator
       groups = improve(groups)
       cost = groups.sum { |g| court_cost(g) }
       best, best_cost = groups, cost if best_cost.nil? || cost < best_cost
+      break if best_cost.zero?
+    end
+    best
+  end
+
+  # Singles: pair players so nobody meets the same opponent again if avoidable.
+  def best_singles(playing)
+    best = nil
+    best_cost = nil
+    TRIES.times do
+      courts = playing.shuffle(random: @rng).each_slice(2).to_a
+      cost = courts.sum { |a, b| @opponents[key(a, b)] }
+      best, best_cost = courts, cost if best_cost.nil? || cost < best_cost
       break if best_cost.zero?
     end
     best
