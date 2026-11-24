@@ -1,0 +1,19 @@
+<%# D: one-time welcome card, the first time each player is signed in (Tara,
+    Nov 24 2026). "Got it" or sending feedback marks it seen for good. %>
+<div class="cr-beta-welcome" role="dialog" aria-modal="true" aria-labelledby="cr-beta-welcome-title">
+  <div class="cr-beta-welcome-box">
+    <span class="cr-beta-pill cr-beta-pill-static">Beta</span>
+    <h2 id="cr-beta-welcome-title">Welcome to the Court Report beta</h2>
+    <p>You're one of the first players using it. What that means:</p>
+    <ul>
+      <li>New features every week</li>
+      <li>Some things may change or break</li>
+      <li>Your ideas shape what we build next</li>
+    </ul>
+    <div class="cr-beta-welcome-actions">
+      <%= button_to "Got it", beta_welcomed_path, method: :patch, class: "cr-btn cr-btn-gold", form: { class: "cr-beta-welcome-form" } %>
+      <button type="button" class="cr-beta-welcome-link" popovertarget="cr-beta-pop">Send feedback</button>
+    </div>
+    <p class="cr-beta-welcome-note">Later, tap the green Beta tag at the top to send feedback any time.</p>
+  </div>
+</div>

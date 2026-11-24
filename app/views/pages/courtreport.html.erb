@@ -9,6 +9,7 @@
 <meta name="theme-color" content="#060f1e">
 <title>Your Court Report · All Your Teams. One App.</title>
 <%= csrf_meta_tags %>
+<%= stylesheet_link_tag "beta" %>
 <%= csp_meta_tag %>
 <link rel="icon" href="/icon.png?v=3" type="image/png">
 <link rel="icon" href="/icon.svg?v=3" type="image/svg+xml">
@@ -384,9 +385,7 @@ body::before{opacity:.3;}
 .cr-btn-pill.cr-btn-primary{background:#3F6C8A;color:#fff;border-color:#3F6C8A;}
 .cr-btn-pill.cr-btn-primary:hover{background:#bb9440;}
 @media(max-width:768px){.cr-hero h1{font-size:2.3rem;}}
-/* "Beta" tag beside the logo (Tara, Nov 24 2026): small, deep-green outline, sits right after the wordmark. */
-.cr-beta-pill { display: inline-flex; align-items: center; align-self: center; margin: 0 auto 0 10px; padding: 3px 9px; border: 1.5px solid #1B6B5A; border-radius: 999px; background: #E3F0EC; color: #1B6B5A; font-family: Inter, system-ui, sans-serif; font-size: .68rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; line-height: 1; white-space: nowrap; flex: 0 0 auto; cursor: default; }
-@media (max-width: 420px) { .cr-beta-pill { margin-left: 6px; padding: 2px 7px; font-size: .6rem; } }
+
 </style>
 </head>
 <body>
@@ -397,7 +396,7 @@ body::before{opacity:.3;}
       <div class="cr-logo-mark"><span class="cr-logo-ball" aria-hidden="true"></span></div>
       <div class="cr-logo-name"><small class="cr-logo-your">YOUR</small>Court <span>Report</span></div>
     </a>
-    <span class="cr-beta-pill" title="Court Report is in beta: new and still being improved">Beta</span>
+    <%= render "shared/beta_popover" %>
   </div>
 </header>
 

@@ -276,7 +276,11 @@ Upcoming/Friendlies tab, calendar, /friendlies, search) for everyone, but are ne
 the white number box on the friendly and player-ratings banners (`.cr-rp-hero-level`) had turned white-on-white with #349.
 
 **BETA tag (Tara, Nov 24 2026):** a small "BETA" pill (`.cr-beta-pill`, deep-green outline on the deep-green tint) right after the
-logo on every page: the app header (layouts/application) and the public home page (pages/courtreport, CSS inline there too).
+logo on every page. **A + D (Tara, Nov 24 evening):** the tag is a button that opens a popup (browser popover, no script:
+`shared/_beta_popover`) with "We're still building" + a feedback box; a one-time welcome card (`shared/_beta_welcome`, shown
+while `users.beta_welcomed_at` is nil; "Got it" or sending feedback sets it). Feedback is saved in the `feedbacks` table
+(user or typed name, message, page path) and read by admins at **/admin/feedback** ("Beta feedback (N)" in the admin menu).
+Styles live in `app/assets/stylesheets/beta.css` (the public home page links it). Rate limit: 10 messages/hour.
 
 **Stale form = friendly message (Tara, Nov 24 2026):** adding a name to a round robin showed the bare "422 Unprocessable Entity"
 page: the form's hidden security code had gone stale (adding players works; reproduced every path). `ApplicationController`

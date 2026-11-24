@@ -22,6 +22,7 @@
         <%= link_to admin_members_path, class: "cr-menu-item", role: "menuitem" do %>Site members<small>Only you see this</small><% end %>
         <%= link_to "Download members spreadsheet", admin_members_path(format: :csv), class: "cr-menu-item", role: "menuitem" %>
         <%= link_to admin_duplicates_path, class: "cr-menu-item", role: "menuitem" do %>Possible duplicates<small>Merge two records of one person</small><% end %>
+        <%= link_to admin_feedback_path, class: "cr-menu-item", role: "menuitem" do %>Beta feedback (<%= Feedback.count %>)<small>What players sent you</small><% end %>
       <% end %>
       <div class="cr-menu-divider"></div>
       <%= button_to "Sign out", session_path, method: :delete, class: "cr-menu-item cr-sb-signout", form: { class: "cr-sb-signout-form" } %>
