@@ -4,8 +4,12 @@
 
 <%= form_with model: friendly, url: url, method: method, data: { turbo: false }, class: "cr-fr-form" do |f| %>
   <label>Type
-    <%= f.select :kind, Friendly::KINDS.map { |k, v| [ v, k ] }, {}, class: "cr-fr-kind-select" %>
-    <span class="cr-fr-kind-hint">Pick what you'll call it. Both work the same way: partners change every set, and nobody sits out a set; anyone past a full court waits until 4 more join.</span>
+    <%= f.select :kind, Friendly::KINDS.map { |k, v| [ v, k ] }, {}, class: "cr-fr-kind-select",
+          onchange: "var s=this.form.querySelector('.cr-fr-format');if(s)s.hidden=(this.value==='round_robin')" %>
+    <span class="cr-fr-kind-hint">Round robin: doubles, partners change every set. Friendly: singles or doubles. Either way nobody sits out a set; anyone past a full court waits until enough join for another court.</span>
+  </label>
+  <label class="cr-fr-format" <%= "hidden" if friendly.round_robin? %>>Singles or doubles
+    <%= f.select :format, Friendly::FORMATS.map { |k, v| [ k == "singles" ? "Singles (2 players a court)" : "Doubles (4 players a court)", k ] } %>
   </label>
   <label>Name <span>(optional)</span>
     <%= f.text_field :title, placeholder: "e.g. Saturday round robin" %>
@@ -53,6 +57,6 @@
       <%= check_box_tag :im_playing, "1", true %> I'm playing (add my name)
     </label>
   <% end %>
-  <p class="cr-fr-hint-block">No need to count courts. People add their names from your link, and Court Report works out the courts: every 4 names = 1 court.</p>
+  <p class="cr-fr-hint-block">No need to count courts. People add their names from your link, and Court Report works out the courts: every 4 names (2 for singles) = 1 court.</p>
   <button type="submit" class="cr-btn cr-btn-gold"><%= friendly.new_record? ? "Book it & get the link" : "Save" %></button>
 <% end %>

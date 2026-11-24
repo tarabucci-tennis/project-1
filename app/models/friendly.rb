@@ -27,6 +27,21 @@ class Friendly < ApplicationRecord
     kind == "round_robin"
   end
 
+  # Friendlies are singles or doubles; round robins are always doubles
+  # (Tara, Nov 24 2026: "friendlies are usually 4 people or 2 people").
+  FORMATS = { "doubles" => "Doubles", "singles" => "Singles" }.freeze
+  validates :format, inclusion: { in: FORMATS.keys }
+  before_validation { self.format = "doubles" if round_robin? || format.blank? }
+
+  def singles?
+    !round_robin? && format == "singles"
+  end
+
+  # Players per court: 2 for singles, 4 for doubles.
+  def per_court
+    singles? ? 2 : PER_COURT
+  end
+
   def kind_label
     KINDS.fetch(kind, "Friendly")
   end
@@ -96,9 +111,9 @@ class Friendly < ApplicationRecord
     spots.select(&:in_lineup)
   end
 
-  # Full courts only: every 4 names = 1 court.
+  # Full courts only: every 4 names (2 for singles) = 1 court.
   def courts_needed
-    FriendlyLineupGenerator.courts_for(active_spots.size)
+    FriendlyLineupGenerator.courts_for(active_spots.size, per_court)
   end
 
   # The first 4-per-court names play; anyone past a full court waits
@@ -107,7 +122,7 @@ class Friendly < ApplicationRecord
   # "nobody wants to take time to go to a round robin and then sit out"):
   # the first 4 per court play every set; anyone extra waits until 4 more join.
   def playing_spots
-    active_spots.first(courts_needed * PER_COURT)
+    active_spots.first(courts_needed * per_court)
   end
 
   def waitlist
@@ -125,7 +140,7 @@ class Friendly < ApplicationRecord
 
   # How many more names fill the next court.
   def players_for_next_court
-    PER_COURT - (active_spots.size % PER_COURT)
+    per_court - (active_spots.size % per_court)
   end
 
   # "9:00 – 11:00 AM", "11:30 AM – 1:00 PM", or just "9:00 AM".
@@ -194,17 +209,17 @@ class Friendly < ApplicationRecord
   end
 
   def can_generate?
-    playing_spots.size >= MIN_PLAYERS
+    playing_spots.size >= per_court
   end
 
   # Builds every set that hasn't been marked played. Played sets stay as they
   # are and count toward fairness (partners, opponents and sit-outs).
   def generate_lineup!(rng: Random.new)
-    raise ArgumentError, "needs at least #{MIN_PLAYERS} players" unless can_generate?
+    raise ArgumentError, "needs at least #{per_court} players" unless can_generate?
 
     old = lineup_sets
     played = old.first(sets_count).select { |s| s["done"] }
-    gen = FriendlyLineupGenerator.new(player_names, history: played, rng: rng)
+    gen = FriendlyLineupGenerator.new(player_names, history: played, rng: rng, per_court: per_court)
     sets = (0...sets_count).map { |i| old[i]&.dig("done") ? old[i] : gen.next_set }
     update!(lineup: { "sets" => sets })
   end
@@ -241,6 +256,7 @@ class Friendly < ApplicationRecord
     counts = Hash.new(0)
     sets.each do |s|
       Array(s["courts"]).each do |p1, p2, p3, p4|
+        next if p3.nil? # singles: no partners
         counts[[ p1, p2 ].sort] += 1
         counts[[ p3, p4 ].sort] += 1
       end
@@ -318,6 +334,7 @@ class Friendly < ApplicationRecord
     seen = Hash.new { |h, k| h[k] = [] }
     lineup_sets.first(sets_count).each_with_index do |set, si|
       Array(set["courts"]).each do |a, b, c, d|
+        next if c.nil? # singles: no partners
         [ [ a, b ], [ c, d ] ].each { |pair| seen[pair.compact.sort] << si + 1 if pair.compact.size == 2 }
       end
     end

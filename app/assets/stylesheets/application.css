@@ -7867,3 +7867,6 @@ input[type="date"]::-webkit-date-and-time-value { text-align: left; }
 html body .cr-fr-form .cr-fr-kind-hint { font-weight: 500; font-size: .8rem; color: #1B2A4A; line-height: 1.4; }
 
 
+
+/* Singles/doubles menu hides for round robins (Tara, Nov 24 2026). */
+html body .cr-fr-form .cr-fr-format[hidden] { display: none; }
