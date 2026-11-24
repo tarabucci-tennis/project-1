@@ -278,6 +278,11 @@ the white number box on the friendly and player-ratings banners (`.cr-rp-hero-le
 **BETA tag (Tara, Nov 24 2026):** a small "BETA" pill (`.cr-beta-pill`, deep-green outline on the deep-green tint) right after the
 logo on every page: the app header (layouts/application) and the public home page (pages/courtreport, CSS inline there too).
 
+**Stale form = friendly message (Tara, Nov 24 2026):** adding a name to a round robin showed the bare "422 Unprocessable Entity"
+page: the form's hidden security code had gone stale (adding players works; reproduced every path). `ApplicationController`
+now rescues `InvalidAuthenticityToken` and sends you back to the page with "That page had been open a while… Please try again."
+Nothing is saved either way.
+
 ## BALL DOODLES background (Tara, Nov 23 2026) — SUPERSEDES the LOCKED COURT background below
 
 The court photo behind signed-in pages was "too much detail and hard to read". Tara picked Instagram-style doodles instead:
