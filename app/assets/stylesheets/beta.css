@@ -34,3 +34,17 @@ button.cr-beta-pill:focus-visible { outline: 2px solid #3F6C8A; outline-offset: 
 .cr-fb-meta { font-size: .85rem; margin-bottom: 6px; }
 .cr-fb-meta code { font-size: .8rem; }
 .cr-fb-message p { margin: 0 0 6px; }
+.cr-beta-anon { display: flex; align-items: center; gap: 8px; font-size: .85rem; font-weight: 600; color: #1B2A4A; cursor: pointer; }
+.cr-beta-anon input { width: 18px; height: 18px; margin: 0; accent-color: #3F6C8A; flex: 0 0 auto; }
+.cr-beta-anon small { font-size: inherit; font-weight: 400; }
+
+/* Floating "Feedback" pill, bottom right (Tara, Nov 24 2026): small, blue,
+   opens the Beta popup. Above the phone bottom menu bar when signed in. */
+.cr-fb-fab { position: fixed; right: 16px; bottom: 20px; z-index: 9000; display: inline-flex; align-items: center; gap: 6px; height: 36px; padding: 0 14px; border: 0; border-radius: 999px; background: #3F6C8A; color: #fff; font: 700 .8rem Inter, system-ui, sans-serif; letter-spacing: .01em; box-shadow: 0 6px 18px rgba(27, 42, 74, .25); cursor: pointer; }
+.cr-fb-fab:hover { background: #335A74; }
+.cr-fb-fab:focus-visible { outline: 2px solid #1B2A4A; outline-offset: 2px; }
+@media (max-width: 720px) {
+  .cr-fb-fab { right: 12px; bottom: 16px; height: 32px; padding: 0 12px; font-size: .75rem; }
+  body.cr-has-sb .cr-fb-fab { bottom: calc(84px + env(safe-area-inset-bottom, 0px)); }
+}
+@media print { .cr-fb-fab { display: none; } }

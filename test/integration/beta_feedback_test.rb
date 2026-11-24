@@ -49,4 +49,16 @@ class BetaFeedbackTest < ActionDispatch::IntegrationTest
     assert_select "button.cr-beta-pill[popovertarget=cr-beta-pop]"
     assert_select "#cr-beta-pop textarea[name=message]"
   end
+
+  test "Send anonymously keeps no account or name" do
+    sign_in(@me)
+    post feedback_path, params: { message: "Quiet idea", anonymous: "1", name: "Should not save" }
+    fb = Feedback.last
+    assert fb.anonymous?
+    assert_nil fb.user_id
+    assert_nil fb.name
+    assert_equal "Anonymous", fb.from_label
+    get teams_path
+    assert_select "#cr-beta-pop input[type=checkbox][name=anonymous]"
+  end
 end

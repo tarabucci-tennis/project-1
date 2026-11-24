@@ -7,8 +7,11 @@ class FeedbacksController < ApplicationController
 
   # POST /feedback
   def create
-    fb = Feedback.new(message: params[:message].to_s.strip, name: (params[:name].to_s.strip.presence unless current_user),
-                      user: current_user, page: safe_page)
+    # "Send anonymously": keep no account and no name with the message.
+    anon = params[:anonymous] == "1"
+    fb = Feedback.new(message: params[:message].to_s.strip, anonymous: anon,
+                      name: (params[:name].to_s.strip.presence unless current_user || anon),
+                      user: (current_user unless anon), page: safe_page)
     if fb.save
       current_user&.update_column(:beta_welcomed_at, Time.current) unless current_user&.beta_welcomed_at
       redirect_back fallback_location: root_path, notice: "Thank you! Your feedback was sent."
