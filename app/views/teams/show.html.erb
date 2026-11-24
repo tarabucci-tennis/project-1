@@ -61,8 +61,14 @@
       <%# Always shown, in navy, so every team page reads the same (Tara's list #19/#75). %>
       <div class="cr-team-colors" title="Team colors">
         <% if @team.team_colors.present? %>
-          <% @team.color_swatches.each do |hex| %><span class="cr-color-dot" style="background: <%= hex %>;"></span><% end %>
-          <span class="cr-team-colors-text"><span class="cr-team-colors-label">Team colors:</span> <%= @team.team_colors %></span>
+          <% legend = @team.color_legend %>
+          <span class="cr-team-colors-text"><span class="cr-team-colors-label">Team colors:</span>
+            <% if legend.any? %>
+              <% legend.each do |name, hex| %><span class="cr-color-item"><span class="cr-color-dot" style="background: <%= hex %>;"></span><%= name %></span><% end %>
+            <% else %>
+              <%= @team.team_colors.gsub(/#\h{3,8}\b|\b\d+(\.\d+)?\b/, "").gsub(/[\s:,;\/]+\z|\A[\s:,;\/]+/, "").squeeze(" ").presence || "not set" %>
+            <% end %>
+          </span>
         <% else %>
           <span class="cr-team-colors-text"><span class="cr-team-colors-label">Team colors:</span> not set</span>
         <% end %>
@@ -594,7 +600,7 @@
       <section class="cr-section">
         <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 12px;">
           <h2 class="cr-section-title" style="margin-bottom: 0;">Roster (<%= @player_count %> Players)</h2>
-          <% if @is_captain && @roster.any? %>
+          <% if @is_captain && @roster.any? && @team.played_any_match? %>
             <%= form_with url: archive_season_team_path(@team), method: :post, local: true, style: "display: flex; gap: 6px; align-items: center;", data: { turbo_confirm: "Archive all #{@roster.size} players on this roster under season \"#{@team.season_name.presence || 'the current season'}\"? You can add a fresh roster after." } do |f| %>
               <%= hidden_field_tag :season, @team.season_name.presence %>
               <%= f.submit "Archive Season", class: "cr-btn cr-btn-outline", style: "padding: 6px 14px; font-size: 0.78rem;" %>
