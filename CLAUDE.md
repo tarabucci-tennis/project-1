@@ -285,6 +285,13 @@ while `users.beta_welcomed_at` is nil; "Got it" or sending feedback sets it). Fe
 (user or typed name, message, page path) and read by admins at **/admin/feedback** ("Beta feedback (N)" in the admin menu).
 Styles live in `app/assets/stylesheets/beta.css` (the public home page links it). Rate limit: 10 messages/hour. **Send anonymously** checkbox (Tara, Nov 24): `feedbacks.anonymous`; no account or name saved; admin page shows "Anonymous". **Floating "Feedback" pill** (Tara, Nov 24, from a SitterLink screenshot; in Court Report blue, not their colors): `shared/_feedback_fab`, bottom right on every page, opens the same popup; on phones it sits 84px up so it clears the bottom menu bar. **Popup (Tara, Nov 24):** opens in the LOWER RIGHT just above the pill (also when opened from the BETA tag), compact (2-line box that grows on focus/typing), with a round **✕** to close; the old "Close" link is gone.
 
+**No TennisRecord links anywhere (Tara, Nov 24 2026):** roster "Matches" opened TennisRecord by NAME and showed the wrong
+Diane Walsh (Vancouver, WA, 3.0). Name-only links can't be made reliable (no TennisRecord id is stored, and this sandbox
+can't reach the site to check), so every TennisRecord link was removed (`tennis_record_url` helpers deleted): roster
+names → Court Report profile, **Matches** → `player_path(user, anchor: "league-history")`, captain stats "TR" column →
+"Profile", scoresheet chart icons and the Ratings "TennisRecord" chip gone. The nightly `TennisrecordPlayoffs` import still
+runs (it's not a link); Tara hasn't decided on it.
+
 **Stale form = friendly message (Tara, Nov 24 2026):** adding a name to a round robin showed the bare "422 Unprocessable Entity"
 page: the form's hidden security code had gone stale (adding players works; reproduced every path). `ApplicationController`
 now rescues `InvalidAuthenticityToken` and sends you back to the page with "That page had been open a while… Please try again."
