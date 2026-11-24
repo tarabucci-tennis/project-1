@@ -11,7 +11,7 @@
 
   <section class="cr-rp-hero">
     <div class="cr-rp-hero-main">
-      <div class="cr-rp-eyebrow">Friendly · organized by <%= @friendly.organizer.name %></div>
+      <div class="cr-rp-eyebrow"><%= @friendly.kind_label %> · organized by <%= @friendly.organizer.name %></div>
       <h1 class="cr-rp-name"><%= @friendly.title %></h1>
       <div class="cr-rp-sub">
         <%= @friendly.starts_at.strftime("%A, %B %-d") %> · <%= @friendly.time_label %>
@@ -43,7 +43,7 @@
         <strong><%= if !@my_spot.in_lineup then "You're marked as not playing today, #{@my_spot.name}." elsif wait_place then "You're on the waitlist (##{wait_place + 1}), #{@my_spot.name}. #{@friendly.players_for_next_court} more makes another court." else "✓ You're in, #{@my_spot.name}!" end %></strong>
         <%= button_to "Can't make it anymore", claim_friendly_path(@friendly), method: :delete,
               params: { spot_id: @my_spot.id }, class: "cr-chip-btn",
-              form: { style: "display:inline;", data: { turbo_confirm: "Take your name off this friendly?" } } %>
+              form: { style: "display:inline;", data: { turbo_confirm: "Take your name off this #{@friendly.kind_label.downcase}?" } } %>
       </div>
     <% else %>
       <%= form_with url: claim_friendly_path(@friendly), method: :post, data: { turbo: false }, class: "cr-fr-claim-form" do %>
@@ -59,13 +59,16 @@
   <section class="cr-rp-card cr-no-print" id="players">
     <div class="cr-rp-card-head">
       <h2 class="cr-rp-card-title">Who's playing (<%= n_players %>)</h2>
-      <span class="cr-rp-card-note">Every 4 names = 1 court</span>
+      <span class="cr-rp-card-note"><%= @friendly.round_robin? ? "Every 4 names = 1 court · extras take turns sitting out" : "Every 4 names = 1 court" %></span>
     </div>
     <p class="cr-fr-courts-summary">
       <% if courts.zero? %>
         <strong><%= @friendly.players_for_next_court %> more <%= "player".pluralize(@friendly.players_for_next_court) %></strong> needed for the first court.
       <% else %>
         <strong><%= n_players %> players = <%= courts %> <%= "court".pluralize(courts) %></strong>
+        <% if (sit = @friendly.sitting_per_set).positive? %>
+          · <%= sit %> <%= sit == 1 ? "sits" : "sit" %> out each set, taking turns
+        <% end %>
         <% if waitlist.any? %>
           · <%= waitlist.size %> on the waitlist · <%= @friendly.players_for_next_court %> more makes court <%= courts + 1 %>
         <% end %>
@@ -144,8 +147,8 @@
         <%= link_to "Edit", edit_friendly_path(@friendly), class: "cr-chip-btn" %>
         <%= button_to (@friendly.archived? ? "Restore" : "Archive"), archive_friendly_path(@friendly), method: :patch, class: "cr-chip-btn",
               form: { style: "display:inline;" } %>
-        <%= button_to "Cancel friendly", friendly_path(@friendly), method: :delete, class: "cr-chip-btn",
-              form: { style: "display:inline;", data: { turbo_confirm: "Cancel this friendly for everyone?" } } %>
+        <%= button_to "Cancel #{@friendly.kind_label.downcase}", friendly_path(@friendly), method: :delete, class: "cr-chip-btn",
+              form: { style: "display:inline;", data: { turbo_confirm: "Cancel this #{@friendly.kind_label.downcase} for everyone?" } } %>
       <% end %>
     </div>
     <% if organizer? %>

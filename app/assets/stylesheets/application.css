@@ -7863,3 +7863,5 @@ input[type="date"], input[type="datetime-local"], input[type="time"] {
   max-width: 100%; min-width: 0; text-align: left;
 }
 input[type="date"]::-webkit-date-and-time-value { text-align: left; }
+/* Round robin / friendly type hint under the Type menu (Tara, Nov 24 2026). */
+html body .cr-fr-form .cr-fr-kind-hint { font-weight: 500; font-size: .8rem; color: #1B2A4A; line-height: 1.4; }

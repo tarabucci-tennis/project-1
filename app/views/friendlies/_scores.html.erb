@@ -48,10 +48,10 @@
           <%= f.select :court, (1..court_count).map { |c| [ "Court #{c}#{' (has a score)' if scores.any? { |s| s.court == c }}", c ] } %>
         </label>
         <label class="cr-fr-se-field">Pair 1
-          <%= f.text_field :pair_a, placeholder: "e.g. Tara & Rebecca", maxlength: 80, list: "cr-fr-names" %>
+          <%= f.text_field :pair_a, placeholder: "e.g. Tara & Rebecca", maxlength: 80, list: "cr-fr-score-names" %>
         </label>
         <label class="cr-fr-se-field">Pair 2
-          <%= f.text_field :pair_b, placeholder: "e.g. Amy & Jen", maxlength: 80, list: "cr-fr-names" %>
+          <%= f.text_field :pair_b, placeholder: "e.g. Amy & Jen", maxlength: 80, list: "cr-fr-score-names" %>
         </label>
         <div class="cr-fr-se-sets">
           <% (1..FriendlyScore::MAX_SETS).each do |i| %>
@@ -69,7 +69,7 @@
         <p class="cr-fr-score-hint">Partial sets are fine (time ran out at 4–3? enter 4–3). Choosing a court that already has a score replaces it.</p>
         <%= f.submit "Save score", class: "cr-btn cr-btn-gold" %>
       <% end %>
-      <datalist id="cr-fr-names"><% names.each do |n| %><option value="<%= n %>"></option><% end %></datalist>
+      <datalist id="cr-fr-score-names"><% names.each do |n| %><option value="<%= n %>"></option><% end %></datalist>
     </details>
   <% end %>
 

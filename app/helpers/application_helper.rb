@@ -162,6 +162,7 @@ module ApplicationHelper
       bits << "#{friendly.players_for_next_court} more for a court"
     else
       bits << pluralize(courts, "court")
+      bits << "#{friendly.sitting_per_set} sit out each set" if friendly.sitting_per_set.positive?
       bits << "#{friendly.waitlist.size} waiting" if friendly.waitlist.any?
     end
     bits.join(" · ")
@@ -179,8 +180,9 @@ module ApplicationHelper
   def friendly_invite_text(friendly)
     lines = [ "🎾 #{friendly.title}", "📅 #{friendly.starts_at.strftime('%a, %b %-d')} · #{friendly.time_label}" ]
     lines.concat(place_lines(friendly.place))
-    lines << "" << "Can you play? Add your name here. Every 4 names = 1 court, so we'll add courts " \
-                   "if more people join. This link always shows who's playing and the lineup:"
+    extras = friendly.round_robin? ? "Partners rotate each set; anyone extra takes turns sitting out." : "so we'll add courts if more people join."
+    lines << "" << "#{'Round robin! ' if friendly.round_robin?}Can you play? Add your name here. Every 4 names = 1 court#{friendly.round_robin? ? '. ' : ', '}#{extras} " \
+                   "This link always shows who's playing and the lineup:"
     lines.join("\n")
   end
 
