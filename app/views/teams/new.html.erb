@@ -94,6 +94,8 @@
 
     <div style="margin-top: 24px;">
       <%= f.submit "Create Team", class: "cr-btn cr-btn-gold", style: "width: 100%; padding: 14px; font-size: 1rem;" %>
+      <%# A plain link back to My Teams; it's outside the form's submit, so nothing is saved. %>
+      <p class="cr-form-cancel"><%= link_to "Cancel", teams_path %></p>
     </div>
   <% end %>
 </div>
