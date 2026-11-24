@@ -175,14 +175,14 @@ module ApplicationHelper
   #   3600 St Davids Rd
   #   Newtown Square, PA 19073
   #
-  #   Can you play? Add your name here. Every 4 names = 1 court, so we'll add
-  #   courts if more people join. This link always shows who's playing and the lineup:
+  #   Add your name here:
+  #   (link)
   def friendly_invite_text(friendly)
     lines = [ "🎾 #{friendly.title}", "📅 #{friendly.starts_at.strftime('%a, %b %-d')} · #{friendly.time_label}" ]
     lines.concat(place_lines(friendly.place))
-    extras = friendly.round_robin? ? "Partners rotate each set; anyone extra takes turns sitting out." : "so we'll add courts if more people join."
-    lines << "" << "#{'Round robin! ' if friendly.round_robin?}Can you play? Add your name here. Every 4 names = 1 court#{friendly.round_robin? ? '. ' : ', '}#{extras} " \
-                   "This link always shows who's playing and the lineup:"
+    # Short (Tara, Nov 24 2026: "I don't want all of the words at the bottom").
+    # The share button puts the link on the next line, so it reads in order.
+    lines << "" << "Add your name here:"
     lines.join("\n")
   end
 
