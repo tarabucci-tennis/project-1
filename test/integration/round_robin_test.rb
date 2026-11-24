@@ -52,4 +52,28 @@ class RoundRobinTest < ActionDispatch::IntegrationTest
     assert_select ".cr-band-card", text: /Round robin/
     assert_match(/Round robin!/, ApplicationController.helpers.friendly_invite_text(rr))
   end
+
+  test "nobody partners the same person twice, and a swap that would is refused" do
+    [ 4, 5, 6, 7, 8, 9, 12 ].each do |n|
+      names = (1..n).map { |i| "P#{i}" }
+      50.times do |seed|
+        g = FriendlyLineupGenerator.new(names, rng: Random.new(seed))
+        sets = Array.new(3) { g.next_set }
+        fr = Friendly.new(sets_count: 3)
+        assert_empty fr.repeat_partners(sets), "#{n} players, seed #{seed}"
+      end
+    end
+
+    rr = book("round_robin")
+    %w[A B C D].each { |nm| rr.spots.create!(name: nm) }
+    rr.update!(lineup: { "sets" => [
+      { "courts" => [ %w[A B C D] ], "sitting" => [], "done" => false },
+      { "courts" => [ %w[A C B D] ], "sitting" => [], "done" => false },
+      { "courts" => [ %w[A D B C] ], "sitting" => [], "done" => false }
+    ] })
+    # Swapping B and C in set 2 would pair A+B again (they partner in set 1).
+    patch swap_friendly_lineup_path(rr), params: { set: 1, a: "0-1", b: "0-2" }
+    assert_equal %w[A C B D], rr.reload.lineup_sets[1]["courts"][0]
+    assert_match(/A and B would be partners twice/, flash[:alert])
+  end
 end

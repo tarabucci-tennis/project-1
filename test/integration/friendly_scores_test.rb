@@ -46,7 +46,8 @@ class FriendlyScoresTest < ActionDispatch::IntegrationTest
 
   test "swapping players in a set drops its scores" do
     @friendly.set_court_score!(0, 0, "6", "2")
-    @friendly.swap_players!(0, "0-1", "0-2")
+    # Bea <-> Dee makes Ann+Dee / Cat+Bea: new partners, so it's allowed.
+    assert @friendly.swap_players!(0, "0-1", "0-3")
     assert_nil @friendly.reload.lineup_sets[0]["scores"]
   end
 end

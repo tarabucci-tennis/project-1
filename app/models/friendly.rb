@@ -224,8 +224,28 @@ class Friendly < ApplicationRecord
     vb = b[0][b[1]]
     a[0][a[1]] = vb
     b[0][b[1]] = va
+    # Never pair two people twice (Tara, Nov 24 2026: "every player plays
+    # with a different person each time"). Refuse a swap that would.
+    planned = sets.first(sets_count)
+    @swap_repeat = (repeat_partners(planned) - repeat_partners(lineup_sets.first(sets_count))).first
+    return false if @swap_repeat
     set.delete("scores") # the pairs changed, so any scores no longer fit
     update!(lineup: { "sets" => sets })
+  end
+
+  # The pair a refused swap would have repeated, e.g. ["Amy", "Jen"].
+  attr_reader :swap_repeat
+
+  # Pairs who partner more than once across the given sets.
+  def repeat_partners(sets)
+    counts = Hash.new(0)
+    sets.each do |s|
+      Array(s["courts"]).each do |p1, p2, p3, p4|
+        counts[[ p1, p2 ].sort] += 1
+        counts[[ p3, p4 ].sort] += 1
+      end
+    end
+    counts.select { |_, n| n > 1 }.keys
   end
 
   # Optional score for one court in a set: games for the first pair (left) and

@@ -139,8 +139,13 @@ class FriendliesController < ApplicationController
   # PATCH /f/:token/lineup/swap?set=&a=&b=
   def swap
     ok = @friendly.swap_players!(params[:set], params[:a], params[:b])
+    alert = if (pair = @friendly.swap_repeat)
+      "#{pair.join(' and ')} would be partners twice, so that swap wasn't made. Everyone plays with a different partner each set."
+    else
+      "Couldn't swap those two."
+    end
     redirect_to friendly_path(@friendly, anchor: "set-#{params[:set].to_i + 1}"),
-                **(ok ? { notice: "Swapped." } : { alert: "Couldn't swap those two." })
+                **(ok ? { notice: "Swapped." } : { alert: alert })
   end
 
   # PATCH /f/:token/lineup/sets/:set/courts/:court/score — optional games for
