@@ -21,6 +21,14 @@ class TeamSyncTest < ActionDispatch::IntegrationTest
     assert_redirected_to team_path(@team)
   end
 
+  test "tapping Sync scores shows the syncing state at once, with the same banner wording" do
+    get team_path(@team)
+    assert_select "form.cr-sync-form[onsubmit=?]", "crSyncStart(this)"
+    assert_includes response.body, "Syncing scores from the league site. Refresh in a minute to see them."
+    post sync_scores_team_path(@team)
+    assert_equal "Syncing scores from the league site. Refresh in a minute to see them.", flash[:notice]
+  end
+
   test "a second tap while syncing doesn't start another run" do
     original = Rails.cache
     Rails.cache = ActiveSupport::Cache::MemoryStore.new
