@@ -48,3 +48,21 @@ button.cr-beta-pill:focus-visible { outline: 2px solid #3F6C8A; outline-offset: 
   body.cr-has-sb .cr-fb-fab { bottom: calc(84px + env(safe-area-inset-bottom, 0px)); }
 }
 @media print { .cr-fb-fab { display: none; } }
+
+/* Compact popup in the LOWER RIGHT, just above the Feedback pill, with a ✕
+   (Tara, Nov 24 2026: "stay in the lower right-hand corner… an X… keep it small
+   or expandable"). The message box starts 2 lines and grows when you type. */
+.cr-beta-pop { inset: auto 16px 68px auto; width: min(320px, calc(100vw - 32px)); padding: 14px 16px; font-size: .85rem; }
+@media (min-width: 1000px) { .cr-beta-pop { inset: auto 16px 68px auto; } }
+@media (max-width: 720px) {
+  .cr-beta-pop { inset: auto 12px 58px auto; }
+  body.cr-has-sb .cr-beta-pop { bottom: calc(124px + env(safe-area-inset-bottom, 0px)); }
+}
+.cr-beta-pop::backdrop { background: transparent; }
+.cr-beta-pop-title { font-size: 1rem; margin: 0 28px 4px 0; }
+.cr-beta-pop p { margin: 0 0 8px; }
+.cr-beta-x { position: absolute; top: 8px; right: 8px; width: 30px; height: 30px; display: grid; place-items: center; border: 0; border-radius: 999px; background: #eef3f7; color: #1B2A4A; font: 700 .95rem Inter, system-ui, sans-serif; line-height: 1; cursor: pointer; }
+.cr-beta-x:hover { background: #dfe8ef; }
+.cr-beta-form textarea { min-height: 52px; transition: min-height .15s ease; }
+.cr-beta-form textarea:focus, .cr-beta-form textarea:not(:placeholder-shown) { min-height: 120px; }
+.cr-beta-form .cr-btn { padding: 8px 14px; font-size: .82rem; }
