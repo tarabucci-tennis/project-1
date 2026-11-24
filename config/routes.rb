@@ -21,6 +21,10 @@ Rails.application.routes.draw do
 
   # Admin: TennisLink fetch POC (Session 15)
   get "admin/members", to: "admin#members", as: :admin_members
+  # Beta feedback (Tara, Nov 24 2026).
+  post  "feedback", to: "feedbacks#create", as: :feedback
+  get   "admin/feedback", to: "feedbacks#index", as: :admin_feedback
+  patch "beta/welcomed", to: "feedbacks#welcomed", as: :beta_welcomed
   get "admin/duplicates", to: "admin#duplicates", as: :admin_duplicates
   post "admin/merge", to: "admin#merge", as: :admin_merge
   get "admin/tennislink_test", to: "admin#tennislink_test", as: :admin_tennislink_test

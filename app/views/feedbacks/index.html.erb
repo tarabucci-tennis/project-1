@@ -1,0 +1,22 @@
+<% content_for :title, "Beta feedback · Court Report" %>
+<%# Admin only: what players sent from the Beta tag and welcome card. %>
+<div class="cr-rp-page cr-rp-narrow">
+  <h1 class="cr-rp-name">Beta feedback</h1>
+  <p class="cr-fr-courts-summary">Only admins see this page. Newest first. <%= pluralize(@feedbacks.size, "message") %>.</p>
+  <% if @feedbacks.empty? %>
+    <p class="cr-coming-up-empty">No feedback yet. Players send it from the green Beta tag at the top of every page.</p>
+  <% else %>
+    <ul class="cr-fb-list">
+      <% @feedbacks.each do |fb| %>
+        <li class="cr-rp-card cr-fb-item">
+          <div class="cr-fb-meta">
+            <strong><%= fb.from_label %></strong>
+            · <%= fb.created_at.in_time_zone("America/New_York").strftime("%b %-d, %Y · %-l:%M %p") %>
+            <% if fb.page.present? %> · on <code><%= fb.page %></code><% end %>
+          </div>
+          <div class="cr-fb-message"><%= simple_format(fb.message) %></div>
+        </li>
+      <% end %>
+    </ul>
+  <% end %>
+</div>

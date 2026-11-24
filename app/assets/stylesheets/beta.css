@@ -1,0 +1,36 @@
+/* Beta tag + feedback popup + one-time welcome card (Tara, Nov 24 2026: A + D).
+   Own file so the public home page (which has no app stylesheet) can link it too. */
+.cr-beta-pill { display: inline-flex; align-items: center; align-self: center; margin: 0 auto 0 10px; padding: 3px 9px; border: 1.5px solid #1B6B5A; border-radius: 999px; background: #E3F0EC; color: #1B6B5A; font-family: Inter, system-ui, sans-serif; font-size: .68rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; line-height: 1; white-space: nowrap; flex: 0 0 auto; cursor: pointer; }
+button.cr-beta-pill:hover { background: #d2e8e0; }
+button.cr-beta-pill:focus-visible { outline: 2px solid #3F6C8A; outline-offset: 2px; }
+.cr-beta-pill-static { margin: 0; cursor: default; }
+@media (max-width: 420px) { .cr-beta-pill { margin-left: 6px; padding: 2px 7px; font-size: .6rem; } .cr-beta-pill-static { margin: 0; } }
+
+.cr-beta-pop { position: fixed; inset: 72px 16px auto auto; margin: 0; width: min(340px, calc(100vw - 32px)); padding: 16px 18px; border: 1px solid #cfd9e4; border-radius: 16px; background: #fff; color: #1B2A4A; box-shadow: 0 14px 40px rgba(27, 42, 74, .22); font-family: Inter, system-ui, sans-serif; font-size: .9rem; line-height: 1.45; }
+.cr-beta-pop::backdrop { background: rgba(27, 42, 74, .15); }
+.cr-beta-pop-title { font-family: Fraunces, Georgia, serif; font-size: 1.15rem; font-weight: 700; margin: 0 0 6px; color: #1B2A4A; }
+.cr-beta-pop p { margin: 0 0 10px; }
+.cr-beta-form { display: grid; gap: 8px; }
+.cr-beta-form input, .cr-beta-form textarea { width: 100%; box-sizing: border-box; padding: 10px 12px; border: 1px solid #cfd9e4; border-radius: 10px; font: inherit; color: #1B2A4A; background: #fff; resize: vertical; }
+.cr-beta-form-row { display: flex; align-items: center; gap: 12px; }
+.cr-beta-form .cr-btn { border: 0; border-radius: 999px; padding: 9px 16px; font: 700 .85rem Inter, system-ui, sans-serif; background: #3F6C8A; color: #fff; cursor: pointer; }
+.cr-beta-close, .cr-beta-welcome-link { background: none; border: 0; padding: 0; font: 700 .85rem Inter, system-ui, sans-serif; color: #1B2A4A; text-decoration: underline; cursor: pointer; }
+@media (min-width: 1000px) { .cr-beta-pop { inset: 74px auto auto 190px; } }
+
+.cr-beta-welcome { position: fixed; inset: 0; z-index: 10000; display: grid; place-items: center; padding: 16px; background: rgba(27, 42, 74, .4); }
+.cr-beta-welcome-box { width: min(420px, 100%); background: #fff; border-radius: 18px; padding: 22px 22px 18px; color: #1B2A4A; font-family: Inter, system-ui, sans-serif; font-size: .95rem; line-height: 1.5; box-shadow: 0 20px 50px rgba(27, 42, 74, .3); }
+.cr-beta-welcome-box h2 { font-family: Fraunces, Georgia, serif; font-size: 1.4rem; font-weight: 700; line-height: 1.2; margin: 10px 0 8px; color: #1B2A4A; text-transform: none; letter-spacing: 0; }
+.cr-beta-welcome-box p { margin: 0 0 6px; }
+.cr-beta-welcome-box ul { margin: 0 0 14px; padding-left: 20px; }
+.cr-beta-welcome-box li { margin: 3px 0; }
+.cr-beta-welcome-actions { display: flex; align-items: center; gap: 18px; }
+.cr-beta-welcome-form { margin: 0; }
+.cr-beta-welcome-actions .cr-btn { border: 0; border-radius: 999px; padding: 10px 22px; font: 700 .9rem Inter, system-ui, sans-serif; background: #3F6C8A; color: #fff; cursor: pointer; }
+.cr-beta-welcome-note { margin-top: 12px !important; font-size: .82rem; }
+
+/* Admin: Beta feedback list. */
+.cr-fb-list { list-style: none; margin: 14px 0 0; padding: 0; display: grid; gap: 12px; }
+.cr-fb-item { padding: 14px 18px; color: #1B2A4A; }
+.cr-fb-meta { font-size: .85rem; margin-bottom: 6px; }
+.cr-fb-meta code { font-size: .8rem; }
+.cr-fb-message p { margin: 0 0 6px; }

@@ -21,14 +21,15 @@
   </head>
 
   <body class="cr-ctx-<%= controller_name %>-<%= action_name %><%= " cr-has-sb" if current_user %>"<% if current_user %> data-controller="sidebar"<% end %>>
+    <% if current_user && current_user.beta_welcomed_at.nil? %><%= render "shared/beta_welcome" %><% end %>
     <nav class="cr-header">
       <div class="cr-header-inner">
         <%= link_to (current_user ? teams_path : root_path), class: "cr-brand" do %>
           <span class="cr-brand-ball"><span class="cr-brand-ball-inner" aria-hidden="true"></span></span>
           <span class="cr-brand-text"><span class="cr-brand-your">YOUR</span>Court <span class="cr-brand-gold">Report</span></span>
         <% end %>
-        <%# "Beta" tag next to the logo (Tara, Nov 24 2026). Outside the link so it isn't part of the logo tap. %>
-        <span class="cr-beta-pill" title="Court Report is in beta: new and still being improved">Beta</span>
+        <%# "Beta" tag next to the logo; tap it for a feedback popup (Tara, Nov 24 2026). %>
+        <%= render "shared/beta_popover" %>
 
         <div class="cr-header-right">
           <% if current_user %>

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_11_24_120000) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_24_130000) do
   create_table "availabilities", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.integer "match_id", null: false
@@ -67,6 +67,16 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_24_120000) do
     t.integer "user_id", null: false
     t.index ["user_id", "starts_at"], name: "index_external_events_on_user_id_and_starts_at"
     t.index ["user_id"], name: "index_external_events_on_user_id"
+  end
+
+  create_table "feedbacks", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.text "message", null: false
+    t.string "name"
+    t.string "page"
+    t.datetime "updated_at", null: false
+    t.integer "user_id"
+    t.index ["user_id"], name: "index_feedbacks_on_user_id"
   end
 
   create_table "friendlies", force: :cascade do |t|
@@ -334,6 +344,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_24_120000) do
 
   create_table "users", force: :cascade do |t|
     t.boolean "admin", default: false, null: false
+    t.datetime "beta_welcomed_at"
     t.decimal "court_report_rating", precision: 4, scale: 2
     t.integer "court_report_rating_lines", default: 0, null: false
     t.datetime "created_at", null: false
@@ -388,6 +399,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_24_120000) do
   add_foreign_key "availabilities", "users"
   add_foreign_key "division_teams", "tennis_teams"
   add_foreign_key "external_events", "users"
+  add_foreign_key "feedbacks", "users"
   add_foreign_key "friendlies", "users", column: "organizer_id"
   add_foreign_key "friendly_scores", "friendlies"
   add_foreign_key "friendly_spots", "friendlies"
