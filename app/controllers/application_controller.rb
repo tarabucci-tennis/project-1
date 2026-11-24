@@ -8,6 +8,16 @@ class ApplicationController < ActionController::Base
 
   helper_method :current_user
 
+  # A form whose hidden security code went stale (page open a long time, or you
+  # signed in again in another tab) used to show the bare "422 Unprocessable
+  # Entity" page (Tara, Nov 24 2026, adding a name to a round robin). Nothing is
+  # saved either way; now you land back on the page with a plain explanation.
+  rescue_from ActionController::InvalidAuthenticityToken do
+    back = request.referer.to_s
+    back = root_path unless back.start_with?(request.base_url)
+    redirect_to back, alert: "That page had been open a while, so for your safety it wasn't saved. Please try again."
+  end
+
   before_action :record_member_visit
 
   private
