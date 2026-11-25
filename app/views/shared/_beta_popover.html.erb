@@ -1,7 +1,6 @@
-<%# A: the Beta tag opens a small popup with a feedback box (Tara, Nov 24 2026).
-    Uses the browser's built-in popover (no script): tap the tag to open, tap
-    outside or Close to shut it. %>
-<button type="button" class="cr-beta-pill" popovertarget="cr-beta-pop" aria-label="Court Report is in beta. Tap to send feedback">Beta</button>
+<%# The feedback popup, opened by the floating Feedback pill (shared/_feedback_fab).
+    The BETA tag beside the logo that also opened it was removed (Tara, Nov 25 2026).
+    Uses the browser's built-in popover (no script). %>
 <div id="cr-beta-pop" class="cr-beta-pop" popover>
   <%# Small, in the lower right by the Feedback pill; ✕ closes it (Tara, Nov 24 2026). %>
   <button type="button" class="cr-beta-x" popovertarget="cr-beta-pop" popovertargetaction="hide" aria-label="Close">✕</button>

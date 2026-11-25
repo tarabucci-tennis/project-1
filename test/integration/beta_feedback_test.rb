@@ -13,7 +13,9 @@ class BetaFeedbackTest < ActionDispatch::IntegrationTest
     sign_in(@me)
     get teams_path
     assert_select ".cr-beta-welcome", text: /Welcome to the Court Report beta/
-    assert_select "button.cr-beta-pill[popovertarget=cr-beta-pop]"
+    # No BETA tag by the logo (Tara, Nov 25 2026); the Feedback pill opens the popup.
+    assert_select "button.cr-beta-pill", count: 0
+    assert_select "[popovertarget=cr-beta-pop]"
     patch beta_welcomed_path
     assert @me.reload.beta_welcomed_at
     get teams_path
@@ -44,9 +46,9 @@ class BetaFeedbackTest < ActionDispatch::IntegrationTest
     assert_match(/Love the round robins!/, response.body)
   end
 
-  test "the public home page has the tappable Beta tag too" do
+  test "the public home page has no Beta tag but keeps the feedback popup" do
     get root_path
-    assert_select "button.cr-beta-pill[popovertarget=cr-beta-pop]"
+    assert_select "button.cr-beta-pill", count: 0
     assert_select "#cr-beta-pop textarea[name=message]"
   end
 
