@@ -1390,10 +1390,12 @@
                 <span class="cr-captain-col-stat">Line</span>
                 <span class="cr-captain-col-stat">W-L</span>
                 <span class="cr-captain-col-stat">Win%</span>
+                <span class="cr-captain-col-stat">Profile</span>
               </div>
               <% @player_analytics.each do |pa| %>
                 <div class="cr-captain-analytics-row">
-                  <span class="cr-captain-col-name"><%= pa[:name] %></span>
+                  <%# Names and Profile go to the player's Court Report page (never TennisRecord). %>
+                  <span class="cr-captain-col-name"><% if pa[:user_id] %><%= link_to pa[:name], player_path(pa[:user_id]), style: "color: inherit; text-decoration: none;" %><% else %><%= pa[:name] %><% end %></span>
                   <span class="cr-captain-col-stat"><%= pa[:matches_played] %></span>
                   <% if @team.lineup_slot_plan.keys.any? { |t, _| t == "singles" } %>
                     <span class="cr-captain-col-stat"><%= pa[:singles_pct] %>%</span>
@@ -1402,6 +1404,7 @@
                   <span class="cr-captain-col-stat"><%= pa[:most_common_line] || "—" %></span>
                   <span class="cr-captain-col-stat"><%= pa[:wins] %>-<%= pa[:losses] %></span>
                   <span class="cr-captain-col-stat"><%= pa[:win_pct] %>%</span>
+                  <span class="cr-captain-col-stat"><% if pa[:user_id] %><%= link_to "view", player_path(pa[:user_id]), style: "color: var(--cr-text-light); font-size: 0.72rem; text-decoration: underline;", title: "#{pa[:name]}'s Court Report profile" %><% else %>—<% end %></span>
                 </div>
               <% end %>
             </div>

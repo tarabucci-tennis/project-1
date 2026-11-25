@@ -20,4 +20,17 @@ class NoTennisrecordLinksTest < ActionDispatch::IntegrationTest
     assert_select "a.cr-roster-history-link[href=?]", player_path(@mate, anchor: "league-history"), text: "Matches"
     assert_select "a.cr-roster-name[href=?]", player_path(@mate)
   end
+
+  test "Captain tab Player Analytics has a Profile column linking to Court Report" do
+    match = @team.matches.create!(opponent: "Rivals", match_date: 3.days.ago, result: "win")
+    line = match.match_lines.create!(line_type: "doubles", position: 1, result: "win", set1_score: "6-2", set2_score: "6-3")
+    line.match_line_players.create!(user: @mate)
+    get team_path(@team)
+    assert_no_match(/tennisrecord\.com/i, response.body)
+    tables = css_select(".cr-captain-analytics-table")
+    analytics = tables.find { |t| t.text.include?("W-L") }
+    assert analytics, "Player Analytics table should render for a captain"
+    assert_includes analytics.css(".cr-captain-analytics-header").text, "Profile"
+    assert analytics.css("a[href='#{player_path(@mate)}']").size >= 2, "name and Profile both link to the profile"
+  end
 end
