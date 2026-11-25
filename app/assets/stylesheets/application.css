@@ -7884,3 +7884,13 @@ html body .cr-form-cancel a { color: #1B2A4A; text-decoration: underline; text-u
 /* Team colors legend: swatch + name only (QA qa-170). */
 .cr-color-item { display: inline-flex; align-items: center; gap: 5px; margin-left: 8px; white-space: nowrap; }
 .cr-color-item .cr-color-dot { margin: 0; }
+
+/* Captain tab tables on phones: slimmer number columns so the added Profile column
+   fits without a sideways swipe (Profile column, Nov 25 2026). */
+@media (max-width: 480px) {
+  html body .cr-captain-analytics-header, html body .cr-captain-analytics-row { padding-left: 10px; padding-right: 10px; }
+  html body .cr-captain-col-name { flex: 1 0 92px; min-width: 92px; }
+  html body .cr-captain-col-stat { width: 42px; }
+  html body .cr-captain-analytics-header { font-size: 0.6rem; letter-spacing: 0; }
+  html body .cr-captain-analytics-header .cr-captain-col-stat { overflow: hidden; text-overflow: clip; }
+}
