@@ -10,7 +10,7 @@ class TeamEvent < ApplicationRecord
   # in kind as typed.
   validates :kind, presence: true, length: { maximum: 30 }
 
-  scope :upcoming, -> { where("event_date >= ?", Date.current).order(event_date: :asc) }
+  scope :upcoming, -> { where("event_date >= ?", PlayClock.today).order(event_date: :asc) }
   scope :chronological, -> { order(event_date: :asc) }
 
   # "Practice" was folded into "Friendly" (Oct 2026). Older practice rows are

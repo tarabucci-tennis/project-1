@@ -65,7 +65,7 @@ class Match < ApplicationRecord
 
   # The match day has arrived (scores can be entered).
   def started?
-    match_date.present? && match_date.to_date <= Date.current
+    match_date.present? && match_date.to_date <= PlayClock.today
   end
 
   # Captains can now set home_away directly via the Edit Match form.

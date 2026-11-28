@@ -139,7 +139,7 @@ class DeltriPlayerHistory
     nil
   end
 
-  def self.most_recent(month, day, today: Date.current)
+  def self.most_recent(month, day, today: PlayClock.today)
     date = Date.new(today.year, month, day)
     date > today ? date.prev_year : date
   end

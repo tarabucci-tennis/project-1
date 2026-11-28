@@ -26,6 +26,12 @@ module PlayClock
     day + key.minutes + DEFAULT_LENGTH
   end
 
+  # Today's date on the players' clock (QA Nov 27 2026: the calendar used the
+  # server's UTC date, so from 7 PM Eastern it marked tomorrow as today).
+  def today
+    now.to_date
+  end
+
   def over?(date, time_text)
     ends_at(date, time_text) <= now
   end

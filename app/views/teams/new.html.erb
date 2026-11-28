@@ -56,7 +56,7 @@
       <label for="league_choice">League</label>
       <select name="league_choice" id="league_choice" class="cr-league-select"
               onchange="var o=document.getElementById('cr-league-name-field');o.hidden=!(this.value==='local'||this.value==='other');if(!o.hidden)o.querySelector('input').focus();">
-        <% TennisTeam::LEAGUE_CHOICES.group_by { |c| c[:group] }.each do |group, choices| %>
+        <% TennisTeam.league_menu_choices.group_by { |c| c[:group] }.each do |group, choices| %>
           <optgroup label="<%= group %>">
             <% choices.each do |c| %>
               <option value="<%= c[:key] %>" <%= "selected" if c[:key] == chosen %>><%= c[:label] %></option>

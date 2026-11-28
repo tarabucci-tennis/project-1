@@ -31,11 +31,11 @@ class TeamsController < ApplicationController
 
     # Full list of upcoming matches (no upper bound, no count cap). Used
     # by the "See Full Schedule" popup modal at the bottom of the inline
-    # list. Past matches are filtered out via Time.current.beginning_of_day
+    # list. Past matches are filtered out via PlayClock.today.beginning_of_day (Eastern)
     # which keeps today's match visible until midnight but drops yesterday
     # and earlier.
     @full_upcoming_matches = Match.where(tennis_team_id: team_ids)
-                                  .where("match_date >= ?", Time.current.beginning_of_day)
+                                  .where("match_date >= ?", PlayClock.today.beginning_of_day)
                                   .includes(:tennis_team, lineup: :lineup_slots)
                                   .order(match_date: :asc)
                                   .to_a
@@ -73,9 +73,9 @@ class TeamsController < ApplicationController
         Date.new(year, month, 1)
       else
         next_match = Match.where(tennis_team_id: team_ids)
-                          .where("match_date >= ?", Date.current)
+                          .where("match_date >= ?", PlayClock.today)
                           .order(match_date: :asc).first
-        (next_match&.match_date&.to_date || Date.current)
+        (next_match&.match_date&.to_date || PlayClock.today)
       end
 
     @calendar_month = anchor.beginning_of_month

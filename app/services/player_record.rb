@@ -109,7 +109,7 @@ class PlayerRecord
   def self.played_date(pm)
     date = pm.played_on
     return nil unless date
-    date > Date.current ? date.prev_year : date
+    date > PlayClock.today ? date.prev_year : date
   end
 
   def self.same_fixture?(entry, pm, date)

@@ -31,16 +31,23 @@ class TennisTeam < ApplicationRecord
     { key: "buxmont",  group: "Philadelphia area", label: "Bux-Mont",                             category: "Local",      name: "Bux-Mont", style: "win_loss" },
     { key: "cup",      group: "Philadelphia area", label: "Inter-Club (Cup)",                     category: "Inter-Club", name: "Inter-Club" },
     { key: "alta",     group: "Other areas",       label: "ALTA (Atlanta)",                       category: "Local",      name: "ALTA", style: "win_loss" },
-    { key: "norcal",   group: "Other areas",       label: "USTA NorCal (Northern California)",    category: "USTA",       name: "USTA NorCal" },
-    { key: "hlta",     group: "Other areas",       label: "HLTA (Houston)",                       category: "Local",      name: "HLTA", style: "win_loss" },
-    { key: "nittl",    group: "Other areas",       label: "NITTL (Northern Illinois)",            category: "Local",      name: "NITTL", style: "win_loss" },
+    { key: "norcal",   group: "Other areas",       label: "USTA NorCal (Northern California)",    category: "USTA",       name: "USTA NorCal", hidden: true },
+    { key: "hlta",     group: "Other areas",       label: "HLTA (Houston)",                       category: "Local",      name: "HLTA", style: "win_loss", hidden: true },
+    { key: "nittl",    group: "Other areas",       label: "NITTL (Northern Illinois)",            category: "Local",      name: "NITTL", style: "win_loss", hidden: true },
     { key: "local",    group: "Other areas",       label: "Local / club league (type its name)",  category: "Local",      name: :typed, style: "win_loss" },
     { key: "other",    group: "Not listed",        label: "Other league (type its name)",         category: "Local",      name: :typed, style: "win_loss" }
   ].freeze
 
+  # NorCal (Pacific) and HLTA / NITTL (Central) are hidden from the Create a Team
+  # menu until teams get their own time zone: "Completed" and "today" run on the
+  # Eastern clock (Tara, Nov 28 2026). Remove `hidden: true` once that's built.
+  def self.league_menu_choices
+    LEAGUE_CHOICES.reject { |c| c[:hidden] }
+  end
+
   # Attributes for a League menu choice. "local" / "other" use the typed name.
   def self.league_choice_attributes(key, typed_name = nil)
-    choice = LEAGUE_CHOICES.detect { |c| c[:key] == key.to_s }
+    choice = league_menu_choices.detect { |c| c[:key] == key.to_s }
     return nil unless choice
     name = choice[:name] == :typed ? typed_name.to_s.strip.presence : choice[:name]
     { league_category: choice[:category], league_name: name, standings_style: choice[:style] }
@@ -49,7 +56,7 @@ class TennisTeam < ApplicationRecord
   # The League menu choice that matches this team (to pre-select it when
   # copying a team). Falls back to "other" for a league not in the list.
   def league_choice_key
-    named = LEAGUE_CHOICES.detect { |c| c[:name].is_a?(String) && c[:name].casecmp?(league_name.to_s) }
+    named = TennisTeam.league_menu_choices.detect { |c| c[:name].is_a?(String) && c[:name].casecmp?(league_name.to_s) }
     return named[:key] if named
     return "usta" if league_category == "USTA"
     return "cup" if league_category == "Inter-Club"

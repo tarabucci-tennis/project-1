@@ -13,9 +13,10 @@ class LeagueChoiceTest < ActionDispatch::IntegrationTest
     %w[USTA Del-Tri Bux-Mont].each { |l| assert_select "select[name=league_choice] option", text: l }
     assert_select "select[name=league_choice] option", text: "Inter-Club (Cup)"
     assert_select "select[name=league_choice] option", text: "ALTA (Atlanta)"
-    assert_select "select[name=league_choice] option", text: /NorCal/
-    assert_select "select[name=league_choice] option", text: "HLTA (Houston)"
-    assert_select "select[name=league_choice] option", text: /NITTL/
+    # Pacific / Central leagues hidden until teams get their own time zone (Tara, Nov 28 2026).
+    assert_select "select[name=league_choice] option", text: /NorCal/, count: 0
+    assert_select "select[name=league_choice] option", text: /HLTA/, count: 0
+    assert_select "select[name=league_choice] option", text: /NITTL/, count: 0
     assert_select "select[name=league_choice] option", text: /Other league/
     assert_select "optgroup[label='Other areas']"
   end
@@ -26,9 +27,7 @@ class LeagueChoiceTest < ActionDispatch::IntegrationTest
       "deltri"  => [ "Local", "Del-Tri", :games ],
       "buxmont" => [ "Local", "Bux-Mont", :games ],
       "cup"     => [ "Inter-Club", "Cup", :sets ],
-      "alta"    => [ "Local", "ALTA", :sets ],
-      "norcal"  => [ "USTA", "USTA", :sets ],
-      "hlta"    => [ "Local", "HLTA", :sets ]
+      "alta"    => [ "Local", "ALTA", :sets ]
     }.each do |key, (category, group, rule)|
       post create_team_path, params: { name: "LC #{key}", league_choice: key }
       team = TennisTeam.find_by!(name: "LC #{key}")
@@ -37,6 +36,12 @@ class LeagueChoiceTest < ActionDispatch::IntegrationTest
       assert_equal rule, team.line_rule, key
     end
     assert_equal "win_loss", TennisTeam.find_by!(name: "LC buxmont").standings_layout
+  end
+
+  test "a hidden league can't be picked by sending its key" do
+    %w[norcal hlta nittl].each do |key|
+      assert_nil TennisTeam.league_choice_attributes(key), key
+    end
   end
 
   test "Other uses the typed league name; blank is refused" do
