@@ -13,7 +13,7 @@ class LineupsController < ApplicationController
 
     @teams.each do |team|
       season = team.matches.reject(&:playoff?).sort_by(&:match_date)
-      team.matches.where("match_date >= ?", Date.current).order(:match_date).each do |match|
+      team.matches.where("match_date >= ?", PlayClock.today).order(:match_date).each do |match|
         lineup = match.lineup rescue nil
         slot   = lineup&.lineup_slots&.find_by(user_id: current_user.id) rescue nil
         @upcoming << {

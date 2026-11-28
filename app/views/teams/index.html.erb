@@ -166,7 +166,7 @@
                     <% elsif nm %>
                       <span class="cr-st-next-date"><%= nm.match_date.strftime("%a %b %-d") %><%= " · #{nm.time_label}" if nm.time_label.present? %></span>
                       <span class="cr-st-next-opp">vs <%= nm.opponent %><% if nm.home? %> · Home<% elsif nm.away? %> · Away<% end %></span>
-                    <% elsif team.start_date && team.start_date > Date.current %>
+                    <% elsif team.start_date && team.start_date > PlayClock.today %>
                       <span class="cr-st-muted">Starts <%= team.start_date.strftime("%-m/%-d") %></span>
                     <% elsif team.matches.none? && !@teams_with_events.include?(team.id) %>
                       <span class="cr-st-muted">No schedule yet</span>
@@ -214,7 +214,7 @@
                 <% events_today  = @calendar_events_by_day[day]  || [] %>
                 <% friendlies_today = @calendar_friendlies_by_day[day] || [] %>
                 <% has_items     = matches_today.any? || events_today.any? || friendlies_today.any? %>
-                <% is_today      = day == Date.current %>
+                <% is_today      = day == PlayClock.today %>
                 <% payload = {
                      date: day.strftime("%Y-%m-%d"),
                      label: day.strftime("%A, %B %-d, %Y"),

@@ -285,6 +285,13 @@ while `users.beta_welcomed_at` is nil; "Got it" or sending feedback sets it). Fe
 (user or typed name, message, page path) and read by admins at **/admin/feedback** ("Beta feedback (N)" in the admin menu).
 Styles live in `app/assets/stylesheets/beta.css` (the public home page links it). Rate limit: 10 messages/hour. **Send anonymously** checkbox (Tara, Nov 24): `feedbacks.anonymous`; no account or name saved; admin page shows "Anonymous". **Floating "Feedback" pill** (Tara, Nov 24, from a SitterLink screenshot; in Court Report blue, not their colors): `shared/_feedback_fab`, bottom right on every page, opens the same popup; on phones it sits 84px up so it clears the bottom menu bar. **Popup (Tara, Nov 24):** opens in the LOWER RIGHT just above the pill (also when opened from the BETA tag), compact (2-line box that grows on focus/typing), with a round **✕** to close; the old "Close" link is gone.
 
+**Time zones (Tara, Nov 28 2026):** the app runs on UTC and times are stored as typed wall-clock. "Today" (calendar
+marker, upcoming lists, `Match#started?`, calendar-entry / external-event upcoming) now uses `PlayClock.today` (Eastern);
+it used `Date.current` (UTC), so after 7 PM Eastern tomorrow showed as today (Muse sweep, Nov 27). **USTA NorCal, HLTA and
+NITTL are hidden** from Create a Team (`hidden: true` in `LEAGUE_CHOICES`, `TennisTeam.league_menu_choices`) because
+"Completed"/"today" assume Eastern. Planned, not built: a time zone per team (from the league; existing teams Eastern) for
+when a match is over, and each viewer's "today" from their phone. Unhide those leagues once that ships.
+
 **No TennisRecord links anywhere (Tara, Nov 24 2026):** roster "Matches" opened TennisRecord by NAME and showed the wrong
 Diane Walsh (Vancouver, WA, 3.0). Name-only links can't be made reliable (no TennisRecord id is stored, and this sandbox
 can't reach the site to check), so every TennisRecord link was removed (`tennis_record_url` helpers deleted): roster
